@@ -1,0 +1,37 @@
+<project name="framework" default="build" basedir=".">
+
+    <!-- PROPERTIES before imports (overrides) -->
+    <property name="import-ant" value="../import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/library.xml" />
+    <import file="${import-ant}/${web-app-env}" />
+    <import file="${import-ant}/${jax-ws-env}" />
+    <import file="${import-ant}/${ws-registry-env}" />
+
+    <!-- PROPERTIES after imports -->
+
+    <!-- CLASSPATHS -->
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="web-app.jars.path" />
+        <path refid="jax-ws.jars.path" />
+        <path refid="ws-registry.jars.path" />
+    </path>
+
+    <!-- TARGETS -->
+    <target name="build"
+            depends="config,build-library"
+            description="Build the project">
+    </target>
+
+    <target name="dist-to-lib"
+            depends="clean,build"
+            description="Builds the project to the super lib directory">
+        <copy todir="../lib" overwrite="true">
+            <fileset dir="${dist.rel-dir}"/>
+        </copy>
+    </target>
+
+</project>

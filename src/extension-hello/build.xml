@@ -1,0 +1,29 @@
+<project name="extension-hello" default="build" basedir=".">
+
+    <!-- before imports -->
+    <property name="import-ant" value="../import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/library.xml" />
+    <import file="${import-ant}/jwsdp.xml" />
+
+    <!-- after imports -->
+
+    <!-- classpaths -->
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jwsdp.jars.path" />
+    </path>
+
+    <!-- library -->
+    <!--- exclude configuration files from jar -->
+    <property name="jar.excludes" value="*.xml,*.properties" />
+
+    <!-- targets -->
+    <target name="build"
+            depends="config,build-library"
+            description="Build the project">
+    </target>
+
+</project>
