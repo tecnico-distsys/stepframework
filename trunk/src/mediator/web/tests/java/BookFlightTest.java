@@ -1,6 +1,9 @@
-import step.proto.mediator.exception.MediatorDomainException;
-import step.proto.mediator.service.BookFlightService;
-import step.proto.mediator.view.ReservationView;
+import proto.mediator.exception.MediatorDomainException;
+import proto.mediator.service.BookFlightService;
+import proto.mediator.view.ReservationView;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class BookFlightTest extends DefaultServiceTest {
 
@@ -25,7 +28,7 @@ public class BookFlightTest extends DefaultServiceTest {
 	assertNotNull("View's reservation code cannot be null", view.getReservationCode());
 	assertEquals("View's client id is incorrect", "L123123123", view.getClientId());
     }
-    
+
     @Test(expected=MediatorDomainException.class)
     public void testFailNoOrigin() throws Exception {
 	BookFlightService service =
