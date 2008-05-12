@@ -1,6 +1,9 @@
-import step.proto.flight.exception.NoFlightAvailableForReservationException;
-import step.proto.flight.service.CreateFlightReservationService;
-import step.proto.flight.view.ReservationVoucher;
+import proto.flight.exception.NoFlightAvailableForReservationException;
+import proto.flight.service.CreateFlightReservationService;
+import proto.flight.view.ReservationVoucher;
+
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class CreateFlightReservationTest extends DefaultServiceTest {
 
@@ -25,7 +28,7 @@ public class CreateFlightReservationTest extends DefaultServiceTest {
 	assertNotNull("Voucher's reservation code cannot be null", voucher.getReservationCode());
 	assertEquals("Voucher's flight number is incorrect", "NY-ROC-1", voucher.getFlightNumber());
     }
-    
+
     @Test(expected=NoFlightAvailableForReservationException.class)
     public void testReservationFailNoOrigin() throws Exception {
 	CreateFlightReservationService service =
