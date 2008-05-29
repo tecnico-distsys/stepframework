@@ -1,23 +1,13 @@
 package step.framework.service;
 
+/**
+ *  The Local Transaction manager is a factory for new local transactions.<br />
+ *  <br />
+ */
 public class LocalTransactionManager implements TransactionManager {
-    
-    private ThreadLocal<Transaction> currentTx = new ThreadLocal<Transaction>() {
-        protected synchronized Transaction initialValue() {
-            return null;
-        }
-    };
-    
+
     public Transaction newTransaction() {
-	if (currentTx.get() == null) {
-	    currentTx.set(new LocalTransaction(this));
-	}
-        return currentTx.get();
+        return new LocalTransaction();
     }
 
-    protected void txDone(LocalTransaction tx) {
-	if (tx == currentTx.get()) {
-	    currentTx.remove();
-	}
-    }
 }
