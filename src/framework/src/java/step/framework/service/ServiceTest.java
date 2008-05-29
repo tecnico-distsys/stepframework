@@ -24,66 +24,72 @@ import org.xml.sax.InputSource;
 
 import step.framework.persistence.PersistenceUtil;
 
+/**
+ *  This is the Framework's base service test.<br />
+ *  All service unit tests should extend this class or one of its subclasses.<br />
+ *  <br />
+ *
+ */
 public class ServiceTest {
+
     static IDatabaseConnection connection;
 
     static {
-	PersistenceUtil.getSessionFactory().getCurrentSession();
+        PersistenceUtil.getSessionFactory().getCurrentSession();
     }
 
     @BeforeClass
     public static void openConnection() {
-	try {
-	    connection = getConnection();
-	} catch (Exception ex) {
-	    throw new AssertionError(ex);
-	}
+        try {
+            connection = getConnection();
+        } catch (Exception ex) {
+            throw new AssertionError(ex);
+        }
     }
 
     @AfterClass
     public static void closeConnection() {
-	try {
-	    connection.close();
-	} catch (SQLException ex) {
-	    throw new AssertionError(ex);
-	}
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            throw new AssertionError(ex);
+        }
     }
 
     private static final IDatabaseConnection getConnection()
     throws IOException, ClassNotFoundException, SQLException {
+        // load database properties
+        Properties buildProperties = new Properties();
+        buildProperties.load(
+            ServiceTest.class.getResourceAsStream("/dbunit.properties"));
 
-	// load database properties
-	Properties buildProperties = new Properties();
-	buildProperties.load(ServiceTest.class.getResourceAsStream(
-	"/dbunit.properties"));
+        String dbUrl = buildProperties.getProperty("database.url");
+        String dbUsername = buildProperties.getProperty("database.username");
+        String dbPassword = buildProperties.getProperty("database.password");
 
-	String dbUrl = buildProperties.getProperty("database.url");
-	String dbUsername = buildProperties.getProperty("database.username");
-	String dbPassword = buildProperties.getProperty("database.password");
+        // create JDBC connection
+        Class.forName(buildProperties.getProperty("database.driver"));
+        Connection jdbcConnection = DriverManager.getConnection(dbUrl,
+        dbUsername, dbPassword);
 
-	// create JDBC connection
-	Class.forName(buildProperties.getProperty("database.driver"));
-	Connection jdbcConnection = DriverManager.getConnection(dbUrl,
-		dbUsername, dbPassword);
+        // Disable foreign key constraint checking
+        // This really depends on the DBMS product... here for MySQL DB
+        jdbcConnection.prepareStatement(
+            buildProperties.getProperty("database.disableConstraints")).execute();
 
-	// Disable foreign key constraint checking
-	// This really depends on the DBMS product... here for MySQL DB
-	jdbcConnection.prepareStatement(buildProperties
-		.getProperty("database.disableConstraints")).execute();
-
-	// create DbUnit connection
-	return new DatabaseConnection(jdbcConnection);
+        // create DbUnit connection
+        return new DatabaseConnection(jdbcConnection);
     }
 
     @Before
     public void loadData() {
-	try {
-	    // initialize your dataset here
-	    IDataSet dataSet = getDataSet(getSetupDataSetName());
-	    DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
-	} catch (Exception ex) {
-	    throw new AssertionError(ex);
-	}
+        try {
+            // initialize your dataset here
+            IDataSet dataSet = getDataSet(getSetupDataSetName());
+            DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
+        } catch (Exception ex) {
+            throw new AssertionError(ex);
+        }
     }
 
     @After
@@ -91,21 +97,21 @@ public class ServiceTest {
     }
 
     protected final IDataSet getDataSet(String filename) throws DataSetException, IOException {
-	InputSource inputSource = new InputSource(getClass()
-		.getResourceAsStream(filename));
-	inputSource.setEncoding("UTF-8");
-	return new CompositeDataSet(new FlatXmlDataSet(inputSource));
+        InputSource inputSource = new InputSource(
+            getClass().getResourceAsStream(filename));
+        inputSource.setEncoding("UTF-8");
+        return new CompositeDataSet(new FlatXmlDataSet(inputSource));
     }
 
     /**
-     * Gets the name of the file containing the setup data set
-     *
-     * @return A String in the format "/" + relativeClassName + ".xml"
-     */
+    * Gets the name of the file containing the setup data set
+    *
+    * @return A String in the format "/" + relativeClassName + ".xml"
+    */
     protected String getSetupDataSetName() {
-	String className = getClass().getName();
-	return "/" + className.substring(className.lastIndexOf('.') + 1)
-	+ ".xml";
+        String className = getClass().getName();
+        return "/" + className.substring(className.lastIndexOf('.') + 1)
+            + ".xml";
     }
 
     /**
@@ -114,37 +120,38 @@ public class ServiceTest {
      * @return A String in the format "/" + relativeClassName + "-result.xml"
      */
     protected String getResultDataSetName() {
-	String className = getClass().getName();
-	return "/" + className.substring(className.lastIndexOf('.') + 1)
-	+ "-result.xml";
+        String className = getClass().getName();
+        return "/" + className.substring(className.lastIndexOf('.') + 1)
+            + "-result.xml";
     }
 
     protected void assertDatabase(String filename) throws java.lang.AssertionError {
-	IDataSet expectedDataSet;
-	IDataSet actualDataSet;
+        IDataSet expectedDataSet;
+        IDataSet actualDataSet;
 
-	try {
-	    // get expected result data set (from a flat XML)
-	    expectedDataSet = getDataSet(filename);
+        try {
+            // get expected result data set (from a flat XML)
+            expectedDataSet = getDataSet(filename);
 
-	    // get the actual data set (from the DB)
-	    actualDataSet = connection.createDataSet();
-	} catch (Exception ex) {
-	    throw new AssertionError(ex);
-	}
+            // get the actual data set (from the DB)
+            actualDataSet = connection.createDataSet();
+        } catch (Exception ex) {
+            throw new AssertionError(ex);
+        }
 
-	try {
-	    // Compare only columns present on expected result
-	    ITableIterator expectedIterator = expectedDataSet.iterator();
-	    while (expectedIterator.next()) {
-		ITableMetaData metaData = expectedIterator.getTableMetaData();
-		ITable actualTable = new CompositeTable(metaData, actualDataSet
-			.getTable(metaData.getTableName()));
+        try {
+            // Compare only columns present on expected result
+            ITableIterator expectedIterator = expectedDataSet.iterator();
+            while (expectedIterator.next()) {
+                ITableMetaData metaData = expectedIterator.getTableMetaData();
+                ITable actualTable = new CompositeTable(metaData,
+                    actualDataSet.getTable(metaData.getTableName()));
 
-		Assertion.assertEquals(expectedIterator.getTable(), actualTable);
-	    }
-	} catch (DatabaseUnitException ex) {
-	    throw new AssertionError(ex);
-	}
+                Assertion.assertEquals(expectedIterator.getTable(), actualTable);
+            }
+        } catch (DatabaseUnitException ex) {
+            throw new AssertionError(ex);
+        }
     }
+
 }
