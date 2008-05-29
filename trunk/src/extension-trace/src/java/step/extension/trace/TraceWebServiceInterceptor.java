@@ -56,6 +56,12 @@ public class TraceWebServiceInterceptor implements WebServiceInterceptor {
             out.println("<cannot access SOAP message>");
             out.println(e.getClass().getName() + " " + e.getMessage());
 
+        } catch(RuntimeException e) {
+            // print runtime exception because it will be swallowed by finally's return
+            out.println("<runtime exception>");
+            out.println(e.getClass().getName() + " " + e.getMessage());
+            throw e;
+
         } finally {
             // trace should never stop a message processing
             return true;
