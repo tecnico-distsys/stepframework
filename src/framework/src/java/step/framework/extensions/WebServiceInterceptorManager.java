@@ -277,14 +277,14 @@ public class WebServiceInterceptorManager {
 
             // inspect SOAP message context
             // to find out in which situation is the message being intercepted
-            boolean isServerSide = SOAPUtil.isServerSideMessage(smc);
+            final boolean IS_SERVER_SIDE = SOAPUtil.isServerSideMessage(smc);
             boolean isOutbound = SOAPUtil.isOutboundMessage(smc);
-            boolean isFault = SOAPUtil.isFaultMessage(smc);
+            final boolean IS_FAULT = SOAPUtil.isFaultMessage(smc);
             if(log.isDebugEnabled()) {
                 log.debug("SOAP Message situation: " +
-                          (isServerSide ? "server-side" : "client-side") + ", " +
+                          (IS_SERVER_SIDE ? "server-side" : "client-side") + ", " +
                           (isOutbound ? "outbound" : "inbound") + ", " +
-                          (isFault ? "fault" : "non-fault"));
+                          (IS_FAULT ? "fault" : "non-fault"));
             }
 
             // interception loop
@@ -340,7 +340,7 @@ public class WebServiceInterceptorManager {
                         log.trace("will return false in the end of loop");
                         interceptMessageReturnValue = false;
 
-                        if((!isServerSide && isOutbound) || (isServerSide && !isOutbound)) {
+                        if((!IS_SERVER_SIDE && isOutbound) || (IS_SERVER_SIDE && !isOutbound)) {
                             log.trace("reverse loop direction");
                             isOutbound = !isOutbound;
                             SOAPUtil.setOutboundMessage(smc, isOutbound);
@@ -362,7 +362,7 @@ public class WebServiceInterceptorManager {
                     isOutbound = changeDirectionIfNecessary(smc,
                                                             extListIterator,
                                                             canChangeDirectionFlag,
-                                                            isServerSide,
+                                                            IS_SERVER_SIDE,
                                                             isOutbound);
                     // only the first exception can cause a direction change
                     log.trace("from now on, the loop can no longer change direction");
@@ -380,7 +380,7 @@ public class WebServiceInterceptorManager {
                     isOutbound = changeDirectionIfNecessary(smc,
                                                             extListIterator,
                                                             canChangeDirectionFlag,
-                                                            isServerSide,
+                                                            IS_SERVER_SIDE,
                                                             isOutbound);
                     // only the first exception can cause a direction change
                     log.trace("from now on, the loop can no longer change direction");
@@ -421,8 +421,8 @@ public class WebServiceInterceptorManager {
             } // while
 
             // if message is a newly created SOAP fault, throw a SOAPFaultException
-            // (isFault was assigned before the interceptors loop)
-            if(!isFault) {
+            // (IS_FAULT was assigned before the interceptors loop)
+            if(!IS_FAULT) {
                 SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
                 if(sf != null) {
                     // message is a SOAPFault
