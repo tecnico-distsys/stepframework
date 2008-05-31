@@ -420,12 +420,15 @@ public class WebServiceInterceptorManager {
 
             } // while
 
-            // if message is a SOAP fault, throw a SOAPFaultException
-            SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
-            if(sf != null) {
-                // message is a SOAPFault
-                log.trace("SOAP message contains a fault; throwing SOAPFaultException with it");
-                throw new SOAPFaultException(sf);
+            // if message is a newly created SOAP fault, throw a SOAPFaultException
+            // (isFault was assigned before the interceptors loop)
+            if(!isFault) {
+                SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
+                if(sf != null) {
+                    // message is a SOAPFault
+                    log.trace("SOAP message contains a newly added fault; throwing SOAPFaultException with it");
+                    throw new SOAPFaultException(sf);
+                }
             }
 
             // return value only after checking that there isn't an exception to throw
