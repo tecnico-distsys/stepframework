@@ -40,9 +40,9 @@ public abstract class WebServiceInterceptorBase implements WebServiceInterceptor
         boolean isOutbound = param.isOutboundSOAPMessage();
 
         if(isOutbound) {
-            return interceptInboundMessage(param);
-        } else {
             return interceptOutboundMessage(param);
+        } else {
+            return interceptInboundMessage(param);
         }
     }
 
