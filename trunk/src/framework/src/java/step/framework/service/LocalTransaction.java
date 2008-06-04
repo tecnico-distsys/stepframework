@@ -112,22 +112,30 @@ public class LocalTransaction implements Transaction {
             log.warn(message);
             throw new IllegalStateException(message);
         }
+
+        boolean txCommited = false;
         try {
             if (nesting == 1) {
                 try {
                     this.tx.commit();
+                    txCommited = true;
                 } catch (HibernateException ex) {
                     throw new TransactionException(ex);
                 } finally {
-                    resetNesting();
+                    // if the commit fails we should keep the current nesting
+                    // to allow the (expected) following rollback operation to succeed.
+                    if (txCommited) {
+                        resetNesting();
+                    }
                 }
             } else {
                 setNesting(nesting-1);
+                txCommited = true;
             }
 
         } finally {
             if (log.isTraceEnabled()) {
-                log.trace("After commit transaction");
+                log.trace("After commit transaction" + (txCommited ? " (ok)" : " (failed)"));
                 log.trace(NESTING_PROPERTY + ":=" + getNesting());
             }
         }
