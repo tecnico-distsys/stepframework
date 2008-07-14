@@ -24,7 +24,7 @@
     <!-- PROPERTIES -->
     <!--            -->
     <property name="import-ant.name" value="ImportAnt" />
-    <property name="import-ant.version" value="5.5.2.2" />
+    <property name="import-ant.version" value="5.5.3" />
 
     <property name="import-ant.module.core" value="true" />
 
