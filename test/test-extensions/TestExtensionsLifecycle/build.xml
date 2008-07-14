@@ -1,0 +1,43 @@
+<project name="TestExtensionsLifecycle" default="run" basedir=".">
+
+    <!-- before imports -->
+    <property name="step-home" value="../../../src" />
+    <property name="import-ant" value="${step-home}/import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/console-app.xml" />
+    <import file="${import-ant}/jwsdp.xml" />
+
+    <!-- after imports -->
+
+    <!-- classpaths -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="${step-home}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
+        <path refid="jwsdp.jars.path" />
+    </path>
+
+    <path id="run.classpath">
+        <pathelement location="${build.classes.rel-dir}" />
+        <path refid="compile.classpath" />
+    </path>
+
+    <!-- console -->
+  	<property name="run.main-class" value="step.test.ExtensionsLifecycleTest" />
+  	<property name="run.args" value="" />
+
+    <!-- build -->
+    <target name="build"
+            depends="config,build-console-app"
+            description="Build the project">
+    </target>
+
+</project>
