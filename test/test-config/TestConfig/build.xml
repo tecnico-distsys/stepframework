@@ -1,7 +1,8 @@
 <project name="TestConfig" default="build" basedir=".">
 
     <!-- before imports (overrides) -->
-    <property name="import-ant" value="../../../src/import-ant" />
+    <property name="step-home" value="../../../src" />
+    <property name="import-ant" value="${step-home}/import-ant" />
 
     <!-- imports -->
     <import file="${import-ant}/core.xml" />
@@ -12,7 +13,7 @@
     <!-- external libraries -->
     <property name="jar.external.enabled" value="" />
     <path id="jar.external.path">
-        <fileset dir="../../../src/lib">
+        <fileset dir="${step-home}/lib">
             <include name="*.jar" />
         </fileset>
     </path>

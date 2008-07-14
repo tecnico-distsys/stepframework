@@ -1,10 +1,11 @@
 <project name="CalcWS" default="build" basedir=".">
 
     <!-- before imports -->
-    <property name="import-ant" value="../../../src/import-ant" />
+    <property name="step-home" value="../../../src" />
+    <property name="import-ant" value="${step-home}/import-ant" />
 
-    <!-- use properties defined in src build.properties file -->
-    <property file="../../../src/build.properties" />
+    <!-- use properties defined in STEP build.properties file -->
+    <property file="${step-home}/build.properties" />
 
     <!-- IMPORTS -->
     <import file="${import-ant}/core.xml" />
@@ -39,7 +40,7 @@
                 <jws:handler-chains xmlns:jws="http://java.sun.com/xml/ns/javaee">
                     <jws:handler-chain>
                         <jws:handler>
-                            <jws:handler-class>framework.ws.handler.LoggingHandler</jws:handler-class>
+                            <jws:handler-class>step.framework.ws.handler.LoggingHandler</jws:handler-class>
                         </jws:handler>
                     </jws:handler-chain>
                 </jws:handler-chains>
@@ -49,7 +50,7 @@
 
     <!-- Web Service registration -->
     <property name="ws-registry.url" value="http://localhost:8080/RegistryServer/" />
-    <property name="ws-registry.main-class" value="framework.ws.registry.Main" />
+    <property name="ws-registry.main-class" value="step.framework.ws.registry.Main" />
     <property name="dir" value="${build.config.ws-registry.rel-dir}" />
 
     <property name="ws-registry.publish.args" value="${dir}/Registry.properties publish ${dir}/Registration.properties ${dir}/RegistrationKey.properties" />
