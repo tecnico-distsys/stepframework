@@ -1,0 +1,50 @@
+<project name="flight" basedir="." default="build">
+    <!-- sub-project build file -->
+
+    <target name="clean"
+    	    description="Clean all projects">
+        <ant inheritAll="false" dir="view" target="clean" />
+        <ant inheritAll="false" dir="core" target="clean" />
+        <ant inheritAll="false" dir="ws" target="clean" />
+        <ant inheritAll="false" dir="ws-client" target="clean" />
+    </target>
+
+    <target name="build"
+    	    description="Build all projects in the correct order">
+        <ant inheritAll="false" dir="view" target="build" />
+        <ant inheritAll="false" dir="core" target="build" />
+        <ant inheritAll="false" dir="ws" target="build" />
+        <ant inheritAll="false" dir="ws-client" target="build" />
+    </target>
+
+    <target name="quick-deploy"
+    	    description="Quick deploy application (assuming build is up-to-date)">
+        <ant inheritAll="false" dir="ws" target="quick-deploy" />
+    </target>
+
+    <target name="quick-redeploy"
+    	    description="Quick redeploy application (assuming build is up-to-date)">
+        <ant inheritAll="false" dir="ws" target="quick-redeploy" />
+    </target>
+
+    <target name="undeploy"
+    	    description="Undeploy application">
+        <ant inheritAll="false" dir="ws" target="undeploy" />
+    </target>
+
+    <target name="quick-run"
+    	    description="Deploy application (assuming build is up-to-date)">
+        <ant inheritAll="false" dir="ws-client" target="quick-run" />
+    </target>
+
+    <target name="generate-db-schema"
+    	    description="Create tables for flight domain">
+        <ant inheritAll="false" dir="core" target="generate-db-schema" />
+    </target>
+
+    <target name="populate-test-domain"
+    	    description="Populate flight domain">
+        <ant inheritAll="false" dir="core" target="populate-test-domain" />
+    </target>
+
+</project>
