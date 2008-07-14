@@ -18,9 +18,17 @@
     <!-- after imports -->
 
     <!-- classpaths -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="${step-home}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
     <path id="compile.classpath">
         <pathelement location="${build.classes.rel-dir}" />
         <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
         <path refid="jax-ws.jars.path" />
     </path>
 
