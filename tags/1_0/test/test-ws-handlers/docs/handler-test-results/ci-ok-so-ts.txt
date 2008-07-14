@@ -1,0 +1,196 @@
+
+Handler C... error behaviour:
+
+|--------- |--------------|------------------------|---------------------------|
+|          | return false | throw RuntimeException | throw SOAPFaultException  |
+|----------|--------------|------------------------|---------------------------|
+|Client OUT|              |                        |                           |
+|----------|--------------|------------------------|---------------------------|
+|Server IN |              |                        |                           |
+|----------|--------------|------------------------|---------------------------|
+|Client IN |              |                        |                           |
+|----------|--------------|------------------------|---------------------------|
+|Server OUT|              |                        |             X             |
+|----------|--------------|------------------------|---------------------------|
+
+
+Trace:
+--------------------------------------------------------------------------------
+Client-side
+                    Server-side
+--------------------------------------------------------------------------------
+
+                    INFO: WSSERVLET12: JAX-WS context listener initializing
+                    handler.server.HandlerAdams@1be20c> (constructor)
+                    handler.server.HandlerBoston@959fa1> (constructor)
+                    handler.server.HandlerChicago@12342ed> (constructor)
+                    handler.server.HandlerDenver@1fef80a> (constructor)
+                    handler.server.HandlerEasy@4e7958> (constructor)
+                    2/Mai/2008 18:11:09 com.sun.xml.ws.transport.http.servlet.WSServletDelegate init
+
+                    INFO: WSSERVLET14: JAX-WS servlet initializing
+
+
+Running the hello.HelloServiceClient program...
+handler.client.HandlerAlpha@fefe3f> (constructor)
+handler.client.HandlerBravo@c2b2f6> (constructor)
+handler.client.HandlerCharlie@1a001ff> (constructor)
+handler.client.HandlerDelta@90c06f> (constructor)
+handler.client.HandlerEcho@1267649> (constructor)
+handler.client.HandlerAlpha@fefe3f> getHeaders()
+handler.client.HandlerBravo@c2b2f6> getHeaders()
+handler.client.HandlerCharlie@1a001ff> getHeaders()
+handler.client.HandlerDelta@90c06f> getHeaders()
+handler.client.HandlerEcho@1267649> getHeaders()
+Outbound SOAP message:
+<?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://hello"><soapenv:Body><ns1:sayHello><ns1:name>friend</ns1:name></ns1:sayHello></soapenv:Body></soapenv:Envelope>
+handler.client.HandlerAlpha@fefe3f> handleMessage() - Outbound SOAP message
+handler.client.HandlerBravo@c2b2f6> handleMessage() - Outbound SOAP message
+handler.client.HandlerCharlie@1a001ff> handleMessage() - Outbound SOAP message
+handler.client.HandlerDelta@90c06f> handleMessage() - Outbound SOAP message
+handler.client.HandlerEcho@1267649> handleMessage() - Outbound SOAP message
+Outbound SOAP message:
+<?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://hello"><soapenv:Body><ns1:sayHello><ns1:name>friend</ns1:name></ns1:sayHello></soapenv:Body></soapenv:Envelope>
+
+
+                    handler.server.HandlerAdams@1be20c> getHeaders()
+                    handler.server.HandlerBoston@959fa1> getHeaders()
+                    handler.server.HandlerChicago@12342ed> getHeaders()
+                    handler.server.HandlerDenver@1fef80a> getHeaders()
+                    handler.server.HandlerEasy@4e7958> getHeaders()
+                    Inbound SOAP message:
+                    <?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.or
+                    g/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http:/
+                    /hello"><soapenv:Body><ns1:sayHello><ns1:name>friend</ns1:name></ns1:sayHello></
+                    soapenv:Body></soapenv:Envelope>
+                    handler.server.HandlerEasy@4e7958> handleMessage() - Inbound SOAP message
+                    handler.server.HandlerDenver@1fef80a> handleMessage() - Inbound SOAP message
+                    handler.server.HandlerChicago@12342ed> handleMessage() - Inbound SOAP message
+                    handler.server.HandlerBoston@959fa1> handleMessage() - Inbound SOAP message
+                    handler.server.HandlerAdams@1be20c> handleMessage() - Inbound SOAP message
+                    Inbound SOAP message:
+                    <?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.or
+                    g/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http:/
+                    /hello"><soapenv:Body><ns1:sayHello><ns1:name>friend</ns1:name></ns1:sayHello></
+                    soapenv:Body></soapenv:Envelope>
+                    Outbound SOAP message:
+                    <?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.or
+                    g/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http:/
+                    /hello"><soapenv:Body><ns1:sayHelloResponse><ns1:return>Hello friend!</ns1:retur
+                    n></ns1:sayHelloResponse></soapenv:Body></soapenv:Envelope>
+                    handler.server.HandlerAdams@1be20c> handleMessage() - Outbound SOAP message
+                    handler.server.HandlerBoston@959fa1> handleMessage() - Outbound SOAP message
+                    handler.server.HandlerChicago@12342ed> handleMessage() - Outbound SOAP message
+                    handler.server.HandlerChicago@12342ed throwing soap fault exception
+                    handler.server.HandlerEasy@4e7958> close()
+                    handler.server.HandlerDenver@1fef80a> close()
+                    handler.server.HandlerChicago@12342ed> close()
+                    handler.server.HandlerBoston@959fa1> close()
+                    handler.server.HandlerAdams@1be20c> close()
+                    2/Mai/2008 18:11:18 com.sun.xml.ws.protocol.soap.server.SOAPMessageDispatcher ge
+                    tResponse
+                    SEVERE: Server Outbound - SOAP Fault!
+                    javax.xml.ws.soap.SOAPFaultException: Server Outbound - SOAP Fault!
+                            at handler.server.HandlerChicago.handleMessage(HandlerChicago.java:39)
+                            at handler.server.HandlerChicago.handleMessage(HandlerChicago.java:15)
+                            at com.sun.xml.ws.handler.HandlerChainCaller.callProtocolHandlers(Handle
+                    rChainCaller.java:614)
+                            at com.sun.xml.ws.handler.HandlerChainCaller.internalCallHandlers(Handle
+                    rChainCaller.java:429)
+                            at com.sun.xml.ws.handler.HandlerChainCaller.callHandlers(HandlerChainCa
+                    ller.java:359)
+                            at com.sun.xml.ws.protocol.soap.server.SOAPMessageDispatcher.callHandler
+                    sOnResponse(SOAPMessageDispatcher.java:399)
+                            at com.sun.xml.ws.protocol.soap.server.SOAPMessageDispatcher.getResponse
+                    (SOAPMessageDispatcher.java:277)
+                            at com.sun.xml.ws.protocol.soap.server.SOAPMessageDispatcher$SoapInvoker
+                    .invoke(SOAPMessageDispatcher.java:557)
+                            at com.sun.xml.ws.protocol.soap.server.SOAPMessageDispatcher.receive(SOA
+                    PMessageDispatcher.java:144)
+                            at com.sun.xml.ws.server.Tie.handle(Tie.java:88)
+                            at com.sun.xml.ws.transport.http.servlet.WSServletDelegate.handle(WSServ
+                    letDelegate.java:279)
+                            at com.sun.xml.ws.transport.http.servlet.WSServletDelegate.doPost(WSServ
+                    letDelegate.java:232)
+                            at com.sun.xml.ws.transport.http.servlet.WSServlet.doPost(WSServlet.java
+                    :77)
+                            at javax.servlet.http.HttpServlet.service(HttpServlet.java:763)
+                            at javax.servlet.http.HttpServlet.service(HttpServlet.java:856)
+                            at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(Appl
+                    icationFilterChain.java:237)
+                            at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationF
+                    ilterChain.java:157)
+                            at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperV
+                    alve.java:214)
+                            at org.apache.catalina.core.StandardValveContext.invokeNext(StandardValv
+                    eContext.java:104)
+                            at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.jav
+                    a:520)
+                            at org.apache.catalina.core.StandardContextValve.invokeInternal(Standard
+                    ContextValve.java:198)
+                            at org.apache.catalina.core.StandardContextValve.invoke(StandardContextV
+                    alve.java:152)
+                            at org.apache.catalina.core.StandardValveContext.invokeNext(StandardValv
+                    eContext.java:104)
+                            at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.jav
+                    a:520)
+                            at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.j
+                    ava:137)
+                            at org.apache.catalina.core.StandardValveContext.invokeNext(StandardValv
+                    eContext.java:104)
+                            at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.j
+                    ava:117)
+                            at org.apache.catalina.core.StandardValveContext.invokeNext(StandardValv
+                    eContext.java:102)
+                            at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.jav
+                    a:520)
+                            at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineVal
+                    ve.java:109)
+                            at org.apache.catalina.core.StandardValveContext.invokeNext(StandardValv
+                    eContext.java:104)
+                            at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:
+                    535)
+                            at org.apache.catalina.core.StandardValveContext.invokeNext(StandardValv
+                    eContext.java:102)
+                            at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.jav
+                    a:520)
+                            at org.apache.catalina.core.ContainerBase.invoke(ContainerBase.java:929)
+
+                            at org.apache.coyote.tomcat5.CoyoteAdapter.service(CoyoteAdapter.java:16
+                    0)
+                            at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java
+                    :790)
+                            at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.proce
+                    ssConnection(Http11Protocol.java:709)
+                            at org.apache.tomcat.util.net.TcpWorkerThread.runIt(PoolTcpEndpoint.java
+                    :572)
+                            at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadP
+                    ool.java:644)
+                            at java.lang.Thread.run(Thread.java:595)
+
+
+Inbound SOAP message:
+<?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://hello"><soapenv:Body><soapenv:Fault xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><faultcode>soapenv:Server</faultcode><faultstring>Server Outbound - SOAP Fault!</faultstring></soapenv:Fault></soapenv:Body></soapenv:Envelope>
+handler.client.HandlerEcho@1267649> handleMessage() - Inbound SOAP message
+handler.client.HandlerDelta@90c06f> handleMessage() - Inbound SOAP message
+handler.client.HandlerCharlie@1a001ff> handleMessage() - Inbound SOAP message
+handler.client.HandlerBravo@c2b2f6> handleMessage() - Inbound SOAP message
+handler.client.HandlerAlpha@fefe3f> handleMessage() - Inbound SOAP message
+Inbound SOAP message:
+<?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://hello"><soapenv:Body><soapenv:Fault xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><faultcode>soapenv:Server</faultcode><faultstring>Server Outbound - SOAP Fault!</faultstring></soapenv:Fault></soapenv:Body></soapenv:Envelope>
+handler.client.HandlerEcho@1267649> close()
+handler.client.HandlerDelta@90c06f> close()
+handler.client.HandlerCharlie@1a001ff> close()
+handler.client.HandlerBravo@c2b2f6> close()
+handler.client.HandlerAlpha@fefe3f> close()
+Exception in thread "main" javax.xml.ws.soap.SOAPFaultException: Server Outbound - SOAP Fault!
+	at com.sun.xml.ws.encoding.soap.ClientEncoderDecoder.toMessageInfo(ClientEncoderDecoder.java:80)
+	at com.sun.xml.ws.encoding.soap.client.SOAPXMLDecoder.toMessageInfo(SOAPXMLDecoder.java:200)
+	at com.sun.xml.ws.protocol.soap.client.SOAPMessageDispatcher.receive(SOAPMessageDispatcher.java:549)
+	at com.sun.xml.ws.protocol.soap.client.SOAPMessageDispatcher.doSend(SOAPMessageDispatcher.java:288)
+	at com.sun.xml.ws.protocol.soap.client.SOAPMessageDispatcher.send(SOAPMessageDispatcher.java:153)
+	at com.sun.xml.ws.encoding.soap.internal.DelegateBase.send(DelegateBase.java:85)
+	at com.sun.xml.ws.client.EndpointIFInvocationHandler.implementSEIMethod(EndpointIFInvocationHandler.java:176)
+	at com.sun.xml.ws.client.EndpointIFInvocationHandler.invoke(EndpointIFInvocationHandler.java:105)
+	at $Proxy18.sayHello(Unknown Source)
+	at hello.HelloServiceClient.main(HelloServiceClient.java:10)

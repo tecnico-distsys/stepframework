@@ -1,0 +1,41 @@
+<project name="TestConfig" default="build" basedir=".">
+
+    <!-- before imports (overrides) -->
+    <property name="step-home" value="../../../src" />
+    <property name="import-ant" value="${step-home}/import-ant" />
+
+    <!-- imports -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/console-app.xml" />
+
+    <!-- after imports -->
+
+    <!-- external libraries -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="${step-home}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- classpaths -->
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
+    </path>
+
+    <path id="run.classpath">
+        <pathelement location="${build.classes.rel-dir}" />
+        <path refid="compile.classpath" />
+    </path>
+
+    <!-- Console -->
+    <property name="run.main-class" value="proj.Hello" />
+    <property name="run.args" value="arg1 arg2 arg3" />
+
+    <!-- build -->
+    <target name="build" depends="config,build-console-app"
+            description="Build the project">
+    </target>
+
+</project>
