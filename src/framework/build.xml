@@ -1,4 +1,4 @@
-<project name="framework" default="build" basedir=".">
+<project name="stepframework" default="build" basedir=".">
 
     <!-- PROPERTIES before imports (overrides) -->
     <property name="import-ant" value="../import-ant" />
