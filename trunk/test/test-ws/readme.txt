@@ -1,6 +1,6 @@
 These subprojects are used to test StubFactory and related classes.
 
-CalcWSCliente supports direct invocation, default factory, url factory, config factory and registry factory.
+CalcWSClient supports direct invocation, default factory, url factory, config factory and registry factory.
 
 --
 2008-07-14
