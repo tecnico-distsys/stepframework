@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+
+    <endpoint name="endpoint"
+              interface="@jax-ws-server.ties.interface.name@"
+              implementation="@jax-ws-server.impl.class.name@"
+              wsdl="WEB-INF/wsdl/@jax-ws-server.wsdl.file-name@"
+              service="{@jax-ws-server.wsdl.namespace@}@jax-ws-server.wsdl.service-name@"
+              port="{@jax-ws-server.wsdl.namespace@}@jax-ws-server.wsdl.port-name@"
+              url-pattern="/endpoint" />
+
+</endpoints>

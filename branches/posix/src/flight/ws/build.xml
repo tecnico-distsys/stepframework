@@ -1,0 +1,110 @@
+<project name="flight-ws" default="build" basedir=".">
+    <!-- web service build file -->
+
+    <!-- before imports -->
+    <property name="import-ant" value="../../import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/console-app.xml" />
+    <import file="${import-ant}/hibernate.xml" />
+    <import file="${import-ant}/${web-app-env}" />
+    <import file="${import-ant}/${jax-ws-env}" />
+    <import file="${import-ant}/jax-ws-server.xml" />
+
+    <!-- after imports -->
+
+    <!-- external XML resources -->
+    <property name="jax.external.enabled" value="" />
+    <path id="jax.external.path">
+        <fileset dir="..">
+            <include name="view/src/xml/*.xsd" />
+        </fileset>
+    </path>
+
+    <!-- external libraries -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="..">
+            <include name="core/dist/*.jar" />
+            <include name="view/dist/*.jar" />
+        </fileset>
+        <fileset dir="../..">
+            <include name="extension-errors/dist/*.jar" />
+            <include name="extension-hello/dist/*.jar" />
+            <include name="extension-trace/dist/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- classpaths -->
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jax-ws.jars.path" />
+        <path refid="jar.external.path" />
+    </path>
+
+    <path id="run.classpath"> <!-- used by hibernate -->
+        <pathelement location="${build.classes.rel-dir}" />
+        <path refid="compile.classpath" />
+    </path>
+
+
+    <!-- console application -->
+    <property name="run.main-class" value="step.proto.flight.Main" />
+    <property name="run.args" value="" />
+
+
+    <!-- Web Service -->
+    <property name="jax-ws-server.wsdl.file-name" value="flight.wsdl" />
+    <property name="jax-ws-server.wsdl.namespace" value="urn:step:proto:flight:wsdl" />
+    <property name="jax-ws-server.wsdl.service-name" value="FlightService" />
+    <property name="jax-ws-server.wsdl.port-name" value="FlightPort" />
+    <property name="jax-ws-server.ties.interface.simple-name" value="FlightPortType" />
+    <property name="jax-ws-server.impl.package" value="step.proto.flight.ws" />
+    <property name="jax-ws-server.impl.class.simple-name" value="FlightServiceImpl" />
+
+    <target name="-replace-jax-ws-server-custom-tokens(dir)">
+        <replace dir="${dir}" token="@jax-ws-server.handler-chains@">
+            <replacevalue><![CDATA[
+                <jws:handler-chains xmlns:jws="http://java.sun.com/xml/ns/javaee">
+                    <jws:handler-chain>
+                        <jws:handler>
+                            <jws:handler-class>step.framework.extensions.Handler</jws:handler-class>
+                        </jws:handler>
+                    </jws:handler-chain>
+                </jws:handler-chains>
+            ]]></replacevalue>
+        </replace>
+    </target>
+
+
+    <!-- hibernate -->
+    <target name="-replace-hibernate-custom-tokens(dir)">
+        <replace dir="${dir}" token="@hibernate.mappings@">
+            <replacevalue><![CDATA[
+        <!-- Classes from flight domain -->
+        <mapping class="step.proto.flight.domain.FlightManager" />
+        <mapping class="step.proto.flight.domain.Airplane" />
+        <mapping class="step.proto.flight.domain.Airport" />
+        <mapping class="step.proto.flight.domain.Flight" />
+        <mapping class="step.proto.flight.domain.FlightReservation" />
+        <mapping class="step.proto.flight.domain.Passenger" />
+            ]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="populate-test-domain" description="Populate test domain">
+        <antcall target="quick-run">
+            <param name="run.main-class" value="step.proto.flight.PopulateTestDomain" />
+            <param name="run.args" value="" />
+        </antcall>
+    </target>
+
+
+    <!-- build -->
+    <target name="build"
+            depends="config,build-database,build-jax-ws-server-from-wsdl"
+            description="Build the project">
+    </target>
+
+</project>
