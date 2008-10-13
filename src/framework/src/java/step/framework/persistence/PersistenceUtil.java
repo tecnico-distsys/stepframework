@@ -27,11 +27,13 @@ public class PersistenceUtil {
             String factory = props.getProperty(PERSISTENCE_FACTORY);
 
             if (factory != null && factory.trim().equals(PERSISTENCE_FACTORY_MOCK)) {
+                log.info("Setting up mock persistence...");
                 sessionFactory = MockSessionFactory.getInstance();
             } else {
                 // By default (and when the property doesn't have the "mock" value) we use the Hibernate SessionFactory
                 
                 // Create the SessionFactory from hibernate.cfg.xml
+                log.info("Setting up hibernate persistence...");
                 sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
             }
         } catch (Throwable ex) {
