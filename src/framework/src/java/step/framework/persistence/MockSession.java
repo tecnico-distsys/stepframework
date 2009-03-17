@@ -5,6 +5,11 @@ import java.sql.Connection;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.LinkedHashSet;
+
 
 import org.hibernate.CacheMode;
 import org.hibernate.Criteria;
@@ -26,7 +31,14 @@ public class MockSession implements Session {
     
     private static Session instance;
 
-    private MockSession() {}
+    /**
+     * Stores all objects touched in this session
+     **/ 
+    private Map<Class, LinkedHashSet<Object>> persistentObjects;
+
+    private MockSession() {
+        persistentObjects = new HashMap<Class, LinkedHashSet<Object>>();
+    }
 
     public static synchronized Session getInstance() {
         if (instance == null) {
@@ -34,6 +46,55 @@ public class MockSession implements Session {
         }
         return instance;
     }
+
+    /**
+     * Returns the first object of the parameter class (or sub-class) touched in this session
+     **/
+    public <T> T getObject(Class<T> clazz) {
+        T result = null;
+	Iterator instanceIterator;
+
+	if (persistentObjects.containsKey(clazz)) {
+	    instanceIterator = persistentObjects.get(clazz).iterator();
+
+	    if (instanceIterator.hasNext()) {
+	        result = clazz.cast(instanceIterator.next());
+	    }
+        }
+        return result;
+    }
+
+    private void addObject(Object object) {
+        Class currentClass = null;
+	LinkedHashSet<Object> objectSet;
+
+	if (object != null) currentClass = object.getClass();
+
+	while (currentClass != null) {
+	    if (persistentObjects.containsKey(currentClass)) {
+		objectSet = persistentObjects.get(currentClass);
+	    } else {
+		objectSet = new LinkedHashSet<Object>();
+		persistentObjects.put(currentClass, objectSet);
+	    }	  
+	    objectSet.add(object);
+	    currentClass = currentClass.getSuperclass();
+	}
+    }
+
+    private void removeObject(Object object) {
+        Class currentClass = null;
+	LinkedHashSet<Object> objectSet;
+
+	if (object != null && persistentObjects.containsKey(object.getClass())) currentClass = object.getClass();
+
+	while (currentClass != null) {
+	    objectSet = persistentObjects.get(currentClass);
+	    objectSet.remove(object);
+	    currentClass = currentClass.getSuperclass();
+	}
+    }
+
 
     /* org.hibernate.classic.Session methods */
     @Deprecated public Query createSQLQuery(String sql, String[] returnAliases, Class[] returnClasses) { throw new UnsupportedOperationException(); }
@@ -60,20 +121,26 @@ public class MockSession implements Session {
     @Deprecated public void update(String entityName, Object object, Serializable id) { throw new UnsupportedOperationException(); }
 
     /* org.hibernate.Session methods */
-    public Transaction beginTransaction() { return MockTransaction.getInstance(); }
+    public Transaction beginTransaction() {
+        return MockTransaction.getInstance();
+    }
     public void cancelQuery() { throw new UnsupportedOperationException(); }
     public void clear() { throw new UnsupportedOperationException(); }
     public Connection close() { throw new UnsupportedOperationException(); }
     @Deprecated public Connection connection() { throw new UnsupportedOperationException(); }
     public boolean contains(Object object) { throw new UnsupportedOperationException(); }
-    public Criteria createCriteria(Class persistentClass) { throw new UnsupportedOperationException(); }
+    public Criteria createCriteria(Class persistentClass) {
+        return new MockCriteria(this, persistentClass);
+    }
     public Criteria createCriteria(Class persistentClass, String alias) { throw new UnsupportedOperationException(); }
     public Criteria createCriteria(String entityName) { throw new UnsupportedOperationException(); }
     public Criteria createCriteria(String entityName, String alias) { throw new UnsupportedOperationException(); }
     public Query createFilter(Object collection, String queryString) { throw new UnsupportedOperationException(); }
     public Query createQuery(String queryString) { throw new UnsupportedOperationException(); }
     public SQLQuery createSQLQuery(String queryString) { throw new UnsupportedOperationException(); }
-    public void delete(Object object) { }
+    public void delete(Object object) {
+        removeObject(object);
+    }
     public void delete(String entityName, Object object) { throw new UnsupportedOperationException(); }
     public void disableFilter(String filterName) { throw new UnsupportedOperationException(); }
     public Connection disconnect() { throw new UnsupportedOperationException(); }
@@ -116,7 +183,10 @@ public class MockSession implements Session {
     public void refresh(Object object, LockMode lockMode) { throw new UnsupportedOperationException(); }
     public void replicate(Object object, ReplicationMode replicationMode) { throw new UnsupportedOperationException(); }
     public void replicate(String entityName, Object object, ReplicationMode replicationMode) { throw new UnsupportedOperationException(); }
-    public Serializable save(Object object) { return null; }
+    public Serializable save(Object object) {
+        addObject(object);
+	return null;
+    }
     public Serializable save(String entityName, Object object) { throw new UnsupportedOperationException(); }
     public void saveOrUpdate(Object object) { throw new UnsupportedOperationException(); }
     public void saveOrUpdate(String entityName, Object object) { throw new UnsupportedOperationException(); }
