@@ -1,6 +1,6 @@
-import proto.mediator.exception.MediatorDomainException;
-import proto.mediator.service.BookFlightService;
-import proto.mediator.view.ReservationView;
+import step.proto.mediator.exception.MediatorDomainException;
+import step.proto.mediator.service.BookFlightService;
+import step.proto.mediator.view.ReservationView;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

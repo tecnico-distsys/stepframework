@@ -1,6 +1,6 @@
-import proto.mediator.exception.DuplicateReservationException;
-import proto.mediator.service.CreateReservationService;
-import proto.mediator.view.ReservationView;
+import step.proto.mediator.exception.DuplicateReservationException;
+import step.proto.mediator.service.CreateReservationService;
+import step.proto.mediator.view.ReservationView;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
