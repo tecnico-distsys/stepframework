@@ -1,6 +1,6 @@
-import proto.flight.exception.NoFlightAvailableForReservationException;
-import proto.flight.service.CreateFlightReservationService;
-import proto.flight.view.ReservationVoucher;
+import step.proto.flight.exception.NoFlightAvailableForReservationException;
+import step.proto.flight.service.CreateFlightReservationService;
+import step.proto.flight.view.ReservationVoucher;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
