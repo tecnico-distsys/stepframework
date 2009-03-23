@@ -47,4 +47,9 @@
         <ant inheritAll="false" dir="core" target="populate-test-domain" />
     </target>
 
+	<target name="run-tests"
+	    	    description="Run all flight service tests">
+	        <ant inheritAll="false" dir="core" target="run-tests" />
+    </target>
+
 </project>

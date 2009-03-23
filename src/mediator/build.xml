@@ -39,5 +39,11 @@
     	    description="Populate mediator domain">
         <ant inheritAll="false" dir="core" target="populate-test-domain" />
     </target>
+	
+	<target name="run-tests"
+	    	    description="Run all mediator service tests">
+	        <ant inheritAll="false" dir="core" target="run-tests" />
+			<ant inheritAll="false" dir="web" target="run-tests" />
+    </target>
 
 </project>

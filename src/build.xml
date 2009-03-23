@@ -45,6 +45,11 @@
         <ant inheritAll="false" dir="flight" target="populate-test-domain" />
     </target>
 
+    <target name="run-flight-tests"
+    	    description="Run all flight service tests">
+        <ant inheritAll="false" dir="flight" target="run-tests" />
+    </target>
+
     <!-- Mediator -->
     <target name="quick-deploy-mediator"
     	    description="Quick deploy mediator web application">
@@ -71,16 +76,21 @@
         <ant inheritAll="false" dir="mediator" target="populate-test-domain" />
     </target>
 
+    <target name="run-mediator-tests"
+    	    description="Run all mediator service tests">
+        <ant inheritAll="false" dir="mediator" target="run-tests" />
+    </target>
+	
     <!-- all -->
-    <target name="quick-deploy" depends="quick-deploy-flight,quick-deploy-mediator"
+    <target name="quick-deploy" depends="quick-deploy-mediator,quick-deploy-flight"
     	    description="Quick deploy all web applications">
     </target>
 
-    <target name="quick-redeploy" depends="quick-redeploy-flight,quick-redeploy-mediator"
+    <target name="quick-redeploy" depends="quick-redeploy-mediator,quick-redeploy-flight"
     	    description="Quick redeploy all web applications">
     </target>
 
-    <target name="undeploy" depends="undeploy-flight,undeploy-mediator"
+    <target name="undeploy" depends="undeploy-mediator,undeploy-flight"
     	    description="Undeploy all web applications">
     </target>
 
@@ -92,4 +102,7 @@
     	    description="Populate all domains">
     </target>
 
+    <target name="run-all-tests" depends="run-flight-tests,run-mediator-tests"
+    	    description="Run all service tests">
+    </target>
 </project>
