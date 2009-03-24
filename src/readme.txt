@@ -20,7 +20,7 @@ The Trip Planner is a system for selling trip packages via a web interface.
 It is composed by several distributed systems, which act together through a
 mediator that interacts with the clients.
 
-This demonstration version of the Trip Planner (V3) supports booking a flight
+This demonstration version of the Trip Planner supports booking a flight
 and uses 3 demonstration Framework Extensions:
 - hello - just says hi when it intercepts the services or web services
 - trace - prints tracing data
@@ -163,9 +163,8 @@ using the application. Try booking a flight from Lisbon to New York!
 7. Testing
 ==============================
 
-Testing each application individually is done just like in trip-planner V1,
-through the "run-tests" target of each core.  However, running tests in a
-distributed system requires all the tables to be stored in the same database.
+Running tests in a distributed system requires all the tables to be stored
+in the same database.
 This is necessary because of the way that DBUnit populates data before each
 test method.
 
@@ -176,15 +175,21 @@ Then, at the top level rebuild the applications and create the tables.
 
 $ ant clean build generate-all-db-schemas
 
-Then, redeploy the flight web server
+Then, redeploy the flight web service and mediator web application
 
 $ ant quick-redeploy-flight
+$ ant quick-redeploy-mediator
 
-Finally, run the tests for the workflow services in the mediator/web
-component:
 
-$ cd mediator/web
-$ ant run-tests
+To run tests for one domain at a time:
+
+$ ant run-flight-tests
+$ ant run-mediator-tests
+
+To run all tests:
+
+$ ant run-all-tests
+
 
 
 8. Extensions
