@@ -1,3 +1,4 @@
+package step.proto.mediator.web.service;
 import step.proto.mediator.exception.DuplicateReservationException;
 import step.proto.mediator.service.CreateReservationService;
 import step.proto.mediator.view.ReservationView;

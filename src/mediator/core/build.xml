@@ -68,7 +68,7 @@
         <param name="hibernate.auto" value="create" />
         </antcall>
         <antcall target="-run-tests">
-            <param name="junit.batchtest.include" value="*.java" />
+            <param name="junit.batchtest.include" value="**/*.java" />
         </antcall>
     </target>
 
