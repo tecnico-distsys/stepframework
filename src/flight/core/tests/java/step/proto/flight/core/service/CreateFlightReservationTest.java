@@ -1,3 +1,4 @@
+package step.proto.flight.core.service;
 import step.proto.flight.exception.NoFlightAvailableForReservationException;
 import step.proto.flight.service.CreateFlightReservationService;
 import step.proto.flight.view.ReservationVoucher;
