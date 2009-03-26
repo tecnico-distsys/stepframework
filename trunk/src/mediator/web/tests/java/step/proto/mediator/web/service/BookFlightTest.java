@@ -1,3 +1,4 @@
+package step.proto.mediator.web.service;
 import step.proto.mediator.exception.MediatorDomainException;
 import step.proto.mediator.service.BookFlightService;
 import step.proto.mediator.view.ReservationView;
