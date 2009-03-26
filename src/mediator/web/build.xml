@@ -24,14 +24,14 @@
         </fileset>
         <fileset dir="../../flight">
             <include name="view/dist/*.jar" />
-            <!--include name="core/dist/*.jar" /-->
-            <include name="ws-client/dist/*.jar" />
+            <include name="core/dist/*.jar" />
+            <!--include name="ws-client/dist/*.jar" />
         </fileset>
         <fileset dir="../..">
             <include name="extension-hello/dist/*.jar" />
         </fileset>
         <fileset dir="../..">
-            <include name="extension-errors/dist/*.jar" />
+            <include name="extension-errors/dist/*.jar" /-->
         </fileset>
     </path>
 
@@ -65,14 +65,14 @@
         <mapping class="step.proto.mediator.domain.Reservation" />
 
         <!-- Classes from flight domain: these are not mapped in the mediator in the distributed environment -->
-        <!--
+        
         <mapping class="step.proto.flight.domain.FlightManager" />
         <mapping class="step.proto.flight.domain.Airplane" />
         <mapping class="step.proto.flight.domain.Airport" />
         <mapping class="step.proto.flight.domain.Flight" />
         <mapping class="step.proto.flight.domain.FlightReservation" />
         <mapping class="step.proto.flight.domain.Passenger" />
-        -->
+        
             ]]></replacevalue>
         </replace>
     </target>
@@ -91,7 +91,7 @@
             <param name="hibernate.auto" value="create" />
         </antcall>
         <antcall target="-run-tests">
-            <param name="junit.batchtest.include" value="*.java" />
+            <param name="junit.batchtest.include" value="**/*.java" />
         </antcall>
     </target>
 
