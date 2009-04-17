@@ -1,6 +1,6 @@
 <!--
     ImportAnt
-    Copyright (C) 2004-2008  Miguel Filipe Leitao Pardal
+    Copyright (C) 2004-2009  Miguel Filipe Leitao Pardal
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -57,17 +57,17 @@
 	    <classpath refid="project.lib.path" />
 	    <export dest="${dbunit.export.file}" />
 	</dbunit>
-    </target> 
+    </target>
 
     <!-- Import data set to the database from the supplied file -->
     <target name="dbunit-import-data">
 	<dbunit driver="${database.driver}" url="${database.url}"
 		userid="${database.username}" password="${database.password}">
 	    <classpath refid="project.lib.path" />
-	    <operation type="CLEAN_INSERT" 
+	    <operation type="CLEAN_INSERT"
                        src="${dbunit.import.file}" />
 	</dbunit>
-    </target> 
+    </target>
 
     <!-- PRIVATE AUXILIARY TARGETS (-name, no description) -->
 
