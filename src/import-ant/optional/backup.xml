@@ -1,6 +1,6 @@
 <!--
     ImportAnt
-    Copyright (C) 2004-2008  Miguel Filipe Leitao Pardal
+    Copyright (C) 2004-2009  Miguel Filipe Leitao Pardal
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

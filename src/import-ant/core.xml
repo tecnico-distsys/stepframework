@@ -1,6 +1,6 @@
 <!--
     ImportAnt
-    Copyright (C) 2004-2008  Miguel Filipe Leitao Pardal
+    Copyright (C) 2004-2009  Miguel Filipe Leitao Pardal
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@
     <!-- PROPERTIES -->
     <!--            -->
     <property name="import-ant.name" value="ImportAnt" />
-    <property name="import-ant.version" value="5.5.3" />
+    <property name="import-ant.version" value="5.5.4" />
 
     <property name="import-ant.module.core" value="true" />
 

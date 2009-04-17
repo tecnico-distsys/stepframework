@@ -12,10 +12,18 @@
 
     <target name="build"
     	    description="Build all projects in the correct order">
+    	<echo message="***** BUILDING EXTENSIONS *****" />
+    	<sleep seconds="2"/>
         <ant inheritAll="false" dir="extension-errors" target="build" />
         <ant inheritAll="false" dir="extension-hello" target="build" />
         <ant inheritAll="false" dir="extension-trace" target="build" />
+
+    	<echo message="***** BUILDING flight APPLICATION *****" />
+    	<sleep seconds="2"/>
         <ant inheritAll="false" dir="flight" target="build" />
+
+    	<echo message="***** BUILDING mediator APPLICATION *****" />
+    	<sleep seconds="2"/>
         <ant inheritAll="false" dir="mediator" target="build" />
     </target>
 
@@ -65,7 +73,7 @@
     	    description="Undeploy mediator web application">
         <ant inheritAll="false" dir="mediator" target="undeploy" />
     </target>
-    
+
     <target name="generate-mediator-db-schema"
     	    description="Create tables for mediator domain">
         <ant inheritAll="false" dir="mediator" target="generate-db-schema" />
@@ -80,7 +88,7 @@
     	    description="Run all mediator service tests">
         <ant inheritAll="false" dir="mediator" target="run-tests" />
     </target>
-	
+
     <!-- all -->
     <target name="quick-deploy" depends="quick-deploy-mediator,quick-deploy-flight"
     	    description="Quick deploy all web applications">
