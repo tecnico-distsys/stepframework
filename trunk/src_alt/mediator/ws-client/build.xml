@@ -20,6 +20,7 @@
         <fileset dir="..">
             <include name="view/src/xml/*.*" />
             <include name="ws/src/xml/*.*" />
+            <include name="web_ws/src/xml/*.*" />
         </fileset>
     </path>
 
