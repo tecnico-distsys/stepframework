@@ -50,7 +50,7 @@
     <target name="-replace-hibernate-custom-tokens(dir)">
         <replace dir="${dir}" token="@hibernate.mappings@">
             <replacevalue><![CDATA[
-        <!-- Classes from flight domain -->
+        <!-- Classes from domain -->
         <mapping class="step.example.flight.domain.FlightManager" />
         <mapping class="step.example.flight.domain.Airplane" />
         <mapping class="step.example.flight.domain.Airport" />
