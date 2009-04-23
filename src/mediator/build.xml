@@ -31,17 +31,17 @@
     </target>
 
     <target name="generate-db-schema"
-    	    description="Create tables for mediator domain">
+    	    description="Create tables for domain">
         <ant inheritAll="false" dir="core" target="generate-db-schema" />
     </target>
 
     <target name="populate-test-domain"
-    	    description="Populate mediator domain">
+    	    description="Populate domain">
         <ant inheritAll="false" dir="core" target="populate-test-domain" />
     </target>
 
 	<target name="run-tests"
-	    	    description="Run all mediator service tests">
+	    	    description="Run all service tests">
         <ant inheritAll="false" dir="core" target="run-tests" />
 		<ant inheritAll="false" dir="web" target="run-tests" />
     </target>

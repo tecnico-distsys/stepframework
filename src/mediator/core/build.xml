@@ -44,7 +44,7 @@
     <target name="-replace-hibernate-custom-tokens(dir)">
         <replace dir="${dir}" token="@hibernate.mappings@">
             <replacevalue><![CDATA[
-        <!-- Classes from mediator domain  -->
+        <!-- Classes from domain  -->
         <mapping class="step.example.mediator.domain.Client" />
         <mapping class="step.example.mediator.domain.Mediator" />
         <mapping class="step.example.mediator.domain.Reservation" />
