@@ -1,0 +1,11 @@
+- Should flight ws client be separated?
+e.g. flight-ws, flight-ws-cli ?
+YES - Keep them separated.
+
+
+- don't forget to add test code
+
+- don't forget to solve libs problem
+SOLVED - each build should be customized in project.classpath and create-jar/war
+
+- don't forget generate and populate db
