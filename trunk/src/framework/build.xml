@@ -1,36 +1,127 @@
 <project name="stepframework" default="build" basedir=".">
 
-    <!-- PROPERTIES before imports (overrides) -->
-    <property name="import-ant" value="../import-ant" />
+    <description>Library build file. Customize as required.</description>
 
-    <!-- IMPORTS -->
-    <import file="${import-ant}/core.xml" />
-    <import file="${import-ant}/library.xml" />
-    <import file="${import-ant}/${web-app-env}" />
-    <import file="${import-ant}/${jax-ws-env}" />
-    <import file="${import-ant}/${ws-registry-env}" />
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
 
-    <!-- PROPERTIES after imports -->
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/build.properties"/>
 
-    <!-- CLASSPATHS -->
-    <path id="compile.classpath">
-        <path refid="project.lib.path" />
-        <path refid="web-app.jars.path" />
-        <path refid="jax-ws.jars.path" />
-        <path refid="ws-registry.jars.path" />
+    <!-- properties with default folder locations -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="web-content.rel-dir" value="WebContent"/>
+    <property name="build.rel-dir" value="build"/>
+    <property name="dist.rel-dir" value="dist"/>
+    <property name="doc.rel-dir" value="doc" />
+
+    <!-- import external definitions -->
+    <import file="../tomcat.xml" />
+    <import file="../jwsdp.xml" />
+
+
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.rel-dir}" />
+        <!-- project libraries -->
+
+        <!-- shared libraries -->
+        <fileset dir="../lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- referenced libraries -->
+        <path refid="tomcat.jars.path" />
+        <path refid="jwsdp.jars.path" />
     </path>
 
-    <!-- TARGETS -->
-    <target name="build"
-            depends="config,build-library"
-            description="Build the project">
+
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean" description="Delete build folder contents" >
+        <delete>
+            <fileset dir="${build.rel-dir}" includes="**/*" excludes="" />
+        </delete>
+        <delete>
+            <fileset dir="${dist.rel-dir}" includes="**/*" excludes="" />
+        </delete>
+    </target>
+
+
+    <!-- compile -->
+
+    <target name="copy-resources" depends="init" description="Copies resource files to compilation folder">
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+    </target>
+
+    <target name="compile" depends="init,copy-resources" description="Compiles the source code" >
+        <javac srcdir="${src.rel-dir}"
+               destdir="${build.rel-dir}"
+               debug="true"
+               debuglevel="lines,vars,source"
+               optimize="true"
+               deprecation="true"
+               source="1.5"
+               target="1.5"
+               verbose="false" >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+
+    <!-- library -->
+
+    <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
+
+    <target name="create-jar" description="Creates a jar file"
+            depends="init,compile">
+        <jar destfile="${jar.rel-file}">
+            <!-- compiled classes and resources -->
+            <zipfileset dir="${build.rel-dir}"
+                        includes="**/*.class,**/*.properties,**/*.xml"
+                        excludes="" />
+        </jar>
+    </target>
+
+
+    <!-- javadoc -->
+
+    <target name="javadoc"
+            depends="init"
+            description="Generate Java classes documentation" >
+        <echo message="Generating javadocs to directory ${doc.rel-dir}" />
+        <delete dir="${doc.rel-dir}" />
+        <javadoc destdir="${doc.rel-dir}" source="1.5" sourcepath="">
+            <fileset dir="${src.rel-dir}" includes="**/*.java"/>
+            <classpath refid="project.classpath" />
+        </javadoc>
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" description="Build the project"
+            depends="create-jar" >
     </target>
 
     <target name="dist-to-lib"
             depends="clean,build"
             description="Builds the project to the super lib directory">
         <copy todir="../lib" overwrite="true">
-            <fileset dir="${dist.rel-dir}"/>
+            <fileset dir="${dist.rel-dir}">
+                <include name="*.jar" />
+            </fileset>
         </copy>
     </target>
 
