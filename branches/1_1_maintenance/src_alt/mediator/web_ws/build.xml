@@ -1,0 +1,149 @@
+<project name="mediator" default="build" basedir=".">
+
+    <!-- before imports -->
+    <property name="import-ant" value="../../import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/console-app.xml" />
+    <import file="${import-ant}/hibernate.xml" />
+    <import file="${import-ant}/${web-app-env}" />
+    <import file="${import-ant}/web-app.xml" />
+    <import file="${import-ant}/${jax-b-env}" />
+    <import file="${import-ant}/${jax-ws-env}" />
+    <import file="${import-ant}/jax-ws-server.xml" />
+    <import file="${import-ant}/jax-ws-server-web-app.xml" />
+    <import file="${import-ant}/dbunit.xml" />
+
+    <!-- after imports -->
+
+    <!-- external XML resources -->
+    <property name="jax.external.enabled" value="" />
+    <path id="jax.external.path">
+        <fileset dir="..">
+            <include name="view/src/xml/*.xsd" />
+        </fileset>
+    </path>
+
+    <!-- external libraries -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="..">
+            <include name="view/dist/*.jar" />
+            <include name="core/dist/*.jar" />
+        </fileset>
+        <fileset dir="../../flight">
+            <include name="view/dist/*.jar" />
+            <!--include name="core/dist/*.jar" /-->
+            <include name="ws-client/dist/*.jar" />
+        </fileset>
+        <fileset dir="../..">
+            <include name="extension-*/dist/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- classpaths -->
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
+        <path refid="web-app.jars.path" />
+        <path refid="jax-b.jars.path" />
+        <path refid="jax-ws.jars.path" />
+    </path>
+
+    <path id="run.classpath">
+        <pathelement location="${build.classes.rel-dir}" />
+        <path refid="compile.classpath" />
+    </path>
+
+
+    <!-- console application -->
+    <property name="run.main-class" value="step.example.mediator.WebConsole" />
+    <property name="run.args" value="" />
+
+    <!-- Web Service -->
+    <property name="jax-ws-server.wsdl.file-name" value="mediator.wsdl" />
+    <property name="jax-ws-server.wsdl.namespace" value="urn:step:example:mediator:wsdl" />
+    <property name="jax-ws-server.wsdl.service-name" value="MediatorService" />
+    <property name="jax-ws-server.wsdl.port-name" value="MediatorPort" />
+    <property name="jax-ws-server.ties.interface.simple-name" value="MediatorPortType" />
+    <property name="jax-ws-server.impl.package" value="step.example.mediator.ws" />
+    <property name="jax-ws-server.impl.class.simple-name" value="MediatorWebServiceImpl" />
+
+    <target name="-replace-jax-ws-server-custom-tokens(dir)">
+        <replace dir="${dir}" token="@jax-ws-server.handler-chains@">
+            <replacevalue><![CDATA[
+                <jws:handler-chains xmlns:jws="http://java.sun.com/xml/ns/javaee">
+                    <jws:handler-chain>
+                        <jws:handler>
+                            <jws:handler-class>step.framework.extensions.Handler</jws:handler-class>
+                        </jws:handler>
+                    </jws:handler-chain>
+                </jws:handler-chains>
+            ]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="copy-web-app-configs">
+        <copy todir="${build.classes.rel-dir}" overwrite="true">
+            <fileset dir="${build.config.web-app.rel-dir}"
+                     includes="**/*"
+                     excludes="web.xml"/>
+        </copy>
+<!--        <copy todir="${build.config.web-app.rel-dir}" overwrite="true">
+            <fileset dir="${build.config.jax-ws-server.rel-dir}" includes="*" excludes="web.xml" />
+        </copy>
+        <copy todir="${build.config.web-app.rel-dir}/wsdl" overwrite="true">
+            <fileset dir="${build.jax.rel-dir}" includes="*.wsdl, *.xsd" excludes="*" />
+        </copy>-->
+    </target>
+
+
+    <!-- Hibernate -->
+    <target name="-replace-hibernate-custom-tokens(dir)">
+        <replace dir="${dir}" token="@hibernate.mappings@">
+            <replacevalue><![CDATA[
+        <!-- Classes from mediator domain  -->
+        <mapping class="step.example.mediator.domain.Client" />
+        <mapping class="step.example.mediator.domain.Mediator" />
+        <mapping class="step.example.mediator.domain.Reservation" />
+
+        <!-- Classes from flight domain: these are not mapped in the mediator in the distributed environment -->
+        <!--
+        <mapping class="step.example.flight.domain.FlightManager" />
+        <mapping class="step.example.flight.domain.Airplane" />
+        <mapping class="step.example.flight.domain.Airport" />
+        <mapping class="step.example.flight.domain.Flight" />
+        <mapping class="step.example.flight.domain.FlightReservation" />
+        <mapping class="step.example.flight.domain.Passenger" />
+        -->
+            ]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="populate-test-domain" description="Populate test domain">
+        <antcall target="quick-run">
+            <param name="run.main-class" value="PopulateTestDomain" />
+            <param name="run.args" value="" />
+        </antcall>
+    </target>
+
+    <!-- tests -->
+    <target name="run-tests" depends="compile,config"
+            description="Runs tests for service classes">
+        <antcall target="build-database">
+            <param name="hibernate.auto" value="create" />
+        </antcall>
+        <antcall target="-run-tests">
+            <param name="junit.batchtest.include" value="**/*.java" />
+        </antcall>
+    </target>
+
+
+    <!-- build -->
+    <target name="build"
+            depends="config,build-database,build-jax-ws-server-ties,-web-app-replaces,compile,build-console-app,create-web-ws-war"
+            description="Build the project">
+    </target>
+
+</project>

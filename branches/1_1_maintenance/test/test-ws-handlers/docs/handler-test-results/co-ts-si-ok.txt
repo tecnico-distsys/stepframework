@@ -1,0 +1,67 @@
+
+Handler C... error behaviour:
+
+|--------- |--------------|------------------------|---------------------------|
+|          | return false | throw RuntimeException | throw SOAPFaultException  |
+|----------|--------------|------------------------|---------------------------|
+|Client OUT|              |                        |            X              |
+|----------|--------------|------------------------|---------------------------|
+|Server IN |              |                        |                           |
+|----------|--------------|------------------------|---------------------------|
+|Client IN |              |                        |                           |
+|----------|--------------|------------------------|---------------------------|
+|Server OUT|              |                        |                           |
+|----------|--------------|------------------------|---------------------------|
+
+
+Trace:
+--------------------------------------------------------------------------------
+Client-side
+                    Server-side
+--------------------------------------------------------------------------------
+
+                    INFO: WSSERVLET12: JAX-WS context listener initializing
+                    handler.server.HandlerAdams@98f352> (constructor)
+                    handler.server.HandlerBoston@87cd5c> (constructor)
+                    handler.server.HandlerChicago@1bb8694> (constructor)
+                    handler.server.HandlerDenver@80669d> (constructor)
+                    handler.server.HandlerEasy@1d0feea> (constructor)
+                    2/Mai/2008 17:52:44 com.sun.xml.ws.transport.http.servlet.WSServletDelegate init
+
+                    INFO: WSSERVLET14: JAX-WS servlet initializing
+
+
+Running the hello.HelloServiceClient program...
+handler.client.HandlerAlpha@fefe3f> (constructor)
+handler.client.HandlerBravo@c2b2f6> (constructor)
+handler.client.HandlerCharlie@90c06f> (constructor)
+handler.client.HandlerDelta@1267649> (constructor)
+handler.client.HandlerEcho@dcb03b> (constructor)
+handler.client.HandlerAlpha@fefe3f> getHeaders()
+handler.client.HandlerBravo@c2b2f6> getHeaders()
+handler.client.HandlerCharlie@90c06f> getHeaders()
+handler.client.HandlerDelta@1267649> getHeaders()
+handler.client.HandlerEcho@dcb03b> getHeaders()
+Outbound SOAP message:
+<?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://hello"><soapenv:Body><ns1:sayHello><ns1:name>friend</ns1:name></ns1:sayHello></soapenv:Body></soapenv:Envelope>
+handler.client.HandlerAlpha@fefe3f> handleMessage() - Outbound SOAP message
+handler.client.HandlerBravo@c2b2f6> handleMessage() - Outbound SOAP message
+handler.client.HandlerCharlie@90c06f> handleMessage() - Outbound SOAP message
+handler.client.HandlerCharlie@90c06f throwing soap fault exception
+handler.client.HandlerBravo@c2b2f6> handleFault() - Outbound SOAP message
+handler.client.HandlerAlpha@fefe3f> handleFault() - Outbound SOAP message
+Outbound SOAP message:
+<?xml version="1.0" ?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://hello" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soapenv:Body><soapenv:Fault><faultcode xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">SOAP-ENV:Server</faultcode><faultstring>Client Outbound - SOAP Fault!</faultstring><faultactor></faultactor></soapenv:Fault></soapenv:Body></soapenv:Envelope>
+handler.client.HandlerCharlie@90c06f> close()
+handler.client.HandlerBravo@c2b2f6> close()
+handler.client.HandlerAlpha@fefe3f> close()
+Exception in thread "main" javax.xml.ws.soap.SOAPFaultException: Client Outbound - SOAP Fault!
+	at com.sun.xml.ws.encoding.soap.ClientEncoderDecoder.toMessageInfo(ClientEncoderDecoder.java:80)
+	at com.sun.xml.ws.encoding.soap.client.SOAPXMLDecoder.toMessageInfo(SOAPXMLDecoder.java:200)
+	at com.sun.xml.ws.protocol.soap.client.SOAPMessageDispatcher.doSend(SOAPMessageDispatcher.java:224)
+	at com.sun.xml.ws.protocol.soap.client.SOAPMessageDispatcher.send(SOAPMessageDispatcher.java:153)
+	at com.sun.xml.ws.encoding.soap.internal.DelegateBase.send(DelegateBase.java:85)
+	at com.sun.xml.ws.client.EndpointIFInvocationHandler.implementSEIMethod(EndpointIFInvocationHandler.java:176)
+	at com.sun.xml.ws.client.EndpointIFInvocationHandler.invoke(EndpointIFInvocationHandler.java:105)
+	at $Proxy18.sayHello(Unknown Source)
+	at hello.HelloServiceClient.main(HelloServiceClient.java:10)

@@ -1,0 +1,116 @@
+<project name="project" basedir="." default="build">
+    <!-- project build file -->
+
+    <target name="clean"
+    	    description="Clean all projects">
+        <ant inheritAll="false" dir="extension-errors" target="clean" />
+        <ant inheritAll="false" dir="extension-hello" target="clean" />
+        <ant inheritAll="false" dir="extension-trace" target="clean" />
+        <ant inheritAll="false" dir="flight" target="clean" />
+        <ant inheritAll="false" dir="mediator" target="clean" />
+    </target>
+
+    <target name="build"
+    	    description="Build all projects in the correct order">
+    	<echo message="***** BUILDING EXTENSIONS *****" />
+    	<sleep seconds="2"/>
+        <ant inheritAll="false" dir="extension-errors" target="build" />
+        <ant inheritAll="false" dir="extension-hello" target="build" />
+        <ant inheritAll="false" dir="extension-trace" target="build" />
+
+    	<echo message="***** BUILDING flight APPLICATION *****" />
+    	<sleep seconds="2"/>
+        <ant inheritAll="false" dir="flight" target="build" />
+
+    	<echo message="***** BUILDING mediator APPLICATION *****" />
+    	<sleep seconds="2"/>
+        <ant inheritAll="false" dir="mediator" target="build" />
+    </target>
+
+    <!-- Flight -->
+    <target name="quick-deploy-flight"
+    	    description="Quick deploy flight web application">
+        <ant inheritAll="false" dir="flight" target="quick-deploy" />
+    </target>
+
+    <target name="quick-redeploy-flight"
+    	    description="Quick redeploy flight web application">
+        <ant inheritAll="false" dir="flight" target="quick-redeploy" />
+    </target>
+
+    <target name="undeploy-flight"
+    	    description="Undeploy web flight application">
+        <ant inheritAll="false" dir="flight" target="undeploy" />
+    </target>
+
+    <target name="generate-flight-db-schema"
+    	    description="Create tables for flight domain">
+        <ant inheritAll="false" dir="flight" target="generate-db-schema" />
+    </target>
+
+    <target name="populate-flight-domain"
+    	    description="Populate flight domain">
+        <ant inheritAll="false" dir="flight" target="populate-test-domain" />
+    </target>
+
+    <target name="run-flight-tests"
+    	    description="Run all flight service tests">
+        <ant inheritAll="false" dir="flight" target="run-tests" />
+    </target>
+
+    <!-- Mediator -->
+    <target name="quick-deploy-mediator"
+    	    description="Quick deploy mediator web application">
+        <ant inheritAll="false" dir="mediator" target="quick-deploy" />
+    </target>
+
+    <target name="quick-redeploy-mediator"
+    	    description="Quick redeploy mediator web application">
+        <ant inheritAll="false" dir="mediator" target="quick-redeploy" />
+    </target>
+
+    <target name="undeploy-mediator"
+    	    description="Undeploy mediator web application">
+        <ant inheritAll="false" dir="mediator" target="undeploy" />
+    </target>
+
+    <target name="generate-mediator-db-schema"
+    	    description="Create tables for mediator domain">
+        <ant inheritAll="false" dir="mediator" target="generate-db-schema" />
+    </target>
+
+    <target name="populate-mediator-domain"
+    	    description="Populate mediator domain">
+        <ant inheritAll="false" dir="mediator" target="populate-test-domain" />
+    </target>
+
+    <target name="run-mediator-tests"
+    	    description="Run all mediator service tests">
+        <ant inheritAll="false" dir="mediator" target="run-tests" />
+    </target>
+
+    <!-- all -->
+    <target name="quick-deploy" depends="quick-deploy-mediator,quick-deploy-flight"
+    	    description="Quick deploy all web applications">
+    </target>
+
+    <target name="quick-redeploy" depends="quick-redeploy-mediator,quick-redeploy-flight"
+    	    description="Quick redeploy all web applications">
+    </target>
+
+    <target name="undeploy" depends="undeploy-mediator,undeploy-flight"
+    	    description="Undeploy all web applications">
+    </target>
+
+    <target name="generate-all-db-schemas" depends="generate-flight-db-schema,generate-mediator-db-schema"
+    	    description="Populate all domains">
+    </target>
+
+    <target name="populate-all-domains" depends="populate-flight-domain,populate-mediator-domain"
+    	    description="Populate all domains">
+    </target>
+
+    <target name="run-all-tests" depends="run-flight-tests,run-mediator-tests"
+    	    description="Run all service tests">
+    </target>
+</project>

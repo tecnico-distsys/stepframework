@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="Mediator"
+             targetNamespace="urn:step:example:mediator:wsdl"
+             xmlns:tns="urn:step:example:mediator:wsdl"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+    <!-- This file is not generated automatically -->
+
+    <types>
+        <xsd:schema elementFormDefault="qualified"
+                    targetNamespace="urn:step:example:mediator:wsdl"
+                    xmlns:ns1="urn:step:example:mediator:view">
+
+            <xsd:import namespace="urn:step:example:mediator:view"
+                        schemaLocation="mediator-view.xsd"/>
+
+            <xsd:complexType name="CreateReservation">
+                <xsd:sequence>
+                    <xsd:element name="clientId" type="xsd:string"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="reservationCode" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createReservation" type="tns:CreateReservation" />
+
+            <xsd:complexType name="CreateReservationResponse">
+                <xsd:sequence>
+                    <xsd:element name="result" type="ns1:ReservationView"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createReservationResponse" type="tns:CreateReservationResponse" />
+
+            <xsd:complexType name="ServiceError" />
+            <xsd:element name="serviceError" type="tns:ServiceError" />
+
+            <xsd:complexType name="MediatorFault">
+                <xsd:sequence>
+                    <xsd:element name="faultType" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="mediatorFault" type="tns:MediatorFault" />
+
+        </xsd:schema>
+    </types>
+
+    <message name="createReservation">
+        <part name="parameters" element="tns:createReservation" />
+    </message>
+    <message name="createReservationResponse">
+        <part name="result" element="tns:createReservationResponse" />
+    </message>
+    <message name="mediatorFault">
+        <part name="fault" element="tns:mediatorFault" />
+    </message>
+    <message name="serviceError">
+        <part name="fault" element="tns:serviceError" />
+    </message>
+
+    <portType name="MediatorPortType">
+        <operation name="createReservation">
+            <input message="tns:createReservation" name="createReservation"/>
+            <output message="tns:createReservationResponse" name="createReservationResponse"/>
+            <fault message="tns:mediatorFault" name="mediatorFault"/>
+            <fault message="tns:serviceError" name="serviceError"/>
+        </operation>
+    </portType>
+
+    <binding name="MediatorBinding" type="tns:MediatorPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <operation name="createReservation">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+            <fault name="mediatorFault">
+                <soap:fault name="mediatorFault" use="literal" />
+            </fault>
+            <fault name="serviceError">
+                <soap:fault name="serviceError" use="literal" />
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="MediatorService">
+        <port name="MediatorPort" binding="tns:MediatorBinding">
+            <soap:address location="REPLACE_WITH_ACTUAL_URL" />
+        </port>
+    </service>
+
+</definitions>

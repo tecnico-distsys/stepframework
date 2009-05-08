@@ -1,0 +1,102 @@
+<project name="mediator" default="build" basedir=".">
+
+    <!-- before imports -->
+    <property name="import-ant" value="../../import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/console-app.xml" />
+    <import file="${import-ant}/hibernate.xml" />
+    <import file="${import-ant}/${web-app-env}" />
+    <import file="${import-ant}/web-app.xml" />
+    <import file="${import-ant}/${jax-b-env}" />
+    <import file="${import-ant}/${jax-ws-env}" />
+    <import file="${import-ant}/dbunit.xml" />
+
+    <!-- after imports -->
+
+    <!-- external libraries -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="..">
+            <include name="view/dist/*.jar" />
+            <include name="core/dist/*.jar" />
+        </fileset>
+        <fileset dir="../../flight">
+            <include name="view/dist/*.jar" />
+            <!--include name="core/dist/*.jar" /-->
+            <include name="ws-client/dist/*.jar" />
+        </fileset>
+        <fileset dir="../..">
+            <include name="extension-*/dist/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- classpaths -->
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
+        <path refid="web-app.jars.path" />
+        <path refid="jax-b.jars.path" />
+        <path refid="jax-ws.jars.path" />
+    </path>
+
+    <path id="run.classpath">
+        <pathelement location="${build.classes.rel-dir}" />
+        <path refid="compile.classpath" />
+    </path>
+
+
+    <!-- console application -->
+    <property name="run.main-class" value="step.example.mediator.WebConsole" />
+    <property name="run.args" value="" />
+
+
+    <!-- hibernate -->
+    <target name="-replace-hibernate-custom-tokens(dir)">
+        <replace dir="${dir}" token="@hibernate.mappings@">
+            <replacevalue><![CDATA[
+        <!-- Classes from mediator domain  -->
+        <mapping class="step.example.mediator.domain.Client" />
+        <mapping class="step.example.mediator.domain.Mediator" />
+        <mapping class="step.example.mediator.domain.Reservation" />
+
+        <!-- Classes from flight domain: these are not mapped in the mediator in the distributed environment -->
+        <!--
+        <mapping class="step.example.flight.domain.FlightManager" />
+        <mapping class="step.example.flight.domain.Airplane" />
+        <mapping class="step.example.flight.domain.Airport" />
+        <mapping class="step.example.flight.domain.Flight" />
+        <mapping class="step.example.flight.domain.FlightReservation" />
+        <mapping class="step.example.flight.domain.Passenger" />
+        -->
+            ]]></replacevalue>
+        </replace>
+    </target>
+
+    <target name="populate-test-domain" description="Populate test domain">
+        <antcall target="quick-run">
+            <param name="run.main-class" value="PopulateTestDomain" />
+            <param name="run.args" value="" />
+        </antcall>
+    </target>
+
+    <!-- tests -->
+    <target name="run-tests" depends="compile,config"
+            description="Runs tests for service classes">
+        <antcall target="build-database">
+            <param name="hibernate.auto" value="create" />
+        </antcall>
+        <antcall target="-run-tests">
+            <param name="junit.batchtest.include" value="**/*.java" />
+        </antcall>
+    </target>
+
+
+    <!-- build -->
+    <target name="build"
+            depends="config,build-database,compile,build-console-app,build-web-app"
+            description="Build the project">
+    </target>
+
+</project>
