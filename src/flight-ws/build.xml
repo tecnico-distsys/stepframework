@@ -20,7 +20,9 @@
     <import file="../tomcat.xml" />
     <import file="../jwsdp.xml" />
 
+
     <!-- project classpath -->
+
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
@@ -195,6 +197,7 @@
 
 
     <!-- build -->
+
     <target name="build" description="Build the project"
             depends="create-jar,create-war" >
     </target>
