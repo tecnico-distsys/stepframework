@@ -1,0 +1,140 @@
+<project name="jwsdp">
+
+    <description>Build environment for Java Web Services Developer Pack</description>
+
+
+    <property name="jwsdp.dir" location="${env.JWSDP_HOME}" />
+
+
+    <path id="jwsdp.fastinfoset.jars.path">
+        <fileset dir="${jwsdp.dir}/fastinfoset/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.jaxb.jars.path">
+        <fileset dir="${jwsdp.dir}/jaxb/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.jaxp.jars.path">
+        <fileset dir="${jwsdp.dir}/jaxp/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.jaxr.jars.path">
+        <fileset dir="${jwsdp.dir}/jaxr/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.jaxrpc.jars.path">
+        <fileset dir="${jwsdp.dir}/jaxrpc/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.jaxws.jars.path">
+        <fileset dir="${jwsdp.dir}/jaxws/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.saaj.jars.path">
+        <fileset dir="${jwsdp.dir}/saaj/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.sjsxp.jars.path">
+        <fileset dir="${jwsdp.dir}/sjsxp/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.xmldsig.jars.path">
+        <fileset dir="${jwsdp.dir}/xmldsig/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.xws-security.jars.path">
+        <fileset dir="${jwsdp.dir}/xws-security/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+    <path id="jwsdp.shared.jars.path">
+        <fileset dir="${jwsdp.dir}/shared/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${jwsdp.dir}/jwsdp-shared/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="jwsdp.jars.path">
+        <path refid="jwsdp.fastinfoset.jars.path" />
+        <path refid="jwsdp.jaxb.jars.path" />
+        <path refid="jwsdp.jaxp.jars.path" />
+        <path refid="jwsdp.jaxr.jars.path" />
+        <path refid="jwsdp.jaxrpc.jars.path" />
+        <path refid="jwsdp.jaxws.jars.path" />
+        <path refid="jwsdp.saaj.jars.path" />
+        <path refid="jwsdp.sjsxp.jars.path" />
+        <path refid="jwsdp.xmldsig.jars.path" />
+        <path refid="jwsdp.xws-security.jars.path" />
+        <path refid="jwsdp.shared.jars.path" />
+    </path>
+
+    <path id="jax-ws.jars.path">
+        <path refid="jwsdp.jaxws.jars.path" />
+        <path refid="jwsdp.jaxb.jars.path" />
+        <path refid="jwsdp.saaj.jars.path" />
+        <path refid="jwsdp.sjsxp.jars.path" />
+        <path refid="jwsdp.shared.jars.path" />
+    </path>
+
+    <path id="ws-registry.jars.path">
+        <path refid="jwsdp.jaxr.jars.path" />
+        <path refid="jwsdp.jaxb.jars.path" />
+        <path refid="jwsdp.saaj.jars.path" />
+    </path>
+
+    <!-- will be redefined in main build file -->
+    <path id="project.classpath">
+    </path>
+
+    <!-- support for JAX-RPC tasks -->
+    <taskdef name="wscompile" classname="com.sun.xml.rpc.tools.ant.Wscompile">
+        <classpath refid="jwsdp.jaxrpc.jars.path"/>
+    </taskdef>
+
+    <taskdef name="wsdeploy" classname="com.sun.xml.rpc.tools.ant.Wsdeploy">
+        <classpath refid="jwsdp.jaxrpc.jars.path"/>
+    </taskdef>
+
+    <!-- support for JAX-B tasks -->
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+        <classpath refid="jwsdp.shared.jars.path" />
+        <classpath refid="jwsdp.jaxb.jars.path"/>
+        <classpath refid="project.classpath" />
+    </taskdef>
+
+    <!-- support for JAX-WS tasks -->
+
+    <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
+        <classpath refid="jwsdp.jaxws.jars.path"/>
+        <classpath refid="project.classpath" />
+    </taskdef>
+
+    <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+        <classpath refid="jwsdp.shared.jars.path"/>
+        <classpath refid="jwsdp.sjsxp.jars.path"/>
+        <classpath refid="jwsdp.jaxb.jars.path"/>
+        <classpath refid="jwsdp.jaxws.jars.path"/>
+        <classpath refid="project.classpath" />
+    </taskdef>
+
+    <!-- annotations processor task name must not be 'apt' to avoid conflict with Ant 1.7's task -->
+    <taskdef name="jax-ws-apt" classname="com.sun.tools.ws.ant.Apt">
+        <classpath>
+            <!--pathelement location="${java.home}/../lib/tools.jar" /-->
+            <path refid="jwsdp.jaxws.jars.path" />
+        </classpath>
+        <classpath refid="project.classpath" />
+    </taskdef>
+
+</project>

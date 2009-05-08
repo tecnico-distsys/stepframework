@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:step:example:mediator:view"
+            xmlns:tns="urn:step:example:mediator:view"
+            elementFormDefault="qualified"
+	    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	    jaxb:version="1.0"
+	    jaxb:extensionBindingPrefixes="xjc"
+	    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	    >
+
+    <xsd:annotation>
+        <xsd:appinfo>
+            <!--                                     -->
+            <!-- JAX-B generated code customizations -->
+            <!--                                     -->
+            <jaxb:globalBindings>
+                <!-- generated classes implement java.io.Serializable with specified id -->
+                <xjc:serializable uid="1" />
+
+                <!-- generated classes extend specified class -->
+                <xjc:superClass name="step.example.mediator.view.BaseView"/>
+
+                <!-- generated classes extend specified interface
+                <xjc:superInterface name="..."/>
+                -->
+            </jaxb:globalBindings>
+
+            <!-- generated classes are in specified package
+            <jaxb:schemaBindings>
+                <jaxb:package name="..." />
+            </jaxb:schemaBindings>
+            -->
+        </xsd:appinfo>
+    </xsd:annotation>
+
+
+    <!--                 -->
+    <!-- XSD definitions -->
+    <!--                 -->
+    <xsd:complexType name="ReservationView">
+        <xsd:sequence>
+            <xsd:element name="reservationCode" type="xsd:string"/>
+            <xsd:element name="clientId" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="reservationView" type="tns:ReservationView"/>
+
+</xsd:schema>
