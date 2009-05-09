@@ -7,7 +7,7 @@
 
     <!-- load properties files -->
     <property file="build.properties"/>
-    <property file="../build.properties"/>
+    <property file="../lib/build.properties"/>
     <property file="${user.home}/build.properties"/>
 
     <!-- properties with default folder locations -->
@@ -17,8 +17,8 @@
     <property name="dist.rel-dir" value="dist"/>
 
     <!-- import external definitions -->
-    <import file="../tomcat.xml" />
-    <import file="../jwsdp.xml" />
+    <import file="../lib/tomcat.xml" />
+    <import file="../lib/jwsdp.xml" />
 
 
     <!-- project classpath -->
