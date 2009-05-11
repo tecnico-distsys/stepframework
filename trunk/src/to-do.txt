@@ -9,3 +9,5 @@ YES - Keep them separated.
 SOLVED - each build should be customized in project.classpath and create-jar/war
 
 - don't forget generate and populate db
+
+- add find-replace capabilities to copy-resources target, to cope with changing local directories in web service configuration files
