@@ -56,7 +56,7 @@
     </target>
 
 
-    <!-- compile -->
+    <!-- resources -->
 
     <target name="prepare-resources" depends="init" description="Prepares resource files for compilation folder">
         <copy todir="${build.rel-dir}" overwrite="true">
@@ -66,6 +66,9 @@
             <replacefilter token="@example-token@" value="${example-property}" />
         </replace>
     </target>
+
+
+    <!-- compile -->
 
     <target name="compile" depends="init,prepare-resources" description="Compiles the source code" >
         <javac srcdir="${src.rel-dir}"
@@ -110,6 +113,28 @@
                         includes="**/exception/*.class,**/exception/*.properties,**/exception/*.xml"
                         excludes="" />
         </jar>
+    </target>
+
+
+    <!-- hibernate -->
+
+    <target name="generate-db-schema"
+            depends="init,compile"
+    	    description="Creates a database schema based on hibernate model">
+
+        <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
+
+        <hibernatetool destdir="${dist.rel-dir}">
+            <classpath refid="project.classpath" />
+            <annotationconfiguration configurationfile="${build.rel-dir}/hibernate.cfg.xml"/>
+            <hbm2ddl export="true"
+                     update="false"
+                     drop="true"
+                     create="true"
+                     outputfilename="application-schema.sql"
+                     format="true"
+                     haltonerror="false"/>
+        </hibernatetool>
     </target>
 
 
