@@ -26,13 +26,6 @@ public class RegistrationKey {
     public RegistrationKey() {
     }
 
-    /** Create a registration key from string representation */
-    /*
-    public RegistrationKey(String key) {
-        setKey(key);
-    }
-    */
-
     /** Create a registration key from JAX-R Key object */
     public RegistrationKey(Key key) throws RegistryException {
         try {
