@@ -17,7 +17,6 @@ public class Main {
         try {
             System.out.println("Using registry configuration file: " + args[0]);
             registry = new Registry(new File(args[0]));
-            System.out.println(Registry.OPTION_OUTPUT_MESSAGES_PROPERTY + " is " + registry.isOptionOutputMessages());
 
             System.out.println("Connecting to registry");
             registry.connect(true);
@@ -131,6 +130,7 @@ public class Main {
             System.out.println("Caught exception while executing " + args[1]);
             System.out.println("Exception class:   " + e.getClass().toString());
             System.out.println("Exception message: " + e.getMessage());
+
         } finally {
             try {
                 if(registry != null)

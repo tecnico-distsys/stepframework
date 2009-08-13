@@ -28,13 +28,6 @@ public class NamePatternQuery extends Query {
         setNamePattern("");
     }
 
-    /** Creates a name pattern query from the provided argument. */
-    /*
-    public NamePatternQuery(String namePattern) {
-        setNamePattern(namePattern);
-    }
-    */
-
     /** Uses a property file to load the name pattern query */
     public NamePatternQuery(File propertyFile) throws RegistryException {
         try {
@@ -103,7 +96,7 @@ public class NamePatternQuery extends Query {
             for(int i = 0; i < QUERY_NAME_PATTERN_PROPERTY_ALIAS.length; i++) {
                 propertyName = QUERY_NAME_PATTERN_PROPERTY_ALIAS[i];
                 property = properties.getProperty(propertyName);
-                if(property == null)
+                if(property != null)
                     break;
             }
         }
@@ -120,6 +113,7 @@ public class NamePatternQuery extends Query {
     public String getNamePattern() {
         return _queryNamePattern;
     }
+
     public void setNamePattern(String namePattern) {
         _queryNamePattern = namePattern;
     }

@@ -102,7 +102,7 @@ public class ClassificationQuery extends Query {
             for(int i = 0; i < CLASSIFICATION_SCHEME_PROPERTY_ALIAS.length; i++) {
                 schemePropertyName = CLASSIFICATION_SCHEME_PROPERTY_ALIAS[i];
                 schemeProperty = properties.getProperty(schemePropertyName);
-                if(schemeProperty == null)
+                if(schemeProperty != null)
                     break;
             }
         }
@@ -117,7 +117,7 @@ public class ClassificationQuery extends Query {
             for(int i = 0; i < CLASSIFICATION_NAME_PROPERTY_ALIAS.length; i++) {
                 namePropertyName = CLASSIFICATION_NAME_PROPERTY_ALIAS[i];
                 nameProperty = properties.getProperty(namePropertyName);
-                if(nameProperty == null)
+                if(nameProperty != null)
                     break;
             }
         }
@@ -132,7 +132,7 @@ public class ClassificationQuery extends Query {
             for(int i = 0; i < CLASSIFICATION_VALUE_PROPERTY_ALIAS.length; i++) {
                 valuePropertyName = CLASSIFICATION_VALUE_PROPERTY_ALIAS[i];
                 valueProperty = properties.getProperty(valuePropertyName);
-                if(valueProperty == null)
+                if(valueProperty != null)
                     break;
             }
         }
@@ -151,12 +151,15 @@ public class ClassificationQuery extends Query {
     public String getClassificationName() {
         return _queryClassificationName;
     }
+
     public String getClassificationScheme() {
         return _queryClassificationScheme;
     }
+
     public String getClassificationValue() {
         return _queryClassificationValue;
     }
+
     public void setClassification(String scheme, String name, String value) {
         _queryClassificationScheme = scheme;
         _queryClassificationName = name;

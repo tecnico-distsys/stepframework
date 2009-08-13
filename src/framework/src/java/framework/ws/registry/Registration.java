@@ -177,38 +177,49 @@ public class Registration {
     public String getClassificationScheme() {
         return _classificationScheme;
     }
+
     public String getClassificationName() {
         return _classificationName;
     }
+
     public String getClassificationValue() {
         return _classificationValue;
     }
+
     public void setClassification(String scheme, String name, String value) {
         _classificationScheme = scheme;
         _classificationName = name;
         _classificationValue = value;
     }
+
     public RegistrationKey getRegistrationKey() {
         return _key;
     }
+
     public void setRegistrationKey(RegistrationKey key) {
         this._key = key;
     }
+
     public String getOrganizationName() {
         return _organizationName;
     }
+
     public void setOrganizationName(String name) {
         _organizationName = name;
     }
+
     public String getServiceBindingAccessURI() {
         return _serviceBindingAccessURI;
     }
+
     public void setServiceBindingAccessURI(String bindingAccessURI) {
         _serviceBindingAccessURI = bindingAccessURI;
     }
+
     public String getServiceName() {
         return _serviceName;
     }
+
     public void setServiceName(String name) {
         _serviceName = name;
     }
