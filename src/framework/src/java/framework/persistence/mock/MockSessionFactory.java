@@ -1,4 +1,4 @@
-package step.framework.persistence;
+package step.framework.persistence.mock;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -7,18 +7,22 @@ import java.util.Set;
 
 import javax.naming.Reference;
 
-import org.hibernate.Interceptor;
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
+import org.hibernate.*;
 import org.hibernate.classic.Session;
 import org.hibernate.engine.FilterDefinition;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.metadata.CollectionMetadata;
+import org.hibernate.metadata.*;
 import org.hibernate.stat.Statistics;
 
+
+/**
+ *  This is a mock implementation of the Hibernate session factory.<br />
+ *  <br />
+ *  Read more about <a href="http://en.wikipedia.org/wiki/Mock_object">Mock objects</a>.
+ */
 public class MockSessionFactory implements SessionFactory {
+
     private static final long serialVersionUID = 1L;
-    
+
     private static MockSessionFactory instance;
 
     private MockSessionFactory() {}
@@ -29,7 +33,7 @@ public class MockSessionFactory implements SessionFactory {
         }
         return instance;
     }
-    
+
     /* org.hibernate.SessionFactory methods */
     public void close() { throw new UnsupportedOperationException(); }
     @SuppressWarnings("unchecked") public void evict(Class persistentClass) { throw new UnsupportedOperationException(); }
@@ -57,4 +61,5 @@ public class MockSessionFactory implements SessionFactory {
     public StatelessSession openStatelessSession() { throw new UnsupportedOperationException(); }
     public StatelessSession openStatelessSession(Connection connection) { throw new UnsupportedOperationException(); }
     public Reference getReference() { throw new UnsupportedOperationException(); }
+
 }

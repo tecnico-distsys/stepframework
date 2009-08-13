@@ -1,20 +1,17 @@
-package step.framework.persistence;
+package step.framework.persistence.mock;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.ScrollableResults;
-import org.hibernate.ScrollMode;
-import org.hibernate.CacheMode;
-import org.hibernate.FetchMode;
-import org.hibernate.FlushMode;
-import org.hibernate.LockMode;
-import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projection;
+import org.hibernate.*;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.ResultTransformer;
 
+
+/**
+ *  This is a mock implementation of the Hibernate criteria.<br />
+ *  <br />
+ *  Read more about <a href="http://en.wikipedia.org/wiki/Mock_object">Mock objects</a>.
+ */
 public class MockCriteria implements Criteria {
     private static final long serialVersionUID = 1L;
 
