@@ -1,41 +1,29 @@
-package step.framework.persistence;
+package step.framework.persistence.mock;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.LinkedHashSet;
+import java.util.*;
 
-
-import org.hibernate.CacheMode;
-import org.hibernate.Criteria;
-import org.hibernate.EntityMode;
-import org.hibernate.Filter;
-import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
-import org.hibernate.LockMode;
-import org.hibernate.Query;
-import org.hibernate.ReplicationMode;
-import org.hibernate.SQLQuery;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.classic.Session;
 import org.hibernate.jdbc.Work;
 import org.hibernate.stat.SessionStatistics;
 import org.hibernate.type.Type;
 
+
+/**
+ *  This is a mock implementation of the Hibernate session.<br />
+ *  <br />
+ *  Read more about <a href="http://en.wikipedia.org/wiki/Mock_object">Mock objects</a>.
+ */
 public class MockSession implements Session {
     private static final long serialVersionUID = 1L;
-    
+
     private static Session instance;
 
     /**
      * Stores all objects touched in this session
-     **/ 
+     **/
     private Map<Class, LinkedHashSet<Object>> persistentObjects;
 
     private MockSession() {
@@ -78,7 +66,7 @@ public class MockSession implements Session {
 	    } else {
 		objectSet = new LinkedHashSet<Object>();
 		persistentObjects.put(currentClass, objectSet);
-	    }	  
+	    }
 	    objectSet.add(object);
 	    currentClass = currentClass.getSuperclass();
 	}
