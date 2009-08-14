@@ -17,7 +17,7 @@ import step.example.flight.wsdl.FlightService;
  * Generated source version: 2.0
  * 
  */
-@WebServiceClient(name = "FlightService", targetNamespace = "urn:step:example:flight:wsdl", wsdlLocation = "file:///C:/dev/java/simple-step/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl")
+@WebServiceClient(name = "FlightService", targetNamespace = "urn:step:example:flight:wsdl", wsdlLocation = "file:///C:/dev/java/stepframework/src/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl")
 public class FlightService
     extends Service
 {
@@ -29,7 +29,7 @@ public class FlightService
     static {
         URL url = null;
         try {
-            url = new URL("file:/C:/dev/java/simple-step/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl");
+            url = new URL("file:/C:/dev/java/stepframework/src/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
