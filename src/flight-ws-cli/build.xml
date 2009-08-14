@@ -7,7 +7,7 @@
 
     <!-- load properties files -->
     <property file="build.properties"/>
-    <property file="../lib/build.properties"/>
+    <property file="../build.properties"/>
     <property file="${user.home}/build.properties"/>
 
     <!-- properties with default folder locations -->
@@ -46,7 +46,8 @@
         <mkdir dir="${dist.rel-dir}"/>
     </target>
 
-    <target name="clean" description="Delete build folder contents" >
+    <target name="clean" description="Delete build folder contents"
+            depends="init">
         <delete>
             <fileset dir="${build.rel-dir}" includes="**/*" excludes="" />
         </delete>
@@ -83,21 +84,6 @@
     </target>
 
 
-    <!-- console -->
-
-    <property name="run.main-class" value="step.example.flight.ws.client.ConsoleClient"/>
-    <property name="run.args" value=""/>
-
-    <target name="run" depends="compile" description="Runs the program" >
-        <java classname="${run.main-class}" fork="true">
-    	    <arg line="${run.args}" />
-            <classpath>
-                <path refid="project.classpath" />
-            </classpath>
-        </java>
-    </target>
-
-
     <!-- library -->
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
@@ -108,12 +94,7 @@
             <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
                         includes="**/*.class,**/*.properties,**/*.xml"
-                        excludes="config.properties" /><!-- this file is used only for testing -->
-            <!-- exception classes -->
-            <zipfileset dir="${build.rel-dir}"
-                        includes="**/*.class,**/*.properties,**/*.xml"
-                        excludes="config.properties" /><!-- this file is used only for testing -->
-
+                        excludes="client-custom-binding.xml" /> <!-- exclude unnecessary files -->
         </jar>
     </target>
 

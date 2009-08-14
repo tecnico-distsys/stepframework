@@ -2,7 +2,7 @@
 
 <bindings xmlns:xsd="http://www.w3.org/2001/XMLSchema"
           xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-          wsdlLocation="file:///C:/dev/java/simple-step/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl"
+          wsdlLocation="file:///C:/dev/java/stepframework/src/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl"
           xmlns="http://java.sun.com/xml/ns/jaxws">
     <bindings node="wsdl:definitions">
 

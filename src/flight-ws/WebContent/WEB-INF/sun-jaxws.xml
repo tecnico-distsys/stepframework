@@ -3,7 +3,7 @@
 <endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
 
     <endpoint name="endpoint"
-              interface="${jax-ws-server.ties.package}.FlightPortType"
+              interface="step.example.flight.ws.FlightPortType"
               implementation="step.example.flight.ws.FlightWebServiceImpl"
               wsdl="WEB-INF/wsdl/flight.wsdl"
               service="{urn:step:example:flight:wsdl}FlightService"

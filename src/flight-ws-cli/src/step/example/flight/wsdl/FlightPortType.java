@@ -21,7 +21,7 @@ import step.example.flight.wsdl.ServiceError_Exception;
  * Generated source version: 2.0
  * 
  */
-@WebService(name = "FlightPortType", targetNamespace = "urn:step:example:flight:wsdl", wsdlLocation = "file:///C:/dev/java/simple-step/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl")
+@WebService(name = "FlightPortType", targetNamespace = "urn:step:example:flight:wsdl", wsdlLocation = "file:///C:/dev/java/stepframework/src/flight-ws/WebContent/WEB-INF/wsdl/flight.wsdl")
 @HandlerChain(name = "", file = "FlightPortType_handler.xml")
 public interface FlightPortType {
 
@@ -33,8 +33,8 @@ public interface FlightPortType {
      * @param passenger
      * @return
      *     returns step.example.flight.view.ReservationVoucher
-     * @throws FlightFault_Exception
      * @throws ServiceError_Exception
+     * @throws FlightFault_Exception
      */
     @WebMethod
     @WebResult(name = "voucher", targetNamespace = "urn:step:example:flight:wsdl")

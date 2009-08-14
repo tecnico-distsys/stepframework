@@ -46,14 +46,9 @@
         <ant inheritAll="false" dir="flight-ws" target="undeploy" />
     </target>
 
-    <target name="generate-flight-db-schema"
+    <target name="generate-flight-db"
     	    description="Create tables for flight domain">
-        <ant inheritAll="false" dir="flight-ws" target="generate-db-schema" />
-    </target>
-
-    <target name="populate-flight-domain"
-    	    description="Populate flight domain">
-        <ant inheritAll="false" dir="flight-ws" target="populate-test-domain" />
+        <ant inheritAll="false" dir="flight-ws" target="generate-db" />
     </target>
 
     <target name="run-flight-tests"
@@ -77,14 +72,9 @@
         <ant inheritAll="false" dir="mediator-web" target="undeploy" />
     </target>
 
-    <target name="generate-mediator-db-schema"
+    <target name="generate-mediator-db"
     	    description="Create tables for mediator domain">
-        <ant inheritAll="false" dir="mediator-web" target="generate-db-schema" />
-    </target>
-
-    <target name="populate-mediator-domain"
-    	    description="Populate mediator domain">
-        <ant inheritAll="false" dir="mediator-web" target="populate-test-domain" />
+        <ant inheritAll="false" dir="mediator-web" target="generate-db" />
     </target>
 
     <target name="run-mediator-tests"
@@ -105,15 +95,11 @@
     	    description="Undeploy all web applications">
     </target>
 
-    <target name="generate-all-db-schemas" depends="generate-flight-db-schema,generate-mediator-db-schema"
-    	    description="Populate all domains">
+    <target name="generate-dbs" depends="generate-flight-db,generate-mediator-db"
+    	    description="Generate all database schemas">
     </target>
 
-    <target name="populate-all-domains" depends="populate-flight-domain,populate-mediator-domain"
-    	    description="Populate all domains">
-    </target>
-
-    <target name="run-all-tests" depends="run-flight-tests,run-mediator-tests"
+    <target name="run-tests" depends="run-flight-tests,run-mediator-tests"
     	    description="Run all service tests">
     </target>
 

@@ -7,7 +7,7 @@
 
     <!-- load properties files -->
     <property file="build.properties"/>
-    <property file="../lib/build.properties"/>
+    <property file="../build.properties"/>
     <property file="${user.home}/build.properties"/>
 
     <!-- properties with default folder locations -->
@@ -42,7 +42,8 @@
         <mkdir dir="${dist.rel-dir}"/>
     </target>
 
-    <target name="clean" description="Delete build folder contents" >
+    <target name="clean" description="Delete build folder contents"
+            depends="init">
         <delete>
             <fileset dir="${build.rel-dir}" includes="**/*" excludes="" />
         </delete>

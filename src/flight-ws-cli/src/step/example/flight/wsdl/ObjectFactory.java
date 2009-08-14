@@ -44,6 +44,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link CreateReservationResponse }
+     * 
+     */
+    public CreateReservationResponse createCreateReservationResponse() {
+        return new CreateReservationResponse();
+    }
+
+    /**
      * Create an instance of {@link CreateReservation }
      * 
      */
@@ -60,14 +68,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ServiceError }
-     * 
-     */
-    public ServiceError createServiceError() {
-        return new ServiceError();
-    }
-
-    /**
      * Create an instance of {@link FlightFault }
      * 
      */
@@ -76,11 +76,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreateReservationResponse }
+     * Create an instance of {@link ServiceError }
      * 
      */
-    public CreateReservationResponse createCreateReservationResponse() {
-        return new CreateReservationResponse();
+    public ServiceError createServiceError() {
+        return new ServiceError();
     }
 
     /**

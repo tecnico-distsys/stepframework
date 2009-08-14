@@ -7,11 +7,12 @@
 
     <!-- load properties files -->
     <property file="build.properties"/>
-    <property file="../lib/build.properties"/>
+    <property file="../build.properties"/>
     <property file="${user.home}/build.properties"/>
 
     <!-- properties with default folder locations -->
     <property name="src.rel-dir" value="src"/>
+    <property name="tests.src.rel-dir" value="tests"/>
     <property name="web-content.rel-dir" value="WebContent"/>
     <property name="build.rel-dir" value="build"/>
     <property name="dist.rel-dir" value="dist"/>
@@ -31,6 +32,9 @@
             <include name="lib/**/*.jar" />
         </fileset>
         <!-- shared libraries -->
+        <fileset dir="../flight-ws/dist">
+            <include name="*.jar" />
+        </fileset>
         <fileset dir="../flight-ws-cli/dist">
             <include name="*.jar" />
         </fileset>
@@ -50,7 +54,8 @@
         <mkdir dir="${dist.rel-dir}"/>
     </target>
 
-    <target name="clean" description="Delete build folder contents" >
+    <target name="clean" description="Delete build folder contents"
+            depends="init">
         <delete>
             <fileset dir="${build.rel-dir}" includes="**/*" excludes="" />
         </delete>
@@ -97,7 +102,7 @@
 
     <target name="run" depends="compile" description="Runs the program" >
         <java classname="${run.main-class}" fork="true">
-    	    <arg line="${run.args}" />
+            <arg line="${run.args}" />
             <classpath>
                 <path refid="project.classpath" />
             </classpath>
@@ -107,9 +112,9 @@
 
     <!-- hibernate -->
 
-    <target name="generate-db-schema"
+    <target name="generate-db"
             depends="init,compile"
-    	    description="Creates a database schema based on hibernate model">
+            description="Create database schema based on the hibernate model">
 
         <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
 
@@ -124,6 +129,47 @@
                      format="true"
                      haltonerror="false"/>
         </hibernatetool>
+    </target>
+
+
+    <!-- tests -->
+
+    <target name="compile-tests" description="Compiles tests for service classes"
+            depends="init,compile">
+        <antcall target="compile">
+            <param name="src.rel-dir" value="${tests.src.rel-dir}" />
+        </antcall>
+    </target>
+
+    <target name="run-tests" description="Runs tests for service classes"
+            depends="compile-tests">
+        <junit printsummary="false"
+               fork="true"
+               forkmode="perTest"
+               haltonerror="false"
+               errorproperty=""
+               haltonfailure="true"
+               failureproperty=""
+               filtertrace="true"
+               jvm="java"
+               dir="${build.rel-dir}"
+               newenvironment="false"
+               includeantruntime="true"
+               showoutput=""
+               tempdir="${java.io.tmpdir}"
+               reloading="true">
+            <formatter unless="junit.formatter.classname"
+                       type="plain" usefile="false" />
+            <batchtest>
+                <fileset dir="${tests.src.rel-dir}"
+                         includes="**/*.java"
+                         excludes="**/*DefaultServiceTest.java" />
+            </batchtest>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+            <sysproperty key="step.framework.persistence.factory" value="hibernate" />
+        </junit>
     </target>
 
 
