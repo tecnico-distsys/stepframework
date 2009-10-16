@@ -1,0 +1,89 @@
+<project name="CalcWSClient" default="build" basedir=".">
+
+    <!-- before imports -->
+    <property name="step-home" value="../../../src" />
+    <property name="import-ant" value="${step-home}/import-ant" />
+
+    <!-- use properties defined in STEP build.properties file -->
+    <property file="${step-home}/build.properties" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/console-app.xml" />
+    <import file="${import-ant}/${jax-ws-env}" />
+    <import file="${import-ant}/jax-ws-client.xml" />
+    <import file="${import-ant}/${ws-registry-env}" />
+    <import file="${import-ant}/ws-registry.xml" />
+
+    <!-- after imports -->
+
+    <!-- classpaths -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="${step-home}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <path id="compile.classpath">
+        <pathelement location="${build.classes.rel-dir}" />
+        <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
+        <path refid="jax-ws.jars.path" />
+        <path refid="ws-registry.jars.path" />
+    </path>
+
+    <path id="run.classpath">
+        <path refid="compile.classpath" />
+    </path>
+
+    <!-- Console application -->
+    <!-- Default values for arguments
+
+         They can be overriden in build.properties file or in command line:
+         ant -Dop=intdiv -Da=20 -Db=0 run
+    -->
+    <property name="url" value="http://localhost:8080/CalcWS/endpoint" />
+    <property name="op" value="sum" />
+    <property name="a" value="10" />
+    <property name="b" value="2" />
+
+    <property name="run.main-class" value="calc.CalcServiceClient" />
+    <property name="run.args" value="${url} ${op} ${a} ${b}" />
+
+    <!-- Web Service client -->
+    <property name="jax-ws-client.wsdl.url" value="http://localhost:8080/CalcWS/endpoint?wsdl" />
+    <property name="jax-ws-client.stubs.package" value="calc.ws.stubs" />
+
+    <!-- uncomment and add classes to source to enable client-side handlers -->
+    <!--target name="-replace-jax-ws-client-custom-tokens(dir)">
+        <replace dir="${dir}" token="@jax-ws-client.handler-chains@">
+            <replacevalue><![CDATA[
+                <jws:handler-chains xmlns:jws="http://java.sun.com/xml/ns/javaee">
+                    <jws:handler-chain>
+                        <jws:handler>
+                            <jws:handler-class>step.framework.ws.handler.LoggingHandler</jws:handler-class>
+                        </jws:handler>
+                    </jws:handler-chain>
+                </jws:handler-chains>
+            ]]></replacevalue>
+        </replace>
+    </target-->
+
+    <!-- Web Service registration queries -->
+    <property name="ws-registry.url" value="http://localhost:8080/RegistryServer/" />
+    <property name="ws-registry.main-class" value="step.framework.ws.registry.Main" />
+    <property name="dir" value="${build.config.ws-registry.rel-dir}" />
+
+    <property name="ws-registry.query.args" value="${dir}/Registry.properties query classification ${dir}/ClassificationQuery.properties" />
+    <!--
+    <property name="ws-registry.query.args" value="${dir}/Registry.properties query namePattern ${dir}/NamePatternQuery.properties" />
+    -->
+
+    <!-- build -->
+    <target name="build"
+            depends="config,build-ws-registry,build-jax-ws-client,compile"
+            description="Build the project">
+    </target>
+
+</project>

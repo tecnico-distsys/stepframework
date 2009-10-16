@@ -1,0 +1,219 @@
+Buildfile: build.xml
+
+clean:
+Deleting directory D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build
+Deleting directory D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\dist
+
+init:
+Created dir: D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build
+Created dir: D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build\classes
+Created dir: D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build\config
+Created dir: D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\dist
+
+-init-console-app:
+
+-config-init:
+Copying 10 files to D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build\config
+
+-config-replaces:
+Replacing tokens in configuration files...
+
+-replace-custom-tokens(dir):
+
+-replace-core-tokens(dir):
+
+-test-resources-dir:
+
+-copy-resources-dir:
+Copying 7 files to D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build\classes
+
+-config-finish:
+
+config:
+
+-database-replaces:
+Replacing tokens in resource files...
+
+-replace-database-custom-tokens(dir):
+Replacing tokens in resource files...
+
+-replace-hibernate-custom-tokens(dir):
+
+-replace-hibernate-tokens(dir):
+
+-replace-database-tokens(dir):
+
+build-database:
+Copying 2 files to D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build\classes
+
+init-library:
+
+compile:
+Compiling 12 source files to D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\build\classes
+
+create-jar:
+Creating D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\dist\flight-core.jar archive...
+Building jar: D:\dev\java\ES-SOD-2007-2008\2008-prototype\framework-extensions\stand-alone-flight\core\dist\flight-core.jar
+
+build-library:
+
+build:
+
+build-console-app:
+
+-run:
+Running the proto.flight.Main program...
+Hello from flight
+Executing service...
+18:01:32,703 TRACE ServiceInterceptorManager:48 - entering interceptBefore()
+18:01:32,703 TRACE ExtensionEngine:297 - Attempting automatic extension engine initialization
+18:01:32,703 TRACE ExtensionEngine:232 - entering init
+18:01:32,703 DEBUG ExtensionEngine:237 - load extension engine configuration from /extensions.properties
+18:01:32,703 TRACE ExtensionEngine:318 - entering loadConfig
+18:01:32,703 TRACE ExtensionEngine:320 - load extensions properties
+18:01:32,703 TRACE ExtensionEngine:321 - /extensions.properties
+18:01:32,718 TRACE ExtensionEngine:331 - extensions config properties (key: 'value')
+18:01:32,718 TRACE ExtensionEngine:335 - extensions.enabled: 'true'
+18:01:32,718 TRACE ExtensionEngine:335 - extensions.intercept.service[]: 'hi,exception-thrower,ola'
+18:01:32,718 TRACE ExtensionEngine:335 - extensions.list: 'hi,ola,exception-thrower'
+18:01:32,718 DEBUG ExtensionEngine:369 - load configuration for each extension
+18:01:32,718 TRACE Extension:229 - entering loadConfig
+18:01:32,718 TRACE Extension:235 - load hi extension properties from /extension-hi.properties
+18:01:32,718 TRACE Extension:250 - extension hi config properties (key: 'value')
+18:01:32,718 TRACE Extension:254 - extension.service-interceptor: 'extension.hello.HelloServiceInterceptor'
+18:01:32,718 TRACE Extension:254 - greeting: 'Hi'
+18:01:32,718 TRACE Extension:254 - extension.listener: 'extension.hello.HelloExtensionListener'
+18:01:32,718 TRACE Extension:254 - extension.enabled: 'true'
+18:01:32,718 TRACE Extension:290 - remove extension hi properties and keep the remaining ones as additional configuration
+18:01:32,718 TRACE Extension:301 - finally exiting loadConfig
+18:01:32,718 TRACE Extension:229 - entering loadConfig
+18:01:32,718 TRACE Extension:235 - load ola extension properties from /extension-ola.properties
+18:01:32,718 TRACE Extension:250 - extension ola config properties (key: 'value')
+18:01:32,718 TRACE Extension:254 - extension.service-interceptor: 'extension.hello.HelloServiceInterceptor'
+18:01:32,718 TRACE Extension:254 - greeting: 'Olá'
+18:01:32,718 TRACE Extension:254 - extension.listener: 'extension.hello.HelloExtensionListener'
+18:01:32,718 TRACE Extension:254 - extension.enabled: 'true'
+18:01:32,718 TRACE Extension:290 - remove extension ola properties and keep the remaining ones as additional configuration
+18:01:32,718 TRACE Extension:301 - finally exiting loadConfig
+18:01:32,718 TRACE Extension:229 - entering loadConfig
+18:01:32,718 TRACE Extension:235 - load exception-thrower extension properties from /extension-exception-thrower.properties
+18:01:32,734 TRACE Extension:250 - extension exception-thrower config properties (key: 'value')
+18:01:32,734 TRACE Extension:254 - extension.web-service-interceptor: 'extension.exception.ThrowExceptionWebServiceInterceptor'
+18:01:32,734 TRACE Extension:254 - extension.enabled: 'true'
+18:01:32,734 TRACE Extension:254 - extension.listener: 'extension.exception.ThrowExceptionExtensionListener'
+18:01:32,734 TRACE Extension:254 - listener.initialized.throw: 'java.lang.NullPointerException'
+18:01:32,734 TRACE Extension:254 - web-service-interceptor.throw: ''
+18:01:32,734 TRACE Extension:254 - listener.destroyed.throw: ''
+18:01:32,734 TRACE Extension:254 - service-interceptor.before.throw: ''
+18:01:32,734 TRACE Extension:254 - service-interceptor.after.throw: ''
+18:01:32,734 TRACE Extension:254 - web-service-interceptor.throw.situation: ''
+18:01:32,734 TRACE Extension:254 - extension.service-interceptor: 'extension.exception.ThrowExceptionServiceInterceptor'
+18:01:32,734 TRACE Extension:290 - remove extension exception-thrower properties and keep the remaining ones as additional configuration
+18:01:32,734 TRACE Extension:301 - finally exiting loadConfig
+18:01:32,734 TRACE ExtensionEngine:377 - load intercept configs
+18:01:32,734 TRACE ExtensionEngine:381 - Intercept configuration trees:
+18:01:32,734 TRACE ExtensionEngine:382 - Configuration tree Service interception
+root [ConfigNode: config=[InterceptConfigData: extensionList={[Extension: id=hi, enabled=true], [Extension: id=exception-thrower, enabled=true], [Extension: id=ola, enabled=true]} ], #childNodes=0]
+
+18:01:32,734 TRACE ExtensionEngine:383 - Configuration tree Web Service interception
+root [ConfigNode: config=null, #childNodes=0]
+
+18:01:32,734 TRACE ExtensionEngine:387 - remove extensions properties and keep the remaining ones as additional configuration
+18:01:32,734 TRACE ExtensionEngine:392 - finally exiting loadConfig
+18:01:32,734 DEBUG ExtensionEngine:240 - extension engine configuration loaded successfully
+18:01:32,734 DEBUG ExtensionEngine:259 - start extensions
+18:01:32,734 TRACE Extension:319 - entering start
+18:01:32,734 TRACE Extension:399 - load service interceptor class
+18:01:32,734 TRACE Extension:418 - create service interceptor instance
+18:01:32,734 TRACE Extension:365 - skipping web service interceptor class loading
+18:01:32,734 TRACE Extension:399 - load listener class
+18:01:32,734 TRACE Extension:418 - create listener instance
+18:01:32,734 TRACE Extension:500 - invoke listener on EXTENSION_INITIALIZED
+Using custom greeting: Hi
+Hi from HelloExtensionListener.extensionInitialized
+18:01:32,750  INFO Extension:342 - Extension hi enabled
+18:01:32,750 TRACE Extension:345 - finally exiting start
+18:01:32,750 TRACE Extension:319 - entering start
+18:01:32,750 TRACE Extension:399 - load service interceptor class
+18:01:32,750 TRACE Extension:418 - create service interceptor instance
+18:01:32,750 TRACE Extension:365 - skipping web service interceptor class loading
+18:01:32,750 TRACE Extension:399 - load listener class
+18:01:32,750 TRACE Extension:418 - create listener instance
+18:01:32,750 TRACE Extension:500 - invoke listener on EXTENSION_INITIALIZED
+Using custom greeting: Olá
+Olá from HelloExtensionListener.extensionInitialized
+18:01:32,750  INFO Extension:342 - Extension ola enabled
+18:01:32,750 TRACE Extension:345 - finally exiting start
+18:01:32,750 TRACE Extension:319 - entering start
+18:01:32,750 TRACE Extension:399 - load service interceptor class
+18:01:32,750 TRACE Extension:418 - create service interceptor instance
+18:01:32,750 TRACE Extension:399 - load web service interceptor class
+18:01:32,750 TRACE Extension:418 - create web service interceptor instance
+18:01:32,750 TRACE Extension:399 - load listener class
+18:01:32,750 TRACE Extension:418 - create listener instance
+18:01:32,750 TRACE Extension:500 - invoke listener on EXTENSION_INITIALIZED
+ThrowExceptionExtensionUtil> throwing an instance of java.lang.NullPointerException in method extensionInitialized
+18:01:32,750  INFO Extension:342 - Extension exception-thrower enabled
+18:01:32,750 TRACE Extension:345 - finally exiting start
+18:01:32,750 DEBUG ExtensionEngine:268 - caught throwable when trying to start extensions
+18:01:32,750 DEBUG ExtensionEngine:269 - java.lang.NullPointerException: ThrowExceptionExtensionUtil generated exception in method extensionInitialized
+18:01:32,750 TRACE ExtensionEngine:270 - throwable details
+java.lang.NullPointerException: ThrowExceptionExtensionUtil generated exception in method extensionInitialized
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:494)
+	at extension.exception.ThrowExceptionExtensionUtil.throwException(ThrowExceptionExtensionUtil.java:22)
+	at extension.exception.ThrowExceptionExtensionListener.extensionInitialized(ThrowExceptionExtensionListener.java:22)
+	at framework.extensions.Extension.invokeListener(Extension.java:507)
+	at framework.extensions.Extension.start(Extension.java:338)
+	at framework.extensions.ExtensionEngine.init(ExtensionEngine.java:262)
+	at framework.extensions.ExtensionEngine.init(ExtensionEngine.java:208)
+	at framework.extensions.ExtensionEngine.autoInit(ExtensionEngine.java:298)
+	at framework.extensions.ExtensionEngine.isEnabled(ExtensionEngine.java:174)
+	at framework.extensions.ServiceInterceptorManager.prepareForIntercept(ServiceInterceptorManager.java:88)
+	at framework.extensions.ServiceInterceptorManager.interceptBeforeService(ServiceInterceptorManager.java:49)
+	at framework.service.Service.before(Service.java:71)
+	at framework.service.Service.execute(Service.java:50)
+	at proto.flight.Main.main(Main.java:20)
+18:01:32,765 DEBUG ExtensionEngine:271 - disabling extension engine
+18:01:32,765 TRACE ExtensionEngine:273 - throw exception with nested cause
+18:01:32,765  INFO ExtensionEngine:281 - Extension engine disabled
+18:01:32,765 TRACE ExtensionEngine:284 - set init flag
+18:01:32,765 TRACE ExtensionEngine:287 - finally exiting init
+18:01:32,765 DEBUG ExtensionEngine:301 - Automatic extension engine initialization failed!
+18:01:32,765 DEBUG ExtensionEngine:302 - framework.extensions.ExtensionEngineException: Failed to initialize extensions
+18:01:32,765 TRACE ExtensionEngine:303 - extension engine exception details
+framework.extensions.ExtensionEngineException: Failed to initialize extensions
+	at framework.extensions.ExtensionEngine.init(ExtensionEngine.java:274)
+	at framework.extensions.ExtensionEngine.init(ExtensionEngine.java:208)
+	at framework.extensions.ExtensionEngine.autoInit(ExtensionEngine.java:298)
+	at framework.extensions.ExtensionEngine.isEnabled(ExtensionEngine.java:174)
+	at framework.extensions.ServiceInterceptorManager.prepareForIntercept(ServiceInterceptorManager.java:88)
+	at framework.extensions.ServiceInterceptorManager.interceptBeforeService(ServiceInterceptorManager.java:49)
+	at framework.service.Service.before(Service.java:71)
+	at framework.service.Service.execute(Service.java:50)
+	at proto.flight.Main.main(Main.java:20)
+Caused by: java.lang.NullPointerException: ThrowExceptionExtensionUtil generated exception in method extensionInitialized
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:494)
+	at extension.exception.ThrowExceptionExtensionUtil.throwException(ThrowExceptionExtensionUtil.java:22)
+	at extension.exception.ThrowExceptionExtensionListener.extensionInitialized(ThrowExceptionExtensionListener.java:22)
+	at framework.extensions.Extension.invokeListener(Extension.java:507)
+	at framework.extensions.Extension.start(Extension.java:338)
+	at framework.extensions.ExtensionEngine.init(ExtensionEngine.java:262)
+	... 8 more
+18:01:32,765 TRACE ServiceInterceptorManager:89 - extensions disabled; ignoring service execution
+18:01:32,765 TRACE ServiceInterceptorManager:54 - finally exiting interceptBefore()
+18:01:32,859 TRACE ServiceInterceptorManager:64 - entering interceptAfter()
+18:01:32,859 TRACE ServiceInterceptorManager:89 - extensions disabled; ignoring service execution
+18:01:32,859 TRACE ServiceInterceptorManager:70 - finally exiting interceptAfter()
+Result:
+NY-ROC-1-4, NY-ROC-1
+
+run:
+
+BUILD SUCCESSFUL
+Total time: 5 seconds
