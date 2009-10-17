@@ -74,6 +74,7 @@
         <xjc destdir="${build.rel-dir}" extension="true">
             <schema dir="${src.rel-dir}" includes="*.xsd"/>
             <binding dir="${src.rel-dir}" includes="*.xjb"/>
+            <produces dir="${build.rel-dir}/org/tripplanner/mediator/view" />
         </xjc>
         <!-- compile data binding classes -->
         <javac
