@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="urn:step:example:flight:view"
-            xmlns:tns="urn:step:example:flight:view"
+            targetNamespace="urn:org:tripplanner:flight:view"
+            xmlns:tns="urn:org:tripplanner:flight:view"
             elementFormDefault="qualified"
 	    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
 	    jaxb:version="1.0"
@@ -20,7 +20,7 @@
                 <xjc:serializable uid="1" />
 
                 <!-- generated classes extend specified class -->
-                <!--xjc:superClass name="step.example.flight.view.BaseView"/-->
+                <!--xjc:superClass name="org.tripplanner.flight.view.BaseView"/-->
 
                 <!-- generated classes extend specified interface
                 <xjc:superInterface name="..."/>

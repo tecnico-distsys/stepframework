@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <definitions name="Flight"
-             targetNamespace="urn:step:example:flight:wsdl"
-             xmlns:tns="urn:step:example:flight:wsdl"
+             targetNamespace="urn:org:tripplanner:flight:wsdl"
+             xmlns:tns="urn:org:tripplanner:flight:wsdl"
              xmlns="http://schemas.xmlsoap.org/wsdl/"
              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
@@ -11,10 +11,10 @@
 
     <types>
         <xsd:schema elementFormDefault="qualified"
-                    targetNamespace="urn:step:example:flight:wsdl"
-                    xmlns:ns1="urn:step:example:flight:view">
+                    targetNamespace="urn:org:tripplanner:flight:wsdl"
+                    xmlns:ns1="urn:org:tripplanner:flight:view">
 
-            <xsd:import namespace="urn:step:example:flight:view"
+            <xsd:import namespace="urn:org:tripplanner:flight:view"
                         schemaLocation="flight-view.xsd"/>
 
             <xsd:complexType name="Passenger">
