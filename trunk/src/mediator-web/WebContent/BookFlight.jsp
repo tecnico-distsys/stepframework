@@ -28,7 +28,7 @@
                     <td><stripes:text name="id"/></td>
                     <td><stripes:errors field="id"/></td>
                 </tr>
-                
+
                 <tr colspan="3">
                     <td><stripes:submit name="flight" value="Submit"/></td>
                 </tr>

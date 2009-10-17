@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<dataset>
-  <Client id="1" objVersion="0" name="Mark Spencer" identification="L4588542" mediator_id="1"/>
-  <Client id="2" objVersion="0" name="John Williams" identification="L4532602" mediator_id="1"/>
-  <Mediator id="1" objVersion="2"/>
-  <Reservation id="1" objVersion="0" code="LIS-NY-1-2" client_id="1"/>
-  <Reservation id="2" objVersion="0" code="LIS-NY-1-1" client_id="2"/>
-</dataset>

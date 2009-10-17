@@ -27,7 +27,7 @@
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">false</property>
-        
+
         <!-- format SQL in log and console -->
         <property name="hibernate.format_sql">false</property>
 
@@ -35,22 +35,22 @@
         <property name="hbm2ddl.auto">validate</property>
 
         <!-- Class mappings  -->
-	
+
         <!-- Classes from mediator domain  -->
-        <mapping class="step.example.mediator.domain.Client" />
-        <mapping class="step.example.mediator.domain.Mediator" />
-        <mapping class="step.example.mediator.domain.Reservation" />
+        <mapping class="org.tripplanner.mediator.domain.Client" />
+        <mapping class="org.tripplanner.mediator.domain.Mediator" />
+        <mapping class="org.tripplanner.mediator.domain.Reservation" />
 
         <!-- Classes from flight domain: these are not mapped in the mediator in the distributed environment -->
         <!--
-        <mapping class="step.example.flight.domain.FlightManager" />
-        <mapping class="step.example.flight.domain.Airplane" />
-        <mapping class="step.example.flight.domain.Airport" />
-        <mapping class="step.example.flight.domain.Flight" />
-        <mapping class="step.example.flight.domain.FlightReservation" />
-        <mapping class="step.example.flight.domain.Passenger" />
+        <mapping class="org.tripplanner.flight.domain.FlightManager" />
+        <mapping class="org.tripplanner.flight.domain.Airplane" />
+        <mapping class="org.tripplanner.flight.domain.Airport" />
+        <mapping class="org.tripplanner.flight.domain.Flight" />
+        <mapping class="org.tripplanner.flight.domain.FlightReservation" />
+        <mapping class="org.tripplanner.flight.domain.Passenger" />
         -->
-            
+
 
     </session-factory>
 
