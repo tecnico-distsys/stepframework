@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="b" default="build" basedir=".">
+
+    <description>JAX-B application build file. Customize as required.</description>
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <!-- properties with default folder locations -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="build.rel-dir" value="bin"/>
+    <property name="dist.rel-dir" value="dist"/>
+
+
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.rel-dir}" />
+        <!-- shared libraries -->
+        <fileset dir="../lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- import external definitions -->
+    <import file="../lib/jax.xml" /><!-- jax uses project.classpath -->
+
+
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+    </target>
+
+
+    <!-- compile -->
+
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <target name="compile" depends="init,prepare-resources">
+    <!-- description="Compile source code" -->
+        <javac
+            srcdir="${src.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+
+    <!-- jax-b -->
+
+    <target name="xjc" depends="init">
+    <!-- description="Create Java classes from XML Schema definitions" -->
+        <!-- generate data binding sources -->
+        <xjc destdir="${build.rel-dir}" extension="true">
+            <schema dir="${src.rel-dir}" includes="*.xsd"/>
+            <binding dir="${src.rel-dir}" includes="*.xjb"/>
+        </xjc>
+        <!-- compile data binding classes -->
+        <javac
+            srcdir="${build.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+            <!-- project classpath is required because some classes may use existing types -->
+        </javac>
+    </target>
+
+
+    <!-- console -->
+
+    <property name="run.main-class" value="hello.HelloJaxb"/>
+    <property name="run.args" value="marshal"/>
+
+    <target name="execute">
+    <!-- description="Execute the program as-is - no compilation is performed" -->
+        <java classname="${run.main-class}" fork="true">
+            <arg line="${run.args}" />
+            <classpath>
+               <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="run" depends="build,execute"
+        description="Run the program">
+    </target>
+
+    <!-- custom runs -->
+
+    <target name="run-marshal"
+        description="Run marshal (java to xml)">
+        <antcall target="run">
+            <param name="run.args" value="marshal output.xml" />
+        </antcall>
+    </target>
+
+    <target name="run-unmarshal"
+        description="Run unmarshal (xml to java)">
+        <antcall target="run">
+            <param name="run.args" value="unmarshal input.xml" />
+        </antcall>
+    </target>
+
+   <target name="run-unmarshal-validate"
+        description="Run unmarshal with validation">
+        <antcall target="run">
+            <param name="run.args" value="unmarshal input.xml ${src.rel-dir}/hello.xsd" />
+        </antcall>
+    </target>
+
+    <target name="run-unmarshal-validate-error"
+        description="Run unmarshal with validation errors">
+        <echo message="The program's input file has errors, so an exception is expected..." />
+        <sleep seconds="3" />
+        <antcall target="run">
+            <param name="run.args" value="unmarshal input-error.xml ${src.rel-dir}/hello.xsd" />
+        </antcall>
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" depends="xjc,compile"
+        description="Build the project">
+    </target>
+
+    <target name="rebuild" depends="clean,build">
+    <!-- description="Rebuild the project" -->
+    </target>
+
+</project>

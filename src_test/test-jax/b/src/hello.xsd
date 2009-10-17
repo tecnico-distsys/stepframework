@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:hello:xsd"
+            xmlns:tns="urn:hello:xsd"
+            elementFormDefault="qualified">
+
+    <xsd:complexType name="HelloType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:int" use="required"/>
+    </xsd:complexType>
+
+    <xsd:element name="hello" type="tns:HelloType"/>
+
+</xsd:schema>
