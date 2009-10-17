@@ -2,7 +2,8 @@
 
 <project name="extensions" default="build" basedir=".">
 
-    <description>Extensions build file. Customize as required.</description>
+    <description>STEP Extensions build file. Customize as required.</description>
+
 
     <!-- load environment variables as properties -->
     <property environment="env"/>

@@ -122,7 +122,7 @@ After the database locations are configured, we need to create the databases.
 
 To create the tables execute at the top level:
 
-$ ant generate-dbs
+$ ant hibernatetool
 
 When executing creating the tables for the first time, some errors like the
 following may appear:
@@ -170,7 +170,7 @@ mediator-web/tests/dbunit.properties and set the same database in both.
 
 Then, at the top level rebuild the applications and create the tables.
 
-$ ant clean build generate-dbs
+$ ant clean build hibernatetool
 
 Then, redeploy the flight web service and mediator web application
 
@@ -179,8 +179,8 @@ $ ant redeploy
 
 To run tests for one domain at a time:
 
-$ ant run-flight-tests
-$ ant run-mediator-tests
+$ ant run-tests-flight
+$ ant run-tests-mediator
 
 To run all tests:
 
@@ -197,3 +197,7 @@ Feel free to experiment with the extensions configuration files and source code.
 
 The flight extensions configuration is located in flight-ws/src.
 The mediator extensions configuration is located in mediator-web/src.
+
+The logging produced by the extensions engine can be adjusted in the
+log4j.properties files, for each component and application.
+
