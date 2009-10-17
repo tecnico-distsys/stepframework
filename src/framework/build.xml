@@ -36,11 +36,6 @@
     </path>
 
 
-    <!-- import external definitions -->
-    <import file="../lib/tomcat.xml" />
-    <import file="../lib/jax.xml" /><!-- jax uses project.classpath -->
-
-
     <!-- basic -->
 
     <target name="init">
