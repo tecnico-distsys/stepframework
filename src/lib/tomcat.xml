@@ -38,7 +38,8 @@
     <taskdef name="tomcat-undeploy" classname="org.apache.catalina.ant.UndeployTask" classpathref="catalina-ant.jar.path" />
 
 
-    <target name="deploy">
+    <target name="deploy"
+        description="Deploy web application">
         <fail message="MUST DEFINE deploy.war.rel-file PROPERTY" unless="deploy.war.rel-file" />
         <property name="deploy.war.file" location="${deploy.war.rel-file}" />
         <tomcat-deploy
@@ -47,16 +48,16 @@
             path="/${deploy.context}" war="file:${deploy.war.file}" />
     </target>
 
-    <target name="undeploy">
+    <target name="undeploy"
+        description="Undeploy web application">
         <tomcat-undeploy
             url="${tomcat.web-manager.url}"
             username="${tomcat.username}" password="${tomcat.password}"
             path="/${deploy.context}" />
     </target>
 
-    <target name="redeploy"
-            depends="undeploy,deploy"
-            description="Undeploy and deploy Web aplication">
+    <target name="redeploy" depends="undeploy,deploy">
+    <!-- description="Undeploy and deploy Web aplication" -->
     </target>
 
 </project>

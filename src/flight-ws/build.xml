@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project name="flight-ws" default="build" basedir=".">
 
-    <description>Web Service build file. Customize as required.</description>
+    <description>JAX-WS Web Service build file. Customize as required.</description>
 
     <!-- load environment variables as properties -->
     <property environment="env"/>
@@ -14,12 +16,8 @@
     <property name="src.rel-dir" value="src"/>
     <property name="tests.src.rel-dir" value="tests"/>
     <property name="web-content.rel-dir" value="WebContent"/>
-    <property name="build.rel-dir" value="build"/>
+    <property name="build.rel-dir" value="build/classes"/>
     <property name="dist.rel-dir" value="dist"/>
-
-    <!-- import external definitions -->
-    <import file="../lib/tomcat.xml" />
-    <import file="../lib/jwsdp.xml" />
 
 
     <!-- project classpath -->
@@ -36,8 +34,14 @@
             <include name="*.jar" />
         </fileset>
         <!-- referenced libraries -->
-        <path refid="jwsdp.jars.path" />
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
     </path>
+
+    <!-- import external definitions -->
+    <import file="../lib/tomcat.xml" />
+    <import file="../lib/jax.xml" /><!-- jax uses project.classpath -->
 
 
     <!-- basic -->
@@ -47,20 +51,17 @@
         <mkdir dir="${dist.rel-dir}"/>
     </target>
 
-    <target name="clean" description="Delete build folder contents"
-            depends="init">
-        <delete>
-            <fileset dir="${build.rel-dir}" includes="**/*" excludes="" />
-        </delete>
-        <delete>
-            <fileset dir="${dist.rel-dir}" includes="**/*" excludes="" />
-        </delete>
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
     </target>
 
 
-    <!-- resources -->
+    <!-- compile -->
 
-    <target name="prepare-resources" depends="init" description="Prepares resource files for compilation folder">
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
         <copy todir="${build.rel-dir}" overwrite="true">
             <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
         </copy>
@@ -69,19 +70,17 @@
         </replace>
     </target>
 
-
-    <!-- compile -->
-
-    <target name="compile" depends="init,prepare-resources" description="Compiles the source code" >
-        <javac srcdir="${src.rel-dir}"
-               destdir="${build.rel-dir}"
-               debug="true"
-               debuglevel="lines,vars,source"
-               optimize="true"
-               deprecation="true"
-               source="1.5"
-               target="1.5"
-               verbose="false" >
+    <target name="compile" depends="init,prepare-resources">
+    <!-- description="Compile source code" -->
+        <javac
+            srcdir="${src.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
             <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
             <classpath refid="project.classpath" />
         </javac>
@@ -90,27 +89,30 @@
 
     <!-- console -->
 
-    <property name="run.main-class" value="step.example.flight.Console"/>
+    <property name="run.main-class" value="org.tripplanner.flight.Console"/>
     <property name="run.args" value=""/>
 
-    <target name="run" depends="compile" description="Runs the program" >
+    <target name="execute">
+    <!-- description="Execute program as-is - no compilation is performed" -->
         <java classname="${run.main-class}" fork="true">
             <arg line="${run.args}" />
             <classpath>
-                <path refid="project.classpath" />
+               <path refid="project.classpath" />
             </classpath>
         </java>
     </target>
+
+    <!-- run target is not defined because the console is for testing only -->
 
 
     <!-- library -->
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
 
-    <target name="create-jar" description="Creates a jar file"
-            depends="init,compile">
+    <target name="create-jar" depends="init,compile">
+    <!-- description="Create a jar file" -->
         <jar destfile="${jar.rel-file}">
-            <!-- compiled classes and resources -->
+            <!-- include only exception classes and resources -->
             <zipfileset dir="${build.rel-dir}"
                         includes="**/exception/*.class,**/exception/*.properties,**/exception/*.xml"
                         excludes="" />
@@ -120,52 +122,55 @@
 
     <!-- hibernate -->
 
-    <target name="generate-db"
-            depends="init,compile"
-            description="Create database schema based on the hibernate model">
+    <target name="hibernatetool" depends="init,compile"
+        description="Create database schema based on the hibernate model">
 
         <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
 
         <hibernatetool destdir="${dist.rel-dir}">
             <classpath refid="project.classpath" />
             <annotationconfiguration configurationfile="${build.rel-dir}/hibernate.cfg.xml"/>
-            <hbm2ddl export="true"
-                     update="false"
-                     drop="true"
-                     create="true"
-                     outputfilename="application-schema.sql"
-                     format="true"
-                     haltonerror="false"/>
+            <hbm2ddl
+                export="true"
+                update="false"
+                drop="true"
+                create="true"
+                outputfilename="application-schema.sql"
+                format="true"
+                haltonerror="false"
+            />
         </hibernatetool>
     </target>
 
 
     <!-- tests -->
 
-    <target name="compile-tests" description="Compiles tests for service classes"
-            depends="init,compile">
+    <target name="compile-tests" depends="init,compile">
+    <!-- description="Compile tests for service classes" -->
         <antcall target="compile">
             <param name="src.rel-dir" value="${tests.src.rel-dir}" />
         </antcall>
     </target>
 
-    <target name="run-tests" description="Runs tests for service classes"
-            depends="compile-tests">
-        <junit printsummary="false"
-               fork="true"
-               forkmode="perTest"
-               haltonerror="false"
-               errorproperty=""
-               haltonfailure="true"
-               failureproperty=""
-               filtertrace="true"
-               jvm="java"
-               dir="${build.rel-dir}"
-               newenvironment="false"
-               includeantruntime="true"
-               showoutput=""
-               tempdir="${java.io.tmpdir}"
-               reloading="true">
+    <target name="run-tests" depends="compile-tests"
+        description="Run tests for service classes">
+        <junit
+            printsummary="false"
+            fork="true"
+            forkmode="perTest"
+            haltonerror="false"
+            errorproperty=""
+            haltonfailure="true"
+            failureproperty=""
+            filtertrace="true"
+            jvm="java"
+            dir="${build.rel-dir}"
+            newenvironment="false"
+            includeantruntime="true"
+            showoutput=""
+            tempdir="${java.io.tmpdir}"
+            reloading="true"
+        >
             <formatter unless="junit.formatter.classname"
                        type="plain" usefile="false" />
             <batchtest>
@@ -181,55 +186,23 @@
     </target>
 
 
-    <!-- jax-b -->
-
-    <target name="generate-java-from-xsd" description="Create Java classes from XML Schema definitions">
-        <xjc target="${src.rel-dir}" extension="true">
-            <schema dir="${web-content.rel-dir}/WEB-INF/wsdl" includes="*.xsd"/>
-            <binding dir="${src.rel-dir}" includes="*.xjb"/>
-        </xjc>
-    </target>
-
-
     <!-- jax-ws-server -->
 
     <property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/flight.wsdl" />
 
-    <target name="-generate-file-url-prefix">
-        <!-- file url syntax is:  file://host/path ; assuming host is empty, the prefix is different for windows and unix systems -->
-        <condition property="file-url-prefix" value="file:///">
-            <os family="windows" />
-        </condition>
-        <condition property="file-url-prefix" value="file://">
-            <not><os family="windows" /></not> <!-- ~ unix -->
-        </condition>
-    </target>
-
-    <target name="-generate-wsdl-url" depends="-generate-file-url-prefix">
-        <property name="wsdl.file" location="${wsdl.rel-file}" />
-        <path id="wsdl.path">
-            <pathelement location="${wsdl.file}"/>
-        </path>
-        <pathconvert property="wsdl.file./" refid="wsdl.path" pathsep=";" dirsep="/" />
-        <property name="wsdl.url" value="${file-url-prefix}${wsdl.file./}" />
-    </target>
-
-    <target name="generate-java-from-wsdl" description="Generate Web Service server-side Java code from WSDL"
-            depends="init,-generate-wsdl-url">
+    <target name="wsimport" depends="init,-generate-wsdl-url">
+    <!-- description="Generate Web Service server-side Java code from WSDL" -->
         <echo message="Executing wsimport to generate server-side code..." />
         <echo message="WSDL: ${wsdl.rel-file}" />
-        <echo message="Generated code destination dir: ${src.rel-dir}" />
         <wsimport wsdl="${wsdl.url}"
                   debug="true"
                   verbose="false"
-                  destdir="${src.rel-dir}"
-                  sourcedestdir="${src.rel-dir}" >
-            <binding dir="${src.rel-dir}" includes="*binding*.xml"/>
+                  destdir="${build.rel-dir}"
+                  sourcedestdir="${build.rel-dir}"
+        >
+            <binding dir="${web-content.rel-dir}/WEB-INF" includes="jaxws*binding.xml"/>
         </wsimport>
-        <!-- delete generated class files, leaving handlers xml -->
-        <delete>
-            <fileset dir="${src.rel-dir}" includes="**/*.class"/>
-        </delete>
+        <!-- The sources are in the build folder, for programmer reference -->
     </target>
 
 
@@ -238,8 +211,8 @@
     <property name="deploy.context" value="${ant.project.name}" />
     <property name="deploy.war.rel-file" value="${dist.rel-dir}/${ant.project.name}.war" />
 
-    <target name="create-war" description="Create Web application ARchive"
-            depends="init,compile">
+    <target name="create-war" depends="init,compile">
+    <!-- description="Create Web application ARchive" -->
 
         <jar destfile="${deploy.war.rel-file}">
             <!-- web content -->
@@ -269,8 +242,12 @@
 
     <!-- build -->
 
-    <target name="build" description="Build the project"
-            depends="create-jar,create-war" >
+    <target name="build" depends="wsimport,create-war,create-jar"
+        description="Build the program">
+    </target>
+
+    <target name="rebuild" depends="clean,build" >
+    <!-- description="Rebuild the project" -->
     </target>
 
 </project>
