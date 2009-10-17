@@ -1,44 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="urn:org:tripplanner:flight:view"
-            xmlns:tns="urn:org:tripplanner:flight:view"
-            elementFormDefault="qualified"
-	    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-	    jaxb:version="1.0"
-	    jaxb:extensionBindingPrefixes="xjc"
-	    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-	    >
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:org:tripplanner:flight:view"
+    xmlns:tns="urn:org:tripplanner:flight:view"
+    elementFormDefault="qualified"
+>
 
-    <xsd:annotation>
-        <xsd:appinfo>
-            <!--                                     -->
-            <!-- JAX-B generated code customizations -->
-            <!--                                     -->
-            <jaxb:globalBindings>
-                <!-- generated classes implement java.io.Serializable with specified id -->
-                <xjc:serializable uid="1" />
-
-                <!-- generated classes extend specified class -->
-                <!--xjc:superClass name="org.tripplanner.flight.view.BaseView"/-->
-
-                <!-- generated classes extend specified interface
-                <xjc:superInterface name="..."/>
-                -->
-            </jaxb:globalBindings>
-
-            <!-- generated classes are in specified package
-            <jaxb:schemaBindings>
-                <jaxb:package name="..." />
-            </jaxb:schemaBindings>
-            -->
-        </xsd:appinfo>
-    </xsd:annotation>
-
-
-    <!--                 -->
-    <!-- XSD definitions -->
-    <!--                 -->
     <xsd:complexType name="ReservationVoucher">
         <xsd:sequence>
             <xsd:element name="reservationCode" type="xsd:string"/>

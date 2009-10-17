@@ -4,18 +4,27 @@
 
     <description>Build environment for Java Web Services</description>
 
+
+    <!-- JAX tools classpath -->
+    <path id="jax.tools.classpath">
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+
     <!-- support for JAX-B tasks -->
     <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
-        <classpath refid="project.classpath" />
+        <classpath refid="jax.tools.classpath" />
     </taskdef>
 
     <!-- support for JAX-WS tasks -->
     <taskdef name="wsgen" classname="com.sun.tools.ws.ant.WsGen">
-        <classpath refid="project.classpath" />
+        <classpath refid="jax.tools.classpath" />
     </taskdef>
 
     <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
-        <classpath refid="project.classpath" />
+        <classpath refid="jax.tools.classpath" />
     </taskdef>
 
 

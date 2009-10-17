@@ -1,21 +1,27 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<definitions name="Flight"
-             targetNamespace="urn:org:tripplanner:flight:wsdl"
-             xmlns:tns="urn:org:tripplanner:flight:wsdl"
-             xmlns="http://schemas.xmlsoap.org/wsdl/"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<definitions
+    name="Flight"
+    targetNamespace="urn:org:tripplanner:flight:wsdl"
+    xmlns:tns="urn:org:tripplanner:flight:wsdl"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+>
 
-    <!-- This file is not generated automatically -->
+    <!-- This file is NOT generated automatically -->
 
     <types>
-        <xsd:schema elementFormDefault="qualified"
-                    targetNamespace="urn:org:tripplanner:flight:wsdl"
-                    xmlns:ns1="urn:org:tripplanner:flight:view">
+        <xsd:schema
+            elementFormDefault="qualified"
+            targetNamespace="urn:org:tripplanner:flight:wsdl"
+            xmlns:ns1="urn:org:tripplanner:flight:view"
+        >
 
-            <xsd:import namespace="urn:org:tripplanner:flight:view"
-                        schemaLocation="flight-view.xsd"/>
+            <xsd:import
+                namespace="urn:org:tripplanner:flight:view"
+                schemaLocation="flight-view.xsd"
+            />
 
             <xsd:complexType name="Passenger">
                 <xsd:sequence>
@@ -77,7 +83,10 @@
     </portType>
 
     <binding name="FlightBinding" type="tns:FlightPortType">
-        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <soap:binding
+            transport="http://schemas.xmlsoap.org/soap/http"
+            style="document"
+        />
         <operation name="createReservation">
             <soap:operation soapAction="" />
             <input>
