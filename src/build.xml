@@ -45,7 +45,7 @@
 
     <target name="hibernatetool-flight"
         description="Create tables for flight domain">
-        <ant inheritAll="false" dir="flight-ws" target="hibernate-tool" />
+        <ant inheritAll="false" dir="flight-ws" target="hibernatetool" />
     </target>
 
     <target name="run-tests-flight"
