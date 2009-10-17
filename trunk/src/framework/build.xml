@@ -4,6 +4,7 @@
 
     <description>Library build file. Customize as required.</description>
 
+
     <!-- load environment variables as properties -->
     <property environment="env"/>
 
@@ -17,7 +18,7 @@
     <property name="web-content.rel-dir" value="WebContent"/>
     <property name="build.rel-dir" value="bin"/>
     <property name="dist.rel-dir" value="dist"/>
-    <property name="doc.rel-dir" value="doc" />
+    <property name="doc.rel-dir" value="${dist.rel-dir}/javadoc" />
 
 
     <!-- project classpath -->
@@ -53,7 +54,7 @@
     <!-- compile -->
 
     <target name="prepare-resources" depends="init">
-    <!-- description="Prepares application resource files" -->
+    <!-- description="Prepare application resource files" -->
         <copy todir="${build.rel-dir}" overwrite="true">
             <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
         </copy>
@@ -62,8 +63,8 @@
         </replace>
     </target>
 
-    <target name="compile" depends="init,prepare-resources">
-    <!-- description="Compiles the source code" -->
+    <target name="compile" depends="prepare-resources">
+    <!-- description="Compile source code" -->
         <javac
             srcdir="${src.rel-dir}"
             destdir="${build.rel-dir}"
@@ -83,8 +84,9 @@
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
 
-    <target name="create-jar" description="Creates a jar file"
-            depends="init,compile">
+    <target name="create-jar" depends="compile">
+    <!-- description="Create a jar file" -->
+
         <jar destfile="${jar.rel-file}">
             <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
@@ -96,9 +98,8 @@
 
     <!-- javadoc -->
 
-    <target name="javadoc"
-            depends="init"
-            description="Generate Java classes documentation" >
+    <target name="javadoc" depends="init"
+        description="Generate Java classes documentation" >
         <echo message="Generating javadocs to directory ${doc.rel-dir}" />
         <delete dir="${doc.rel-dir}" />
         <javadoc destdir="${doc.rel-dir}" sourcepath="">
@@ -110,7 +111,7 @@
 
     <!-- build -->
 
-    <target name="build" depends="compile,create-jar"
+    <target name="build" depends="create-jar"
         description="Build the program">
     </target>
 
@@ -118,8 +119,8 @@
     <!-- description="Rebuild the project" -->
     </target>
 
-    <target name="dist-to-lib" depends="clean,build">
-    <!-- description="Build the program and distribute it to lib folder" -->
+    <target name="dist-to-lib" depends="rebuild">
+    <!-- description="Rebuild the program and distribute it to lib folder" -->
         <copy todir="../lib" overwrite="true">
             <fileset file="${jar.rel-file}"/>
         </copy>
