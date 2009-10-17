@@ -4,6 +4,7 @@
 
     <description>Web Application build file. Customize as required.</description>
 
+
     <!-- load environment variables as properties -->
     <property environment="env"/>
 
@@ -65,6 +66,32 @@
     </target>
 
 
+    <!-- jax-b -->
+
+    <target name="xjc" depends="init" unless="recompile.flag">
+    <!-- description="Create Java classes from XML Schema definitions" -->
+        <!-- generate data binding sources -->
+        <xjc destdir="${build.rel-dir}" extension="true">
+            <schema dir="${src.rel-dir}" includes="*.xsd"/>
+            <binding dir="${src.rel-dir}" includes="*.xjb"/>
+        </xjc>
+        <!-- compile data binding classes -->
+        <javac
+            srcdir="${build.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+            <!-- project classpath is required because some classes may use existing types -->
+        </javac>
+    </target>
+
+
     <!-- compile -->
 
     <target name="prepare-resources" depends="init">
@@ -77,7 +104,7 @@
         </replace>
     </target>
 
-    <target name="compile" depends="init,prepare-resources">
+    <target name="compile" depends="xjc,prepare-resources">
     <!-- description="Compile source code" -->
         <javac
             srcdir="${src.rel-dir}"
@@ -100,7 +127,7 @@
     <property name="run.args" value=""/>
 
     <target name="execute">
-    <!-- description="Executes the program as-is - no compilation is performed" -->
+    <!-- description="Execute the program as-is - no compilation is performed" -->
         <java classname="${run.main-class}" fork="true">
             <arg line="${run.args}" />
             <classpath>
@@ -114,7 +141,7 @@
 
     <!-- hibernate -->
 
-    <target name="hibernatetool" depends="init,compile"
+    <target name="hibernatetool" depends="compile"
         description="Create database schema based on the hibernate model">
 
         <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
@@ -136,10 +163,11 @@
 
     <!-- tests -->
 
-    <target name="compile-tests" depends="init,compile">
+    <target name="compile-tests" depends="compile">
     <!-- description="Compile tests for service classes" -->
         <antcall target="compile">
             <param name="src.rel-dir" value="${tests.src.rel-dir}" />
+            <param name="recompile.flag" value="true" />
         </antcall>
     </target>
 
@@ -177,38 +205,12 @@
     </target>
 
 
-    <!-- jax-b -->
-
-    <target name="xjc" depends="init">
-    <!-- description="Create Java classes from XML Schema definitions" -->
-        <!-- generate data binding sources -->
-        <xjc destdir="${build.rel-dir}" extension="true">
-            <schema dir="${src.rel-dir}" includes="*.xsd"/>
-            <binding dir="${src.rel-dir}" includes="*.xjb"/>
-        </xjc>
-        <!-- compile data binding classes -->
-        <javac
-            srcdir="${build.rel-dir}"
-            destdir="${build.rel-dir}"
-            debug="true"
-            debuglevel="lines,vars,source"
-            optimize="true"
-            deprecation="true"
-            verbose="false"
-        >
-            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
-            <classpath refid="project.classpath" />
-            <!-- project classpath is required because some classes may use existing types -->
-        </javac>
-    </target>
-
-
     <!-- web application -->
 
     <property name="deploy.context" value="${ant.project.name}" />
     <property name="deploy.war.rel-file" value="${dist.rel-dir}/${ant.project.name}.war" />
 
-    <target name="create-war" depends="init,compile">
+    <target name="create-war" depends="compile">
     <!-- description="Create Web application ARchive" -->
 
         <jar destfile="${deploy.war.rel-file}">
@@ -230,13 +232,7 @@
             <zipfileset dir="../flight-ws-cli/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
-            <zipfileset dir="../extension-hello/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <zipfileset dir="../extension-trace/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <zipfileset dir="../extension-errors/dist"
+            <zipfileset dir="../extensions/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
         </jar>
@@ -246,7 +242,7 @@
 
     <!-- build -->
 
-    <target name="build" depends="xjc,compile,create-war"
+    <target name="build" depends="create-war"
         description="Build the program">
     </target>
 

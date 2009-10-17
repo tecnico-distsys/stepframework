@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="extension-trace" default="build" basedir=".">
+<project name="extensions" default="build" basedir=".">
 
-    <description>Extension build file. Customize as required.</description>
+    <description>Extensions build file. Customize as required.</description>
 
     <!-- load environment variables as properties -->
     <property environment="env"/>
@@ -51,7 +51,7 @@
     <!-- compile -->
 
     <target name="prepare-resources" depends="init">
-    <!-- description="Prepares application resource files" -->
+    <!-- description="Prepare application resource files" -->
         <copy todir="${build.rel-dir}" overwrite="true">
             <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
         </copy>
@@ -60,8 +60,8 @@
         </replace>
     </target>
 
-    <target name="compile" depends="init,prepare-resources">
-    <!-- description="Compiles the source code" -->
+    <target name="compile" depends="prepare-resources">
+    <!-- description="Compile source code" -->
         <javac
             srcdir="${src.rel-dir}"
             destdir="${build.rel-dir}"
@@ -81,8 +81,8 @@
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
 
-    <target name="create-jar" description="Creates a jar file"
-            depends="init,compile">
+    <target name="create-jar" depends="compile">
+    <!-- description="Create a jar file" -->
         <jar destfile="${jar.rel-file}">
             <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
@@ -94,7 +94,7 @@
 
     <!-- build -->
 
-    <target name="build" depends="compile,create-jar"
+    <target name="build" depends="create-jar"
         description="Build the program">
     </target>
 

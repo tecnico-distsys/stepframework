@@ -4,29 +4,24 @@
 
     <description>Project super-build file. Customize as required.</description>
 
+
     <target name="clean"
-            description="Clean all projects">
-        <ant inheritAll="false" dir="extension-errors" target="clean" />
-        <ant inheritAll="false" dir="extension-hello" target="clean" />
-        <ant inheritAll="false" dir="extension-trace" target="clean" />
+        description="Clean all projects">
+        <ant inheritAll="false" dir="extensions" target="clean" />
         <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
         <ant inheritAll="false" dir="flight-ws" target="clean" />
         <ant inheritAll="false" dir="mediator-web" target="clean" />
     </target>
 
     <target name="build"
-            description="Build all projects in the correct order">
+        description="Build all projects in the correct order">
         <echo message="***** BUILDING EXTENSIONS *****" />
         <sleep seconds="2"/>
-        <ant inheritAll="false" dir="extension-errors" target="build" />
-        <ant inheritAll="false" dir="extension-hello" target="build" />
-        <ant inheritAll="false" dir="extension-trace" target="build" />
-
+        <ant inheritAll="false" dir="extensions" target="build" />
         <echo message="***** BUILDING flight APPLICATION *****" />
         <sleep seconds="2"/>
         <ant inheritAll="false" dir="flight-ws" target="build" />
         <ant inheritAll="false" dir="flight-ws-cli" target="build" />
-
         <echo message="***** BUILDING mediator APPLICATION *****" />
         <sleep seconds="2"/>
         <ant inheritAll="false" dir="mediator-web" target="build" />
@@ -53,7 +48,7 @@
         <ant inheritAll="false" dir="flight-ws" target="hibernate-tool" />
     </target>
 
-    <target name="run-flight-tests"
+    <target name="run-tests-flight"
         description="Run all flight service tests">
         <ant inheritAll="false" dir="flight-ws" target="run-tests" />
     </target>
@@ -79,7 +74,7 @@
         <ant inheritAll="false" dir="mediator-web" target="hibernatetool" />
     </target>
 
-    <target name="run-mediator-tests"
+    <target name="run-tests-mediator"
         description="Run all mediator service tests">
         <ant inheritAll="false" dir="mediator-web" target="run-tests" />
     </target>
@@ -101,8 +96,9 @@
         description="Generate all database schemas">
     </target>
 
-    <target name="run-tests" depends="run-flight-tests,run-mediator-tests"
+    <target name="run-tests" depends="run-tests-flight,run-tests-mediator"
         description="Run all service tests">
     </target>
+
 
 </project>
