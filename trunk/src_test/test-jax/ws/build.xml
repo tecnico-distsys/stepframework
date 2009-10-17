@@ -96,6 +96,7 @@
                   sourcedestdir="${build.rel-dir}"
         >
             <binding dir="${web-content.rel-dir}/WEB-INF" includes="jaxws*binding.xml"/>
+            <produces dir="${build.rel-dir}/hello/wsdl" />
         </wsimport>
         <!-- The sources are in the build folder, for programmer reference -->
     </target>

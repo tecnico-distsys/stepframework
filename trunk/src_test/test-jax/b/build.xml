@@ -47,6 +47,33 @@
     </target>
 
 
+    <!-- jax-b -->
+
+    <target name="xjc" depends="init">
+    <!-- description="Create Java classes from XML Schema definitions" -->
+        <!-- generate data binding sources -->
+        <xjc destdir="${build.rel-dir}" extension="true">
+            <schema dir="${src.rel-dir}" includes="*.xsd"/>
+            <binding dir="${src.rel-dir}" includes="*.xjb"/>
+            <produces dir="${build.rel-dir}/hello/xsd" />
+        </xjc>
+        <!-- compile data binding classes -->
+        <javac
+            srcdir="${build.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+            <!-- project classpath is required because some classes may use existing types -->
+        </javac>
+    </target>
+
+
     <!-- compile -->
 
     <target name="prepare-resources" depends="init">
@@ -72,32 +99,6 @@
         >
             <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
             <classpath refid="project.classpath" />
-        </javac>
-    </target>
-
-
-    <!-- jax-b -->
-
-    <target name="xjc" depends="init">
-    <!-- description="Create Java classes from XML Schema definitions" -->
-        <!-- generate data binding sources -->
-        <xjc destdir="${build.rel-dir}" extension="true">
-            <schema dir="${src.rel-dir}" includes="*.xsd"/>
-            <binding dir="${src.rel-dir}" includes="*.xjb"/>
-        </xjc>
-        <!-- compile data binding classes -->
-        <javac
-            srcdir="${build.rel-dir}"
-            destdir="${build.rel-dir}"
-            debug="true"
-            debuglevel="lines,vars,source"
-            optimize="true"
-            deprecation="true"
-            verbose="false"
-        >
-            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
-            <classpath refid="project.classpath" />
-            <!-- project classpath is required because some classes may use existing types -->
         </javac>
     </target>
 
