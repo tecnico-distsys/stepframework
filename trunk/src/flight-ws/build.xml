@@ -4,6 +4,7 @@
 
     <description>JAX-WS Web Service build file. Customize as required.</description>
 
+
     <!-- load environment variables as properties -->
     <property environment="env"/>
 
@@ -59,6 +60,26 @@
     </target>
 
 
+    <!-- jax-ws-server -->
+
+    <property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/flight.wsdl" />
+
+    <target name="wsimport" depends="init,-generate-wsdl-url" unless="recompile.flag">
+    <!-- description="Generate Web Service server-side Java code from WSDL" -->
+        <echo message="Executing wsimport to generate server-side code..." />
+        <echo message="WSDL: ${wsdl.rel-file}" />
+        <wsimport wsdl="${wsdl.url}"
+                  debug="true"
+                  verbose="false"
+                  destdir="${build.rel-dir}"
+                  sourcedestdir="${build.rel-dir}"
+        >
+            <binding dir="${web-content.rel-dir}/WEB-INF" includes="jaxws*binding.xml"/>
+        </wsimport>
+        <!-- The sources are in the build folder, for programmer reference -->
+    </target>
+
+
     <!-- compile -->
 
     <target name="prepare-resources" depends="init">
@@ -71,7 +92,7 @@
         </replace>
     </target>
 
-    <target name="compile" depends="init,prepare-resources">
+    <target name="compile" depends="wsimport,prepare-resources">
     <!-- description="Compile source code" -->
         <javac
             srcdir="${src.rel-dir}"
@@ -110,7 +131,7 @@
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
 
-    <target name="create-jar" depends="init,compile">
+    <target name="create-jar" depends="compile">
     <!-- description="Create a jar file" -->
         <jar destfile="${jar.rel-file}">
             <!-- include only exception classes and resources -->
@@ -123,7 +144,7 @@
 
     <!-- hibernate -->
 
-    <target name="hibernatetool" depends="init,compile"
+    <target name="hibernatetool" depends="compile"
         description="Create database schema based on the hibernate model">
 
         <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
@@ -146,10 +167,11 @@
 
     <!-- tests -->
 
-    <target name="compile-tests" depends="init,compile">
+    <target name="compile-tests" depends="compile">
     <!-- description="Compile tests for service classes" -->
         <antcall target="compile">
             <param name="src.rel-dir" value="${tests.src.rel-dir}" />
+            <param name="recompile.flag" value="true" />
         </antcall>
     </target>
 
@@ -187,32 +209,12 @@
     </target>
 
 
-    <!-- jax-ws-server -->
-
-    <property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/flight.wsdl" />
-
-    <target name="wsimport" depends="init,-generate-wsdl-url">
-    <!-- description="Generate Web Service server-side Java code from WSDL" -->
-        <echo message="Executing wsimport to generate server-side code..." />
-        <echo message="WSDL: ${wsdl.rel-file}" />
-        <wsimport wsdl="${wsdl.url}"
-                  debug="true"
-                  verbose="false"
-                  destdir="${build.rel-dir}"
-                  sourcedestdir="${build.rel-dir}"
-        >
-            <binding dir="${web-content.rel-dir}/WEB-INF" includes="jaxws*binding.xml"/>
-        </wsimport>
-        <!-- The sources are in the build folder, for programmer reference -->
-    </target>
-
-
     <!-- web application -->
 
     <property name="deploy.context" value="${ant.project.name}" />
     <property name="deploy.war.rel-file" value="${dist.rel-dir}/${ant.project.name}.war" />
 
-    <target name="create-war" depends="init,compile">
+    <target name="create-war" depends="compile">
     <!-- description="Create Web application ARchive" -->
 
         <jar destfile="${deploy.war.rel-file}">
@@ -224,16 +226,11 @@
                         includes="**/*.class,**/*.properties,**/*.xml"
                         prefix="WEB-INF/classes" />
             <!-- shared libs -->
-            <zipfileset dir="../extension-hello/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <zipfileset dir="../extension-trace/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <zipfileset dir="../extension-errors/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
             <zipfileset dir="../lib"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+            <!-- referenced libs -->
+            <zipfileset dir="../extensions/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
         </jar>
@@ -243,12 +240,13 @@
 
     <!-- build -->
 
-    <target name="build" depends="wsimport,create-war,create-jar"
+    <target name="build" depends="create-war,create-jar"
         description="Build the program">
     </target>
 
     <target name="rebuild" depends="clean,build" >
     <!-- description="Rebuild the project" -->
     </target>
+
 
 </project>

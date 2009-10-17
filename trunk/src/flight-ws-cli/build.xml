@@ -61,7 +61,7 @@
 
     <property name="wsdl.rel-file" value="../flight-ws/${web-content.rel-dir}/WEB-INF/wsdl/flight.wsdl" />
 
-    <target name="wsimport" depends="init,-generate-wsdl-url">
+    <target name="wsimport" depends="init,-generate-wsdl-url" unless="recompile.flag">
     <!-- description="Generate Web Service client-side Java code from WSDL" -->
         <echo message="Executing wsimport to generate client-side code..." />
         <echo message="WSDL: ${wsdl.rel-file}" />
@@ -90,7 +90,7 @@
         </replace>
     </target>
 
-    <target name="compile" depends="init,prepare-resources">
+    <target name="compile" depends="wsimport,prepare-resources">
     <!-- description="Compile source code" -->
         <javac
             srcdir="${src.rel-dir}"
@@ -113,7 +113,7 @@
     <property name="run.args" value=""/>
 
     <target name="execute">
-    <!-- description="Executes the program as-is - no compilation is performed" -->
+    <!-- description="Execute the program as-is - no compilation is performed" -->
         <java classname="${run.main-class}" fork="true">
             <arg line="${run.args}" />
             <classpath>
@@ -130,8 +130,8 @@
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
 
-    <target name="create-jar" depends="init,compile">
-    <!-- description="Creates a jar file" -->
+    <target name="create-jar" depends="compile">
+    <!-- description="Create jar file" -->
         <jar destfile="${jar.rel-file}">
             <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
@@ -143,12 +143,13 @@
 
     <!-- build -->
 
-    <target name="build" depends="wsimport,compile,create-jar"
+    <target name="build" depends="create-jar"
         description="Build the program">
     </target>
 
     <target name="rebuild" depends="clean,build" >
     <!-- description="Rebuild the project" -->
     </target>
+
 
 </project>
