@@ -5,104 +5,104 @@
     <description>Project super-build file. Customize as required.</description>
 
     <target name="clean"
-    	    description="Clean all projects">
+            description="Clean all projects">
         <ant inheritAll="false" dir="extension-errors" target="clean" />
         <ant inheritAll="false" dir="extension-hello" target="clean" />
         <ant inheritAll="false" dir="extension-trace" target="clean" />
-        <ant inheritAll="false" dir="flight-ws" target="clean" />
         <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
+        <ant inheritAll="false" dir="flight-ws" target="clean" />
         <ant inheritAll="false" dir="mediator-web" target="clean" />
     </target>
 
     <target name="build"
-    	    description="Build all projects in the correct order">
-    	<echo message="***** BUILDING EXTENSIONS *****" />
-    	<sleep seconds="2"/>
+            description="Build all projects in the correct order">
+        <echo message="***** BUILDING EXTENSIONS *****" />
+        <sleep seconds="2"/>
         <ant inheritAll="false" dir="extension-errors" target="build" />
         <ant inheritAll="false" dir="extension-hello" target="build" />
         <ant inheritAll="false" dir="extension-trace" target="build" />
 
-    	<echo message="***** BUILDING flight APPLICATION *****" />
-    	<sleep seconds="2"/>
+        <echo message="***** BUILDING flight APPLICATION *****" />
+        <sleep seconds="2"/>
         <ant inheritAll="false" dir="flight-ws" target="build" />
         <ant inheritAll="false" dir="flight-ws-cli" target="build" />
 
-    	<echo message="***** BUILDING mediator APPLICATION *****" />
-    	<sleep seconds="2"/>
+        <echo message="***** BUILDING mediator APPLICATION *****" />
+        <sleep seconds="2"/>
         <ant inheritAll="false" dir="mediator-web" target="build" />
     </target>
 
     <!-- Flight -->
     <target name="deploy-flight"
-    	    description="Deploy flight">
+        description="Deploy flight">
         <ant inheritAll="false" dir="flight-ws" target="deploy" />
     </target>
 
     <target name="redeploy-flight"
-    	    description="Redeploy flight">
+        description="Redeploy flight">
         <ant inheritAll="false" dir="flight-ws" target="redeploy" />
     </target>
 
     <target name="undeploy-flight"
-    	    description="Undeploy flight">
+        description="Undeploy flight">
         <ant inheritAll="false" dir="flight-ws" target="undeploy" />
     </target>
 
-    <target name="generate-flight-db"
-    	    description="Create tables for flight domain">
-        <ant inheritAll="false" dir="flight-ws" target="generate-db" />
+    <target name="hibernatetool-flight"
+        description="Create tables for flight domain">
+        <ant inheritAll="false" dir="flight-ws" target="hibernate-tool" />
     </target>
 
     <target name="run-flight-tests"
-    	    description="Run all flight service tests">
+        description="Run all flight service tests">
         <ant inheritAll="false" dir="flight-ws" target="run-tests" />
     </target>
 
     <!-- Mediator -->
     <target name="deploy-mediator"
-    	    description="Deploy mediator">
+        description="Deploy mediator">
         <ant inheritAll="false" dir="mediator-web" target="deploy" />
     </target>
 
     <target name="redeploy-mediator"
-    	    description="Redeploy mediator">
+        description="Redeploy mediator">
         <ant inheritAll="false" dir="mediator-web" target="redeploy" />
     </target>
 
     <target name="undeploy-mediator"
-    	    description="Undeploy mediator">
+        description="Undeploy mediator">
         <ant inheritAll="false" dir="mediator-web" target="undeploy" />
     </target>
 
-    <target name="generate-mediator-db"
-    	    description="Create tables for mediator domain">
-        <ant inheritAll="false" dir="mediator-web" target="generate-db" />
+    <target name="hibernatetool-mediator"
+        description="Create tables for mediator domain">
+        <ant inheritAll="false" dir="mediator-web" target="hibernatetool" />
     </target>
 
     <target name="run-mediator-tests"
-    	    description="Run all mediator service tests">
+        description="Run all mediator service tests">
         <ant inheritAll="false" dir="mediator-web" target="run-tests" />
     </target>
 
     <!-- all -->
     <target name="deploy" depends="deploy-flight,deploy-mediator"
-    	    description="Deploy all web applications">
+        description="Deploy all web applications">
     </target>
 
     <target name="redeploy" depends="redeploy-flight,redeploy-mediator"
-    	    description="Redeploy all web applications">
+        description="Redeploy all web applications">
     </target>
 
     <target name="undeploy" depends="undeploy-mediator,undeploy-flight"
-    	    description="Undeploy all web applications">
+        description="Undeploy all web applications">
     </target>
 
-    <target name="generate-dbs" depends="generate-flight-db,generate-mediator-db"
-    	    description="Generate all database schemas">
+    <target name="hibernatetool" depends="hibernatetool-flight,hibernatetool-mediator"
+        description="Generate all database schemas">
     </target>
 
     <target name="run-tests" depends="run-flight-tests,run-mediator-tests"
-    	    description="Run all service tests">
+        description="Run all service tests">
     </target>
 
 </project>

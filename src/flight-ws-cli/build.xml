@@ -20,6 +20,10 @@
     <property name="dist.rel-dir" value="dist"/>
 
 
+    <!-- import external definitions -->
+    <import file="../lib/jax.xml" />
+
+
     <!-- project classpath -->
 
     <path id="project.classpath">
@@ -37,9 +41,6 @@
             <include name="*.jar" />
         </fileset>
     </path>
-
-    <!-- import external definitions -->
-    <import file="../lib/jax.xml" /><!-- jax uses project.classpath -->
 
 
     <!-- basic -->

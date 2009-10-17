@@ -95,14 +95,14 @@ By default these are:
 
 database.host=localhost
 database.name=flight
-database.username=sdesXX
+database.username=step
 database.password=
 
 - For mediator:
 
 database.host=localhost
 database.name=mediator
-database.username=sdesXX
+database.username=step
 database.password=
 
 Therefore, either:
