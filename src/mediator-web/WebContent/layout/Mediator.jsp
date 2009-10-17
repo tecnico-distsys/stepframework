@@ -21,7 +21,7 @@
                     padding-top: 0px;
                     padding-right: 0px;
                 }
-                
+
                 hr {
                     border: none;
                     background-color: #023264;
@@ -30,7 +30,7 @@
                     margin-top: 10px;
                     margin-bottom: 10px;
                 }
-                
+
                 td.border {
                     background-color: #B1BBD6;
                 }
@@ -39,7 +39,7 @@
                     width: 150;
                     padding: 0 5 0 5;
                 }
-                
+
                 td.header {
                     height: 50;
                 }
@@ -47,27 +47,27 @@
                 td.body {
                     padding: 25 25 25 25
                 }
-                
+
                 table.layout {
                     width: 100%;
                     height: 100%;
                     border-spacing: 0;
                     padding: 0;
                 }
-                
+
                 table.list {
                     width: 85%;
                     border-spacing: 0;
                 }
-                
+
                 td.list {
                     vertical-align: text-top
                 }
-                
+
                 tr.blue {
                     background-color: #E4E8F1;
                 }
-                
+
                 tr.green {
                     background-color: #DDFFDD;
                 }
@@ -75,12 +75,12 @@
                 tr.red {
                     background-color: #FFCCCC;
                 }
-                
+
                 .footer {
                     font-size: smaller;
                     vertical-align: bottom;
                 }
-                
+
                 .errorSection {
                     border-style: solid;
                     border-width: 1px;
@@ -89,10 +89,10 @@
                     margin-top: 5;
                     margin-bottom: 5;
                     padding: 10 20 10 20;
-                    text-align:left; 
+                    text-align:left;
                     width: 85%;
                 }
-                
+
                 .errorMessage, .errorItem {
                     color: #b72222;
                 }
@@ -108,13 +108,13 @@
                     <td class="border menu" rowspan="2" valign="top">
                         <center>
                             <a href="http://www.ist.utl.pt">
-                                <img src="${pageContext.request.contextPath}/layout/images/logo.gif" width="95" height="198" alt="Instituto Superior Técnico" border="0"/>
+                                <img src="${pageContext.request.contextPath}/layout/images/logo.png" alt="Instituto Superior Técnico" border="0"/>
                             </a>
                         </center>
                         <br/>
                         <stripes:layout-component name="menu">
                             <jsp:include page="/menu.jsp"/>
-                        </stripes:layout-component>                        
+                        </stripes:layout-component>
                     </td>
                     <td class="border header">
                         <stripes:layout-component name="header">
@@ -130,7 +130,7 @@
                         <stripes:layout-component name="body">
                             <center>
                                 <a href="http://www.ist.utl.pt">
-                                    <img src="${pageContext.request.contextPath}/layout/images/banner.gif" alt="Instituto Superior Técnico" border="0"/>
+                                    <img src="${pageContext.request.contextPath}/layout/images/banner.png" alt="Instituto Superior Técnico" border="0"/>
                                 </a>
                             </center>
                             <br/>
@@ -138,7 +138,7 @@
                                 <jsp:include page="/layout/errors.jsp"/>
                             </stripes:layout-component>
                             <stripes:layout-component name="content" />
-                        </stripes:layout-component>                        
+                        </stripes:layout-component>
                     </td>
                 </tr>
                 <tr>

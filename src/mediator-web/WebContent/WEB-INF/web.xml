@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-         version="2.4">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+        version="2.4">
 
-    <!-- Perform framework initialization on deploy -->
+    <!-- STEP Framework Context Listener -->
     <listener>
         <listener-class>step.framework.web.ContextListener</listener-class>
     </listener>
 
+    <!-- Stripes Filters -->
     <filter>
         <display-name>Stripes Filter</display-name>
         <filter-name>StripesFilter</filter-name>
         <filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
         <init-param>
             <param-name>ActionResolver.Packages</param-name>
-            <param-value>step.example.mediator.web</param-value>
+            <param-value>org.tripplanner.mediator.web</param-value>
         </init-param>
         <init-param>
             <param-name>ActionBeanContext.Class</param-name>
-            <param-value>step.example.mediator.web.MediatorContext</param-value>
+            <param-value>org.tripplanner.mediator.web.MediatorContext</param-value>
         </init-param>
         <init-param>
             <param-name>ExceptionHandler.Class</param-name>
@@ -29,7 +29,7 @@
         </init-param>
         <init-param>
             <param-name>DelegatingExceptionHandler.Packages</param-name>
-            <param-value>step.example.mediator.web</param-value>
+            <param-value>org.tripplanner.mediator.web</param-value>
         </init-param>
     </filter>
 
@@ -45,6 +45,7 @@
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
+    <!-- Stripes Servlet -->
     <servlet>
         <servlet-name>StripesDispatcher</servlet-name>
         <servlet-class>net.sourceforge.stripes.controller.DispatcherServlet</servlet-class>
@@ -60,6 +61,6 @@
         <welcome-file>index.html</welcome-file>
         <welcome-file>default.jsp</welcome-file>
     </welcome-file-list>
-    
+
 </web-app>
 
