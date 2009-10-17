@@ -55,6 +55,8 @@ Unzipped  apache-ant-1.7.1.zip to tomcat-step-1.3/apache-ant
 
 Copied tail.exe (win32 binary) to tomcat-step-1.3/bin
 
+Copied servlet-api.jar and jsp-api.jar to STEP lib
+
 Copied all STEP lib jar files to tomcat-step-1.3/lib
 
 Copied junit-4.5 to tomcat-step-1.3/apache-ant/lib/junit.jar and 
