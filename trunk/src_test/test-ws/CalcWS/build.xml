@@ -68,7 +68,7 @@
     <!-- build -->
     <target name="build"
             depends="config,build-ws-registry,build-jax-ws-server"
-            description="Builds the project">
+            description="Build the project">
     </target>
 
 </project>

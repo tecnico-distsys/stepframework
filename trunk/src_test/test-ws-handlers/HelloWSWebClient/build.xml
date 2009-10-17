@@ -53,7 +53,7 @@
     <!-- build -->
     <target name="build"
             depends="config,build-jax-ws-client,build-web-app"
-            description="Builds the project">
+            description="Build the project">
     </target>
 
 </project>
