@@ -5,29 +5,41 @@
     <description>Project super-build file. Customize as required.</description>
 
 
-    <target name="clean"
-        description="Clean all projects">
-        <ant inheritAll="false" dir="extensions" target="clean" />
-        <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
-        <ant inheritAll="false" dir="flight-ws" target="clean" />
-        <ant inheritAll="false" dir="mediator-web" target="clean" />
+    <!-- Extensions -->
+    <target name="build-extensions"
+        description="Build extensions library">
+        <echo message="***** BUILDING EXTENSIONS *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="extensions" target="build" />
     </target>
 
-    <target name="build"
-        description="Build all projects in the correct order">
-        <echo message="***** BUILDING EXTENSIONS *****" />
-        <sleep seconds="2"/>
-        <ant inheritAll="false" dir="extensions" target="build" />
-        <echo message="***** BUILDING flight APPLICATION *****" />
-        <sleep seconds="2"/>
-        <ant inheritAll="false" dir="flight-ws" target="build" />
-        <ant inheritAll="false" dir="flight-ws-cli" target="build" />
-        <echo message="***** BUILDING mediator APPLICATION *****" />
-        <sleep seconds="2"/>
-        <ant inheritAll="false" dir="mediator-web" target="build" />
+    <target name="clean-extensions"
+        description="Clean extensions library">
+        <ant inheritAll="false" dir="extensions" target="clean" />
     </target>
+
+    <target name="rebuild-extensions" depends="clean-extensions,build-extensions" />
+
 
     <!-- Flight -->
+    <target name="build-flight"
+        description="Build flight">
+        <echo message="***** BUILDING flight APPLICATION *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="flight-ws" target="build" />
+        <ant inheritAll="false" dir="flight-ws-cli" target="build" />
+    </target>
+
+    <target name="clean-flight"
+        description="Clean flight">
+        <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
+        <ant inheritAll="false" dir="flight-ws" target="clean" />
+    </target>
+
+    <target name="rebuild-flight" depends="clean-flight,build-flight" />
+
     <target name="deploy-flight"
         description="Deploy flight">
         <ant inheritAll="false" dir="flight-ws" target="deploy" />
@@ -45,15 +57,37 @@
 
     <target name="hibernatetool-flight"
         description="Create tables for flight domain">
+        <echo message="------ CREATING flight DATABASE -----" />
+        <sleep seconds="1"/>
+
         <ant inheritAll="false" dir="flight-ws" target="hibernatetool" />
     </target>
 
     <target name="run-tests-flight"
         description="Run all flight service tests">
+        <echo message="##### RUNNING mediator TESTS #####" />
+        <sleep seconds="1"/>
+
         <ant inheritAll="false" dir="flight-ws" target="run-tests" />
     </target>
 
+
     <!-- Mediator -->
+    <target name="build-mediator"
+        description="Build mediator">
+        <echo message="***** BUILDING mediator APPLICATION *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="mediator-web" target="build" />
+    </target>
+
+    <target name="clean-mediator"
+        description="Clean mediator">
+        <ant inheritAll="false" dir="mediator-web" target="clean" />
+    </target>
+
+    <target name="rebuild-mediator" depends="clean-mediator,build-mediator" />
+
     <target name="deploy-mediator"
         description="Deploy mediator">
         <ant inheritAll="false" dir="mediator-web" target="deploy" />
@@ -71,15 +105,34 @@
 
     <target name="hibernatetool-mediator"
         description="Create tables for mediator domain">
+        <echo message="------ CREATING mediator DATABASE -----" />
+        <sleep seconds="1"/>
+
         <ant inheritAll="false" dir="mediator-web" target="hibernatetool" />
     </target>
 
     <target name="run-tests-mediator"
         description="Run all mediator service tests">
+        <echo message="##### RUNNING mediator TESTS #####" />
+        <sleep seconds="1"/>
+
         <ant inheritAll="false" dir="mediator-web" target="run-tests" />
     </target>
 
-    <!-- all -->
+
+    <!-- ALL -->
+    <target name="build" depends="build-extensions,build-flight,build-mediator"
+        description="Build all projects in the correct order">
+    </target>
+
+    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions"
+        description="Clean all projects">
+    </target>
+
+    <target name="rebuild" depends="build"
+        description="Rebuild all projects in the correct order">
+    </target>
+
     <target name="deploy" depends="deploy-flight,deploy-mediator"
         description="Deploy all web applications">
     </target>

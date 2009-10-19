@@ -196,6 +196,13 @@
     <target name="create-war" depends="compile">
     <!-- description="Create Web application ARchive" -->
 
+        <!-- unjar *-ws-cli.jar to build folder because of a Java or JAX-WS or Tomcat bug
+            that locks the file on the server and prevents undeploy from working as expected -->
+        <unjar
+            src="../flight-ws-cli/dist/flight-ws-cli.jar"
+            dest="${build.rel-dir}"
+            overwrite="true" />
+
         <jar destfile="${deploy.war.rel-file}">
             <!-- web content -->
             <zipfileset dir="${web-content.rel-dir}"
@@ -212,9 +219,7 @@
             <zipfileset dir="../flight-ws/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
-            <zipfileset dir="../flight-ws-cli/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
+            <!-- ../flight-ws-cli/dist/*.jar - see unjar comment above -->
             <zipfileset dir="../extensions/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
