@@ -2,11 +2,11 @@
 *** Tomcat for STEP ***
 
 
-This file summarizes the installation procedure and describes the 
+This file summarizes the installation procedure and describes the
 configuration changes made to prepare the tomcat-step-1.3 package.
 
 The package version number tomcat-step-1.3 refers to the STEP Framework version.
-Please refer to webapps/ROOT/index.html for the listing of other included and 
+Please refer to webapps/ROOT/index.html for the listing of other included and
 recommended software versions
 
 --
@@ -57,19 +57,24 @@ Copied tail.exe (win32 binary) to tomcat-step-1.3/bin
 
 Copied servlet-api.jar and jsp-api.jar to STEP lib
 
-Copied all STEP lib jar files to tomcat-step-1.3/lib
+Copied all stepframework/lib jar files to tomcat-step-1.3/lib
 
-Copied junit-4.5 to tomcat-step-1.3/apache-ant/lib/junit.jar and 
+stepframework/src/lib/stepframework.jar is NOT included.
+(Applications will have to include this JAR themselves.
+The rationale is to give developers more visibility of the framework's source code
+and to allow easier modification and experimentation.)
+
+Copied junit-4.5 to tomcat-step-1.3/apache-ant/lib/junit.jar and
 to tomcat-step-1.3/lib/junit.jar
 
 Deleted all tomcat-step-1.3/webapps except ROOT and manager.
 
-Renamed tomcat-step-1.3/webapps/ROOT/index.html to 
-tomcat-step-1.3/webapps/ROOT/index-tomcat.html 
-Added new index.html to tomcat-step-1.3/webapps/ROOT 
+Renamed tomcat-step-1.3/webapps/ROOT/index.html to
+tomcat-step-1.3/webapps/ROOT/index-tomcat.html
+Added new index.html to tomcat-step-1.3/webapps/ROOT
 (added STEP logo, quick link to manager)
 
-Added new user with the role manager to 
+Added new user with the role manager to
 tomcat-step-1.3/conf/tomcat-users.xml:
     <role rolename="manager"/>
     <user username="admin" password="adminadmin" roles="manager"/>
@@ -82,10 +87,10 @@ Added index.html to tomcat-step-1.3_docs.
 
 Acknowledgements:
 
-Apache Software Foundation and 
+Apache Software Foundation and
 all other authors of used open-source software packages.
 
 --
 
 Miguel Pardal (miguel.pardal@ist.utl.pt)
-2009-10-17
+2009-10-19
