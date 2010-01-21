@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="jax-examples" basedir="." default="build">
+
+    <description>Java APIs for XML (JAX) projects super-build file. Customize as required.</description>
+
+    <target name="clean"
+    	description="Clean all projects">
+        <ant inheritAll="false" dir="web" target="clean" />
+        <ant inheritAll="false" dir="b" target="clean" />
+        <ant inheritAll="false" dir="ws" target="clean" />
+        <ant inheritAll="false" dir="ws-cli" target="clean" />
+    </target>
+
+    <target name="build"
+        description="Build all projects in the correct order">
+        <ant inheritAll="false" dir="web" target="build" />
+        <ant inheritAll="false" dir="b" target="build" />
+        <ant inheritAll="false" dir="ws" target="build" />
+        <ant inheritAll="false" dir="ws-cli" target="build" />
+    </target>
+
+    <target name="backup" depends="clean"
+        description="Create a project backup archive" >
+        <tstamp />
+        <property name="backup.base.dir" location="." />
+        <property name="backup.dest.dir" location=".." />
+        <property name="backup.file-name" value="${ant.project.name}_${DSTAMP}_${TSTAMP}.zip" />
+        <property name="backup.file" location="${backup.dest.dir}/${backup.file-name}" />
+        <zip basedir="${backup.base.dir}" destfile="${backup.file}" />
+    </target>
+
+</project>
