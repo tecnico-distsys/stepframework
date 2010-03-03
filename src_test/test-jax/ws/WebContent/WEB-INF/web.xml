@@ -13,6 +13,11 @@
         <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
     </listener>
 
+    <!-- Web Service listener -->
+    <listener>
+        <listener-class>hello.ws.WebServiceContextListener</listener-class>
+    </listener>
+    
     <!-- JAX-WS servlet -->
     <servlet>
         <servlet-name>jax-ws-servlet</servlet-name>

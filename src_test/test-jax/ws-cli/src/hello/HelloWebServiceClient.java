@@ -7,7 +7,7 @@ import java.util.*;
 
 public class HelloWebServiceClient {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         System.out.println("Web Service client starting...");
 
@@ -25,7 +25,7 @@ public class HelloWebServiceClient {
 
         // invoke web service and print result
         System.out.println("Invoking Web Service...");
-        String sayHelloResult = port.sayHello("friend");
+        String sayHelloResult = port.sayHello(null);
         System.out.println("The result is: " + sayHelloResult);
 
     }
