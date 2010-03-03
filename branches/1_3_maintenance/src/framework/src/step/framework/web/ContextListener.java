@@ -26,7 +26,10 @@ public class ContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         // write startup message
         log.info("Framework initializing...");
-
+        
+        log.debug("Disable JAX-WS option to capture stack trace in SOAP fault messages");
+        System.getProperties().setProperty("com.sun.xml.ws.fault.SOAPFaultBuilder.disableCaptureStackTrace", "false");
+       
         log.trace("Initializing extension engine");
         ExtensionEngine engine = ExtensionEngine.getInstance();
         boolean extEnabled = false;

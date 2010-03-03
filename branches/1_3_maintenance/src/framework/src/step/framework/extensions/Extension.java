@@ -228,7 +228,7 @@ public class Extension {
     //
 
     // public-scoped accessors
-    
+
     /** Check if extension is enabled */
     public boolean isEnabled() {
         return this.enabled;
@@ -274,34 +274,34 @@ public class Extension {
     String getListenerClassName() {
         return this.listenerClassName;
     }
-    
+
     /** access listener class */
     Class getListenerClass() {
         return this.listenerClass;
     }
 
     // no accessor is provided for listenerInstance because it is an internal implementation option
-    
+
     /** access service interceptor class name */
     String getServiceInterceptorClassName() {
         return this.serviceInterceptorClassName;
     }
-    
+
     /** access service interceptor class */
     Class getServiceInterceptorClass() {
         return this.serviceInterceptorClass;
     }
-    
+
     /** access web service interceptor class name */
     String getWebServiceInterceptorClassName() {
         return this.webServiceInterceptorClassName;
     }
-    
+
     /** access service interceptor class */
     Class getWebServiceInterceptorClass() {
         return this.webServiceInterceptorClass;
     }
-    
+
 
     //
     //  Configuration loading
@@ -343,9 +343,7 @@ public class Extension {
 
             // enabled
             String enabledPropertyValue = props.getProperty(EXTENSION_ENABLED_PROPERTY_NAME);
-            if(enabledPropertyValue != null && enabledPropertyValue.trim().equalsIgnoreCase("true")) {
-                this.enabled = true;
-            }
+            this.enabled = ConfigUtil.recognizeAsTrue(enabledPropertyValue);
 
             // listener
             String listenerPropertyValue = props.getProperty(EXTENSION_LISTENER_PROPERTY_NAME);

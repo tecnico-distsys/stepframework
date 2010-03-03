@@ -115,4 +115,23 @@ public class ConfigUtil {
         }
     }
 
+    /**
+     *  Recognize if string contains "true" or one of its synonyms: "yes" and "on".
+     *  Everything else is considered false (including null).
+     *
+     *  Surrounding whitespace is trimmed.
+     *  Character case (Tt) is ignored.
+     */
+    public static boolean recognizeAsTrue(String propertyValue) {
+        if(propertyValue == null)
+            return false;
+        propertyValue = propertyValue.trim();
+        if(propertyValue.equalsIgnoreCase("true") ||
+           propertyValue.equalsIgnoreCase("yes") ||
+           propertyValue.equalsIgnoreCase("on"))
+            return true;
+        else
+            return false;
+    }
+
 }
