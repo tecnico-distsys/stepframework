@@ -1,4 +1,4 @@
-package step.test.dot;
+package step.framework.config.tree.dot;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class DotConfig {
     }
 
     public String toString() {
-        return "data=" + data;
+        return data;
     }
 
 }

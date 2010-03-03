@@ -129,7 +129,7 @@
         description="Clean all projects">
     </target>
 
-    <target name="rebuild" depends="build"
+    <target name="rebuild" depends="clean,build"
         description="Rebuild all projects in the correct order">
     </target>
 
