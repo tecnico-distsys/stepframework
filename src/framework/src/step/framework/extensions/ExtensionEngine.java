@@ -196,7 +196,7 @@ public class ExtensionEngine {
     //
 
     // public-scoped accessors
-    
+
     /** Check if extension engine is enabled. Can trigger automatic initialization. */
     public boolean isEnabled() {
         autoInit();
@@ -220,14 +220,14 @@ public class ExtensionEngine {
 
     // package-scoped accessors - can only be accessed for classes in same package
     // (allow better unit testing)
-    
+
     // initFlag is an internal implementation option
 
     /** Access the extension list */
     List<Extension> getExtensionList() {
         return this.extensionList;
     }
-    
+
     /** Access the service interception configuration tree. Can trigger automatic initialization. */
     ConfigTree<InterceptConfigData> getInterceptServiceConfigTree() {
         autoInit();
@@ -385,9 +385,7 @@ public class ExtensionEngine {
 
             // enabled
             String enabledPropertyValue = props.getProperty(EXTENSIONS_ENABLED_PROPERTY_NAME);
-            if(enabledPropertyValue != null && enabledPropertyValue.trim().equalsIgnoreCase("true")) {
-                this.enabledFlag = true;
-            }
+            this.enabledFlag = ConfigUtil.recognizeAsTrue(enabledPropertyValue);
 
             // check if enabled
             if(!this.enabledFlag) {

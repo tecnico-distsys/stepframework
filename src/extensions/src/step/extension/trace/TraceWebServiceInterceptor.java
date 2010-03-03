@@ -2,17 +2,21 @@ package step.extension.trace;
 
 import java.io.PrintStream;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import step.framework.config.ConfigUtil;
 import step.framework.extensions.WebServiceInterceptor;
 import step.framework.extensions.WebServiceInterceptorException;
 import step.framework.extensions.WebServiceInterceptorParameter;
+import step.framework.ws.XMLUtil;
 
 /**
  *  This is the Trace extension's web service interceptor.
@@ -29,7 +33,6 @@ public class TraceWebServiceInterceptor implements WebServiceInterceptor {
         PrintStream out = getPrintStream(param);
 
         try {
-
             // access SOAP message context
             SOAPMessageContext smc = param.getSOAPMessageContext();
 
@@ -49,8 +52,17 @@ public class TraceWebServiceInterceptor implements WebServiceInterceptor {
 
             // print SOAP message contents
             SOAPMessage soapMessage = smc.getMessage();
-            soapMessage.writeTo(out);
-            out.println();
+            SOAPPart soapPart = soapMessage.getSOAPPart();
+            
+            // check printing style
+            Properties extConfig = param.getExtension().getConfig();
+            boolean prettyPrint = ConfigUtil.recognizeAsTrue(extConfig.getProperty("pretty-print"));
+            if(prettyPrint) {
+                XMLUtil.prettyPrint(soapPart, out);
+            } else {
+                soapMessage.writeTo(out);
+                out.println();
+            }
 
         } catch(SOAPException e) {
             out.println("<cannot access SOAP message>");
