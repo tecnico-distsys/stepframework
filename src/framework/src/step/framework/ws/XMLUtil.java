@@ -16,7 +16,7 @@ public class XMLUtil {
     private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     private static final boolean DEFAULT_OMIT = true;
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String DEFAULT_ENCODING = null;
     private static final boolean DEFAULT_INDENT = true;
     private static final int DEFAULT_INDENT_AMOUNT = 2;
 
@@ -29,11 +29,14 @@ public class XMLUtil {
 
         Transformer tf = transformerFactory.newTransformer();
 
-        tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, String.valueOf(omitXmlDeclaration));
+        if(omitXmlDeclaration)
+            tf.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         if(encoding != null)
             tf.setOutputProperty(OutputKeys.ENCODING, encoding);
-        tf.setOutputProperty(OutputKeys.INDENT, String.valueOf(indent));
-        tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indentAmount));
+        if(indent) {
+            tf.setOutputProperty(OutputKeys.INDENT, "yes");
+            tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indentAmount));
+        }
         
         tf.transform(sourceXml, resultXml);
     }

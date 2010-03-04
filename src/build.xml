@@ -65,7 +65,7 @@
 
     <target name="run-tests-flight"
         description="Run all flight service tests">
-        <echo message="##### RUNNING mediator TESTS #####" />
+        <echo message="##### RUNNING flight TESTS #####" />
         <sleep seconds="1"/>
 
         <ant inheritAll="false" dir="flight-ws" target="run-tests" />
