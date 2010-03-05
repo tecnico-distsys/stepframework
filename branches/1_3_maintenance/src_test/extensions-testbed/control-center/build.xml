@@ -1,0 +1,321 @@
+<project name="testbed-control-center" basedir="." default="test">
+
+    <description>Extensions testbed control center.</description>
+
+    <!--
+        Definitions shared by all stages =======================================
+    -->
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <!-- locations -->
+    <property name="root.rel-dir" value="../../../src"/>
+    <property name="rootextra.rel-dir" value="../../../src_extra"/>
+    <property name="testbed.rel-dir" value=".."/>
+
+    <!-- import external definitions -->
+    <import file="${root.rel-dir}/lib/tomcat.xml" />
+
+
+    <!--
+        MASTER ORCHESTRATION
+    -->
+
+    <macrodef name="test-sequence">
+        <attribute name="configuration" default="default" />
+        <sequential>
+            <!-- stage 1: Setup server -->
+            <antcall target="stop-server" />
+            <antcall target="wait-stop" />
+            <antcall target="reset-server" />
+            <antcall target="start-server" />
+            <antcall target="wait-start" />
+            <!-- stage 2: Build testbed code -->
+            <antcall target="build" />
+            <!-- stage 3: Configure testbed-->
+            <antcall target="apply-@{configuration}-configuration" />
+            <!-- stage 4: Deploy-->
+            <antcall target="deploy" />
+            <antcall target="wait-deploy" />
+            <!-- stage 5: Run tests-->
+            <antcall target="execute" />
+            <!-- stage 6: Fetch results-->
+            <antcall target="fetch-results">
+                <param name="configuration" value="@{configuration}" />
+            </antcall>
+        </sequential>
+    </macrodef>
+
+    <target name="init">
+        <!-- define timestamp properties in the beginning -->
+        <tstamp/>
+    </target>
+        
+    <target name="test-default" depends="init">
+        <echo message="Testing *** default *** configuration..." />
+        <sleep seconds="1"/>
+
+        <test-sequence />
+    </target>
+
+    <target name="test-no-cipher" depends="init">
+        <echo message="Testing *** no cipher *** configuration..." />
+        <sleep seconds="1"/>
+
+        <test-sequence configuration="no-cipher" />
+    </target>
+
+    <target name="test"
+            depends="test-default,test-no-cipher,stop-server" />
+
+
+    <!--
+        1. Server setup stage =======================================
+    -->
+
+    <target name="detect-platform">
+        <condition property="is-unix">
+            <os family="unix"/>
+        </condition>
+        <condition property="is-windows">
+            <os family="windows"/>
+        </condition>
+    </target>
+
+    <target name="start-server"
+            depends="detect-platform,start-server-win,start-server-nix"
+            description="Start server" />
+
+    <target name="start-server-win"
+            if="is-windows">
+        <echo message="Spawning server" />
+        <exec executable="cmd"
+              dir="${tomcat.dir}\bin"
+              spawn="true" >
+            <arg value="/c"/>
+            <arg value="catalina.bat"/>
+            <arg value="start"/>
+        </exec>
+    </target>
+
+    <target name="start-server-nix"
+            if="is-unix">
+        <echo message="Spawning server" />
+        <exec executable="catalina.sh"
+              dir="${tomcat.dir}/bin"
+              spawn="true" >
+            <arg value="start"/>
+        </exec>
+    </target>
+
+    <target name="stop-server"
+            depends="detect-platform,stop-server-win,stop-server-nix"
+            description="Stop server" />
+
+    <target name="stop-server-win"
+            if="is-windows">
+        <echo message="Stopping server" />
+        <exec executable="cmd"
+              dir="${tomcat.dir}\bin" >
+            <arg value="/c"/>
+            <arg value="catalina.bat"/>
+            <arg value="stop"/>
+        </exec>
+    </target>
+
+    <target name="stop-server-nix"
+            if="is-unix">
+        <echo message="Stopping server" />
+        <exec executable="catalina.sh"
+              dir="${tomcat.home.replica}/bin">
+            <arg value="stop"/>
+        </exec>
+    </target>
+
+    <target name="wait-stop">
+        <sleep seconds="5"/>
+    </target>
+
+    <target name="wait-start">
+        <sleep seconds="3"/>
+    </target>
+
+    <target name="restart-server"
+            depends="stop-server,wait-stop,start-server"
+            description="Stop and start server" >
+    </target>
+
+    <target name="reset-server"
+            description="Delete all of the server's working files and web applications" >
+        <echo message="Deleting all working server files and web applications" />
+        <delete includeemptydirs="true" deleteonexit="true">
+            <fileset dir="${tomcat.dir}/logs"
+                     includes="**/*"
+                     excludes=""
+                     defaultexcludes="false"/>
+            <fileset dir="${tomcat.dir}/temp"
+                     includes="**/*/"
+                     excludes="safeToDelete.tmp"
+                     defaultexcludes="false"/>
+            <fileset dir="${tomcat.dir}/webapps"
+                     includes="**/*"
+                     excludes="manager/**/*,ROOT/**/*"
+                     defaultexcludes="false"/>
+            <fileset dir="${tomcat.dir}/work"
+                     includes="**/*"
+                     excludes=""
+                     defaultexcludes="false"/>
+        </delete>
+    </target>
+
+
+    <!--
+        2. Build testbed =======================================
+    -->
+
+    <target name="clean">
+        <ant inheritAll="false" dir="${testbed.rel-dir}" target="clean" />
+    </target>
+
+    <target name="build">
+        <ant inheritAll="false" dir="${testbed.rel-dir}" target="build" />
+    </target>
+
+    <target name="rebuild">
+        <ant inheritAll="false" dir="${testbed.rel-dir}" target="rebuild" />
+    </target>
+
+
+    <!--
+        3. Configure testbed =======================================
+    -->
+
+    <!-- macros -->
+
+    <macrodef name="open-war">
+        <attribute name="war" />
+        <sequential>
+            <move file="@{war}" tofile="@{war}.master"/>
+            <delete dir="@{war}.open" />
+            <mkdir dir="@{war}.open" />
+            <unzip src="@{war}.master" dest="@{war}.open" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="close-war">
+        <attribute name="war" />
+        <sequential>
+            <zip basedir="@{war}.open" destfile="@{war}" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="replace-in-war">
+        <attribute name="war" />
+        <attribute name="replacer" />
+        <sequential>
+            <open-war war="@{war}" />
+            <antcall target="@{replacer}">
+                <param name="dir" value="@{war}.open" />
+            </antcall>
+            <close-war war="@{war}" />
+        </sequential>
+    </macrodef>
+
+    <macrodef name="replace-in-build">
+        <attribute name="dir" />
+        <attribute name="replacer" />
+        <sequential>
+            <antcall target="@{replacer}">
+                <param name="dir" value="@{dir}" />
+            </antcall>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="replace-in-testbed">
+        <attribute name="client-replacer" />
+        <attribute name="server-replacer" />
+        <sequential>
+            <replace-in-war war="${testbed.rel-dir}/hello-ws/dist/hello-ws.war"
+                            replacer="@{server-replacer}" />
+            <replace-in-war war="${testbed.rel-dir}/helloclient-web/dist/helloclient-web.war"
+                            replacer="@{client-replacer}" />
+            <replace-in-build dir="${testbed.rel-dir}/helloclient-web/build"
+                              replacer="@{client-replacer}" />
+        </sequential>
+    </macrodef>
+
+    <!-- replacer targets -->
+
+    <target name="-default-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <!-- replaces nothing -->
+    </target>
+
+    <target name="-disable-cipher-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-cipher.properties"/>
+            <replacefilter token="extension.enabled=true" value="extension.enabled=false" />
+        </replace>
+    </target>
+
+    <!-- configurations to apply -->
+
+    <target name="apply-default-configuration">
+        <replace-in-testbed client-replacer="-default-replacer"
+                            server-replacer="-default-replacer" />
+    </target>
+
+    <target name="apply-no-cipher-configuration">
+        <replace-in-testbed client-replacer="-disable-cipher-replacer"
+                            server-replacer="-disable-cipher-replacer" />
+    </target>
+
+
+    <!--
+        4. Deploy =======================================
+    -->
+
+    <target name="deploy">
+        <ant inheritAll="false" dir="${testbed.rel-dir}" target="deploy" />
+    </target>
+
+    <target name="wait-deploy">
+        <sleep seconds="3"/>
+    </target>
+
+
+    <!--
+        5. Run tests =======================================
+    -->
+
+    <target name="execute">
+        <ant inheritAll="false" dir="${testbed.rel-dir}/helloclient-web" target="execute" />
+    </target>
+
+
+    <!--
+        6. Fetch results =======================================
+    -->
+
+    <property name="results.rel-dir" value="results" />
+
+    <target name="fetch-results" depends="init">
+        <fail message="MUST DEFINE configuration PROPERTY" unless="configuration" />
+        <property name="result.rel-dir" value="${results.rel-dir}/${DSTAMP}/${TSTAMP}/${configuration}" />
+        <copy todir="${result.rel-dir}">
+            <fileset dir="${tomcat.dir}/logs"
+                     includes="**/*"
+                     excludes=""/>
+            <fileset dir="${tomcat.dir}/temp"
+                     includes="**/*"
+                     excludes="safeToDelete.tmp"/>
+        </copy>
+    </target>
+
+    <target name="clean-results">
+        <delete dir="${results.rel-dir}" failonerror="true" deleteonexit="true" />
+    </target>
+
+</project>
