@@ -14,62 +14,15 @@
     <property name="rootextra.rel-dir" value="../../../src_extra"/>
     <property name="testbed.rel-dir" value=".."/>
 
+    <property name="results.rel-dir" value="results" />
+
     <!-- import external definitions -->
     <import file="${root.rel-dir}/lib/tomcat.xml" />
 
+    <!-- define timestamp properties DSTAMP and TSTAMP -->
+    <tstamp/>
 
-    <!--
-        MASTER ORCHESTRATION
-    -->
-
-    <macrodef name="test-sequence">
-        <attribute name="configuration" default="default" />
-        <sequential>
-            <!-- stage 1: Setup server -->
-            <antcall target="stop-server" />
-            <antcall target="wait-stop" />
-            <antcall target="reset-server" />
-            <antcall target="start-server" />
-            <antcall target="wait-start" />
-            <!-- stage 2: Build testbed code -->
-            <antcall target="build" />
-            <!-- stage 3: Configure testbed-->
-            <antcall target="apply-@{configuration}-configuration" />
-            <!-- stage 4: Deploy-->
-            <antcall target="deploy" />
-            <antcall target="wait-deploy" />
-            <!-- stage 5: Run tests-->
-            <antcall target="execute" />
-            <!-- stage 6: Fetch results-->
-            <antcall target="fetch-results">
-                <param name="configuration" value="@{configuration}" />
-            </antcall>
-        </sequential>
-    </macrodef>
-
-    <target name="init">
-        <!-- define timestamp properties in the beginning -->
-        <tstamp/>
-    </target>
-        
-    <target name="test-default" depends="init">
-        <echo message="Testing *** default *** configuration..." />
-        <sleep seconds="1"/>
-
-        <test-sequence />
-    </target>
-
-    <target name="test-no-cipher" depends="init">
-        <echo message="Testing *** no cipher *** configuration..." />
-        <sleep seconds="1"/>
-
-        <test-sequence configuration="no-cipher" />
-    </target>
-
-    <target name="test"
-            depends="test-default,test-no-cipher,stop-server" />
-
-
+    
     <!--
         1. Server setup stage =======================================
     -->
@@ -85,7 +38,9 @@
 
     <target name="start-server"
             depends="detect-platform,start-server-win,start-server-nix"
-            description="Start server" />
+            description="Start server" >
+        <sleep seconds="2"/>
+    </target>
 
     <target name="start-server-win"
             if="is-windows">
@@ -111,7 +66,9 @@
 
     <target name="stop-server"
             depends="detect-platform,stop-server-win,stop-server-nix"
-            description="Stop server" />
+            description="Stop server" >
+        <sleep seconds="3"/>
+    </target>
 
     <target name="stop-server-win"
             if="is-windows">
@@ -133,16 +90,8 @@
         </exec>
     </target>
 
-    <target name="wait-stop">
-        <sleep seconds="5"/>
-    </target>
-
-    <target name="wait-start">
-        <sleep seconds="3"/>
-    </target>
-
     <target name="restart-server"
-            depends="stop-server,wait-stop,start-server"
+            depends="stop-server,start-server"
             description="Stop and start server" >
     </target>
 
@@ -191,8 +140,6 @@
         3. Configure testbed =======================================
     -->
 
-    <!-- macros -->
-
     <macrodef name="open-war">
         <attribute name="war" />
         <sequential>
@@ -232,46 +179,283 @@
         </sequential>
     </macrodef>
 
-    <macrodef name="replace-in-testbed">
-        <attribute name="client-replacer" />
-        <attribute name="server-replacer" />
+    <macrodef name="replace-in-client">
+        <attribute name="replacer" />
         <sequential>
-            <replace-in-war war="${testbed.rel-dir}/hello-ws/dist/hello-ws.war"
-                            replacer="@{server-replacer}" />
             <replace-in-war war="${testbed.rel-dir}/helloclient-web/dist/helloclient-web.war"
-                            replacer="@{client-replacer}" />
+                            replacer="@{replacer}" />
             <replace-in-build dir="${testbed.rel-dir}/helloclient-web/build"
-                              replacer="@{client-replacer}" />
+                              replacer="@{replacer}" />
         </sequential>
     </macrodef>
 
-    <!-- replacer targets -->
+    <macrodef name="replace-in-server">
+        <attribute name="replacer" />
+        <sequential>
+            <replace-in-war war="${testbed.rel-dir}/hello-ws/dist/hello-ws.war"
+                            replacer="@{replacer}" />
+        </sequential>
+    </macrodef>
 
+    <macrodef name="replace-in-both">
+        <attribute name="replacer" />
+        <sequential>
+            <replace-in-client replacer="@{replacer}" />
+            <replace-in-server replacer="@{replacer}" />
+        </sequential>
+    </macrodef>
+
+    <!--           -->
+    <!-- replacers -->
+    <!--           -->
+    
     <target name="-default-replacer">
         <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
-        <!-- replaces nothing -->
+        <!-- replace nothing -->
     </target>
 
-    <target name="-disable-cipher-replacer">
+    <target name="-enable-cipher-replacer">
         <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
         <replace dir="${dir}" summary="true">
             <include name="**/extension-cipher.properties"/>
-            <replacefilter token="extension.enabled=true" value="extension.enabled=false" />
+            <replacefilter token="extension.enabled=false" value="extension.enabled=true" />
         </replace>
     </target>
 
-    <!-- configurations to apply -->
-
-    <target name="apply-default-configuration">
-        <replace-in-testbed client-replacer="-default-replacer"
-                            server-replacer="-default-replacer" />
+    <target name="-trace-client-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-trace.properties"/>
+            <replacefilter token="#output=trace.log" value="output=${tomcat.dir./}/temp/trace-client.log" />
+        </replace>
     </target>
 
-    <target name="apply-no-cipher-configuration">
-        <replace-in-testbed client-replacer="-disable-cipher-replacer"
-                            server-replacer="-disable-cipher-replacer" />
+    <target name="-trace-server-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-trace.properties"/>
+            <replacefilter token="#output=trace.log" value="output=${tomcat.dir./}/temp/trace-server.log" />
+        </replace>
+    </target>
+    
+    <target name="-throw-serviceerrorexception-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/config.properties"/>
+            <replacefilter token="#hello.ws.ThrowServiceError=true" value="hello.ws.ThrowServiceError=true" />
+        </replace>
+    </target>  
+
+    <target name="-return-false-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.return=false" value="web-service-interceptor.return=false" />
+        </replace>
+    </target>  
+
+    <target name="-throw-wsiexception-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.throw=step.framework.extensions.WebServiceInterceptorException" value="web-service-interceptor.throw=step.framework.extensions.WebServiceInterceptorException" />
+        </replace>
+    </target>  
+
+    <target name="-throw-soapfaultexception-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.throw=javax.xml.ws.soap.SOAPFaultException" value="web-service-interceptor.throw=javax.xml.ws.soap.SOAPFaultException" />
+        </replace>
+    </target>  
+
+    <target name="-throw-nullpointerexception-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.throw=java.lang.NullPointerException" value="web-service-interceptor.throw=java.lang.NullPointerException" />
+        </replace>
+    </target>  
+
+    <target name="-client-outbound-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.error-when=client-outbound" value="web-service-interceptor.error-when=client-outbound" />
+        </replace>
+    </target> 
+    
+    <target name="-server-inbound-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.error-when=server-inbound" value="web-service-interceptor.error-when=server-inbound" />
+        </replace>
+    </target> 
+ 
+    <target name="-server-outbound-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.error-when=server-outbound" value="web-service-interceptor.error-when=server-outbound" />
+        </replace>
+    </target> 
+    
+    <target name="-client-inbound-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-errors.properties"/>
+            <replacefilter token="#web-service-interceptor.error-when=client-inbound" value="web-service-interceptor.error-when=client-inbound" />
+        </replace>
+    </target> 
+
+ 
+    <!--                -->
+    <!-- configurations -->
+    <!--                -->
+
+    <target name="apply-config-ok">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
     </target>
 
+
+    <!-- throw ServiceError_Exception -->
+    <target name="apply-config-throw-serviceerrorexception">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-throw-serviceerrorexception-replacer" />
+    </target>
+
+
+    <!-- return false -->
+    <target name="apply-config-return-false-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-return-false-replacer" />
+    </target>
+
+    <target name="apply-config-return-false-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-return-false-replacer" />
+    </target>
+
+    <target name="apply-config-return-false-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-return-false-replacer" />
+    </target>
+
+    <target name="apply-config-return-false-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-return-false-replacer" />
+    </target>
+
+
+    <!-- throw WebServiceInterceptorException -->
+    <target name="apply-config-throw-wsinterceptorexception-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-throw-wsiexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-wsinterceptorexception-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-throw-wsiexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-wsinterceptorexception-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-throw-wsiexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-wsinterceptorexception-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-throw-wsiexception-replacer" />
+    </target>
+
+
+    <!-- throw SOAPFaultException -->
+    <target name="apply-config-throw-soapfaultexception-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-throw-soapfaultexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-soapfaultexception-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-throw-soapfaultexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-soapfaultexception-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-throw-soapfaultexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-soapfaultexception-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-throw-soapfaultexception-replacer" />
+    </target>    
+
+    
+    <!-- throw NullPointerException -->
+    <target name="apply-config-throw-nullpointerexception-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-throw-nullpointerexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-nullpointerexception-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-throw-nullpointerexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-nullpointerexception-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-throw-nullpointerexception-replacer" />
+    </target>
+
+    <target name="apply-config-throw-nullpointerexception-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-throw-nullpointerexception-replacer" />
+    </target>    
+
+
+    <!-- CIPHER test cases -->
+    <target name="apply-config-cipher">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+    </target>
+    
 
     <!--
         4. Deploy =======================================
@@ -279,10 +463,7 @@
 
     <target name="deploy">
         <ant inheritAll="false" dir="${testbed.rel-dir}" target="deploy" />
-    </target>
-
-    <target name="wait-deploy">
-        <sleep seconds="3"/>
+        <sleep seconds="2"/>
     </target>
 
 
@@ -299,9 +480,7 @@
         6. Fetch results =======================================
     -->
 
-    <property name="results.rel-dir" value="results" />
-
-    <target name="fetch-results" depends="init">
+    <target name="fetch-results">
         <fail message="MUST DEFINE configuration PROPERTY" unless="configuration" />
         <property name="result.rel-dir" value="${results.rel-dir}/${DSTAMP}/${TSTAMP}/${configuration}" />
         <copy todir="${result.rel-dir}">
@@ -318,4 +497,175 @@
         <delete dir="${results.rel-dir}" failonerror="true" deleteonexit="true" />
     </target>
 
+
+    <!--
+        MASTER ORCHESTRATION
+    -->
+
+    <macrodef name="test-sequence">
+        <attribute name="configuration" default="ok" />
+        <sequential>
+            <!-- stage 1: Setup server -->
+            <antcall target="stop-server" />
+            <antcall target="reset-server" />
+            <antcall target="start-server" />
+            <!-- stage 2: Build testbed code -->
+            <antcall target="build" />
+            <!-- stage 3: Configure testbed-->
+            <antcall target="apply-config-@{configuration}" />
+            <!-- stage 4: Deploy-->
+            <antcall target="deploy" />
+            <!-- stage 5: Run tests-->
+            <antcall target="execute" />
+            <!-- stage 6: Fetch results-->
+            <antcall target="fetch-results">
+                <param name="configuration" value="@{configuration}" />
+            </antcall>
+        </sequential>
+    </macrodef>
+
+
+    <target name="test-ok">
+        <echo message="Testing *** ok *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence />
+    </target>
+
+
+    <!-- throw ServiceError_Exception -->
+    <target name="test-throw-serviceerrorexception">
+        <echo message="Testing *** throw-serviceerrorexception *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-serviceerrorexception" />
+    </target>
+
+    <!-- return false -->
+    <target name="test-return-false-cout">
+        <echo message="Testing *** return-false-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="return-false-cout" />
+    </target>
+
+    <target name="test-return-false-sin">
+        <echo message="Testing *** return-false-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="return-false-sin" />
+    </target>
+
+    <target name="test-return-false-sout">
+        <echo message="Testing *** return-false-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="return-false-sout" />
+    </target>
+
+    <target name="test-return-false-cin">
+        <echo message="Testing *** return-false-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="return-false-cin" />
+    </target>
+
+    <target name="test-return-false"
+            depends="test-return-false-cout,test-return-false-sin,test-return-false-sout,test-return-false-cin" />
+
+
+    <!-- throw WebServiceInterceptorException -->
+    <target name="test-throw-wsinterceptorexception-cout">
+        <echo message="Testing *** throw-wsinterceptorexception-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-wsinterceptorexception-cout" />
+    </target>
+
+    <target name="test-throw-wsinterceptorexception-sin">
+        <echo message="Testing *** throw-wsinterceptorexception-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-wsinterceptorexception-sin" />
+    </target>
+
+    <target name="test-throw-wsinterceptorexception-sout">
+        <echo message="Testing *** throw-wsinterceptorexception-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-wsinterceptorexception-sout" />
+    </target>
+
+    <target name="test-throw-wsinterceptorexception-cin">
+        <echo message="Testing ***throw-wsinterceptorexception-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-wsinterceptorexception-cin" />
+    </target>
+
+    <target name="test-throw-wsinterceptorexception"
+            depends="test-throw-wsinterceptorexception-cout,test-throw-wsinterceptorexception-sin,test-throw-wsinterceptorexception-sout,test-throw-wsinterceptorexception-cin" />
+
+    
+    <!-- throw SOAPFaultException -->
+    <target name="test-throw-soapfaultexception-cout">
+        <echo message="Testing *** throw-soapfaultexception-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-soapfaultexception-cout" />
+    </target>
+
+    <target name="test-throw-soapfaultexception-sin">
+        <echo message="Testing *** throw-soapfaultexception-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-soapfaultexception-sin" />
+    </target>
+
+    <target name="test-throw-soapfaultexception-sout">
+        <echo message="Testing *** throw-soapfaultexception-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-soapfaultexception-sout" />
+    </target>
+
+    <target name="test-throw-soapfaultexception-cin">
+        <echo message="Testing ***throw-soapfaultexception-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-soapfaultexception-cin" />
+    </target>
+
+    <target name="test-throw-soapfaultexception"
+            depends="test-throw-soapfaultexception-cout,test-throw-soapfaultexception-sin,test-throw-soapfaultexception-sout,test-throw-soapfaultexception-cin" />
+
+            
+    <!-- throw NullPointerException -->
+    <target name="test-throw-nullpointerexception-cout">
+        <echo message="Testing *** throw-nullpointerexception-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-nullpointerexception-cout" />
+    </target>
+
+    <target name="test-throw-nullpointerexception-sin">
+        <echo message="Testing *** throw-nullpointerexception-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-nullpointerexception-sin" />
+    </target>
+
+    <target name="test-throw-nullpointerexception-sout">
+        <echo message="Testing *** throw-nullpointerexception-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-nullpointerexception-sout" />
+    </target>
+
+    <target name="test-throw-nullpointerexception-cin">
+        <echo message="Testing ***throw-nullpointerexception-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="throw-nullpointerexception-cin" />
+    </target>
+
+     <target name="test-throw-nullpointerexception"
+            depends="test-throw-nullpointerexception-cout,test-throw-nullpointerexception-sin,test-throw-nullpointerexception-sout,test-throw-nullpointerexception-cin" />
+            
+    
+    <!-- cipher -->
+    <target name="test-cipher">
+        <echo message="Testing *** cipher *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher" />
+    </target>
+
+    
+    <!-- MASTER TEST -->
+    <target name="test"
+            depends="test-ok,test-cipher,test-throw-serviceerrorexception, test-return-false,test-throw-wsinterceptorexception,test-throw-soapfaultexception,test-throw-nullpointerexception" />
+
+  
 </project>
