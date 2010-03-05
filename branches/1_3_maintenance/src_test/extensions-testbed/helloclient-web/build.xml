@@ -150,6 +150,24 @@
 
     </target>
 
+    <!-- console -->
+
+    <property name="run.main-class" value="hello.web.SayHelloAction"/>
+    <property name="run.args" value="friend"/>
+
+    <target name="execute">
+    <!-- description="Execute the program as-is - no compilation is performed" -->
+        <java classname="${run.main-class}" fork="true">
+            <arg line="${run.args}" />
+            <classpath>
+               <path refid="project.classpath" />
+            </classpath>
+            <sysproperty key="com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump" value="false" />
+        </java>
+    </target>
+
+    <!-- run target is not defined because the console is for testing only -->
+
 
     <!-- build -->
 
