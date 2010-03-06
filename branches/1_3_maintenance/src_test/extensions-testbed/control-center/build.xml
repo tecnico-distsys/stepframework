@@ -450,12 +450,157 @@
 
 
     <!-- CIPHER test cases -->
-    <target name="apply-config-cipher">
+    
+    <target name="apply-config-cipher-ok">
         <replace-in-client replacer="-trace-client-replacer" />
         <replace-in-server replacer="-trace-server-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
     </target>
+
+    <!-- throw ServiceError_Exception -->
+    <target name="apply-config-cipher-throw-serviceerrorexception">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-throw-serviceerrorexception-replacer" />
+    </target>
+
+
+    <!-- return false -->
+    <target name="apply-config-cipher-return-false-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-return-false-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-return-false-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-return-false-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-return-false-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-return-false-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-return-false-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-return-false-replacer" />
+    </target>
+
+
+    <!-- throw WebServiceInterceptorException -->
+    <target name="apply-config-cipher-throw-wsinterceptorexception-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-throw-wsiexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-wsinterceptorexception-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-throw-wsiexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-wsinterceptorexception-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-throw-wsiexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-wsinterceptorexception-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-throw-wsiexception-replacer" />
+    </target>
+
+
+    <!-- throw SOAPFaultException -->
+    <target name="apply-config-cipher-throw-soapfaultexception-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-throw-soapfaultexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-soapfaultexception-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-throw-soapfaultexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-soapfaultexception-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-throw-soapfaultexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-soapfaultexception-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-throw-soapfaultexception-replacer" />
+    </target>    
+
     
+    <!-- throw NullPointerException -->
+    <target name="apply-config-cipher-throw-nullpointerexception-cout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-outbound-replacer" />
+        <replace-in-client replacer="-throw-nullpointerexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-nullpointerexception-sin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-inbound-replacer" />
+        <replace-in-server replacer="-throw-nullpointerexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-nullpointerexception-sout">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-server replacer="-server-outbound-replacer" />
+        <replace-in-server replacer="-throw-nullpointerexception-replacer" />
+    </target>
+
+    <target name="apply-config-cipher-throw-nullpointerexception-cin">
+        <replace-in-client replacer="-trace-client-replacer" />
+        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-both replacer="-enable-cipher-replacer" />
+        <replace-in-client replacer="-client-inbound-replacer" />
+        <replace-in-client replacer="-throw-nullpointerexception-replacer" />
+    </target>    
+
 
     <!--
         4. Deploy =======================================
@@ -521,6 +666,8 @@
             <antcall target="fetch-results">
                 <param name="configuration" value="@{configuration}" />
             </antcall>
+            <!-- stage 7: Assert results are as expected -->
+            <!-- TODO Currently done by manual inspection -->
         </sequential>
     </macrodef>
 
@@ -530,7 +677,6 @@
         <sleep seconds="1"/>
         <test-sequence />
     </target>
-
 
     <!-- throw ServiceError_Exception -->
     <target name="test-throw-serviceerrorexception">
@@ -655,17 +801,148 @@
             depends="test-throw-nullpointerexception-cout,test-throw-nullpointerexception-sin,test-throw-nullpointerexception-sout,test-throw-nullpointerexception-cin" />
             
     
-    <!-- cipher -->
-    <target name="test-cipher">
+    <!-- CIPHER cases -->
+    
+    <target name="test-cipher-ok">
         <echo message="Testing *** cipher *** configuration..." />
         <sleep seconds="1"/>
-        <test-sequence configuration="cipher" />
+        <test-sequence configuration="cipher-ok" />
     </target>
 
-    
-    <!-- MASTER TEST -->
-    <target name="test"
-            depends="test-ok,test-cipher,test-throw-serviceerrorexception, test-return-false,test-throw-wsinterceptorexception,test-throw-soapfaultexception,test-throw-nullpointerexception" />
+    <!-- throw ServiceError_Exception -->
+    <target name="test-cipher-throw-serviceerrorexception">
+        <echo message="Testing *** cipher-throw-serviceerrorexception *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-serviceerrorexception" />
+    </target>
 
-  
+    <!-- return false -->
+    <target name="test-cipher-return-false-cout">
+        <echo message="Testing *** cipher-return-false-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-return-false-cout" />
+    </target>
+
+    <target name="test-cipher-return-false-sin">
+        <echo message="Testing *** cipher-return-false-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-return-false-sin" />
+    </target>
+
+    <target name="test-cipher-return-false-sout">
+        <echo message="Testing *** cipher-return-false-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-return-false-sout" />
+    </target>
+
+    <target name="test-cipher-return-false-cin">
+        <echo message="Testing *** cipher-return-false-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-return-false-cin" />
+    </target>
+
+    <target name="test-cipher-return-false"
+            depends="test-cipher-return-false-cout,test-cipher-return-false-sin,test-cipher-return-false-sout,test-cipher-return-false-cin" />
+
+
+    <!-- throw WebServiceInterceptorException -->
+    <target name="test-cipher-throw-wsinterceptorexception-cout">
+        <echo message="Testing *** cipher-throw-wsinterceptorexception-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-wsinterceptorexception-cout" />
+    </target>
+
+    <target name="test-cipher-throw-wsinterceptorexception-sin">
+        <echo message="Testing *** cipher-throw-wsinterceptorexception-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-wsinterceptorexception-sin" />
+    </target>
+
+    <target name="test-cipher-throw-wsinterceptorexception-sout">
+        <echo message="Testing *** cipher-throw-wsinterceptorexception-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-wsinterceptorexception-sout" />
+    </target>
+
+    <target name="test-cipher-throw-wsinterceptorexception-cin">
+        <echo message="Testing ***cipher-throw-wsinterceptorexception-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-wsinterceptorexception-cin" />
+    </target>
+
+    <target name="test-cipher-throw-wsinterceptorexception"
+            depends="test-cipher-throw-wsinterceptorexception-cout,test-cipher-throw-wsinterceptorexception-sin,test-cipher-throw-wsinterceptorexception-sout,test-cipher-throw-wsinterceptorexception-cin" />
+
+    
+    <!-- throw SOAPFaultException -->
+    <target name="test-cipher-throw-soapfaultexception-cout">
+        <echo message="Testing *** cipher-throw-soapfaultexception-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-soapfaultexception-cout" />
+    </target>
+
+    <target name="test-cipher-throw-soapfaultexception-sin">
+        <echo message="Testing *** cipher-throw-soapfaultexception-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-soapfaultexception-sin" />
+    </target>
+
+    <target name="test-cipher-throw-soapfaultexception-sout">
+        <echo message="Testing *** cipher-throw-soapfaultexception-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-soapfaultexception-sout" />
+    </target>
+
+    <target name="test-cipher-throw-soapfaultexception-cin">
+        <echo message="Testing ***cipher-throw-soapfaultexception-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-soapfaultexception-cin" />
+    </target>
+
+    <target name="test-cipher-throw-soapfaultexception"
+            depends="test-cipher-throw-soapfaultexception-cout,test-cipher-throw-soapfaultexception-sin,test-cipher-throw-soapfaultexception-sout,test-cipher-throw-soapfaultexception-cin" />
+
+            
+    <!-- throw NullPointerException -->
+    <target name="test-cipher-throw-nullpointerexception-cout">
+        <echo message="Testing *** cipher-throw-nullpointerexception-cout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-nullpointerexception-cout" />
+    </target>
+
+    <target name="test-cipher-throw-nullpointerexception-sin">
+        <echo message="Testing *** cipher-throw-nullpointerexception-sin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-nullpointerexception-sin" />
+    </target>
+
+    <target name="test-cipher-throw-nullpointerexception-sout">
+        <echo message="Testing *** cipher-throw-nullpointerexception-sout *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-nullpointerexception-sout" />
+    </target>
+
+    <target name="test-cipher-throw-nullpointerexception-cin">
+        <echo message="Testing ***cipher-throw-nullpointerexception-cin *** configuration..." />
+        <sleep seconds="1"/>
+        <test-sequence configuration="cipher-throw-nullpointerexception-cin" />
+    </target>
+
+     <target name="test-cipher-throw-nullpointerexception"
+            depends="test-cipher-throw-nullpointerexception-cout,test-cipher-throw-nullpointerexception-sin,test-cipher-throw-nullpointerexception-sout,test-cipher-throw-nullpointerexception-cin" />
+    
+    
+    <!-- MASTER TESTS -->
+    <target name="test"
+            depends="test-ok,test-throw-serviceerrorexception, test-return-false,test-throw-wsinterceptorexception,test-throw-soapfaultexception,test-throw-nullpointerexception" 
+            description="Test all normal client-server interactions" />
+
+    <target name="test-cipher"
+            depends="test-cipher-ok,test-cipher-throw-serviceerrorexception, test-cipher-return-false,test-cipher-throw-wsinterceptorexception,test-cipher-throw-soapfaultexception,test-cipher-throw-nullpointerexception" 
+            description="Test all client-server interactions with cipher extension enabled" />
+
+    <target name="test-all"
+            depends="test,test-cipher"
+            description="Test all client-server interactions with and without cipher extension" />
+            
 </project>
