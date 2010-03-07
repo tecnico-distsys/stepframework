@@ -214,27 +214,31 @@
         <!-- replace nothing -->
     </target>
 
-    <target name="-enable-cipher-replacer">
-        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
-        <replace dir="${dir}" summary="true">
-            <include name="**/extension-cipher.properties"/>
-            <replacefilter token="extension.enabled=false" value="extension.enabled=true" />
-        </replace>
-    </target>
-
-    <target name="-trace-client-replacer">
+    <target name="-client-logs-replacer">
         <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
         <replace dir="${dir}" summary="true">
             <include name="**/extension-trace.properties"/>
-            <replacefilter token="#output=trace.log" value="output=${tomcat.dir./}/temp/trace-client.log" />
+            <replacefilter token="#output=trace.log" value="output=${tomcat.dir./}/temp/soap-trace-client.log" />
+        </replace>
+        <replace dir="${dir}" summary="true">
+            <include name="**/log4j.properties"/>
+            <replacefilter token="log-client.log" value="${tomcat.dir./}/logs/log-client.log" />
+            <replacefilter token="log-client.xml" value="${tomcat.dir./}/logs/log-client.xml" />
+            <replacefilter token="log-client.html" value="${tomcat.dir./}/logs/log-client.html" />
         </replace>
     </target>
 
-    <target name="-trace-server-replacer">
+    <target name="-server-logs-replacer">
         <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
         <replace dir="${dir}" summary="true">
             <include name="**/extension-trace.properties"/>
-            <replacefilter token="#output=trace.log" value="output=${tomcat.dir./}/temp/trace-server.log" />
+            <replacefilter token="#output=trace.log" value="output=${tomcat.dir./}/temp/soap-trace-server.log" />
+        </replace>
+        <replace dir="${dir}" summary="true">
+            <include name="**/log4j.properties"/>
+            <replacefilter token="log-server.log" value="${tomcat.dir./}/logs/log-server.log" />
+            <replacefilter token="log-server.xml" value="${tomcat.dir./}/logs/log-server.xml" />
+            <replacefilter token="log-server.html" value="${tomcat.dir./}/logs/log-server.html" />
         </replace>
     </target>
     
@@ -242,7 +246,7 @@
         <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
         <replace dir="${dir}" summary="true">
             <include name="**/config.properties"/>
-            <replacefilter token="#hello.ws.ThrowServiceError=true" value="hello.ws.ThrowServiceError=true" />
+            <replacefilter token="hello.ws.ThrowServiceError=false" value="hello.ws.ThrowServiceError=true" />
         </replace>
     </target>  
 
@@ -310,50 +314,58 @@
         </replace>
     </target> 
 
+    <target name="-enable-cipher-replacer">
+        <fail message="MUST DEFINE dir PROPERTY" unless="dir" />
+        <replace dir="${dir}" summary="true">
+            <include name="**/extension-cipher.properties"/>
+            <replacefilter token="extension.enabled=false" value="extension.enabled=true" />
+        </replace>
+    </target>
+
  
     <!--                -->
     <!-- configurations -->
     <!--                -->
 
     <target name="apply-config-ok">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
     </target>
 
 
     <!-- throw ServiceError_Exception -->
     <target name="apply-config-throw-serviceerrorexception">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-throw-serviceerrorexception-replacer" />
     </target>
 
 
     <!-- return false -->
     <target name="apply-config-return-false-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-return-false-replacer" />
     </target>
 
     <target name="apply-config-return-false-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-return-false-replacer" />
     </target>
 
     <target name="apply-config-return-false-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-return-false-replacer" />
     </target>
 
     <target name="apply-config-return-false-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-return-false-replacer" />
     </target>
@@ -361,29 +373,29 @@
 
     <!-- throw WebServiceInterceptorException -->
     <target name="apply-config-throw-wsinterceptorexception-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-throw-wsiexception-replacer" />
     </target>
 
     <target name="apply-config-throw-wsinterceptorexception-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-throw-wsiexception-replacer" />
     </target>
 
     <target name="apply-config-throw-wsinterceptorexception-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-throw-wsiexception-replacer" />
     </target>
 
     <target name="apply-config-throw-wsinterceptorexception-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-throw-wsiexception-replacer" />
     </target>
@@ -391,29 +403,29 @@
 
     <!-- throw SOAPFaultException -->
     <target name="apply-config-throw-soapfaultexception-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-throw-soapfaultexception-replacer" />
     </target>
 
     <target name="apply-config-throw-soapfaultexception-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-throw-soapfaultexception-replacer" />
     </target>
 
     <target name="apply-config-throw-soapfaultexception-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-throw-soapfaultexception-replacer" />
     </target>
 
     <target name="apply-config-throw-soapfaultexception-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-throw-soapfaultexception-replacer" />
     </target>    
@@ -421,29 +433,29 @@
     
     <!-- throw NullPointerException -->
     <target name="apply-config-throw-nullpointerexception-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-throw-nullpointerexception-replacer" />
     </target>
 
     <target name="apply-config-throw-nullpointerexception-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-throw-nullpointerexception-replacer" />
     </target>
 
     <target name="apply-config-throw-nullpointerexception-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-throw-nullpointerexception-replacer" />
     </target>
 
     <target name="apply-config-throw-nullpointerexception-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-throw-nullpointerexception-replacer" />
     </target>    
@@ -452,15 +464,15 @@
     <!-- CIPHER test cases -->
     
     <target name="apply-config-cipher-ok">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
     </target>
 
     <!-- throw ServiceError_Exception -->
     <target name="apply-config-cipher-throw-serviceerrorexception">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-throw-serviceerrorexception-replacer" />
     </target>
@@ -468,32 +480,32 @@
 
     <!-- return false -->
     <target name="apply-config-cipher-return-false-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-return-false-replacer" />
     </target>
 
     <target name="apply-config-cipher-return-false-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-return-false-replacer" />
     </target>
 
     <target name="apply-config-cipher-return-false-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-return-false-replacer" />
     </target>
 
     <target name="apply-config-cipher-return-false-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-return-false-replacer" />
@@ -502,32 +514,32 @@
 
     <!-- throw WebServiceInterceptorException -->
     <target name="apply-config-cipher-throw-wsinterceptorexception-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-throw-wsiexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-wsinterceptorexception-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-throw-wsiexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-wsinterceptorexception-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-throw-wsiexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-wsinterceptorexception-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-throw-wsiexception-replacer" />
@@ -536,32 +548,32 @@
 
     <!-- throw SOAPFaultException -->
     <target name="apply-config-cipher-throw-soapfaultexception-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-throw-soapfaultexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-soapfaultexception-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-throw-soapfaultexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-soapfaultexception-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-throw-soapfaultexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-soapfaultexception-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-throw-soapfaultexception-replacer" />
@@ -570,32 +582,32 @@
     
     <!-- throw NullPointerException -->
     <target name="apply-config-cipher-throw-nullpointerexception-cout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-outbound-replacer" />
         <replace-in-client replacer="-throw-nullpointerexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-nullpointerexception-sin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-inbound-replacer" />
         <replace-in-server replacer="-throw-nullpointerexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-nullpointerexception-sout">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-server replacer="-server-outbound-replacer" />
         <replace-in-server replacer="-throw-nullpointerexception-replacer" />
     </target>
 
     <target name="apply-config-cipher-throw-nullpointerexception-cin">
-        <replace-in-client replacer="-trace-client-replacer" />
-        <replace-in-server replacer="-trace-server-replacer" />
+        <replace-in-client replacer="-client-logs-replacer" />
+        <replace-in-server replacer="-server-logs-replacer" />
         <replace-in-both replacer="-enable-cipher-replacer" />
         <replace-in-client replacer="-client-inbound-replacer" />
         <replace-in-client replacer="-throw-nullpointerexception-replacer" />
