@@ -1,5 +1,8 @@
 package step.framework.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import step.framework.exception.TransactionException;
 
 /**
@@ -9,19 +12,31 @@ import step.framework.exception.TransactionException;
  */
 public class NullTransaction implements Transaction {
 
-    public NullTransaction() {
-    }
+	protected Log log;
 
-    /** empty */
-    public void begin() throws TransactionException {
-    }
+	public NullTransaction() {
+		this.log = LogFactory.getLog(this.getClass());
+	}
 
-    /** empty */
-    public void commit() throws TransactionException {
-    }
+	/** empty */
+	public void begin() throws TransactionException {
+		if (log.isTraceEnabled()) {
+			log.trace("Commit a transaction");
+		}
+	}
 
-    /** empty */
-    public void rollback() throws TransactionException {
-    }
+	/** empty */
+	public void commit() throws TransactionException {
+		if (log.isTraceEnabled()) {
+			log.trace("Commit a transaction");
+		}
+	}
+
+	/** empty */
+	public void rollback() throws TransactionException {
+		if (log.isTraceEnabled()) {
+			log.trace("Rollback a transaction");
+		}
+	}
 
 }

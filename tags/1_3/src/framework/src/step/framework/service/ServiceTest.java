@@ -18,11 +18,12 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
-import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.xml.sax.InputSource;
 
-import step.framework.persistence.PersistenceUtil;
+import step.framework.Bootstrap;
+import step.framework.config.ConfigUtil;
 
 /**
  *  This is the Framework's base service test.<br />
@@ -35,7 +36,7 @@ public class ServiceTest {
     static IDatabaseConnection connection;
 
     static {
-        PersistenceUtil.getSessionFactory().getCurrentSession();
+        Bootstrap.init();
     }
 
     @BeforeClass
@@ -57,25 +58,25 @@ public class ServiceTest {
     }
 
     private static final IDatabaseConnection getConnection()
-    throws IOException, ClassNotFoundException, SQLException {
+    throws IOException, ClassNotFoundException, SQLException, DatabaseUnitException {
         // load database properties
-        Properties buildProperties = new Properties();
-        buildProperties.load(
-            ServiceTest.class.getResourceAsStream("/dbunit.properties"));
-
-        String dbUrl = buildProperties.getProperty("database.url");
-        String dbUsername = buildProperties.getProperty("database.username");
-        String dbPassword = buildProperties.getProperty("database.password");
+    	Properties properties = ConfigUtil.getResourceAsProperties("/persistence.properties");                	
+		if(properties == null) {
+			throw new AssertionError("Persistence configuration file (/persistence.properties) not found...");
+		}
+    	
+    	final String dbUrl = "jdbc:mysql:" + properties.getProperty("persistence.dbAlias");
+        String dbUsername = properties.getProperty("persistence.dbUsername");
+        String dbPassword = properties.getProperty("persistence.dbPassword");
 
         // create JDBC connection
-        Class.forName(buildProperties.getProperty("database.driver"));
+    	Class.forName("com.mysql.jdbc.Driver");
         Connection jdbcConnection = DriverManager.getConnection(dbUrl,
         dbUsername, dbPassword);
 
         // Disable foreign key constraint checking
         // This really depends on the DBMS product... here for MySQL DB
-        jdbcConnection.prepareStatement(
-            buildProperties.getProperty("database.disableConstraints")).execute();
+        jdbcConnection.prepareStatement("set FOREIGN_KEY_CHECKS=0").execute();
 
         // create DbUnit connection
         return new DatabaseConnection(jdbcConnection);
@@ -100,7 +101,11 @@ public class ServiceTest {
         InputSource inputSource = new InputSource(
             getClass().getResourceAsStream(filename));
         inputSource.setEncoding("UTF-8");
-        return new CompositeDataSet(new FlatXmlDataSet(inputSource));
+        FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+// JORGE: these options should reduce hand-coded XML bugs
+//        builder.setColumnSensing(true);
+//        builder.setCaseSensitiveTableNames(true);
+        return new CompositeDataSet(builder.build(inputSource));
     }
 
     /**
