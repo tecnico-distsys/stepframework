@@ -17,7 +17,7 @@
     <property name="src.rel-dir" value="src"/>
     <property name="tests.src.rel-dir" value="tests"/>
     <property name="web-content.rel-dir" value="WebContent"/>
-    <property name="build.rel-dir" value="build/classes"/>
+    <property name="build.rel-dir" value="bin"/>
     <property name="dist.rel-dir" value="dist"/>
 
 
@@ -180,9 +180,7 @@
                          includes="**/*.java"
                          excludes="**/*DefaultServiceTest.java" />
             </batchtest>
-            <classpath>
-                <path refid="project.classpath" />
-            </classpath>
+            <classpath refid="project.classpath" />
             <sysproperty key="step.framework.persistence.factory" value="hibernate" />
         </junit>
     </target>
