@@ -9,7 +9,7 @@
 
     <xsd:complexType name="ReservationVoucher">
         <xsd:sequence>
-            <xsd:element name="reservationCode" type="xsd:string"/>
+            <xsd:element name="reservationCode" type="xsd:int"/>
             <xsd:element name="flightNumber" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>

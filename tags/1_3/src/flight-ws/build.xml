@@ -15,10 +15,18 @@
 
     <!-- properties with default folder locations -->
     <property name="src.rel-dir" value="src"/>
+	<property name="src.java.rel-dir" value="${src.rel-dir}/java"/>
+	<property name="src.dml.rel-dir" value="${src.rel-dir}/dml"/>
     <property name="tests.src.rel-dir" value="tests"/>
     <property name="web-content.rel-dir" value="WebContent"/>
-    <property name="build.rel-dir" value="build/classes"/>
+    <property name="build.rel-dir" value="build"/>
+	<property name="build.generated-src.rel-dir" value="${build.rel-dir}/src"/>
+	<property name="build.classes.rel-dir" value="${build.rel-dir}/classes"/>
+	<property name="build.classes.dir" location="${build.classes.rel-dir}"/>
     <property name="dist.rel-dir" value="dist"/>
+	
+	<property name="dml.rel-file" value="${src.dml.rel-dir}/flight.dml"/>
+	<property name="dml.file" location="${dml.rel-file}"/>
 
 
     <!-- import external definitions -->
@@ -30,14 +38,14 @@
 
     <path id="project.classpath">
         <!-- compiled classes -->
-        <pathelement location="${build.rel-dir}" />
+        <pathelement location="${build.classes.rel-dir}" />
         <!-- project libraries -->
         <fileset dir="${web-content.rel-dir}/WEB-INF">
             <include name="lib/**/*.jar" />
         </fileset>
         <!-- shared libraries -->
         <fileset dir="../lib">
-            <include name="*.jar" />
+            <include name="**/*.jar" />
         </fileset>
         <!-- referenced libraries -->
         <fileset dir="${env.STEP_HOME}/lib">
@@ -45,24 +53,83 @@
         </fileset>
     </path>
 
+	<!-- fenix-framework -->
 
-    <!-- basic -->
+	<import file="dml-generate.xml"/>
+	
+	<property name="flag.generated.rel-file" value="${build.generated-src.rel-dir}/dml.generated"/>
+	
+	<target name="clean-domain">
+	<!-- description="Deletes generated base domain classes" -->
+	    <delete dir="${build.generated-src.rel-dir}/org/tripplanner/flight/domain"
+	    	includeemptydirs="true" failonerror="false" deleteonexit="true" />
+		<delete file="${flag.generated.rel-file}" />
+	</target>
+	
+	<target name="check-domain-sources">
+		<uptodate property="uptodate.sources" srcfile="${dml.rel-file}" targetfile="${flag.generated.rel-file}"/>
+	</target>
 
-    <target name="init">
-        <mkdir dir="${build.rel-dir}"/>
-        <mkdir dir="${dist.rel-dir}"/>
-    </target>
+	<target name="sources-are-uptodate" if="uptodate.sources">
+		<echo message="Base domain classes already generated"/>
+	</target>
+	
+	<target name="generate-domain" depends="check-domain-sources,sources-are-uptodate" unless="uptodate.sources">
+	<!-- description="Generates the base domain classes from a DML specification" -->
+        <echo message="Executing dml-compile to generate base domain classes..." />
+        <echo message="DML: ${dml.rel-file}" />
+		<dml-compile dml="${dml.rel-file}" java-sources="${src.java.rel-dir}" java-gen="${build.generated-src.rel-dir}">
+			<classpath refid="project.classpath" />
+		</dml-compile>
+		<touch file="${flag.generated.rel-file}"/>
+	</target>
 
-    <target name="clean"
-        description="Delete temporary folders">
-        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
-        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
-    </target>
+	
+	<target name="check-domain-classes">
+	<!-- description="Checks if base domain classes have already been instrumented" --> 
+		<uptodate property="uptodate.dml">
+			<srcfiles dir="${src.dml.rel-dir}" includes="**/*.dml"/>
+			<chainedmapper>
+				<mapper type="flatten"/>
+				<mapper type="glob" from="*.dml" to="${build.classes.dir}/*.dml"/>
+			</chainedmapper>
+		</uptodate>
+		<condition property="uptodate.classes">
+			<and>
+				<available type="dir" filepath="${build.generated-src.rel-dir}" file="/org/tripplanner/flight/domain" /> 
+				<uptodate>
+					<srcfiles dir="${build.generated-src.rel-dir}" includes="org/tripplanner/flight/domain/**/*.java"/>
+					<chainedmapper>
+						<mapper type="package" from="*.java" to="*.class"/>
+						<mapper type="unpackage" from="*.class" to="${build.classes.dir}/*.class"/>
+					</chainedmapper>
+				</uptodate>
+				<isset property="uptodate.dml"/>
+			</and>
+		</condition>
+	</target>
 
+	<target name="dml-not-uptodate" unless="uptodate.dml">
+		<copy file="${dml.rel-file}" todir="${build.classes.rel-dir}"/>
+	</target>
+	
+	<target name="classes-are-uptodate" if="uptodate.classes">
+		<echo message="Base domain classes already instrumented."/>
+	</target>
+	
+	<target name="instrument-domain" depends="check-domain-classes,dml-not-uptodate,classes-are-uptodate" unless="uptodate.classes">
+		<!-- description="Instruments the domain classes" -->
+		<echo message="Executing post-process-domain to instrument base domain classes..." />
+		<echo message="DML: ${dml.file}" />
+		<post-process-domain dml="${dml.file}" dir="${build.classes.rel-dir}">
+			<classpath refid="project.classpath" />
+		</post-process-domain>
+	</target>
 
     <!-- jax-ws-server -->
 
     <property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/flight.wsdl" />
+    <property name="xsd.rel-dir" value="${web-content.rel-dir}/WEB-INF/wsdl" />
 
     <target name="wsimport" depends="init,-generate-wsdl-url" unless="recompile.flag">
     <!-- description="Generate Web Service server-side Java code from WSDL" -->
@@ -71,45 +138,85 @@
         <wsimport wsdl="${wsdl.url}"
                   debug="true"
                   verbose="false"
-                  destdir="${build.rel-dir}"
-                  sourcedestdir="${build.rel-dir}"
+                  destdir="${build.classes.rel-dir}"
+                  sourcedestdir="${build.generated-src.rel-dir}"
         >
             <binding dir="${web-content.rel-dir}/WEB-INF" includes="jaxws*binding.xml"/>
-            <produces dir="${build.rel-dir}/org/tripplanner/flight/view" />
-            <produces dir="${build.rel-dir}/org/tripplanner/flight/wsdl" />
+        	<depends dir="${xsd.rel-dir}" includes="*.xsd" />
+            <produces dir="${build.generated-src.rel-dir}" includes="org/tripplanner/flight/view/,org/tripplanner/flight/wsdl" />
+        	<produces dir="${build.classes.rel-dir}" includes="org/tripplanner/flight/view/,org/tripplanner/flight/wsdl" />
+<!--
+            <produces dir="${build.generated-src.rel-dir}/org/tripplanner/flight/view" />
+        	<produces dir="${build.classes.rel-dir}/org/tripplanner/flight/view" />
+            <produces dir="${build.generated-src.rel-dir}/org/tripplanner/flight/wsdl" />
+        	<produces dir="${build.classes.rel-dir}/org/tripplanner/flight/wsdl" />
+-->
         </wsimport>
-        <!-- The sources are in the build folder, for programmer reference -->
+        <!-- The sources are in the generated source folder, for programmer reference -->
     </target>
 
+	<target name="clean-wsimport">
+	<!-- description="Deletes generated Web Service server-side classes" -->
+		<delete includeemptydirs="true" failonerror="false" deleteonexit="true">
+			<fileset dir="${build.generated-src.rel-dir}/org/tripplanner/flight/view"/>
+			<fileset dir="${build.generated-src.rel-dir}/org/tripplanner/flight/wsdl"/>
+		</delete>
+	</target>
+	
+	<!-- basic -->
 
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+    	<mkdir dir="${build.classes.rel-dir}"/>
+    	<!--mkdir dir="${build.generated-src.rel-dir}"/-->
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+	<target name="clean-classes">
+	<!-- description="Deletes compiled classes" -->
+	    <delete dir="${build.classes.rel-dir}" failonerror="false" deleteonexit="true" />
+	</target>		
+
+	<target name="clean" description="Delete temporary folders">
+		<delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+		<delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+	</target>
+	
     <!-- compile -->
 
     <target name="prepare-resources" depends="init">
     <!-- description="Prepare application resource files" -->
-        <copy todir="${build.rel-dir}" overwrite="true">
-            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        <copy todir="${build.classes.rel-dir}" overwrite="true">
+            <fileset dir="${src.java.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
         </copy>
-        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+        <replace dir="${build.classes.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
             <replacefilter token="@example-token@" value="${example-property}" />
         </replace>
     </target>
 
-    <target name="compile" depends="wsimport,prepare-resources">
+    <target name="compile-sources" depends="generate-domain,wsimport,prepare-resources">
     <!-- description="Compile source code" -->
         <javac
-            srcdir="${src.rel-dir}"
-            destdir="${build.rel-dir}"
+            srcdir="${src.java.rel-dir}"
+            destdir="${build.classes.rel-dir}"
             debug="true"
             debuglevel="lines,vars,source"
             optimize="true"
             deprecation="true"
             verbose="false"
         >
+        	<src>
+        		<pathelement path="${build.generated-src.rel-dir}:${src.java.rel-dir}"/>
+<!--        		<dirset dir="${build.generated-src.rel-dir}" includes="**/*.java"/>
+        		<dirset dir="${src.java.rel-dir}" includes="**/*.java" /> -->
+        	</src>
             <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
             <classpath refid="project.classpath" />
         </javac>
     </target>
 
+	<target name="compile" depends="compile-sources,instrument-domain"/>
+	<!-- description="Compile classes from source" -->		
 
     <!-- library -->
 
@@ -119,46 +226,25 @@
     <!-- description="Create a jar file" -->
         <jar destfile="${jar.rel-file}">
             <!-- include only exception classes and resources -->
-            <zipfileset dir="${build.rel-dir}"
+            <zipfileset dir="${build.classes.rel-dir}"
                         includes="**/exception/*.class,**/exception/*.properties,**/exception/*.xml"
                         excludes="" />
         </jar>
     </target>
 
-
-    <!-- hibernate -->
-
-    <target name="hibernatetool" depends="compile"
-        description="Create database schema based on the hibernate model">
-
-        <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
-
-        <hibernatetool destdir="${dist.rel-dir}">
-            <classpath refid="project.classpath" />
-            <annotationconfiguration configurationfile="${build.rel-dir}/hibernate.cfg.xml"/>
-            <hbm2ddl
-                export="true"
-                update="false"
-                drop="true"
-                create="true"
-                outputfilename="application-schema.sql"
-                format="true"
-                haltonerror="false"
-            />
-        </hibernatetool>
-    </target>
-
-
     <!-- tests -->
-
+<!--
     <target name="compile-tests" depends="compile">
+-->
     <!-- description="Compile tests for service classes" -->
+<!--
         <antcall target="compile">
-            <param name="src.rel-dir" value="${tests.src.rel-dir}" />
+            <param name="src.java-rel-dir" value="${tests.src.rel-dir}" />
             <param name="recompile.flag" value="true" />
         </antcall>
     </target>
-
+-->
+<!--
     <target name="run-tests" depends="compile-tests"
         description="Run tests for service classes">
         <junit
@@ -171,7 +257,7 @@
             failureproperty=""
             filtertrace="true"
             jvm="java"
-            dir="${build.rel-dir}"
+            dir="${build.classes.rel-dir}"
             newenvironment="false"
             includeantruntime="true"
             showoutput=""
@@ -191,7 +277,7 @@
             <sysproperty key="step.framework.persistence.factory" value="hibernate" />
         </junit>
     </target>
-
+-->
 
     <!-- web application -->
 
@@ -206,12 +292,13 @@
             <zipfileset dir="${web-content.rel-dir}"
                         includes="**/*" />
             <!-- compiled classes and resource files -->
-            <zipfileset dir="${build.rel-dir}"
-                        includes="**/*.class,**/*.properties,**/*.xml"
+            <zipfileset dir="${build.classes.rel-dir}"
+                        includes="**/*.class,**/*.properties,**/*.xml,**/*.dml"
                         prefix="WEB-INF/classes" />
             <!-- shared libs -->
             <zipfileset dir="../lib"
                         includes="*.jar"
+            			excludes="junit*,dbunit*,slf4j*"
                         prefix="WEB-INF/lib" />
             <!-- referenced libs -->
             <zipfileset dir="../extensions/dist"
