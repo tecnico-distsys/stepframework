@@ -193,7 +193,7 @@ public class SOAPUtil{
             org.w3c.dom.Document newDoc = newDetail.getOwnerDocument();
 
             // import all detail entries (copy)
-            Iterator detailEntriesIterator = faultDetail.getDetailEntries();
+            Iterator<?> detailEntriesIterator = faultDetail.getDetailEntries();
             while(detailEntriesIterator.hasNext()) {
                 DetailEntry detailEntry = (DetailEntry) detailEntriesIterator.next();
                 org.w3c.dom.Node newNode = newDoc.importNode(detailEntry, true /*deep*/);
