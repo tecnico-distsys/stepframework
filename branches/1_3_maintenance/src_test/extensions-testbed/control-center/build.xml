@@ -667,7 +667,7 @@
             <antcall target="reset-server" />
             <antcall target="start-server" />
             <!-- stage 2: Build testbed code -->
-            <antcall target="build" />
+            <antcall target="rebuild" />
             <!-- stage 3: Configure testbed-->
             <antcall target="apply-config-@{configuration}" />
             <!-- stage 4: Deploy-->
