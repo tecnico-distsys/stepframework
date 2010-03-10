@@ -115,7 +115,7 @@ public class WebServiceInterceptorManager {
     //  messages, so it's not used.
     private String buildWebServiceConfigPath(SOAPMessageContext smc) {
         ExtensionsUtil.throwIllegalArgIfNull(smc,
-                                             "soap message context can't be null");
+                                             "soap message context cannot be null");
 
         // read SOAP message name properties
         QName qualifiedServiceName = (QName) smc.get(MessageContext.WSDL_SERVICE);
@@ -144,13 +144,13 @@ public class WebServiceInterceptorManager {
         String port = dequalifiedPort[DEQUALIFY_LOCAL_NAME_IDX];
 
         // warn if the namespaces in port and operation are different from
-        // the namespace in service (the one that's being used)
+        // the namespace in service (the one that is being used)
         if(log.isWarnEnabled()) {
             String portNamespace = dequalifiedPort[DEQUALIFY_NAMESPACE_IDX];
             if(!(namespace.equals(portNamespace))) {
                 log.warn("The port namespace is different from the service namespace.");
                 log.warn("service ns: '" + namespace + "', port ns: '" + portNamespace + "'");
-                log.warn("Extension engine is assuming they're the same for configuration purposes.");
+                log.warn("Extension engine is assuming they are the same for configuration purposes.");
             }
         }
 
@@ -205,7 +205,7 @@ public class WebServiceInterceptorManager {
 
         // check argument
         ExtensionsUtil.throwIllegalArgIfNull(smc,
-                                             "SOAP message context can't be null");
+                                             "SOAP message context cannot be null");
 
         // check if extension engine is enabled
         if(!this.engine.isEnabled()) {
@@ -270,10 +270,14 @@ public class WebServiceInterceptorManager {
     private boolean interceptMessage(SOAPMessageContext smc, InterceptConfigData configData) {
         // check argument
         ExtensionsUtil.throwIllegalArgIfNull(smc,
-                                             "SOAP message context can't be null");
+                                             "SOAP message context cannot be null");
         try {
             // intercept message return value
             boolean interceptMessageReturnValue = true;
+            // flag to signal that a hidden fault has been uncovered by an interceptor
+            boolean hiddenFault = false;
+            // flag to signal that an interceptor has thrown an exception TODO
+            /*boolean thrownFault = false;*/
 
             // inspect SOAP message context
             // to find out in which situation is the message being intercepted
@@ -325,13 +329,22 @@ public class WebServiceInterceptorManager {
                     WebServiceInterceptor interceptor = ext.createWebServiceInterceptorInstance();
 
                     log.trace("create web service interceptor parameter instance");
-                    WebServiceInterceptorParameter param =
-                        new WebServiceInterceptorParameter(this.engine, ext, smc);
+                    WebServiceInterceptorParameter param = new WebServiceInterceptorParameter(this.engine, ext, smc);
 
                     log.trace("call web service interceptor");
                     boolean interceptorReturnValue = interceptor.interceptMessage(param);
                     if(log.isTraceEnabled()) {
                         log.trace("interceptor return value: '" + interceptorReturnValue + "'");
+                    }
+
+                    log.trace("checking if web service interceptor uncovered a hidden fault");
+                    if(!IS_FAULT && SOAPUtil.isFaultMessage(smc)) {
+                        hiddenFault = true;
+                        log.trace("interceptor execution uncovered a hidden fault");
+                        if(log.isTraceEnabled()) {
+                            SOAPFault soapFault = SOAPUtil.getFault(smc.getMessage());
+                            log.trace("uncovered fault string: " + soapFault.getFaultString());
+                        }
                     }
 
                     // process interceptor return value
@@ -367,6 +380,9 @@ public class WebServiceInterceptorManager {
                     // only the first exception can cause a direction change
                     log.trace("from now on, the loop can no longer change direction");
                     canChangeDirectionFlag = false;
+                    
+                    // remember that a exception was thrown in case some extension masks it
+                    /*thrownFault = true;*/
 
                     log.debug("proceed");
 
@@ -385,6 +401,9 @@ public class WebServiceInterceptorManager {
                     // only the first exception can cause a direction change
                     log.trace("from now on, the loop can no longer change direction");
                     canChangeDirectionFlag = false;
+                    
+                    // remember that a exception was thrown in case some extension masks it
+                    /*thrownFault = true;*/
 
                     log.debug("proceed");
 
@@ -422,7 +441,7 @@ public class WebServiceInterceptorManager {
 
             // if message is a newly created SOAP fault, throw a SOAPFaultException
             // (IS_FAULT was assigned before the interceptors loop)
-            if(!IS_FAULT) {
+            if(!IS_FAULT && !hiddenFault) {
                 SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
                 if(sf != null) {
                     // message is a SOAPFault
@@ -433,6 +452,11 @@ public class WebServiceInterceptorManager {
 
             // return value only after checking that there isn't an exception to throw
             // (i.e. exceptions take precedence over return value)
+            /*if(thrownFault) {
+                log.trace("setting return to 'false' from intercept message due to thrown faults");
+            	interceptMessageReturnValue = false;
+            }*/
+
             if(log.isTraceEnabled()) {
                 log.trace("returning '" + interceptMessageReturnValue + "' from intercept message");
             }
