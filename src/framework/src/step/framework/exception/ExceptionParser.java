@@ -4,11 +4,12 @@ import java.lang.reflect.Constructor;
 
 public class ExceptionParser {
 
-    public static <T> T parse(String faultType, String faultMessage) {
+    @SuppressWarnings("unchecked")
+	public static <T> T parse(String faultType, String faultMessage) {
 	Class<? extends T> domainExceptionClass = null;
 	// get the exception class
 	try {
-	    domainExceptionClass = (Class<? extends T>)Class.forName(faultType);
+	    domainExceptionClass = (Class<? extends T>) Class.forName(faultType);
 	} catch (Exception e) { // either ClassNotFoundException or ClasCastException
 	    throw new RuntimeException("Could not find class for exception: '" + faultType + "'");
 	}

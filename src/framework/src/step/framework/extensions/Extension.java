@@ -1,7 +1,7 @@
 package step.framework.extensions;
 
 import java.util.Collections;
-import java.util.Enumeration;
+//import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -69,19 +69,19 @@ public class Extension {
     /** extension listener full class name */
     private String listenerClassName;
     /** extension listener class */
-    private Class listenerClass;
+	private Class<?> listenerClass;
     /** extension listener class instance */
     private ExtensionListener listenerInstance;
 
     /** extension service interceptor full class name */
     private String serviceInterceptorClassName;
     /** extension service interceptor class */
-    private Class serviceInterceptorClass;
+	private Class<?> serviceInterceptorClass;
 
     /** extension web service interceptor full class name */
     private String webServiceInterceptorClassName;
     /** extension web service interceptor class */
-    private Class webServiceInterceptorClass;
+	private Class<?> webServiceInterceptorClass;
 
     /** additional configuration properties */
     private Properties additionalConfig;
@@ -293,9 +293,17 @@ public class Extension {
             // log all properties
             if(log.isTraceEnabled()) {
                 log.trace("extension " + this.id + " config properties (key: 'value')");
-                for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-                    String key = (String) e.nextElement();
-                    String value = (String) props.get(key);
+                
+// JORGE: Replaced with typesafe for-each loop
+                
+//                for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
+//                    String key = (String) e.nextElement();
+//                    String value = (String) props.get(key);
+//                    log.trace(key + ": '" + value + "'");
+//                }
+                
+                for (String key : props.stringPropertyNames()) {
+                	String value = (String) props.get(key);
                     log.trace(key + ": '" + value + "'");
                 }
             }
@@ -427,7 +435,7 @@ public class Extension {
     //
 
     // Helper method to load class
-    private Class loadClass(String className, String desc) throws ExtensionException {
+	private Class<?> loadClass(String className, String desc) throws ExtensionException {
         ExtensionsUtil.throwIllegalArgIfNull(className,
                                              "class name used to load class can't be null");
         // if necessary provide a default description
@@ -446,7 +454,7 @@ public class Extension {
     }
 
     // Helper method to create class instance
-    private Object createInstance(Class classObject, String desc) throws ExtensionException {
+	private Object createInstance(Class<?> classObject, String desc) throws ExtensionException {
         ExtensionsUtil.throwIllegalArgIfNull(classObject,
                                              "class used to create instance can't be null");
         // if necessary provide a default description

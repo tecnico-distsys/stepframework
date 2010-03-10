@@ -2,7 +2,7 @@ package step.framework.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+//import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -107,12 +107,21 @@ public class ConfigUtil {
         if(prefix == null)
             throw new IllegalArgumentException("Can't remove properties with null prefix!");
 
-        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-            String key = (String) e.nextElement();
-            if (key.startsWith(prefix)) {
+// JORGE: Replaced with typesafe for-each loop
+        
+//        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
+//            String key = (String) e.nextElement();
+//            if (key.startsWith(prefix)) {
+//                props.remove(key);
+//            }
+//        }
+
+        for (String key : props.stringPropertyNames()) {
+        	if (key.startsWith(prefix)) {
                 props.remove(key);
             }
         }
+        
     }
 
 }

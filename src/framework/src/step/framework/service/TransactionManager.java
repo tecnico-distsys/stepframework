@@ -7,7 +7,12 @@ package step.framework.service;
  *  <br />
  */
 public interface TransactionManager {
+	public enum TransactionType {
+		DISABLED,
+		REQUIRED
+	}
 
-    public Transaction newTransaction();
+    public Transaction newTransaction(TransactionType type);
+    public boolean supportsType(TransactionType type);
 
 }
