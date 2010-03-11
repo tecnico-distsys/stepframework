@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import step.framework.domain.DomainException;
 import step.framework.extensions.ServiceInterceptor;
 import step.framework.extensions.ServiceInterceptorException;
 import step.framework.extensions.ServiceInterceptorParameter;
@@ -20,7 +19,7 @@ public class TraceServiceInterceptor implements ServiceInterceptor {
      *   Prints the values of the service atributes before the service's execution.
      */
     public void interceptBefore(ServiceInterceptorParameter param)
-    throws DomainException, ServiceInterceptorException {
+    throws ServiceInterceptorException {
         trace(param);
     }
 
@@ -28,12 +27,12 @@ public class TraceServiceInterceptor implements ServiceInterceptor {
      *   Prints the values of the service atributes after the service's execution.
      */
     public void interceptAfter(ServiceInterceptorParameter param)
-    throws DomainException, ServiceInterceptorException {
+    throws ServiceInterceptorException {
         trace(param);
     }
 
     private void trace(ServiceInterceptorParameter param)
-    throws DomainException, ServiceInterceptorException {
+    throws ServiceInterceptorException {
         // where to write the information
         PrintStream out = getPrintStream(param);
 
