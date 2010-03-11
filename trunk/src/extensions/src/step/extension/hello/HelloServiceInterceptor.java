@@ -2,7 +2,6 @@ package step.extension.hello;
 
 import java.util.Properties;
 
-import step.framework.domain.DomainException;
 import step.framework.extensions.ServiceInterceptor;
 import step.framework.extensions.ServiceInterceptorException;
 import step.framework.extensions.ServiceInterceptorParameter;
@@ -16,7 +15,7 @@ public class HelloServiceInterceptor implements ServiceInterceptor {
 
     /** Greet before the service executes */
     public void interceptBefore(ServiceInterceptorParameter param)
-    throws DomainException, ServiceInterceptorException {
+    throws ServiceInterceptorException {
         Properties extConfig = param.getExtension().getConfig();
         String greeting = extConfig.getProperty("greeting");
         System.out.println(greeting + " (before service execution)");
@@ -24,7 +23,7 @@ public class HelloServiceInterceptor implements ServiceInterceptor {
 
     /** Greet after the service executes */
     public void interceptAfter(ServiceInterceptorParameter param)
-    throws DomainException, ServiceInterceptorException {
+    throws ServiceInterceptorException {
         Properties extConfig = param.getExtension().getConfig();
         String greeting = extConfig.getProperty("greeting");
         System.out.println(greeting + " (after service execution)");

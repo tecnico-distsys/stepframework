@@ -3,7 +3,8 @@ package step.framework.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import step.framework.domain.DomainException;
+import pt.ist.fenixframework.DomainObject;
+
 import step.framework.exception.ServiceException;
 import step.framework.extensions.ServiceInterceptorManager;
 import step.framework.persistence.Persistence;
@@ -71,7 +72,7 @@ public abstract class Service<R> {
      *  transaction implementations.<br />
      *  <br />
      */
-    public final R execute(TransactionManager txManager) throws DomainException, ServiceException {
+    public final R execute(TransactionManager txManager) throws ServiceException {
     	Transaction tx = null;
         boolean txCommited = false;
 
@@ -103,24 +104,28 @@ public abstract class Service<R> {
 
     }
 
-    public R execute() throws DomainException, ServiceException {
+    public R execute() throws ServiceException {
     	return execute(TransactionManagerFactory.defaultTransactionManager(txType));
     }
     
     /** This is the method subclasses should override to implement a service */
-    protected abstract R action() throws DomainException;
+    protected abstract R action();
 
 
     //
     // Extensions interception
     //
 
-    protected final void before() throws DomainException, ServiceException {
+    protected final void before() throws ServiceException {
         extManager.interceptBeforeService(this);
     }
 
-    protected final void after() throws DomainException, ServiceException {
+    protected final void after() throws ServiceException {
         extManager.interceptAfterService(this);
     }
 
+    @SuppressWarnings("unchecked")
+    protected final <T extends DomainObject> T getRoot() {
+        return (T) Persistence.getRoot();
+    }
 }

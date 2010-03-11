@@ -7,7 +7,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import step.framework.config.tree.ConfigTree;
-import step.framework.domain.DomainException;
 import step.framework.exception.ServiceException;
 
 
@@ -44,7 +43,7 @@ public class ServiceInterceptorManager {
      *  Intercept service before main action
      */
     public void interceptBeforeService(Object serviceInstance)
-    throws DomainException, ServiceException {
+    throws ServiceException {
         try {
             log.trace("entering interceptBefore()");
             InterceptConfigData configData = prepareForIntercept(serviceInstance);
@@ -60,7 +59,7 @@ public class ServiceInterceptorManager {
      *  Intercept service after main action
      */
     public void interceptAfterService(Object serviceInstance)
-    throws DomainException, ServiceException {
+    throws ServiceException {
         try {
             log.trace("entering interceptAfter()");
             InterceptConfigData configData = prepareForIntercept(serviceInstance);
@@ -131,7 +130,7 @@ public class ServiceInterceptorManager {
 
     // Helper method to actually perform before service interception
     private void interceptBefore(Object serviceInstance, InterceptConfigData configData)
-    throws DomainException, ServiceException {
+    throws ServiceException {
 
         // log service being intercepted
         if(log.isDebugEnabled()) {
@@ -173,8 +172,6 @@ public class ServiceInterceptorManager {
                 interceptor.interceptBefore(param);
                 //          ---------------
 
-            } catch(DomainException de) {
-                handleDomainException(de);
             } catch(ServiceInterceptorException sie) {
                 handleServiceInterceptorException(sie);
             } catch(ExtensionException ee) {
@@ -190,7 +187,7 @@ public class ServiceInterceptorManager {
 
     // Helper method to actually perform after service interception
     private void interceptAfter(Object serviceInstance, InterceptConfigData configData)
-    throws DomainException, ServiceException {
+    throws ServiceException {
 
         // log service being intercepted
         if(log.isDebugEnabled()) {
@@ -234,8 +231,6 @@ public class ServiceInterceptorManager {
                 interceptor.interceptAfter(param);
                 //          --------------
 
-            } catch(DomainException de) {
-                handleDomainException(de);
             } catch(ServiceInterceptorException sie) {
                 handleServiceInterceptorException(sie);
             } catch(ExtensionException ee) {
@@ -248,16 +243,6 @@ public class ServiceInterceptorManager {
 
     } // interceptAfter
 
-
-    // Helper method to handle a domain exception during interception
-    private void handleDomainException(DomainException de)
-    throws DomainException {
-        log.debug("service interceptor has thrown a domain exception");
-        log.debug(de);
-        log.trace("domain exception details", de);
-        log.trace("rethrowing");
-        throw de;
-    }
 
     // Helper method to handle an extension exception during interception
     private void handleServiceInterceptorException(ServiceInterceptorException sie)
