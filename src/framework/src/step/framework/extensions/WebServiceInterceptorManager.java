@@ -274,10 +274,6 @@ public class WebServiceInterceptorManager {
         try {
             // intercept message return value
             boolean interceptMessageReturnValue = true;
-            // flag to signal that a hidden fault has been uncovered by an interceptor
-            boolean hiddenFault = false;
-            // flag to signal that an interceptor has thrown an exception TODO
-            /*boolean thrownFault = false;*/
 
             // inspect SOAP message context
             // to find out in which situation is the message being intercepted
@@ -337,16 +333,6 @@ public class WebServiceInterceptorManager {
                         log.trace("interceptor return value: '" + interceptorReturnValue + "'");
                     }
 
-                    log.trace("checking if web service interceptor uncovered a hidden fault");
-                    if(!IS_FAULT && SOAPUtil.isFaultMessage(smc)) {
-                        hiddenFault = true;
-                        log.trace("interceptor execution uncovered a hidden fault");
-                        if(log.isTraceEnabled()) {
-                            SOAPFault soapFault = SOAPUtil.getFault(smc.getMessage());
-                            log.trace("uncovered fault string: " + soapFault.getFaultString());
-                        }
-                    }
-
                     // process interceptor return value
                     if(interceptorReturnValue == false) {
                         log.trace("web service interceptor returned false");
@@ -380,9 +366,6 @@ public class WebServiceInterceptorManager {
                     // only the first exception can cause a direction change
                     log.trace("from now on, the loop can no longer change direction");
                     canChangeDirectionFlag = false;
-                    
-                    // remember that a exception was thrown in case some extension masks it
-                    /*thrownFault = true;*/
 
                     log.debug("proceed");
 
@@ -401,9 +384,6 @@ public class WebServiceInterceptorManager {
                     // only the first exception can cause a direction change
                     log.trace("from now on, the loop can no longer change direction");
                     canChangeDirectionFlag = false;
-                    
-                    // remember that a exception was thrown in case some extension masks it
-                    /*thrownFault = true;*/
 
                     log.debug("proceed");
 
@@ -441,7 +421,7 @@ public class WebServiceInterceptorManager {
 
             // if message is a newly created SOAP fault, throw a SOAPFaultException
             // (IS_FAULT was assigned before the interceptors loop)
-            if(!IS_FAULT && !hiddenFault) {
+            if(!IS_FAULT) {
                 SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
                 if(sf != null) {
                     // message is a SOAPFault
@@ -452,11 +432,6 @@ public class WebServiceInterceptorManager {
 
             // return value only after checking that there isn't an exception to throw
             // (i.e. exceptions take precedence over return value)
-            /*if(thrownFault) {
-                log.trace("setting return to 'false' from intercept message due to thrown faults");
-            	interceptMessageReturnValue = false;
-            }*/
-
             if(log.isTraceEnabled()) {
                 log.trace("returning '" + interceptMessageReturnValue + "' from intercept message");
             }
