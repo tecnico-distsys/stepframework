@@ -29,26 +29,41 @@ public class SayHelloService extends HelloBaseService<String> {
 	@Override
 	protected String action() throws HelloWSException {
 		try	{
-			// create Web Service stub
+            log.trace("Starting SayHelloService action");
+
+			log.debug("create Web Service stub");
 			HelloPortType port = HelloStubFactory.getInstance().getPortUsingConfig();
 
+            log.debug("Invoke web service. Parameter = " + name);
 			String greeting = port.sayHello(name);
 
+            log.debug("Return value = " + greeting);
 			return greeting;
-		} catch (ServiceError_Exception e) {
-			// remote service error
-			log.error(e);
-			throw new RemoteServiceException(e);
-		} catch (StubFactoryException e) {
-			// stub creation error
-			log.error(e);
-			throw new RemoteServiceException(e);
-		} catch (WebServiceException e) {
-			// communication error (wrong address, connection closed, ...)
-			log.error(e);
-			throw new RemoteServiceException(e);
-		}
 
+        } catch (ServiceError_Exception see) {
+            log.trace("Caught " + see.getClass());
+			// remote service error
+			log.error(see);
+            log.trace("Throw RemoteServiceException with nested exception");
+			throw new RemoteServiceException(see);
+
+        } catch (StubFactoryException sfe) {
+            log.trace("Caught " + sfe.getClass());
+			// stub creation error
+			log.error(sfe);
+            log.trace("Throw RemoteServiceException with nested exception");
+			throw new RemoteServiceException(sfe);
+
+        } catch (WebServiceException wse) {
+            log.trace("Caught " + wse.getClass());
+			// communication error (wrong address, connection closed, ...)
+			log.error(wse);
+            log.trace("Throw RemoteServiceException with nested exception");
+			throw new RemoteServiceException(wse);
+
+        } finally {
+            log.trace("Finally exiting SayHelloService action");
+        }
 	}
 
 }
