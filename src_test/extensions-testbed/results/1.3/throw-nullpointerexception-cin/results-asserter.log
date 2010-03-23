@@ -1,0 +1,22 @@
+[2010-03-19 15:12:07,082] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 15:12:07,086]DEBUG     4[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 15:12:07,091]DEBUG     9[main](AssertMain.java:22) - args[0] 'throw-nullpointerexception-cin'
+[2010-03-19 15:12:07,091]DEBUG     9[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-cin'
+[2010-03-19 15:12:07,091]DEBUG     9[main](AssertMain.java:45) - Building context
+[2010-03-19 15:12:07,108]TRACE    26[main](AssertMain.java:66) - Context:
+[2010-03-19 15:12:07,109]TRACE    27[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-cin
+[2010-03-19 15:12:07,109]TRACE    27[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-cin\soap-trace-client.log
+[2010-03-19 15:12:07,109]TRACE    27[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-cin\log-server.log
+[2010-03-19 15:12:07,110]TRACE    28[main](AssertMain.java:68) - config: throw-nullpointerexception-cin
+[2010-03-19 15:12:07,111]TRACE    29[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-cin\soap-trace-server.log
+[2010-03-19 15:12:07,112]TRACE    30[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-cin\log-client.log
+[2010-03-19 15:12:07,112]DEBUG    30[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 15:12:07,113]DEBUG    31[main](AssertMain.java:79) - Asserting configuration 'throw-nullpointerexception-cin'
+[2010-03-19 15:12:07,130] INFO    48[main](Assertions.java:60) - assertClientNestedNullPointerException
+[2010-03-19 15:12:07,150] INFO    68[main](Assertions.java:115) - assertSOAPCounts
+[2010-03-19 15:12:07,151] INFO    69[main](Assertions.java:92) - assertCountClientSOAPEnvelopes
+[2010-03-19 15:12:07,152] INFO    70[main](Assertions.java:97) - assertCountServerSOAPEnvelopes
+[2010-03-19 15:12:07,152] INFO    70[main](Assertions.java:102) - assertCountClientSOAPFaults
+[2010-03-19 15:12:07,153] INFO    71[main](Assertions.java:107) - assertCountServerSOAPFaults
+[2010-03-19 15:12:07,153] INFO    71[main](AssertMain.java:153) - All assertions executed successfully for configuration 'throw-nullpointerexception-cin'
+[2010-03-19 15:12:07,154] INFO    72[main](AssertMain.java:37) - End of results asserter.

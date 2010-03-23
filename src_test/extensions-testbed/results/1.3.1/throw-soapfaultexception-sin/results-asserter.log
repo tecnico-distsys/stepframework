@@ -1,0 +1,22 @@
+[2010-03-23 21:42:00,915] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:42:00,918]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:42:00,922]DEBUG     7[main](AssertMain.java:22) - args[0] 'throw-soapfaultexception-sin'
+[2010-03-23 21:42:00,923]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\throw-soapfaultexception-sin'
+[2010-03-23 21:42:00,923]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-23 21:42:00,939]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-23 21:42:00,940]TRACE    25[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\throw-soapfaultexception-sin
+[2010-03-23 21:42:00,940]TRACE    25[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\throw-soapfaultexception-sin\soap-trace-client.log
+[2010-03-23 21:42:00,940]TRACE    25[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\throw-soapfaultexception-sin\log-server.log
+[2010-03-23 21:42:00,940]TRACE    25[main](AssertMain.java:68) - config: throw-soapfaultexception-sin
+[2010-03-23 21:42:00,941]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\throw-soapfaultexception-sin\soap-trace-server.log
+[2010-03-23 21:42:00,941]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\throw-soapfaultexception-sin\log-client.log
+[2010-03-23 21:42:00,942]DEBUG    27[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:42:00,942]DEBUG    27[main](AssertMain.java:79) - Asserting configuration 'throw-soapfaultexception-sin'
+[2010-03-23 21:42:00,959] INFO    44[main](Assertions.java:52) - assertClientSOAPFaultException
+[2010-03-23 21:42:00,980] INFO    65[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:42:00,980] INFO    65[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:42:00,981] INFO    66[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:42:00,982] INFO    67[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:42:00,983] INFO    68[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:42:00,983] INFO    68[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'throw-soapfaultexception-sin'
+[2010-03-23 21:42:00,983] INFO    68[main](AssertMain.java:37) - End of results asserter.

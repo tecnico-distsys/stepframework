@@ -2,6 +2,7 @@ package step.extension.errors;
 
 import java.util.Properties;
 
+import step.framework.domain.DomainException;
 import step.framework.extensions.ServiceInterceptor;
 import step.framework.extensions.ServiceInterceptorException;
 import step.framework.extensions.ServiceInterceptorParameter;
@@ -14,7 +15,7 @@ import step.framework.extensions.ServiceInterceptorParameter;
 public class ErrorsServiceInterceptor implements ServiceInterceptor {
 
     public void interceptBefore(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
 
         Properties extConfig = param.getExtension().getConfig();
         String exceptionClassName = extConfig.getProperty("service-interceptor.before.throw");
@@ -22,6 +23,8 @@ public class ErrorsServiceInterceptor implements ServiceInterceptor {
         if(exceptionClassName != null && exceptionClassName.trim().length() > 0) {
             try {
                 ThrowExceptionUtil.throwException(exceptionClassName, "interceptBefore");
+            } catch(DomainException de) {
+                throw de;
             } catch(ServiceInterceptorException sie) {
                 throw sie;
             } catch(RuntimeException rte) {
@@ -34,7 +37,7 @@ public class ErrorsServiceInterceptor implements ServiceInterceptor {
     }
 
     public void interceptAfter(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
 
         Properties extConfig = param.getExtension().getConfig();
         String exceptionClassName = extConfig.getProperty("service-interceptor.after.throw");
@@ -42,6 +45,8 @@ public class ErrorsServiceInterceptor implements ServiceInterceptor {
         if(exceptionClassName != null && exceptionClassName.trim().length() > 0) {
             try {
                 ThrowExceptionUtil.throwException(exceptionClassName, "interceptAfter");
+            } catch(DomainException de) {
+                throw de;
             } catch(ServiceInterceptorException sie) {
                 throw sie;
             } catch(RuntimeException rte) {
