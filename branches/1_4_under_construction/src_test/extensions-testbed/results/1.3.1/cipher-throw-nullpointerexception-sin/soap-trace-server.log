@@ -1,0 +1,12 @@
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5
+XPv9+v8ux+v7ne18QTX+E01jamk0rkjeWjSghLa6JVGIzGGtcXDHOlLu8zizPGf3QxIIiqvW14ET
+ewnwAr9DaiILTgoJbFA7Y6a5849yAnxZY1MqkUy7wSpeOA1KFQthz/7QKvMjIjfibR29okKSS2vX
+XU0tJRw=
+</CipherBody>
+  </S:Body>
+</S:Envelope>
