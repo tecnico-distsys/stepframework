@@ -1,0 +1,43 @@
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5&#13;
+XPv9+v8ux+v7ne18QTX+E01jamk0rkjeWjSghLa6JVGIzGGtcXDHOlLu8zizPGf3QxIIiqvW14ET&#13;
+ewnwAr9DaiILTgoJbFA7Y6a5849yAnxZY1MqkUy7wSpeOA1KFQthz/7QKvMjIjfibR29okKSS2vX&#13;
+XU0tJRw=&#13;
+</CipherBody>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5
+XPv9+v8ux+v7ne18QTX+E01jamk0rkjeWjSghLa6JSmXiNCUvQzg05weGHpk03c6Uu7zOLM8Z/dD
+EgiKq9bX7/NgodlSCZduF5UhP0ldtIzFPgB+Nrol1ZmaPIxvmyp1h+PtAsoMOCcfRoiBO9fz42gk
+cD7WAH3/a2cBaYE5ZMfY+EbLPYQSdbhgtwkfgJw=
+</CipherBody>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <sayHelloResponse xmlns="urn:hello:wsdl">
+      <return>Hello friend</return>
+    </sayHelloResponse>
+  </S:Body>
+</S:Envelope>

@@ -1,0 +1,25 @@
+[2010-03-23 21:53:20,213] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:53:20,219]DEBUG     6[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:53:20,224]DEBUG    11[main](AssertMain.java:22) - args[0] 'cipher-throw-soapfaultexception-cin'
+[2010-03-23 21:53:20,224]DEBUG    11[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-soapfaultexception-cin'
+[2010-03-23 21:53:20,224]DEBUG    11[main](AssertMain.java:45) - Building context
+[2010-03-23 21:53:20,241]TRACE    28[main](AssertMain.java:66) - Context:
+[2010-03-23 21:53:20,242]TRACE    29[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-soapfaultexception-cin
+[2010-03-23 21:53:20,242]TRACE    29[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-soapfaultexception-cin\soap-trace-client.log
+[2010-03-23 21:53:20,243]TRACE    30[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-soapfaultexception-cin\log-server.log
+[2010-03-23 21:53:20,246]TRACE    33[main](AssertMain.java:68) - config: cipher-throw-soapfaultexception-cin
+[2010-03-23 21:53:20,246]TRACE    33[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-soapfaultexception-cin\soap-trace-server.log
+[2010-03-23 21:53:20,247]TRACE    34[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-soapfaultexception-cin\log-client.log
+[2010-03-23 21:53:20,247]DEBUG    34[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:53:20,247]DEBUG    34[main](AssertMain.java:79) - Asserting configuration 'cipher-throw-soapfaultexception-cin'
+[2010-03-23 21:53:20,266] INFO    53[main](Assertions.java:60) - assertClientSOAPFaultExceptionFailedToDecipher
+[2010-03-23 21:53:20,288] INFO    75[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:53:20,288] INFO    75[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:53:20,290] INFO    77[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:53:20,290] INFO    77[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:53:20,291] INFO    78[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:53:20,292] INFO    79[main](Assertions.java:172) - assertSOAPBodyCipherCounts
+[2010-03-23 21:53:20,292] INFO    79[main](Assertions.java:138) - assertCountClientSOAPBodyCipher
+[2010-03-23 21:53:20,292] INFO    79[main](Assertions.java:143) - assertCountServerSOAPBodyCipher
+[2010-03-23 21:53:20,293] INFO    80[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'cipher-throw-soapfaultexception-cin'
+[2010-03-23 21:53:20,293] INFO    80[main](AssertMain.java:37) - End of results asserter.
