@@ -21,9 +21,13 @@ public class TraceExtensionListener implements ExtensionListener {
     public void extensionInitialized(ExtensionListenerParameter param)
     throws ExtensionException {
 
-        // access the extension configuration
+        // access the extension configuration and context
         Properties extConfig = param.getExtension().getConfig();
+        Map<String,Object> extContext = param.getExtension().getContext();
 
+        //
+        //  output
+        //
         String output = extConfig.getProperty("output");
 	    PrintStream outputStream =  null;
         boolean usingFile = false;
@@ -43,8 +47,6 @@ public class TraceExtensionListener implements ExtensionListener {
     	    System.out.println("Using default output: System.out");
     	}
 
-        // store the print stream in the extension's context
-        Map<String,Object> extContext = param.getExtension().getContext();
         extContext.put("output", outputStream);
         extContext.put("output.usingFile", new Boolean(usingFile));
     }

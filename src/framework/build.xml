@@ -15,6 +15,7 @@
 
     <!-- properties with default folder locations -->
     <property name="src.rel-dir" value="src"/>
+    <property name="tests.src.rel-dir" value="tests"/>
     <property name="web-content.rel-dir" value="WebContent"/>
     <property name="build.rel-dir" value="bin"/>
     <property name="dist.rel-dir" value="dist"/>
@@ -26,11 +27,11 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- STEP non-shareable dependencies -->
+        <!-- shared libraries -->
         <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
-        <!-- shared STEP framework dependencies -->
+        <!-- referenced libraries -->
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>
@@ -79,6 +80,44 @@
         </javac>
     </target>
 
+	
+    <!-- tests -->
+
+    <target name="prepare-test-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${tests.src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <target name="compile-tests" depends="prepare-test-resources">
+    <!-- description="Compile tests" -->
+        <javac
+            srcdir="${tests.src.rel-dir}" 
+            destdir="${build.rel-dir}"
+            debug="${compile.debug}"
+            debuglevel="${compile.debuglevel}"
+        >
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+    <target name="run-tests" depends="compile-tests"
+        description="Run tests">
+        <junit haltonfailure="yes" fork="true">
+            <classpath refid="project.classpath" />
+            <formatter type="plain" usefile="false" />
+            <batchtest>
+                <fileset dir="${tests.src.rel-dir}"
+                    includes="**/*Test.java">
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
 
     <!-- library -->
 
@@ -90,8 +129,8 @@
         <jar destfile="${jar.rel-file}">
             <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
-                        includes="**/*.class,**/*.properties,**/*.xml"
-                        excludes="" />
+                        includes="**/*.class"
+                        excludes="**/*.properties,**/*.xml" />
         </jar>
     </target>
 
@@ -111,7 +150,7 @@
 
     <!-- build -->
 
-    <target name="build" depends="create-jar"
+    <target name="build" depends="compile,run-tests,create-jar"
         description="Build the program">
     </target>
 
@@ -119,7 +158,7 @@
     <!-- description="Rebuild the project" -->
     </target>
 
-    <target name="dist-to-lib" depends="rebuild">
+    <target name="dist-to-lib" depends="clean,create-jar"> <!-- exclude test code -->
     <!-- description="Rebuild the program and distribute it to lib folder" -->
         <copy todir="../lib" overwrite="true">
             <fileset file="${jar.rel-file}"/>

@@ -18,23 +18,28 @@
     <property name="build.rel-dir" value="build/classes"/>
     <property name="dist.rel-dir" value="dist"/>
 
+
+    <!-- import external definitions -->
+    <import file="../lib/tomcat.xml" />
+
+
     <!-- project classpath -->
 
     <path id="project.classpath">
-        <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- project libraries -->
+        <path refid="tomcat.jars.path" /> <!-- used by servlet listener -->
         <fileset dir="${web-content.rel-dir}/WEB-INF">
             <include name="lib/**/*.jar" />
         </fileset>
-        <!-- shared libraries -->
+        <fileset dir="../ws-handlers/dist">
+            <include name="*.jar" />
+        </fileset>
         <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
     </path>
 
-    <!-- import external definitions -->
-    <import file="../lib/tomcat.xml" />
+    <!-- import more external definitions -->
     <import file="../lib/jax.xml" /><!-- jax uses project.classpath -->
 
 
@@ -118,7 +123,10 @@
             <zipfileset dir="${build.rel-dir}"
                         includes="**/*.class,**/*.properties,**/*.xml"
                         prefix="WEB-INF/classes" />
-            <!-- shared libs -->
+            <!-- libs -->
+            <zipfileset dir="../ws-handlers/dist"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
             <zipfileset dir="../lib"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
