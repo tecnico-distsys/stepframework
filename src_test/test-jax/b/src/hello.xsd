@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:hello:xsd"
+            xmlns:tns="urn:hello:xsd"
+            elementFormDefault="qualified"
+
+    	    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    	    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    	    jaxb:version="1.0"
+    	    jaxb:extensionBindingPrefixes="xjc"
+            >
+
+    <xsd:annotation>
+        <xsd:appinfo>
+            <!--                                     -->
+            <!-- JAX-B generated code customizations -->
+            <!--                                     -->
+            <jaxb:globalBindings>
+                <!-- generated classes implement java.io.Serializable with uid -->
+                <xjc:serializable uid="1" />
+
+                <!-- generated classes extend class -->
+                <!--xjc:superClass name="..." /-->
+
+                <!-- generated classes extend interface -->
+                <!--xjc:superInterface name="..."/-->
+            </jaxb:globalBindings>
+
+            <!-- generated classes are in specified package -->
+            <!--jaxb:schemaBindings>
+                <jaxb:package name="..." />
+            </jaxb:schemaBindings-->
+        </xsd:appinfo>
+    </xsd:annotation>
+
+
+    <xsd:complexType name="HelloType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:int" use="required"/>
+    </xsd:complexType>
+
+    <xsd:element name="hello" type="tns:HelloType"/>
+
+</xsd:schema>
