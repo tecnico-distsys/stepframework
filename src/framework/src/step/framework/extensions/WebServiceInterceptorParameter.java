@@ -27,7 +27,7 @@ public class WebServiceInterceptorParameter extends InterceptorParameter {
                                    SOAPMessageContext smc) {
         super(engine, extension);
         ExtensionsUtil.throwIllegalArgIfNull(smc,
-            "SOAP message context for web service interceptor parameter cannot be null");
+            "SOAP message context for web service interceptor parameter can't be null");
         this.smc = smc;
     }
 
@@ -37,14 +37,14 @@ public class WebServiceInterceptorParameter extends InterceptorParameter {
     //
 
     /**
-     *  Access the current SOAP message context.
+     *  Access the current SOAP message context
      */
     public SOAPMessageContext getSOAPMessageContext() {
         return this.smc;
     }
 
     /**
-     *  Check if message is outbound.
+     *  Check if message is outbound
      */
     public boolean isOutboundSOAPMessage() {
         return SOAPUtil.isOutboundMessage(this.smc);
@@ -63,24 +63,10 @@ public class WebServiceInterceptorParameter extends InterceptorParameter {
     }
 
     /**
-     *  Check if message is being processed on the server-side.
+     *  Check if message is being processed on the server-side
      */
     public boolean isServerSide() {
         return SOAPUtil.isServerSideMessage(this.smc);
-    }
-
-    /**
-     *  Check if message is being forced to go back to client.<br />
-     *  <br />
-     *  It can be forced by a return false,
-     *  or by a thrown WebServiceInterceptorException,
-     *  or by a thrown SOAPFaultException.<br />
-     *  <br />
-     *  This condition is only signaled on the machine (client/server)
-     *  where it occurred.<br />
-     */
-    public boolean isForcedBackToClient() {
-        return SOAPUtil.isForcedBackToClient(this.smc);
     }
 
 }

@@ -26,11 +26,11 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- STEP non-shareable dependencies -->
+        <!-- shared libraries -->
         <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
-        <!-- shared STEP framework dependencies -->
+        <!-- referenced libraries -->
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>

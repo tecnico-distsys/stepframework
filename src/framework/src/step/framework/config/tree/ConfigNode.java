@@ -10,9 +10,7 @@ import java.util.Map;
  */
 class ConfigNode<C> implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
-	//
+    //
     // Members
     //
     private C config;

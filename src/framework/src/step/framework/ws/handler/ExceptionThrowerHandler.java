@@ -109,7 +109,7 @@ public class ExceptionThrowerHandler implements SOAPHandler<SOAPMessageContext> 
         if(runtimeExceptionClassname == null)
             throw new HandlerException("This exception is being thrown by a handler for testing purposes!");
 
-        Class<?> ec = null;
+        Class ec = null;
         RuntimeException rte = null;
         try {
         	// search and instantiate the runtime exception class

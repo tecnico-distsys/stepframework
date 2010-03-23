@@ -3,6 +3,7 @@ package step.framework.extensions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -194,15 +195,13 @@ public class ExtensionEngine {
     //  Property methods
     //
 
-    // public-scoped accessors
-
-    /** Check if extension engine is enabled. Can trigger automatic initialization. */
+    /** Check if extension engine is enabled */
     public boolean isEnabled() {
         autoInit();
         return this.enabledFlag;
     }
 
-    /** Obtain user-customized configuration of extension engine. Can trigger automatic initialization. */
+    /** Obtain user-customized configuration of extension engine */
     public Properties getConfig() {
         autoInit();
         return this.additionalConfig;
@@ -217,23 +216,13 @@ public class ExtensionEngine {
         return this.context;
     }
 
-    // package-scoped accessors - can only be accessed for classes in same package
-    // (allow better unit testing)
-
-    // initFlag is an internal implementation option
-
-    /** Access the extension list */
-    List<Extension> getExtensionList() {
-        return this.extensionList;
-    }
-
-    /** Access the service interception configuration tree. Can trigger automatic initialization. */
+    /** Access the service interception configuration tree */
     ConfigTree<InterceptConfigData> getInterceptServiceConfigTree() {
         autoInit();
         return this.interceptServiceConfigTree;
     }
 
-    /** Access the service interception configuration tree. Can trigger automatic initialization. */
+    /** Access the service interception configuration tree */
     ConfigTree<InterceptConfigData> getInterceptWebServiceConfigTree() {
         autoInit();
         return this.interceptWebServiceConfigTree;
@@ -375,13 +364,11 @@ public class ExtensionEngine {
             // log all properties
             if(log.isTraceEnabled()) {
                 log.trace("extensions config properties (key: 'value')");
-                
-                // typesafe for-each loop
-                for (String key :props.stringPropertyNames()) {
-                	String value = (String) props.get(key);
-                	log.trace(key + ": '" + value + "'");
+                for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
+                    String key = (String) e.nextElement();
+                    String value = (String) props.get(key);
+                    log.trace(key + ": '" + value + "'");
                 }
-            
             }
 
             // enabled
@@ -496,19 +483,9 @@ public class ExtensionEngine {
 
     // Helper method to load interception configuration
     private void loadInterceptConfig(Properties props) throws ExtensionEngineException {
-
-// JORGE: Replaced with typesafe for-each loop
-    	
-//        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-//            String key = (String) e.nextElement();
-//            if (key.startsWith(SERVICE_INTERCEPT_PROPERTY_NAME)) {
-//                addToConfigTree(props, interceptServiceConfigTree, key, true, false);
-//            } else if (key.startsWith(WEB_SERVICE_INTERCEPT_PROPERTY_NAME)) {
-//                addToConfigTree(props, interceptWebServiceConfigTree, key, false, true);
-//            }
-//        }
-        for (String key : props.stringPropertyNames()) {
-        	if (key.startsWith(SERVICE_INTERCEPT_PROPERTY_NAME)) {
+        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
+            String key = (String) e.nextElement();
+            if (key.startsWith(SERVICE_INTERCEPT_PROPERTY_NAME)) {
                 addToConfigTree(props, interceptServiceConfigTree, key, true, false);
             } else if (key.startsWith(WEB_SERVICE_INTERCEPT_PROPERTY_NAME)) {
                 addToConfigTree(props, interceptWebServiceConfigTree, key, false, true);

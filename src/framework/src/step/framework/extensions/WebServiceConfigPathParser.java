@@ -7,9 +7,7 @@ import step.framework.config.tree.ConfigPathParser;
 
 class WebServiceConfigPathParser implements ConfigPathParser {
 
-	private static final long serialVersionUID = 1L;
-
-	/** Character that starts the namespace declaration */
+    /** Character that starts the namespace declaration */
     public static final String BEGIN_NAMESPACE_SPECIFIER = "{";
     /** Character that ends the namespace declaration */
     public static final String END_NAMESPACE_SPECIFIER = "}";

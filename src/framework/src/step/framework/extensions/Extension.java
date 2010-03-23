@@ -1,7 +1,7 @@
 package step.framework.extensions;
 
 import java.util.Collections;
-//import java.util.Enumeration;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -69,19 +69,19 @@ public class Extension {
     /** extension listener full class name */
     private String listenerClassName;
     /** extension listener class */
-	private Class<?> listenerClass;
+    private Class listenerClass;
     /** extension listener class instance */
     private ExtensionListener listenerInstance;
 
     /** extension service interceptor full class name */
     private String serviceInterceptorClassName;
     /** extension service interceptor class */
-	private Class<?> serviceInterceptorClass;
+    private Class serviceInterceptorClass;
 
     /** extension web service interceptor full class name */
     private String webServiceInterceptorClassName;
     /** extension web service interceptor class */
-	private Class<?> webServiceInterceptorClass;
+    private Class webServiceInterceptorClass;
 
     /** additional configuration properties */
     private Properties additionalConfig;
@@ -224,10 +224,8 @@ public class Extension {
 
 
     //
-    //  Property
+    // Property
     //
-
-    // public-scoped accessors
 
     /** Check if extension is enabled */
     public boolean isEnabled() {
@@ -252,9 +250,6 @@ public class Extension {
         return this.context;
     }
 
-    // package-scoped accessors - can only be accessed for classes in same package
-    // (allow better unit testing)
-
     /** Check if extension is configured to intercept services */
     boolean interceptsServices() {
         return (this.serviceInterceptorClassName != null);
@@ -265,42 +260,6 @@ public class Extension {
         return (this.webServiceInterceptorClassName != null);
     }
 
-    /** access engine */
-    ExtensionEngine getEngine() {
-        return this.engine;
-    }
-
-    /** access listener class name */
-    String getListenerClassName() {
-        return this.listenerClassName;
-    }
-
-    /** access listener class */
-    Class<?> getListenerClass() {
-        return this.listenerClass;
-    }
-
-    // no accessor is provided for listenerInstance because it is an internal implementation option
-
-    /** access service interceptor class name */
-    String getServiceInterceptorClassName() {
-        return this.serviceInterceptorClassName;
-    }
-
-    /** access service interceptor class */
-    Class<?> getServiceInterceptorClass() {
-        return this.serviceInterceptorClass;
-    }
-
-    /** access web service interceptor class name */
-    String getWebServiceInterceptorClassName() {
-        return this.webServiceInterceptorClassName;
-    }
-
-    /** access service interceptor class */
-    Class<?> getWebServiceInterceptorClass() {
-        return this.webServiceInterceptorClass;
-    }
 
 
     //
@@ -334,17 +293,18 @@ public class Extension {
             // log all properties
             if(log.isTraceEnabled()) {
                 log.trace("extension " + this.id + " config properties (key: 'value')");
-                
-                // typesafe for-each loop
-                for (String key : props.stringPropertyNames()) {
-                	String value = (String) props.get(key);
+                for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
+                    String key = (String) e.nextElement();
+                    String value = (String) props.get(key);
                     log.trace(key + ": '" + value + "'");
                 }
             }
 
             // enabled
             String enabledPropertyValue = props.getProperty(EXTENSION_ENABLED_PROPERTY_NAME);
-            this.enabled = ConfigUtil.recognizeAsTrue(enabledPropertyValue);
+            if(enabledPropertyValue != null && enabledPropertyValue.trim().equalsIgnoreCase("true")) {
+                this.enabled = true;
+            }
 
             // listener
             String listenerPropertyValue = props.getProperty(EXTENSION_LISTENER_PROPERTY_NAME);
@@ -467,7 +427,7 @@ public class Extension {
     //
 
     // Helper method to load class
-	private Class<?> loadClass(String className, String desc) throws ExtensionException {
+    private Class loadClass(String className, String desc) throws ExtensionException {
         ExtensionsUtil.throwIllegalArgIfNull(className,
                                              "class name used to load class can't be null");
         // if necessary provide a default description
@@ -486,7 +446,7 @@ public class Extension {
     }
 
     // Helper method to create class instance
-	private Object createInstance(Class<?> classObject, String desc) throws ExtensionException {
+    private Object createInstance(Class classObject, String desc) throws ExtensionException {
         ExtensionsUtil.throwIllegalArgIfNull(classObject,
                                              "class used to create instance can't be null");
         // if necessary provide a default description

@@ -8,9 +8,7 @@ import step.framework.config.tree.ConfigPathParser;
 
 class ServiceConfigPathParser implements ConfigPathParser {
 
-	private static final long serialVersionUID = 1L;
-
-	/**
+    /**
      *  Parse a Java name to a list with its elements:
      *  package and simple name.
      *
