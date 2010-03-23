@@ -39,8 +39,25 @@ public class SOAPUtil{
 
 
     //
+    //  STEP message context properties
+    //
+
+    public static final String FORCED_BACK_TO_CLIENT_PROPERTY = "step.framework.ws.messageForcedBackToClient";
+
+
+
+    //
     //  SOAP message context utilities
     //
+
+    /**
+     *  This method checks if the SOAP message in context
+     *  is being processed on the server-side (true) or on the client-side (false).
+     */
+    public static boolean isServerSideMessage(SOAPMessageContext smc) {
+        Object servletContextProperty = smc.get(MessageContext.SERVLET_CONTEXT);
+        return (servletContextProperty != null);
+    }
 
     /**
      *  This method checks if the SOAP message in context
@@ -60,12 +77,27 @@ public class SOAPUtil{
 
     /**
      *  This method checks if the SOAP message in context
-     *  is being processed on the server-side (true) or on the client-side (false).
+     *  is being forced back to the client.
+     *
+     *  If the property does not exist,
+     *  then message is also considered as not being forced back to client.
      */
-    public static boolean isServerSideMessage(SOAPMessageContext smc) {
-        Object servletContextProperty = smc.get(MessageContext.SERVLET_CONTEXT);
-        return (servletContextProperty != null);
+    public static boolean isForcedBackToClient(SOAPMessageContext smc) {
+        Boolean forcedProperty = (Boolean) smc.get(FORCED_BACK_TO_CLIENT_PROPERTY);
+        if(forcedProperty == null)
+            return false;
+        else
+            return forcedProperty.booleanValue();
     }
+
+    /**
+     *  This method changes the SOAP message context property
+     *  for message being forced back to the client.
+     */
+    public static void setForcedBackToClient(SOAPMessageContext smc, boolean forcedPropertyValue) {
+        smc.put(FORCED_BACK_TO_CLIENT_PROPERTY, new Boolean(forcedPropertyValue));
+    }
+
 
     /**
      *  This method checks if the SOAP message in context

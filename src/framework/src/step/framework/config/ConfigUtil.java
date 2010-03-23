@@ -107,21 +107,31 @@ public class ConfigUtil {
         if(prefix == null)
             throw new IllegalArgumentException("Can't remove properties with null prefix!");
 
-// JORGE: Replaced with typesafe for-each loop
-        
-//        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-//            String key = (String) e.nextElement();
-//            if (key.startsWith(prefix)) {
-//                props.remove(key);
-//            }
-//        }
-
+        // typesafe for-each loop
         for (String key : props.stringPropertyNames()) {
         	if (key.startsWith(prefix)) {
                 props.remove(key);
             }
         }
-        
+    }
+
+    /**
+     *  Recognize if string contains "true" or one of its synonyms: "yes" and "on".
+     *  Everything else is considered false (including null).
+     *
+     *  Surrounding whitespace is trimmed.
+     *  Character case (Tt) is ignored.
+     */
+    public static boolean recognizeAsTrue(String propertyValue) {
+        if(propertyValue == null)
+            return false;
+        propertyValue = propertyValue.trim();
+        if(propertyValue.equalsIgnoreCase("true") ||
+           propertyValue.equalsIgnoreCase("yes") ||
+           propertyValue.equalsIgnoreCase("on"))
+            return true;
+        else
+            return false;
     }
 
 }
