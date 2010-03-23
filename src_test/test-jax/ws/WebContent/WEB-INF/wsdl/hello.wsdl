@@ -37,19 +37,25 @@
                     targetNamespace="urn:hello:wsdl"
                     xmlns:tns="urn:hello:wsdl">
 
-            <xsd:complexType name="SayHelloType">
+            <xsd:complexType name="SayHello">
                 <xsd:sequence>
                     <xsd:element name="name" type="xsd:string" />
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:element name="sayHello" type="tns:SayHelloType" />
+            <xsd:element name="sayHello" type="tns:SayHello" />
 
-            <xsd:complexType name="SayHelloResponseType">
+            <xsd:complexType name="SayHelloResponse">
                 <xsd:sequence>
                     <xsd:element name="return" type="xsd:string" />
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:element name="sayHelloResponse" type="tns:SayHelloResponseType" />
+            <xsd:element name="sayHelloResponse" type="tns:SayHelloResponse" />
+
+            <xsd:complexType name="EmptyName">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="emptyName" type="tns:EmptyName" />
 
         </xsd:schema>
     </types>
@@ -64,8 +70,13 @@
     <message name="sayHello">
         <part name="parameters" element="tns:sayHello" />
     </message>
+
     <message name="sayHelloResponse">
         <part name="result" element="tns:sayHelloResponse" />
+    </message>
+
+    <message name="EmptyNameFault">
+            <part name="fault" element="tns:emptyName" />
     </message>
 
 
@@ -79,8 +90,9 @@
     -->
     <portType name="HelloPortType">
         <operation name="sayHello">
-            <input message="tns:sayHello" />
-            <output message="tns:sayHelloResponse" />
+            <input message="tns:sayHello" name="sayHello" />
+            <output message="tns:sayHelloResponse" name="sayHelloResponse" />
+            <fault message="tns:EmptyNameFault" name="emptyName" />
         </operation>
     </portType>
 
@@ -102,12 +114,15 @@
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <operation name="sayHello">
             <soap:operation soapAction="" />
-            <input>
+            <input name="sayHello">
                 <soap:body use="literal" />
             </input>
-            <output>
+            <output name="sayHelloResponse">
                 <soap:body use="literal" />
             </output>
+            <fault name="emptyName">
+                <soap:fault use="literal" name="emptyName" />
+            </fault>
         </operation>
     </binding>
 
