@@ -3,7 +3,6 @@ package step.framework.extensions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -376,16 +375,20 @@ public class ExtensionEngine {
             // log all properties
             if(log.isTraceEnabled()) {
                 log.trace("extensions config properties (key: 'value')");
-                for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-                    String key = (String) e.nextElement();
-                    String value = (String) props.get(key);
-                    log.trace(key + ": '" + value + "'");
+                
+                // typesafe for-each loop
+                for (String key :props.stringPropertyNames()) {
+                	String value = (String) props.get(key);
+                	log.trace(key + ": '" + value + "'");
                 }
+            
             }
 
             // enabled
             String enabledPropertyValue = props.getProperty(EXTENSIONS_ENABLED_PROPERTY_NAME);
-            this.enabledFlag = ConfigUtil.recognizeAsTrue(enabledPropertyValue);
+            if(enabledPropertyValue != null && enabledPropertyValue.trim().equalsIgnoreCase("true")) {
+                this.enabledFlag = true;
+            }
 
             // check if enabled
             if(!this.enabledFlag) {
@@ -493,9 +496,19 @@ public class ExtensionEngine {
 
     // Helper method to load interception configuration
     private void loadInterceptConfig(Properties props) throws ExtensionEngineException {
-        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-            String key = (String) e.nextElement();
-            if (key.startsWith(SERVICE_INTERCEPT_PROPERTY_NAME)) {
+
+// JORGE: Replaced with typesafe for-each loop
+    	
+//        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
+//            String key = (String) e.nextElement();
+//            if (key.startsWith(SERVICE_INTERCEPT_PROPERTY_NAME)) {
+//                addToConfigTree(props, interceptServiceConfigTree, key, true, false);
+//            } else if (key.startsWith(WEB_SERVICE_INTERCEPT_PROPERTY_NAME)) {
+//                addToConfigTree(props, interceptWebServiceConfigTree, key, false, true);
+//            }
+//        }
+        for (String key : props.stringPropertyNames()) {
+        	if (key.startsWith(SERVICE_INTERCEPT_PROPERTY_NAME)) {
                 addToConfigTree(props, interceptServiceConfigTree, key, true, false);
             } else if (key.startsWith(WEB_SERVICE_INTERCEPT_PROPERTY_NAME)) {
                 addToConfigTree(props, interceptWebServiceConfigTree, key, false, true);

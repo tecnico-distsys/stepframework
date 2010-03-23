@@ -332,7 +332,8 @@ public class WebServiceInterceptorManager {
                     WebServiceInterceptor interceptor = ext.createWebServiceInterceptorInstance();
 
                     log.trace("create web service interceptor parameter instance");
-                    WebServiceInterceptorParameter param = new WebServiceInterceptorParameter(this.engine, ext, smc);
+                    WebServiceInterceptorParameter param =
+                        new WebServiceInterceptorParameter(this.engine, ext, smc);
 
                     log.trace("call web service interceptor");
                     boolean interceptorReturnValue = interceptor.interceptMessage(param);

@@ -1,0 +1,25 @@
+[2010-03-23 21:49:06,602] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:49:06,605]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:49:06,609]DEBUG     7[main](AssertMain.java:22) - args[0] 'cipher-throw-wsinterceptorexception-cout'
+[2010-03-23 21:49:06,610]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-wsinterceptorexception-cout'
+[2010-03-23 21:49:06,610]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-23 21:49:06,626]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-23 21:49:06,626]TRACE    24[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-wsinterceptorexception-cout
+[2010-03-23 21:49:06,626]TRACE    24[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-wsinterceptorexception-cout\soap-trace-client.log
+[2010-03-23 21:49:06,627]TRACE    25[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-wsinterceptorexception-cout\log-server.log
+[2010-03-23 21:49:06,627]TRACE    25[main](AssertMain.java:68) - config: cipher-throw-wsinterceptorexception-cout
+[2010-03-23 21:49:06,628]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-wsinterceptorexception-cout\soap-trace-server.log
+[2010-03-23 21:49:06,628]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-wsinterceptorexception-cout\log-client.log
+[2010-03-23 21:49:06,628]DEBUG    26[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:49:06,628]DEBUG    26[main](AssertMain.java:79) - Asserting configuration 'cipher-throw-wsinterceptorexception-cout'
+[2010-03-23 21:49:06,649] INFO    47[main](Assertions.java:60) - assertClientSOAPFaultExceptionFailedToDecipher
+[2010-03-23 21:49:06,671] INFO    69[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:49:06,671] INFO    69[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:49:06,672] INFO    70[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:49:06,689] INFO    87[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:49:06,689] INFO    87[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:49:06,705] INFO   103[main](Assertions.java:172) - assertSOAPBodyCipherCounts
+[2010-03-23 21:49:06,706] INFO   104[main](Assertions.java:138) - assertCountClientSOAPBodyCipher
+[2010-03-23 21:49:06,706] INFO   104[main](Assertions.java:143) - assertCountServerSOAPBodyCipher
+[2010-03-23 21:49:06,722] INFO   120[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'cipher-throw-wsinterceptorexception-cout'
+[2010-03-23 21:49:06,723] INFO   121[main](AssertMain.java:37) - End of results asserter.

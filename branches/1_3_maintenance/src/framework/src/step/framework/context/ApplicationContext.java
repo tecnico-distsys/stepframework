@@ -6,7 +6,9 @@ package step.framework.context;
  */
 public class ApplicationContext extends ContextImpl implements Context {
 
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Private constructor prevents construction outside this class.
      */
     private ApplicationContext() {
