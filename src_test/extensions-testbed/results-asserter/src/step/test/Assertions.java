@@ -18,7 +18,7 @@ public class Assertions {
 
     public static void assertClientNoException(AssertContext ctx) throws Exception {
         log.info(getMethodName());
-        String regex = "(?i).*exception.*";
+        String regex = "(?i).*Action message.*Exception.*";
         int lineNr = TextFileUtil.lineOfPattern(ctx.get("clientLog"), regex);
         if(lineNr != -1)
             throw new AssertException("Found unexpected exception in client log (line " + lineNr + ")");
@@ -51,6 +51,14 @@ public class Assertions {
     public static void assertClientSOAPFaultException(AssertContext ctx) throws Exception {
         log.info(getMethodName());
         String regex = "(?i).*Action message.*SOAPFaultException.*generated.*";
+        int lineNr = TextFileUtil.lineOfPattern(ctx.get("clientLog"), regex);
+        if(lineNr == -1)
+            throw new AssertException("Expression " + regex + " should have matched a line in client log");
+    }
+
+    public static void assertClientSOAPFaultExceptionFailedToDecipher(AssertContext ctx) throws Exception {
+        log.info(getMethodName());
+        String regex = "(?i).*Action message.*SOAPFaultException.*failed to decipher.*";
         int lineNr = TextFileUtil.lineOfPattern(ctx.get("clientLog"), regex);
         if(lineNr == -1)
             throw new AssertException("Expression " + regex + " should have matched a line in client log");
@@ -96,6 +104,15 @@ public class Assertions {
         }
     }
 
+    private static void assertCountForcedBack(String file, int expectedCount, String fileDescription) throws Exception {
+        String regex = ".*bound.*SOAP Message.*forced back to client.*";
+        int lineCounter = TextFileUtil.lineCountPattern(file, regex);
+        if(lineCounter != expectedCount) {
+            String message = "Expecting " + expectedCount + " forced backs but found " + lineCounter + " in " + fileDescription;
+            throw new AssertException(message);
+        }
+    }
+
 
     public static void assertCountClientSOAPEnvelopes(AssertContext ctx, int expected) throws Exception {
         log.info(getMethodName());
@@ -127,10 +144,21 @@ public class Assertions {
         assertCountSOAPBodyCipher(ctx.get("serverSoap"), expected, "server soap trace");
     }
 
+    public static void assertCountClientForcedBack(AssertContext ctx, int expected) throws Exception {
+        log.info(getMethodName());
+        assertCountForcedBack(ctx.get("clientSoap"), expected, "client soap trace");
+    }
+
+    public static void assertCountServerForcedBack(AssertContext ctx, int expected) throws Exception {
+        log.info(getMethodName());
+        assertCountForcedBack(ctx.get("serverSoap"), expected, "server soap trace");
+    }
+
 
     public static void assertSOAPCounts(AssertContext ctx,
-                                        int clientSoapEnvelopeCount, int serverSoapEnvelopeCount,
-                                        int clientSoapFaultCount, int serverSoapFaultCount) throws Exception {
+        int clientSoapEnvelopeCount, int serverSoapEnvelopeCount,
+        int clientSoapFaultCount, int serverSoapFaultCount) throws Exception {
+
         log.info(getMethodName());
         assertCountClientSOAPEnvelopes(ctx, clientSoapEnvelopeCount);
         assertCountServerSOAPEnvelopes(ctx, serverSoapEnvelopeCount);
@@ -139,10 +167,19 @@ public class Assertions {
     }
 
     public static void assertSOAPBodyCipherCounts(AssertContext ctx,
-                                        int clientSoapBodyCipherCount, int serverSoapBodyCipherCount) throws Exception {
+        int clientSoapBodyCipherCount, int serverSoapBodyCipherCount) throws Exception {
+
         log.info(getMethodName());
         assertCountClientSOAPBodyCipher(ctx, clientSoapBodyCipherCount);
         assertCountServerSOAPBodyCipher(ctx, serverSoapBodyCipherCount);
+    }
+
+    public static void assertSOAPForcedBackCounts(AssertContext ctx,
+        int clientCount, int serverCount) throws Exception {
+
+        log.info(getMethodName());
+        assertCountClientForcedBack(ctx, clientCount);
+        assertCountServerForcedBack(ctx, serverCount);
     }
 
 

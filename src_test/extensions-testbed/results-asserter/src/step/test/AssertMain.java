@@ -150,77 +150,95 @@ public class AssertMain {
             } else if("cipher-ok".equals(CONFIG)) {
                 Assertions.assertClientNoException(ctx);
                 Assertions.assertClientHelloFriend(ctx);
-                Assertions.assertSOAPCounts(ctx, 4, 4, 0, 0);
-                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
+                Assertions.assertSOAPCounts(ctx, 4, 4, 0, 0); // client envelopes, server envelopes,
+                                                              //    client faults, server faults
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2); // client, server
 
             } else if("cipher-throw-serviceerrorexception".equals(CONFIG)) {
                 Assertions.assertClientServiceErrorException(ctx);
-                Assertions.assertSOAPCounts(ctx, 4, 4, 2, 2);
+                Assertions.assertSOAPCounts(ctx, 4, 4, 1, 1);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
 
             } else if("cipher-return-false-cout".equals(CONFIG)) {
                 Assertions.assertClientUnexpectedXML(ctx);
                 Assertions.assertSOAPCounts(ctx, 2, 0, 0, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 0, 0);
             } else if("cipher-return-false-sin".equals(CONFIG)) {
                 Assertions.assertClientUnexpectedXML(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 2, 0, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
             } else if("cipher-return-false-sout".equals(CONFIG)) {
                 Assertions.assertClientNoException(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 4, 0, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
             } else if("cipher-return-false-cin".equals(CONFIG)) {
                 Assertions.assertClientNoException(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 4, 0, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
 
             } else if("cipher-throw-wsinterceptorexception-cout".equals(CONFIG)) {
-                Assertions.assertClientSOAPFaultException(ctx);
+                Assertions.assertClientSOAPFaultExceptionFailedToDecipher(ctx);
                 Assertions.assertSOAPCounts(ctx, 2, 0, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 0, 0);
             } else if("cipher-throw-wsinterceptorexception-sin".equals(CONFIG)) {
                 Assertions.assertClientSOAPFaultException(ctx);
-                Assertions.assertSOAPCounts(ctx, 4, 2, 2, 1);
+                Assertions.assertSOAPCounts(ctx, 4, 2, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
             } else if("cipher-throw-wsinterceptorexception-sout".equals(CONFIG)) {
                 Assertions.assertClientSOAPFaultException(ctx);
-                Assertions.assertSOAPCounts(ctx, 4, 4, 2, 1);
-            } else if("cipher-throw-wsinterceptorexception-cin".equals(CONFIG)) {
-                Assertions.assertClientSOAPFaultException(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 4, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
+            } else if("cipher-throw-wsinterceptorexception-cin".equals(CONFIG)) {
+                Assertions.assertClientSOAPFaultExceptionFailedToDecipher(ctx);
+                Assertions.assertSOAPCounts(ctx, 4, 4, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
 
             } else if("cipher-throw-soapfaultexception-cout".equals(CONFIG)) {
-                Assertions.assertClientSOAPFaultException(ctx);
+                Assertions.assertClientSOAPFaultExceptionFailedToDecipher(ctx);
                 Assertions.assertSOAPCounts(ctx, 2, 0, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 0, 0);
             } else if("cipher-throw-soapfaultexception-sin".equals(CONFIG)) {
                 Assertions.assertClientSOAPFaultException(ctx);
-                Assertions.assertSOAPCounts(ctx, 4, 2, 2, 1);
+                Assertions.assertSOAPCounts(ctx, 4, 2, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
             } else if("cipher-throw-soapfaultexception-sout".equals(CONFIG)) {
                 Assertions.assertClientSOAPFaultException(ctx);
-                Assertions.assertSOAPCounts(ctx, 4, 4, 2, 1);
-            } else if("cipher-throw-soapfaultexception-cin".equals(CONFIG)) {
-                Assertions.assertClientSOAPFaultException(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 4, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
+            } else if("cipher-throw-soapfaultexception-cin".equals(CONFIG)) {
+                Assertions.assertClientSOAPFaultExceptionFailedToDecipher(ctx);
+                Assertions.assertSOAPCounts(ctx, 4, 4, 1, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
 
             } else if("cipher-throw-nullpointerexception-cout".equals(CONFIG)) {
                 Assertions.assertClientNestedNullPointerException(ctx);
                 Assertions.assertSOAPCounts(ctx, 1, 0, 0, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 0, 0);
             } else if("cipher-throw-nullpointerexception-sin".equals(CONFIG)) {
-                Assertions.assertClientSOAPFaultException(ctx);
+                Assertions.assertClientSOAPFaultExceptionFailedToDecipher(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 1, 2, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 1, 1);
             } else if("cipher-throw-nullpointerexception-sout".equals(CONFIG)) {
-                Assertions.assertClientSOAPFaultException(ctx);
+                Assertions.assertClientSOAPFaultExceptionFailedToDecipher(ctx);
                 Assertions.assertSOAPCounts(ctx, 4, 3, 2, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 1, 1);
             } else if("cipher-throw-nullpointerexception-cin".equals(CONFIG)) {
                 Assertions.assertClientNestedNullPointerException(ctx);
                 Assertions.assertSOAPCounts(ctx, 3, 4, 0, 0);
+                Assertions.assertSOAPBodyCipherCounts(ctx, 2, 2);
 
             } else {
                 throw new AssertException("Unknown configuration " + CONFIG);
             }
 
-            log.info("All assertions executed successfully for configuration '" + CONFIG + "'");
+            log.info("SUCCESS! All assertions executed successfully for configuration '" + CONFIG + "'");
 
         } catch(AssertException ae) {
-            log.info("Assertion failed for configuration '" + CONFIG + "'");
+            log.info("FAILURE! Assertion failed for configuration '" + CONFIG + "'");
             log.info("Details", ae);
 
         } catch(Exception e) {
-            log.error("Caught unexpected exception " + e.getClass().getName() + " while testing configuration '" + CONFIG + "'");
+            log.error("FAILURE! Caught unexpected exception " + e.getClass().getName() + " while testing configuration '" + CONFIG + "'");
             log.error("Details", e);
         }
 
