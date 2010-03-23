@@ -7,4 +7,6 @@ import java.util.HashMap;
  */
 abstract class ContextImpl extends HashMap<String,Object> implements Context {
 
+	private static final long serialVersionUID = 1L;
+
 }

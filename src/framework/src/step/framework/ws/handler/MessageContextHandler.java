@@ -39,9 +39,8 @@ public class MessageContextHandler implements SOAPHandler<SOAPMessageContext> {
     private void printMessageContext(MessageContext map) {
         out.println("Message context: (scope,key,value)");
         try {
-            java.util.Iterator it = map.keySet().iterator();
-            while (it.hasNext()) {
-                Object key = it.next();
+            // simplified for-each loop
+        	for (String key : map.keySet()) {
                 Object value = map.get(key);
                 
                 String keyString;

@@ -107,9 +107,9 @@ public class ConfigUtil {
         if(prefix == null)
             throw new IllegalArgumentException("Can't remove properties with null prefix!");
 
-        for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-            String key = (String) e.nextElement();
-            if (key.startsWith(prefix)) {
+        // typesafe for-each loop
+        for (String key : props.stringPropertyNames()) {
+        	if (key.startsWith(prefix)) {
                 props.remove(key);
             }
         }
