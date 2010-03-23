@@ -42,18 +42,21 @@ public class TraceWebServiceInterceptor implements WebServiceInterceptor {
             boolean isServerSide = param.isServerSide();
             boolean isOutbound = param.isOutboundSOAPMessage();
             boolean isFault = param.isFaultSOAPMessage();
+            boolean isForcedBackToClient = param.isForcedBackToClient();
 
             out.println("Tracing Web Service" +
                         (isServerSide ? "" : " client") +
                         ": " + webServiceName);
             out.println((isOutbound ? "Outbound" : "Inbound") +
                         " SOAP message" +
-                        (isFault ? " containing a Fault:" : ":"));
+                        (isFault ? " containing a Fault" : "") +
+                        (isForcedBackToClient ? " forced back to client" : "") +
+                        ":");
 
             // print SOAP message contents
             SOAPMessage soapMessage = smc.getMessage();
             SOAPPart soapPart = soapMessage.getSOAPPart();
-            
+
             // check printing style
             Properties extConfig = param.getExtension().getConfig();
             boolean prettyPrint = ConfigUtil.recognizeAsTrue(extConfig.getProperty("pretty-print"));

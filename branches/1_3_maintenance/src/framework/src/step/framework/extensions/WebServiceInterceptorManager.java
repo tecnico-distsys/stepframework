@@ -278,22 +278,29 @@ public class WebServiceInterceptorManager {
             // inspect SOAP message context
             // to find out in which situation is the message being intercepted
             final boolean IS_SERVER_SIDE = SOAPUtil.isServerSideMessage(smc);
-            boolean isOutbound = SOAPUtil.isOutboundMessage(smc);
-            final boolean IS_FAULT = SOAPUtil.isFaultMessage(smc);
+            final boolean WAS_OUTBOUND = SOAPUtil.isOutboundMessage(smc);
+            final boolean WAS_FAULT = SOAPUtil.isFaultMessage(smc);
+
+            // current message status
+            boolean isOutbound = WAS_OUTBOUND;
+            boolean isFault = WAS_FAULT;
+
             if(log.isDebugEnabled()) {
                 log.debug("SOAP Message situation: " +
                           (IS_SERVER_SIDE ? "server-side" : "client-side") + ", " +
                           (isOutbound ? "outbound" : "inbound") + ", " +
-                          (IS_FAULT ? "fault" : "non-fault"));
+                          (isFault ? "fault" : "non-fault"));
             }
+
 
             // interception loop
             List<Extension> extList = configData.getExtensionList();
 
-            // can change direction flag
-            // (the first interceptor exception can, in some cases, change the message direction)
-            // (after the first exception or if returning false, the direction can no longer change)
-            boolean canChangeDirectionFlag = true;
+            // Message forced back to client flag. A forced message cannot change direction.
+            boolean isForcedBackToClient = false;
+            // A message can be forced by a return false,
+            // or by a thrown WebServiceInterceptorException,
+            // or by a thrown SOAPFaultException.
 
             // create iterator in position according to message direction
             ListIterator<Extension> extListIterator =
@@ -333,110 +340,149 @@ public class WebServiceInterceptorManager {
                         log.trace("interceptor return value: '" + interceptorReturnValue + "'");
                     }
 
-                    // process interceptor return value
-                    if(interceptorReturnValue == false) {
-                        log.trace("web service interceptor returned false");
-                        log.trace("will return false in the end of loop");
-                        interceptMessageReturnValue = false;
+                    // process interceptor false return value in exception handler
+                    if(interceptorReturnValue == false)
+                        throw new ReturnFalseException();
 
-                        if((!IS_SERVER_SIDE && isOutbound) || (IS_SERVER_SIDE && !isOutbound)) {
-                            log.trace("reverse loop direction");
-                            isOutbound = !isOutbound;
-                            SOAPUtil.setOutboundMessage(smc, isOutbound);
-                            log.trace("advance list iterator to skip current extension");
-                            directionAwareNext(extListIterator, isOutbound);
+
+                } catch(Exception e) {
+
+                    if(e instanceof ReturnFalseException ||
+                       e instanceof SOAPFaultException ||
+                       e instanceof WebServiceInterceptorException) {
+
+                        if(e instanceof ReturnFalseException) {
+                            log.trace("web service interceptor returned false");
+                            log.trace("will return false in the end of loop");
+                            interceptMessageReturnValue = false;
+
+                        } else if(e instanceof SOAPFaultException) {
+                            log.debug("web service interceptor has thrown a SOAP fault exception");
+                            log.debug(e);
+                            log.trace("soap fault exception details", e);
+                            log.debug("replacing existing message's body with SOAP Fault contained in exception");
+                            SOAPUtil.replaceBodyWithFault(smc, ((SOAPFaultException)e).getFault());
+
+                        } else if(e instanceof WebServiceInterceptorException) {
+                            log.debug("web service interceptor has thrown a web service interceptor exception");
+                            log.debug(e);
+                            log.trace("web service interceptor exception details", e);
+                            log.debug("replacing existing message's body with a SOAP Fault containing the exception's message");
+                            SOAPUtil.replaceBodyWithNewFault(smc, e.getMessage());
+
                         }
 
-                        log.trace("from now on, the loop can no longer change direction");
-                        canChangeDirectionFlag = false;
+                        if(!isForcedBackToClient) {
+                            log.debug("Message is now forced to go to client");
+                            log.trace("from now on, the loop can no longer change direction");
+
+                            isForcedBackToClient = true;
+                            SOAPUtil.setForcedBackToClient(smc, isForcedBackToClient);
+
+                            if((!IS_SERVER_SIDE && isOutbound) || (IS_SERVER_SIDE && !isOutbound)) {
+                                log.trace("reverse loop direction");
+
+                                isOutbound = !isOutbound;
+                                SOAPUtil.setOutboundMessage(smc, isOutbound);
+
+                                log.trace("advance list iterator to skip current extension");
+                                directionAwareNext(extListIterator, isOutbound);
+                            }
+                        }
+
+                    } else if(e instanceof ExtensionException) {
+                        log.debug("caught extension exception (that is not a web service interceptor exception)");
+                        log.debug(e);
+                        log.trace("extension exception details", e);
+
+                        // No changes to flags are necessary in this case,
+                        // because processing will be aborted by the upward propagation of the runtime exception
+
+                        log.trace("throwing runtime exception with extension exception nested inside");
+                        throw new RuntimeException(e);
+
+                    } else if(e instanceof RuntimeException) {
+                        log.debug("web service interceptor has thrown a run-time exception");
+                        log.debug(e);
+                        log.trace("run-time exception details", e);
+
+                        // No changes to flags are necessary in this case,
+                        // because processing will be aborted by the upward propagation of the runtime exception
+
+                        log.trace("rethrowing");
+                        throw (RuntimeException) e;
+
+                    } else if(e instanceof SOAPException) {
+                        log.trace("rethrowing SOAPException");
+                        throw (SOAPException) e;
                     }
 
-                } catch(SOAPFaultException sfe) {
-                    log.debug("web service interceptor has thrown a SOAP fault exception");
-                    log.debug(sfe);
-                    log.trace("soap fault exception details", sfe);
-                    log.debug("replacing existing message's body with SOAP Fault contained in exception");
-                    SOAPUtil.replaceBodyWithFault(smc, sfe.getFault());
+                } // catch(Exception)
 
-                    isOutbound = changeDirectionIfNecessary(smc,
-                                                            extListIterator,
-                                                            canChangeDirectionFlag,
-                                                            IS_SERVER_SIDE,
-                                                            isOutbound);
-                    // only the first exception can cause a direction change
-                    log.trace("from now on, the loop can no longer change direction");
-                    canChangeDirectionFlag = false;
-
-                    log.debug("proceed");
-
-                } catch(WebServiceInterceptorException wsie) {
-                    log.debug("web service interceptor has thrown a web service interceptor exception");
-                    log.debug(wsie);
-                    log.trace("web service interceptor exception details", wsie);
-                    log.debug("replacing existing message's body with a SOAP Fault containing the exception's message");
-                    SOAPUtil.replaceBodyWithNewFault(smc, wsie.getMessage());
-
-                    isOutbound = changeDirectionIfNecessary(smc,
-                                                            extListIterator,
-                                                            canChangeDirectionFlag,
-                                                            IS_SERVER_SIDE,
-                                                            isOutbound);
-                    // only the first exception can cause a direction change
-                    log.trace("from now on, the loop can no longer change direction");
-                    canChangeDirectionFlag = false;
-
-                    log.debug("proceed");
-
-                } catch(ExtensionException ee) {
-                    log.debug("caught extension exception (that is not a web service interceptor exception)");
-                    log.debug(ee);
-                    log.trace("extension exception details", ee);
-
-                    // only the first exception can cause a direction change
-                    log.trace("from now on, the loop can no longer change direction");
-                    canChangeDirectionFlag = false;
-                    // (this change is not actually necessary in this case, as
-                    // processing will be aborted by the upward propagation of the runtime exception)
-
-                    log.trace("throwing runtime exception with extension exception nested inside");
-                    throw new RuntimeException(ee);
-
-                } catch(RuntimeException rte) {
-                    log.debug("web service interceptor has thrown a run-time exception");
-                    log.debug(rte);
-                    log.trace("run-time exception details", rte);
-
-                    // only the first exception can cause a direction change
-                    log.trace("from now on, the loop can no longer change direction");
-                    canChangeDirectionFlag = false;
-                    // (this change is not actually necessary in this case, as
-                    // processing will be aborted by the upward propagation of the runtime exception)
-
-                    log.trace("rethrowing");
-                    throw rte;
-
-                } // try-catch
+                // update isFault
+                isFault = SOAPUtil.isFaultMessage(smc);
+                if(log.isTraceEnabled()) {
+                    log.trace("message " + (isFault ? "contains" : "does not contain") + " a fault");
+                }
+                log.trace("proceed to next step in loop");
 
             } // while
 
-            // if message is a newly created SOAP fault, throw a SOAPFaultException
-            // (IS_FAULT was assigned before the interceptors loop)
-            if(!IS_FAULT) {
-                SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
-                if(sf != null) {
-                    // message is a SOAPFault
-                    log.trace("SOAP message contains a newly added fault; throwing SOAPFaultException with it");
-                    throw new SOAPFaultException(sf);
+
+            log.debug("Proceeding after web service interceptor loop");
+
+            if(isForcedBackToClient) {
+                // either return false or SOAPFaultException or WebServiceInterceptorException
+                log.trace("Something happened to normal message flow");
+                log.debug("Message is forced to go to client");
+
+                // return false
+                if(!interceptMessageReturnValue) {
+                    log.trace("returning false from intercept message");
+                    return false;
                 }
+
+                // ! either a SOAPFaultException or a WebServiceInterceptorException was thrown
+
+                // check fault status
+                if(isFault) {
+                    // check initial fault status
+                    if(WAS_FAULT) {
+                        log.trace("Relying on JAX-WS engine to handle the fault");
+                        log.trace("returning true from intercept message.");
+                        return true;
+                    } else {
+                        // message is a newly created SOAP fault, throw a SOAPFaultException
+                        SOAPFault sf = SOAPUtil.getFault(smc.getMessage());
+                        if(sf == null) {
+                            String warning = "Message should contain a fault. SOAPFault should not be null.";
+                            log.warn(warning);
+                            throw new IllegalStateException(warning);
+                        }
+                        log.trace("SOAP message contains a newly added fault; throwing SOAPFaultException with it");
+                        throw new SOAPFaultException(sf);
+                    }
+                } else {
+                    // !isFault
+                    log.trace("Message is not a fault but it is being forced to go back to client");
+                    log.trace("Probably a fault is hidden somehow (e.g. inside a ciphered body). Return message to client as is.");
+
+                    log.trace("returning false from intercept message.");
+                    return false;
+                }
+
             }
 
-            // return value only after checking that there isn't an exception to throw
-            // (i.e. exceptions take precedence over return value)
-            if(log.isTraceEnabled()) {
-                log.trace("returning '" + interceptMessageReturnValue + "' from intercept message");
-            }
-            return interceptMessageReturnValue;
 
+            // return value
+            if(!interceptMessageReturnValue) {
+                String warning = "Return value is false, but all return false cases should have been handled elsewhere.";
+                log.warn(warning);
+                throw new IllegalStateException(warning);
+            }
+
+            log.trace("returning true from intercept message");
+            return true;
 
         } catch(SOAPException se) {
             // throw an unchecked exception if the SOAP message is in an illegal state
@@ -476,31 +522,9 @@ public class WebServiceInterceptorManager {
         }
     }
 
-    // Helper method to change message direction if necessary
-    private boolean changeDirectionIfNecessary(SOAPMessageContext smc,
-                                               ListIterator<Extension> extListIterator,
-                                               boolean canChangeDirection,
-                                               boolean isServerSide,
-                                               boolean isOutbound) {
-        boolean isClientSide = !isServerSide;
-        boolean isInbound = !isOutbound;
-
-        if(canChangeDirection &&
-           ((isServerSide && isInbound) || (isClientSide && isOutbound)) ) {
-            log.debug("reversing message direction");
-
-            log.trace("changing SOAP message context outbound property");
-            SOAPUtil.setOutboundMessage(smc, !isOutbound);
-
-            log.trace("advance list iterator to skip current extension");
-            directionAwareNext(extListIterator, !isOutbound);
-
-            log.trace("changing local isOutbound flag");
-            return !isOutbound;
-        } else {
-            // return initial isOutbound value
-            return isOutbound;
-        }
+    // Helper exception class to allow similar treatment of return false as SOAPFaultException and WebServiceInterceptorException
+    private class ReturnFalseException extends Exception {
+        // empty
     }
 
 }
