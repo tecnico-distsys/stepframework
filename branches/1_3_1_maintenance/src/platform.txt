@@ -1,0 +1,12 @@
+This version of the STEP Framework is built and tested for the following platform:
+
+- Java Developer Kit 1.6.0_18
+- MySQL 5.1.43
+- stepcat-1.x-6.0.14 (Tomcat 6.0.14, Ant 1.7.1, JUnit 4.7)
+
+The following environment property is required:
+STEP_HOME
+
+--
+2010-03-02
+Miguel Pardal
