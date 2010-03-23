@@ -654,8 +654,6 @@ public class Registry {
     /** Delete all web services that satisfy the name pattern query.
         Returns true if all service deletions were performed successfully, false otherwise */
     public boolean delete(NamePatternQuery query) throws RegistryException {
-// JORGE: What's the use?
-//        boolean result = true;
 
         log.info("Deleting all web service registrations that satisfy the name pattern");
 
@@ -688,9 +686,6 @@ public class Registry {
     /** Delete all web services that satisfy the classification query.
         Returns true if all service deletions were performed successfully, false otherwise */
     public boolean delete(ClassificationQuery query) throws RegistryException {
-// JORGE: What's the use?
-//        boolean result = true;
-
         log.info("Deleting all web service registrations that satisfy the classification queries");
 
         ClassificationQuery[] queryArray = new ClassificationQuery[1];

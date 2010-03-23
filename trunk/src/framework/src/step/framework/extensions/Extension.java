@@ -224,8 +224,10 @@ public class Extension {
 
 
     //
-    // Property
+    //  Property
     //
+
+    // public-scoped accessors
 
     /** Check if extension is enabled */
     public boolean isEnabled() {
@@ -250,6 +252,9 @@ public class Extension {
         return this.context;
     }
 
+    // package-scoped accessors - can only be accessed for classes in same package
+    // (allow better unit testing)
+
     /** Check if extension is configured to intercept services */
     boolean interceptsServices() {
         return (this.serviceInterceptorClassName != null);
@@ -260,6 +265,42 @@ public class Extension {
         return (this.webServiceInterceptorClassName != null);
     }
 
+    /** access engine */
+    ExtensionEngine getEngine() {
+        return this.engine;
+    }
+
+    /** access listener class name */
+    String getListenerClassName() {
+        return this.listenerClassName;
+    }
+
+    /** access listener class */
+    Class<?> getListenerClass() {
+        return this.listenerClass;
+    }
+
+    // no accessor is provided for listenerInstance because it is an internal implementation option
+
+    /** access service interceptor class name */
+    String getServiceInterceptorClassName() {
+        return this.serviceInterceptorClassName;
+    }
+
+    /** access service interceptor class */
+    Class<?> getServiceInterceptorClass() {
+        return this.serviceInterceptorClass;
+    }
+
+    /** access web service interceptor class name */
+    String getWebServiceInterceptorClassName() {
+        return this.webServiceInterceptorClassName;
+    }
+
+    /** access service interceptor class */
+    Class<?> getWebServiceInterceptorClass() {
+        return this.webServiceInterceptorClass;
+    }
 
 
     //
@@ -294,14 +335,7 @@ public class Extension {
             if(log.isTraceEnabled()) {
                 log.trace("extension " + this.id + " config properties (key: 'value')");
                 
-// JORGE: Replaced with typesafe for-each loop
-                
-//                for (Enumeration e = props.propertyNames() ; e.hasMoreElements() ;) {
-//                    String key = (String) e.nextElement();
-//                    String value = (String) props.get(key);
-//                    log.trace(key + ": '" + value + "'");
-//                }
-                
+                // typesafe for-each loop
                 for (String key : props.stringPropertyNames()) {
                 	String value = (String) props.get(key);
                     log.trace(key + ": '" + value + "'");
@@ -310,9 +344,7 @@ public class Extension {
 
             // enabled
             String enabledPropertyValue = props.getProperty(EXTENSION_ENABLED_PROPERTY_NAME);
-            if(enabledPropertyValue != null && enabledPropertyValue.trim().equalsIgnoreCase("true")) {
-                this.enabled = true;
-            }
+            this.enabled = ConfigUtil.recognizeAsTrue(enabledPropertyValue);
 
             // listener
             String listenerPropertyValue = props.getProperty(EXTENSION_LISTENER_PROPERTY_NAME);
