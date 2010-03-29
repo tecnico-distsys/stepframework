@@ -1,5 +1,7 @@
 package step.framework.view;
 
+import java.io.Serializable;
+
 /**
  * Abstract view of a domain object. Each view should inherit from this class.  
  * 
@@ -7,8 +9,7 @@ package step.framework.view;
  * description and the generator does not produce a useful equals(Object) method.  Comparisons using equals will only check for
  * reference equality.
  *
- * Conceptually views are read-only objects.  Eventhough the automatic generation includes setters they should never be used,
- * except when setting up a newly created view instance (this is because the automatic generation only produces the default
- * constructor).
+ * Conceptually views are read-only objects.
  */
-public abstract class View {}
+public abstract class View implements Serializable {
+	private static final long serialVersionUID = 1L;}
