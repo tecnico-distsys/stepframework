@@ -3,7 +3,6 @@ package step.framework;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import step.framework.exception.InitializationError;
 import step.framework.extensions.ExtensionEngine;
 import step.framework.extensions.ExtensionEngineException;
 import step.framework.persistence.Persistence;
