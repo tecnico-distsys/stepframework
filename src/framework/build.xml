@@ -119,18 +119,39 @@
     </target>
 
 
+
     <!-- library -->
 
     <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
+    <property name="jar-dev.rel-file" value="${dist.rel-dir}/${ant.project.name}-dev.jar" />
+    <property name="jar-src.rel-file" value="${dist.rel-dir}/${ant.project.name}-src.jar" />
 
     <target name="create-jar" depends="compile">
     <!-- description="Create a jar file" -->
 
+        <!-- runtime library -->
         <jar destfile="${jar.rel-file}">
-            <!-- compiled classes and resources -->
+            <!-- relevant compiled classes -->
             <zipfileset dir="${build.rel-dir}"
                         includes="**/*.class"
-                        excludes="**/*.properties,**/*.xml" />
+                        excludes="step/framework/presentation/client/**,**/*.properties,**/*.xml" />
+            <!-- GWT client source-code is necessary for Java-to-Javascript translation -->
+            <zipfileset dir="${src.rel-dir}"
+                        includes="step/framework/presentation/**/*.java,step/framework/view/**/*.java"
+                        excludes=""/>
+        </jar>
+
+        <!-- development-only library -->
+        <jar destfile="${jar-dev.rel-file}">
+            <zipfileset dir="${build.rel-dir}"
+                        includes="step/framework/presentation/client/**/*.class"/>
+        </jar>
+
+        <!-- full source code distribution -->
+        <jar destfile="${jar-src.rel-file}">
+            <zipfileset dir="${src.rel-dir}"
+                        includes="step/framework/**/*.java"
+                        excludes=""/>
         </jar>
     </target>
 
