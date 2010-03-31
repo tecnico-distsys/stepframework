@@ -1,6 +1,6 @@
 package step.framework.extensions.badext;
 
-import step.framework.extensions.ExtensionListener;
+/*import step.framework.extensions.ExtensionListener;*/
 import step.framework.extensions.ExtensionListenerParameter;
 
 public class BadExtensionListener /*implements ExtensionListener*/ {

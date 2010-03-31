@@ -525,6 +525,7 @@ public class WebServiceInterceptorManager {
 
     // Helper exception class to allow similar treatment of return false as SOAPFaultException and WebServiceInterceptorException
     private class ReturnFalseException extends Exception {
+		private static final long serialVersionUID = 1L;
         // empty
     }
 
