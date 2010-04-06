@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="build/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/dap-framework.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/db-ojb-1.0.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/fenix-framework-r46630.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jvstm.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/stepframework.jar"/>
+	<classpathentry kind="lib" path="lib/stepframework-dev.jar"/>
+	<classpathentry kind="lib" path="lib/stepframework-src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/STEP dependencies"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/extensions.jar"/>
+	<classpathentry kind="lib" path="/flight/dist/flight.jar"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>

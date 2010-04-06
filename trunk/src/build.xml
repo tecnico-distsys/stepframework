@@ -28,41 +28,37 @@
         <echo message="***** BUILDING flight APPLICATION *****" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="flight-ws" target="build" />
-        <ant inheritAll="false" dir="flight-ws-cli" target="build" />
+        <ant inheritAll="false" dir="flight" target="create-war" />
     </target>
 
     <target name="clean-flight"
         description="Clean flight">
-        <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
-        <ant inheritAll="false" dir="flight-ws" target="clean" />
+        <ant inheritAll="false" dir="flight" target="clean" />
     </target>
-
-    <target name="rebuild-flight" depends="clean-flight,build-flight" />
 
     <target name="deploy-flight"
         description="Deploy flight">
-        <ant inheritAll="false" dir="flight-ws" target="deploy" />
+        <ant inheritAll="false" dir="flight" target="deploy" />
     </target>
 
     <target name="redeploy-flight"
         description="Redeploy flight">
-        <ant inheritAll="false" dir="flight-ws" target="redeploy" />
+        <ant inheritAll="false" dir="flight" target="redeploy" />
     </target>
 
     <target name="undeploy-flight"
         description="Undeploy flight">
-        <ant inheritAll="false" dir="flight-ws" target="undeploy" />
+        <ant inheritAll="false" dir="flight" target="undeploy" />
     </target>
 
-    <target name="hibernatetool-flight"
-        description="Create tables for flight domain">
-        <echo message="------ CREATING flight DATABASE -----" />
+    <target name="setup-flight"
+        description="Prepares flight database for usage">
+        <echo message="------ SETTING UP flight DATABASE -----" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="flight-ws" target="hibernatetool" />
+        <ant inheritAll="false" dir="flight" target="setup" />
     </target>
-
+<!--
     <target name="run-tests-flight"
         description="Run all flight service tests">
         <echo message="##### RUNNING mediator TESTS #####" />
@@ -70,7 +66,7 @@
 
         <ant inheritAll="false" dir="flight-ws" target="run-tests" />
     </target>
-
+-->
 
     <!-- Mediator -->
     <target name="build-mediator"
@@ -78,39 +74,37 @@
         <echo message="***** BUILDING mediator APPLICATION *****" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="mediator-web" target="build" />
+        <ant inheritAll="false" dir="mediator" target="create-war" />
     </target>
 
     <target name="clean-mediator"
         description="Clean mediator">
-        <ant inheritAll="false" dir="mediator-web" target="clean" />
+        <ant inheritAll="false" dir="mediator" target="clean" />
     </target>
-
-    <target name="rebuild-mediator" depends="clean-mediator,build-mediator" />
 
     <target name="deploy-mediator"
         description="Deploy mediator">
-        <ant inheritAll="false" dir="mediator-web" target="deploy" />
+        <ant inheritAll="false" dir="mediator" target="deploy" />
     </target>
 
     <target name="redeploy-mediator"
         description="Redeploy mediator">
-        <ant inheritAll="false" dir="mediator-web" target="redeploy" />
+        <ant inheritAll="false" dir="mediator" target="redeploy" />
     </target>
 
     <target name="undeploy-mediator"
         description="Undeploy mediator">
-        <ant inheritAll="false" dir="mediator-web" target="undeploy" />
+        <ant inheritAll="false" dir="mediator" target="undeploy" />
     </target>
 
-    <target name="hibernatetool-mediator"
-        description="Create tables for mediator domain">
-        <echo message="------ CREATING mediator DATABASE -----" />
+    <target name="setup-mediator"
+        description="Prepares mediator database for usage">
+        <echo message="------ SETTING UP mediator DATABASE -----" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="mediator-web" target="hibernatetool" />
+        <ant inheritAll="false" dir="mediator" target="setup" />
     </target>
-
+<!--
     <target name="run-tests-mediator"
         description="Run all mediator service tests">
         <echo message="##### RUNNING mediator TESTS #####" />
@@ -118,7 +112,7 @@
 
         <ant inheritAll="false" dir="mediator-web" target="run-tests" />
     </target>
-
+-->
 
     <!-- ALL -->
     <target name="build" depends="build-extensions,build-flight,build-mediator"
@@ -145,13 +139,13 @@
         description="Undeploy all web applications">
     </target>
 
-    <target name="hibernatetool" depends="hibernatetool-flight,hibernatetool-mediator"
+    <target name="setup" depends="setup-flight,setup-mediator"
         description="Generate all database schemas">
     </target>
-
+<!--
     <target name="run-tests" depends="run-tests-flight,run-tests-mediator"
         description="Run all service tests">
     </target>
-
+-->
 
 </project>
