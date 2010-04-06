@@ -1,0 +1,166 @@
+package step.examples.tripplanner.flight.domain;
+
+valueType java.math.BigDecimal as BigDecimal {
+    externalizeWith {
+        String toString();
+    }
+}
+enum step.examples.tripplanner.flight.domain.PassengerType as PassengerType;
+
+class FlightApp;
+
+class Airport {
+    String IATACode;    // 3-letter IATA code
+    String ICAOCode;    // 4-letter ICAO code
+    String city;
+    BigDecimal costPerUse;
+}
+
+relation FlightAppKnowsAirports {
+    FlightApp playsRole flightApp;
+    Airport playsRole airport {
+        multiplicity *;
+    }
+}
+
+class Aircraft {
+    String aircraftRegistration;
+}
+
+relation FlightAppKnowsAircrafts {
+    FlightApp playsRole flightApp;
+    Aircraft playsRole aircraft {
+        multiplicity *;
+    }
+}
+
+class Airplane extends Aircraft {
+    String make;
+    String model;
+    int capacity;
+    BigDecimal costPerUse;
+}
+
+class Passenger {
+    String name;
+    String passport;
+    PassengerType type;
+}
+
+class Airline {
+    String name;
+    String code;        // 2-letter code
+}
+
+relation FlightAppHasSingleAirline {
+    FlightApp playsRole flightApp;
+    Airline playsRole airline;
+}
+
+relation AirlineOwnsAirplanes {
+    Airline playsRole airline;
+    Airplane playsRole airplane {
+        multiplicity *;
+    }
+}
+
+relation AirlineHasPassengers {
+    Airline playsRole airline {
+        multiplicity 1..1;
+    }
+    Passenger playsRole passenger {
+        multiplicity *;
+    }
+}
+
+class Flight {
+    int code;
+    LocalTime departure;
+    BigDecimal baseCost;
+}
+
+relation AirlineManagesFlights {
+    Airline playsRole airline {
+        multiplicity 1..1;
+    }
+    Flight playsRole flight {
+        multiplicity *;
+    }
+}
+
+relation FlightOrigin {
+    Flight playsRole departingFlight {
+        multiplicity *;
+    }
+    
+    Airport playsRole origin {
+        multiplicity 1..1;
+    }
+}
+
+relation FlightDestination {
+    Flight playsRole arrivingFlight {
+        multiplicity *;
+    }
+    
+    Airport playsRole destination {
+        multiplicity 1..1;
+    }
+}
+
+class FlightInstance {
+    LocalDate date;
+    BigDecimal costPerPassenger;
+    int lastReservation;
+}
+
+relation FlightHasInstances {
+    Flight playsRole flight {
+        multiplicity 1..1;
+    }
+    FlightInstance playsRole instance {
+        multiplicity *;
+    }
+}
+
+relation FlightAirplane {
+    FlightInstance playsRole flight {
+        multiplicity *;
+    }
+    
+    Airplane playsRole airplane {
+        multiplicity 1..1;
+    }
+}
+
+class Reservation {
+    int code;
+    PassengerType type;
+}
+/*
+relation AirlineHasReservation {
+    Airline playsRole airline {
+        multiplicity 1..1;
+    }
+    Reservation playsRole reservation {
+        multiplicity *;
+    }
+}
+*/
+relation ReservationPassenger {
+    Reservation playsRole reservation {
+        multiplicity *;
+    }
+    Passenger playsRole passenger {
+        multiplicity 1..1;
+    }
+}
+
+relation ReservationFlightInstance {
+    Reservation playsRole reservation {
+        multiplicity *;
+    }
+    FlightInstance playsRole flight{
+        multiplicity 1..1;
+    }
+}

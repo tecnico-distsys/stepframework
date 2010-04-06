@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="flight" default="compile" basedir=".">
+
+	<description>Flight application</description>
+
+	<!-- load environment variables as properties -->
+	<property environment="env"/>
+	
+	<!-- load properties files -->
+	<property file="build.properties"/>
+	<property file="../build.properties"/>
+	<property file="${user.home}/build.properties"/>
+
+	<!-- PROJECT-SPECIFIC PROPERTIES -->
+	<property name="dml.filename" value="flight.dml"/>
+	<property name="wsdl.filename" value="flight.wsdl"/>
+	<property name="package.project.name" value="step.examples.tripplanner.flight"/>
+	<property name="gwt.module.rel-name" value="flight"/>
+	<property name="gwt.host-page" value="index.html"/>
+	<property name="deploy.context" value="${gwt.module.rel-name}"/>
+
+	<!-- properties with default folder locations -->
+	<property name="src.rel-dir" value="src"/>
+	<property name="build.rel-dir" value="build"/>
+	<property name="web-content.rel-dir" value="war"/>
+	<property name="lib.rel-dir" value="${web-content.rel-dir}/WEB-INF/lib"/>
+	<property name="lib-dev.rel-dir" value="lib"/>
+	<property name="etc.rel-dir" value="etc"/>
+	<property name="dist.rel-dir" value="dist"/>
+	
+	<property name="src.java.rel-dir" value="${src.rel-dir}"/>
+	<property name="src.dml.rel-dir" value="${src.rel-dir}"/>
+	<property name="build.generated-src.rel-dir" value="${build.rel-dir}/src"/>
+	<property name="build.classes.rel-dir" value="${build.rel-dir}/classes"/>
+	<property name="web-content.classes.rel-dir" value="${web-content.rel-dir}/WEB-INF/classes"/>
+
+	<property name="src.java.dir" location="${src.java.rel-dir}"/>
+	<property name="src.dml.dir" location="${src.dml.rel-dir}"/>
+	<property name="build.generated-src.dir" location="${build.generated-src.rel-dir}"/>
+	<property name="build.classes.dir" location="${build.classes.rel-dir}"/>
+	<property name="web-content.classes.dir" value="${web-content.classes.rel-dir}"/>
+
+	<!-- project classpath -->
+	<path id="project.classpath">
+		<!-- compiled classes -->
+		<pathelement location="${build.classes.rel-dir}" />
+		<!-- development libraries (not required at run-time) -->
+		<fileset dir="${lib-dev.rel-dir}" includes="*.jar"/>
+		<!-- (GWT libraries must come first as they conflict with jasper-jdt.jar from Tomcat) -->
+		<pathelement location="${env.GWT_HOME}/gwt-user.jar"/>
+		<fileset dir="${env.GWT_HOME}" includes="gwt-dev*.jar" />
+		<!-- shared libraries (already provided by custom application server) -->
+		<fileset dir="${env.STEP_HOME}/lib" includes="*.jar"/>
+		<!-- application-specific libraries (not shared between different web applications)-->
+		<!-- (exclude GWT run-time library if it exists) -->
+		<fileset dir="${lib.rel-dir}" includes="**/*.jar" excludes="gwt-servlet.jar"/>
+	</path>
+
+	<property name="dml.rel-file" value="${src.dml.rel-dir}/${dml.filename}"/>
+	<property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/${wsdl.filename}" />
+
+	<pathconvert property="package.project.rel-dir" pathsep=".">
+		<unpackagemapper from="${basedir}/*" to="*"/>
+		<path location="${package.project.name}"/>
+	</pathconvert>
+
+	<!--                      -->
+	<!-- External definitions -->
+	<!--                      -->
+	
+	<taskdef resource="pt/ist/fenixframework/dml-ant.xml" classpathref="project.classpath"/>
+	
+	<import file="${etc.rel-dir}/import-ant/tomcat.xml" />
+	<import file="${etc.rel-dir}/import-ant/jax.xml" />
+	
+
+	<!--                                 -->
+	<!-- Fenix Framework-related targets -->
+	<!--                                 -->
+	
+	<target name="generate-domain" description="Generates the domain classes">
+		<dml-domain-generator destDirectory="${src.java.dir}"
+							  destDirectoryBase="${build.generated-src.dir}">
+			<fileset file="${dml.rel-file}"/>
+		</dml-domain-generator>
+	</target>
+	
+	<target name="instrument-classes" depends="compile-sources">
+		<copy file="${dml.rel-file}" todir="${build.classes.rel-dir}"/>
+		<dml-post-processor dir="${build.classes.dir}">
+			<fileset file="${dml.rel-file}"/>
+			<classpath refid="project.classpath" />
+		</dml-post-processor>
+	</target>
+
+	<!--                      -->
+	<!-- Web Services targets -->
+	<!--                      -->
+	
+	<target name="wsimport" depends="init,-generate-wsdl-url">
+	<!-- description="Generate Web Service Java code from WSDL" -->
+		<echo message="Executing wsimport to generate clinet/server code..." />
+		<echo message="WSDL: ${wsdl.rel-file}" />
+		<wsimport wsdl="${wsdl.url}" debug="true" verbose="false"
+				  destdir="${build.classes.rel-dir}" sourcedestdir="${build.generated-src.rel-dir}">
+			<binding dir="${etc.rel-dir}/bindings" includes="jax*-binding.xml"/>
+			<produces dir="${build.generated-src.rel-dir}/${package.project.rel-dir}/ws/view" />
+			<produces dir="${build.generated-src.rel-dir}/${package.project.rel-dir}/ws" />
+		</wsimport>
+	</target>
+
+	<!--                     -->
+	<!-- Compilation targets -->
+	<!--                     -->
+	
+	<target name="init">
+		<mkdir dir="${build.rel-dir}"/>
+		<mkdir dir="${build.classes.rel-dir}"/>
+		<mkdir dir="${dist.rel-dir}"/>
+	</target>
+	
+	<property name="resources.to-copy" value="**/*.properties,**/*.xml"/>
+	<filterset id="resources.update-rules" begintoken="@" endtoken="@">
+		<filter token="tomcat.url" value="${tomcat.url}"/>
+<!--		<filter token="context" value=""/> in dev-mode, the root is the application -->
+		<filter token="context" value="/${deploy.context}"/>
+	</filterset>
+	
+	<target name="prepare-resources" depends="init">
+		<!-- description="Copy and update application resource-files based on build properties" -->
+		<copy todir="${build.classes.rel-dir}" overwrite="true">
+			<fileset dir="${src.java.rel-dir}"  includes="${resources.to-copy}"/>
+			<filterset refid="resources.update-rules"/>
+		</copy>
+	</target>
+	
+	<target name="compile-sources" depends="prepare-resources">
+		<javac destdir="${build.classes.rel-dir}" debug="true" debuglevel="lines,vars,source"
+			   optimize="true" deprecation="true" verbose="false">
+			<classpath refid="project.classpath" />
+			<src>
+				<pathelement path="${build.generated-src.rel-dir}:${src.java.rel-dir}"/>
+			</src>
+			<compilerarg line=""/>
+			<!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+		</javac>
+	</target>
+	
+	<target name="compile" description="Compile Java source code"
+			depends="init,generate-domain,wsimport,compile-sources,instrument-classes"/>
+
+	<!--                     -->
+	<!-- GWT-related targets -->
+	<!--                     -->
+	
+	<property name="gwt.module" value="${package.project.name}.${gwt.module.rel-name}"/>
+	<property name="gwt.module.rel-dir" value="${web-content.rel-dir}/${gwt.module.rel-name}"/>
+	
+	<property name="package.presentation.rel-dir" value="${package.project.rel-dir}/presentation"/>
+	
+	<target name="check-javascript">
+		<condition property="javascript.uptodate">
+			<uptodate targetfile="${gwt.module.rel-dir}/${gwt.module.rel-name}.nocache.js">
+				<srcfiles dir="${src.java.rel-dir}/${package.presentation.rel-dir}/client"/>
+				<srcfiles dir="${src.java.rel-dir}/${package.project.rel-dir}/view"/>
+				<srcfiles dir="${src.java.rel-dir}/${package.project.rel-dir}/exception"/>
+			</uptodate>
+		</condition>
+	</target>
+	
+	<target name="generate-javascript" depends="compile,check-javascript"
+			unless="javascript.uptodate">
+		<java classname="com.google.gwt.dev.Compiler" fork="true" failonerror="true">
+			<classpath>
+				<pathelement location="${src.java.rel-dir}"/>
+				<pathelement location="${build.generated-src.rel-dir}" />
+				<path refid="project.classpath"/>
+			</classpath>
+			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
+			<jvmarg value="-Xmx256M"/>
+			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+			<arg value="-style"/>
+			<arg value="DETAILED"/>
+			<!-- output directory -->
+			<arg value="-war"/>
+			<arg value="${web-content.rel-dir}"/>
+			<!-- Module names to compile -->
+			<arg value="${gwt.module}"/>
+		</java>
+	</target>
+	
+	<target name="gwt-devmode" depends="compile">
+		<!-- description="Run web application in Development mode" -->
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
+			<classpath>
+				<pathelement location="${src.java.rel-dir}"/>
+				<pathelement location="${build.generated-src.rel-dir}"/>
+				<path refid="project.classpath"/>
+			</classpath>
+			<jvmarg value="-Xmx256M"/>
+			<arg value="-war"/>
+			<arg value="${web-content.rel-dir}"/>
+			<arg value="-startupUrl"/>
+			<arg value="${gwt.host-page}"/>
+			<!-- Module names to compile -->
+			<arg value="${gwt.module}"/>
+		</java>
+	</target>
+
+	<!--                                  -->
+	<!-- Application construction targets -->
+	<!--                                  -->
+	
+	<target name="clean" depends="eclipse-clean" description="Removes all generated resources">
+		<delete dir="${gwt.module.rel-dir}" includeemptydirs="true" failonerror="false"
+				deleteonexit="true" />
+		<delete dir="${build.rel-dir}" includeemptydirs="true" failonerror="false"
+				deleteonexit="true" />
+		<delete dir="${dist.rel-dir}" includeemptydirs="true" failonerror="false"
+				deleteonexit="true" />
+	</target>
+	
+	<target name="build" depends="clean,compile,create-client-jar"
+			description="Build application from scratch"/>
+	
+	<property name="deploy.war.rel-file" value="${dist.rel-dir}/${deploy.context}.war"/>
+	<property name="client.jar.rel-file" value="${dist.rel-dir}/${deploy.context}.jar" />
+	
+	<target name="create-war" depends="build,generate-javascript"
+			description="Create WAR deployable module">
+		<war destfile="${deploy.war.rel-file}"
+			 webxml="${web-content.rel-dir}/WEB-INF/web.xml">
+			<fileset dir="${web-content.rel-dir}" excludes="WEB-INF/**"/>
+			<classes dir="${build.classes.rel-dir}" excludes="config.properties"/>
+			<lib dir="${lib.rel-dir}" excludes="gwt-servlet.jar"/>
+			<lib dir="${env.GWT_HOME}" includes="gwt-servlet.jar" />
+		</war>
+	</target>
+	
+	<target name="create-client-jar" depends="compile">
+	<!-- description="Create the WS client JAR file" -->
+		<jar destfile="${client.jar.rel-file}">
+			<!-- include only client classes and resources -->
+			<zipfileset dir="${build.classes.rel-dir}">
+				<include name="**/xmlschema/**"/>
+				<include name="${package.project.rel-dir}/view/**"/>
+				<include name="${package.project.rel-dir}/exception/**"/>
+				<include name="${package.project.rel-dir}/ws/**"/>
+				<exclude name="${package.project.rel-dir}/ws/server/**"/>
+			</zipfileset>
+		</jar>
+	</target>
+
+	<!--                                -->
+	<!-- Application invocation targets -->
+	<!--                                -->
+	
+	<target name="run" depends="compile">
+	<!-- description="Run standalone program" -->
+		<java classname="step.examples.tripplanner.flight.Main" 
+			  classpathref="project.classpath" fork="true" failonerror="true"/>
+	</target>
+	
+	<target name="setup" depends="compile" description="Setup domain data">
+		<sql driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/"
+			 userid="step" password=""
+			 classpathref="project.classpath">
+			drop database flight;
+			create database flight;
+		</sql>
+		<java classname="step.examples.tripplanner.flight.Setup" 
+			  classpathref="project.classpath" fork="true" failonerror="true"/>
+	</target>
+	
+	<target name="client-run" description="Execute the WS test client">
+		<java classname="step.examples.tripplanner.flight.Client" 
+			  classpathref="project.classpath" fork="true" failonerror="true">
+			  <sysproperty key="com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump"
+						   value="false" />
+		</java>
+	</target>
+
+	<!--                         -->
+	<!-- Eclipse-related targets -->
+	<!--                         -->
+	
+	<!-- targets useful to avoid Eclipse interference with the build process -->
+	<target name="eclipse-compile" depends="compile"
+			description="Compile Java source code on Eclipse">
+		<mkdir dir="${web-content.classes.rel-dir}"/>
+		<copy todir="${web-content.classes.rel-dir}" overwrite="true">
+			<fileset dir="${build.classes.rel-dir}"/>
+		</copy>
+	</target>
+	
+	<target name="eclipse-build" depends="build,eclipse-compile"
+			description="Build application from scratch on Eclipse"/>
+	
+	<target name="eclipse-clean">
+		<delete dir="${web-content.classes.rel-dir}" includeemptydirs="true" failonerror="false"
+				deleteonexit="true" />
+	</target>
+</project>

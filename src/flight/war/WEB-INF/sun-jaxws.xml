@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+
+    <endpoint name="endpoint"
+              interface="step.examples.tripplanner.flight.ws.FlightPortType"
+              implementation="step.examples.tripplanner.flight.ws.server.FlightWebServiceImpl"
+              wsdl="WEB-INF/wsdl/flight.wsdl"
+              service="{urn:step:examples:tripplanner:flight:ws}FlightService"
+              port="{urn:step:examples:tripplanner:flight:ws}FlightPort"
+              url-pattern="/endpoint" />
+
+</endpoints>

@@ -1,0 +1,48 @@
+package step.examples.tripplanner.mediator.domain;
+
+class MediatorApp {
+    int lastReservationCode;
+}
+
+class Airport {
+    String code;    // 3-letter IATA code
+    String city;
+    String name;
+}
+
+relation MediatorAppKnowsAirports {
+    MediatorApp playsRole mediator;
+    Airport playsRole airport {
+        multiplicity *;
+    }
+}
+
+class Client {
+    String name;
+    String identification;
+}
+
+relation MediatorHasClients {
+    MediatorApp playsRole mediator {
+        multiplicity 1..1;
+    }
+    Client playsRole client {
+        multiplicity *;
+    }
+}
+
+class Reservation {
+    int code;
+    String flightCode;
+    LocalDate departure;
+    int bookingCode;
+}
+
+relation ClientHasReservations {
+    Reservation playsRole reservation {
+        multiplicity *;
+    }
+    Client playsRole client {
+        multiplicity 1..1;
+    }
+}
