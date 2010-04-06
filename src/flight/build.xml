@@ -45,6 +45,8 @@
 	<path id="project.classpath">
 		<!-- compiled classes -->
 		<pathelement location="${build.classes.rel-dir}" />
+		<!-- used extensions -->
+		<fileset dir="../extensions/dist" includes="*.jar"/>
 		<!-- development libraries (not required at run-time) -->
 		<fileset dir="${lib-dev.rel-dir}" includes="*.jar"/>
 		<!-- (GWT libraries must come first as they conflict with jasper-jdt.jar from Tomcat) -->
@@ -54,7 +56,7 @@
 		<fileset dir="${env.STEP_HOME}/lib" includes="*.jar"/>
 		<!-- application-specific libraries (not shared between different web applications)-->
 		<!-- (exclude GWT run-time library if it exists) -->
-		<fileset dir="${lib.rel-dir}" includes="**/*.jar" excludes="gwt-servlet.jar"/>
+		<fileset dir="${lib.rel-dir}" includes="*.jar" excludes="gwt-servlet.jar"/>
 	</path>
 
 	<property name="dml.rel-file" value="${src.dml.rel-dir}/${dml.filename}"/>
@@ -235,6 +237,7 @@
 			<classes dir="${build.classes.rel-dir}" excludes="config.properties"/>
 			<lib dir="${lib.rel-dir}" excludes="gwt-servlet.jar"/>
 			<lib dir="${env.GWT_HOME}" includes="gwt-servlet.jar" />
+			<lib dir="../extensions/dist" includes="*.jar" /><!-- Extensions -->
 		</war>
 	</target>
 	

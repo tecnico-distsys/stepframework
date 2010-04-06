@@ -5,6 +5,25 @@
     <description>Project super-build file. Customize as required.</description>
 
 
+    <!-- Framework -->
+    <target name="build-framework"
+        description="Build STEP framework">
+        <echo message="***** BUILDING FRAMEWORK *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="framework" target="build" />
+    </target>
+
+    <target name="clean-framework" depends="dist-clean"
+        description="Clean STEP framework">
+        <ant inheritAll="false" dir="framework" target="clean" />
+    </target>
+
+    <target name="rebuild-framework" depends="clean-framework,build-framework" />
+
+
+    <!-- EXAMPLES -->
+
     <!-- Extensions -->
     <target name="build-extensions"
         description="Build extensions library">
@@ -20,6 +39,72 @@
     </target>
 
     <target name="rebuild-extensions" depends="clean-extensions,build-extensions" />
+
+    <!-- propagate libraries to sub-projects -->
+    <macrodef name="dist-to-dir">
+        <attribute name="dir"/>
+        <sequential>
+            <ant inheritAll="false" dir="framework" target="dist-to-dir">
+                <property name="to.dir" location="@{dir}"/>
+            </ant>
+            <copy todir="@{dir}/war/WEB-INF/lib" overwrite="true">
+                <fileset dir="../lib/fenix-framework/application-specific" includes="*.jar"/>
+            </copy>
+<!--
+            <copy todir="@{dir}/war/WEB-INF/lib" overwrite="true" flatten="true">
+                <fileset dir="../lib" includes="**/application-specific/*.jar"/>
+            </copy>
+            <copy todir="@{dir}/lib" overwrite="true" flatten="true">
+                <fileset dir="../lib" includes="**/development-time/*.jar"/>
+            </copy>
+-->
+        </sequential>
+    </macrodef>
+
+    <macrodef name="clean-from-dir">
+        <attribute name="dir" />
+        <sequential>
+            <ant inheritAll="false" dir="framework" target="dist-clean">
+                <property name="from.dir" location="@{dir}"/>
+            </ant>
+            <delete includeemptydirs="true" deleteonexit="true" failonerror="false">
+                <fileset dir="@{dir}/war/WEB-INF/lib">
+                    <present targetdir="../lib/fenix-framework/application-specific"/>
+                </fileset>
+<!--
+                <fileset dir="@{dir}/war/WEB-INF/lib">
+                    <present targetdir="../lib">
+                        <mapper type="regexp" from="^(?:.+/)?development-time/([^/]+\.jar)" to="\1"/>
+                    </present>
+                </fileset>
+                <fileset dir="@{dir}/lib">
+                    <present targetdir="../lib">
+                        <mapper type="regexp" from="^(?:.+/)?development-time/([^/]+\.jar)" to="\1"/>
+                    </present>
+                </fileset>
+-->
+            </delete>
+        </sequential>
+    </macrodef>
+
+
+    <target name="dist-framework"
+        description="Copy required libraries to each sub-project">
+        <echo message="***** DISTRIBUTE LIBRARIES TO SUB-PROJECTS *****" />
+        <sleep seconds="1"/>
+
+        <dist-to-dir dir="flight"/>
+        <dist-to-dir dir="mediator"/>
+    </target>
+
+    <target name="dist-clean"
+        description="Delete required libraries from all sub-projects">
+        <echo message="***** REMOVE LIBRARIES FROM SUB-PROJECTS *****" />
+        <sleep seconds="1"/>
+
+        <clean-from-dir dir="flight"/>
+        <clean-from-dir dir="mediator"/>
+    </target>
 
 
     <!-- Flight -->
@@ -123,7 +208,7 @@
         description="Clean all projects">
     </target>
 
-    <target name="rebuild" depends="build"
+    <target name="rebuild" depends="clean,build"
         description="Rebuild all projects in the correct order">
     </target>
 
