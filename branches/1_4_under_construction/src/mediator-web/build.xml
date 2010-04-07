@@ -31,21 +31,31 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- project libraries -->
+
+        <!-- libraries -->
         <fileset dir="${web-content.rel-dir}/WEB-INF">
             <include name="lib/**/*.jar" />
         </fileset>
-        <!-- shared libraries -->
+
         <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
-        <!-- referenced libraries -->
+
         <fileset dir="../flight-ws/dist">
-            <include name="*.jar" /><!-- exceptions -->
+            <include name="*.jar" /><!-- exception classes -->
         </fileset>
         <fileset dir="../flight-ws-cli/dist">
             <include name="*.jar" />
         </fileset>
+
+        <fileset dir="../extensions/dist">
+            <include name="*.jar" />
+        </fileset>
+
+        <fileset dir="../perf/dist">
+            <include name="*.jar" />
+        </fileset>
+
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>
@@ -211,16 +221,24 @@
             <zipfileset dir="${build.rel-dir}"
                         includes="**/*.class,**/*.properties,**/*.xml"
                         prefix="WEB-INF/classes" />
-            <!-- shared libs -->
+
+            <!-- libraries -->
             <zipfileset dir="../lib"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
-            <!-- referenced libraries -->
+            
             <zipfileset dir="../flight-ws/dist"
                         includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <!-- ../flight-ws-cli/dist/*.jar - see unjar comment above -->
+                        prefix="WEB-INF/lib" /> <!-- exception classes -->
+            
+            <!-- ../flight-ws-cli/dist/*.jar is already included -->
+            <!-- see unjar comment above -->
+
             <zipfileset dir="../extensions/dist"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+
+            <zipfileset dir="../perf/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
         </jar>

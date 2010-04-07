@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="tomcat-management">
+
+    <description>Build environment for Tomcat</description>
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <property name="tomcat.dir" location="${env.CATALINA_HOME}" />
+
+    <path id="tomcat.dir.path">
+        <pathelement location="${tomcat.dir}"/>
+    </path>
+    <pathconvert property="tomcat.dir./" refid="tomcat.dir.path" pathsep=";" dirsep="/" />
+
+
+    <target name="detect-platform">
+        <condition property="is-unix">
+            <os family="unix"/>
+        </condition>
+        <condition property="is-windows">
+            <os family="windows"/>
+        </condition>
+    </target>
+
+    <target name="start-server"
+            depends="detect-platform,start-server-win,start-server-nix"
+            description="Start server" >
+        <sleep seconds="1"/>
+    </target>
+
+    <target name="start-server-win"
+            if="is-windows">
+        <echo message="Spawning server" />
+        <exec executable="cmd"
+              dir="${tomcat.dir}\bin"
+              spawn="true" >
+            <arg value="/c"/>
+            <arg value="catalina.bat"/>
+            <arg value="start"/>
+        </exec>
+    </target>
+
+    <target name="start-server-nix"
+            if="is-unix">
+        <echo message="Spawning server" />
+        <exec executable="catalina.sh"
+              dir="${tomcat.dir}/bin"
+              spawn="true" >
+            <arg value="start"/>
+        </exec>
+    </target>
+
+    <target name="stop-server"
+            depends="detect-platform,stop-server-win,stop-server-nix"
+            description="Stop server" >
+        <sleep seconds="3"/>
+    </target>
+
+    <target name="stop-server-win"
+            if="is-windows">
+        <echo message="Stopping server" />
+        <exec executable="cmd"
+              dir="${tomcat.dir}\bin" >
+            <arg value="/c"/>
+            <arg value="catalina.bat"/>
+            <arg value="stop"/>
+        </exec>
+    </target>
+
+    <target name="stop-server-nix"
+            if="is-unix">
+        <echo message="Stopping server" />
+        <exec executable="catalina.sh"
+              dir="${tomcat.home.replica}/bin">
+            <arg value="stop"/>
+        </exec>
+    </target>
+
+    <target name="restart-server"
+            depends="stop-server,start-server"
+            description="Stop and start server" >
+    </target>
+
+    <target name="reset-server"
+            description="Delete all of the server's working files and web applications" >
+        <echo message="Deleting all working server files and web applications" />
+        <delete includeemptydirs="true" deleteonexit="true">
+            <fileset dir="${tomcat.dir}/logs"
+                     includes="**/*"
+                     excludes=""
+                     defaultexcludes="false"/>
+            <fileset dir="${tomcat.dir}/temp"
+                     includes="**/*/"
+                     excludes="safeToDelete.tmp"
+                     defaultexcludes="false"/>
+            <fileset dir="${tomcat.dir}/webapps"
+                     includes="**/*"
+                     excludes="manager/**/*,ROOT/**/*"
+                     defaultexcludes="false"/>
+            <fileset dir="${tomcat.dir}/work"
+                     includes="**/*"
+                     excludes=""
+                     defaultexcludes="false"/>
+        </delete>
+    </target>
+
+    <target name="start-server-fresh"
+            depends="reset-server,start-server">
+    </target>
+
+    <target name="restart-server-fresh"
+            depends="stop-server,reset-server,start-server">
+    </target>
+
+</project>

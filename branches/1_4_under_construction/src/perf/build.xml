@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="stepframework" default="build" basedir=".">
+<project name="perf" default="build" basedir=".">
 
-    <description>Library build file. Customize as required.</description>
-
+    <description>STEP performance library.</description>
 
     <!-- load environment variables as properties -->
     <property environment="env"/>
@@ -15,11 +14,8 @@
 
     <!-- properties with default folder locations -->
     <property name="src.rel-dir" value="src"/>
-    <property name="tests.src.rel-dir" value="tests"/>
-    <property name="web-content.rel-dir" value="WebContent"/>
     <property name="build.rel-dir" value="bin"/>
     <property name="dist.rel-dir" value="dist"/>
-    <property name="doc.rel-dir" value="${dist.rel-dir}/javadoc" />
 
 
     <!-- project classpath -->
@@ -27,13 +23,26 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- STEP non-shareable dependencies -->
+
+        <!-- libraries -->
         <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
-        <!-- shared STEP framework dependencies -->
+
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
+        </fileset>
+
+        <fileset dir="${env.JAVA_LIB_HOME}">
+            <include name="apache-log4j/**/log4j-1.2.15.jar" />
+            <!--include name="commons-cli/**/commons-cli-1.2.jar" /-->
+            <!--include name="commons-collections/**/commons-collections-3.2.1.jar" /-->
+            <!--include name="commons-dbcp/**/commons-dbcp-1.2.2.jar" /-->
+            <include name="commons-logging/**/commons-logging-1.1.1.jar" />
+            <!--include name="commons-pool/**/commons-pool-1.5.3.jar" /-->
+            <!--include name="mysql-connector-java/**/mysql-connector-java-5.1.10-bin.jar" /-->
+            <!--include name="junit/**/junit-4.7.jar" /-->
+            <include name="perf4j/**/perf4j-0.9.12-log4jonly.jar" />
         </fileset>
     </path>
 
@@ -80,44 +89,6 @@
         </javac>
     </target>
 
-	
-    <!-- tests -->
-
-    <target name="prepare-test-resources" depends="init">
-    <!-- description="Prepare application resource files" -->
-        <copy todir="${build.rel-dir}" overwrite="true">
-            <fileset dir="${tests.src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
-        </copy>
-        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
-            <replacefilter token="@example-token@" value="${example-property}" />
-        </replace>
-    </target>
-
-    <target name="compile-tests" depends="prepare-test-resources">
-    <!-- description="Compile tests" -->
-        <javac
-            srcdir="${tests.src.rel-dir}" 
-            destdir="${build.rel-dir}"
-            debug="${compile.debug}"
-            debuglevel="${compile.debuglevel}"
-        >
-            <classpath refid="project.classpath" />
-        </javac>
-    </target>
-
-    <target name="run-tests" depends="compile-tests"
-        description="Run tests">
-        <junit haltonfailure="yes" fork="true">
-            <classpath refid="project.classpath" />
-            <formatter type="plain" usefile="false" />
-            <batchtest>
-                <fileset dir="${tests.src.rel-dir}"
-                    includes="**/*Test.java">
-                </fileset>
-            </batchtest>
-        </junit>
-    </target>
-
 
     <!-- library -->
 
@@ -125,45 +96,23 @@
 
     <target name="create-jar" depends="compile">
     <!-- description="Create a jar file" -->
-
         <jar destfile="${jar.rel-file}">
             <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
                         includes="**/*.class"
-                        excludes="**/*.properties,**/*.xml" />
+                        excludes="" />
         </jar>
-    </target>
-
-
-    <!-- javadoc -->
-
-    <target name="javadoc" depends="init"
-        description="Generate Java classes documentation" >
-        <echo message="Generating javadocs to directory ${doc.rel-dir}" />
-        <delete dir="${doc.rel-dir}" />
-        <javadoc destdir="${doc.rel-dir}" sourcepath="">
-            <fileset dir="${src.rel-dir}" includes="**/*.java"/>
-            <classpath refid="project.classpath" />
-        </javadoc>
     </target>
 
 
     <!-- build -->
 
-    <target name="build" depends="compile,run-tests,create-jar"
+    <target name="build" depends="create-jar"
         description="Build the program">
     </target>
 
     <target name="rebuild" depends="clean,build">
     <!-- description="Rebuild the project" -->
     </target>
-
-    <target name="dist-to-lib" depends="clean,create-jar"> <!-- exclude test code -->
-    <!-- description="Rebuild the program and distribute it to lib folder" -->
-        <copy todir="../lib" overwrite="true">
-            <fileset file="${jar.rel-file}"/>
-        </copy>
-    </target>
-
 
 </project>
