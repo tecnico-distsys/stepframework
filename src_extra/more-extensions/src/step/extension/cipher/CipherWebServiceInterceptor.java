@@ -17,12 +17,13 @@ import step.framework.extensions.*;
  *  Web Service interceptor that ciphers outbound messages
  *  and deciphers inbound messages.
  */
-public class CipherWebServiceInterceptor implements WebServiceInterceptor {
+public class CipherWebServiceInterceptor extends WebServiceInterceptorBase {
 
     /*
      *  Interception
      */
 
+    @Override
 	public boolean interceptMessage(WebServiceInterceptorParameter param)
         throws SOAPFaultException, WebServiceInterceptorException {
 
