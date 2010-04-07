@@ -13,7 +13,7 @@ import step.framework.extensions.*;
  *  Its purpose is intercept the initialization and destruction
  *  of the STEP extension.
  */
-public class PerfExtensionListener implements ExtensionListener {
+public class PerfExtensionListener extends ExtensionListenerBase {
 
     /** Logging */
     private static Log log = LogFactory.getLog(PerfExtensionListener.class);
@@ -23,6 +23,7 @@ public class PerfExtensionListener implements ExtensionListener {
     //  ExtensionListener
     //
 
+    @Override
     public void extensionInitialized(ExtensionListenerParameter param)
         throws ExtensionException {
 
@@ -30,6 +31,7 @@ public class PerfExtensionListener implements ExtensionListener {
 
     }
 
+    @Override
     public void extensionDestroyed(ExtensionListenerParameter param)
         throws ExtensionException {
 

@@ -5,9 +5,8 @@
 def root = ".";
 
 // add library locations to class loader
-def urlHelper = new FileURLHelper();
-this.class.classLoader.rootLoader.addURL(urlHelper.toFileURL(root + "/lib/stepframework.jar"))
-this.class.classLoader.rootLoader.addURL(urlHelper.toFileURL(root + "/flight-ws-cli/dist/flight-ws-cli.jar"))
+this.class.classLoader.rootLoader.addURL(FileURLHelper.toFileURL(root + "/lib/stepframework.jar"))
+this.class.classLoader.rootLoader.addURL(FileURLHelper.toFileURL(root + "/flight-ws-cli/dist/flight-ws-cli.jar"))
 
 // create Web Service stub
 def service = Class.forName("org.tripplanner.flight.wsdl.FlightService").newInstance();

@@ -3,17 +3,16 @@ package step.extension.errors;
 import java.util.Properties;
 
 import step.framework.domain.DomainException;
-import step.framework.extensions.ServiceInterceptor;
-import step.framework.extensions.ServiceInterceptorException;
-import step.framework.extensions.ServiceInterceptorParameter;
+import step.framework.extensions.*;
 
 
 /**
  *  This is the Errors extension's service interceptor.
  *  If properly configured, it is invoked before and after a service execution.
  */
-public class ErrorsServiceInterceptor implements ServiceInterceptor {
+public class ErrorsServiceInterceptor extends ServiceInterceptorBase {
 
+    @Override
     public void interceptBefore(ServiceInterceptorParameter param)
     throws DomainException, ServiceInterceptorException {
 
@@ -36,6 +35,7 @@ public class ErrorsServiceInterceptor implements ServiceInterceptor {
         }
     }
 
+    @Override
     public void interceptAfter(ServiceInterceptorParameter param)
     throws DomainException, ServiceInterceptorException {
 

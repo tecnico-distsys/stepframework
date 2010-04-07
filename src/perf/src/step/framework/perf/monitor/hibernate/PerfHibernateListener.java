@@ -41,80 +41,80 @@ public class PerfHibernateListener
 
     public boolean onPreInsert(PreInsertEvent event) {
         log.trace("onPreInsert");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.insert");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.insert");
         // do not veto operation
         return false;
     }
 
     public void onPreLoad(PreLoadEvent event) {
         log.trace("onPreLoad");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.load");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.load");
     }
 
     public boolean onPreUpdate(PreUpdateEvent event) {
         log.trace("onPreUpdate");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.update");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.update");
         // do not veto operation
         return false;
     }
 
     public boolean onPreDelete(PreDeleteEvent event) {
         log.trace("onPreDelete");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.delete");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.delete");
         // do not veto operation
         return false;
     }
 
     public void onPreRecreateCollection(PreCollectionRecreateEvent event) {
         log.trace("onPreRecreateCollection");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.collection-recreate");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.collection-recreate");
     }
 
 	public void onPreUpdateCollection(PreCollectionUpdateEvent event) {
         log.trace("onPreUpdateCollection");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.collection-update");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.collection-update");
     }
 
 	public void onPreRemoveCollection(PreCollectionRemoveEvent event) {
         log.trace("onPreRemoveCollection");
-        StopWatchHelper.getThreadStopWatch().start("hibernate.collection-remove");
+        StopWatchHelper.getThreadStopWatch("hibernate").start("hibernate.collection-remove");
     }
 
 
     public void onPostInsert(PostInsertEvent event) {
         log.trace("onPostInsert");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.insert");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.insert");
     }
 
     public void onPostLoad(PostLoadEvent event) {
         log.trace("onPostLoad");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.load");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.load");
     }
 
     public void onPostUpdate(PostUpdateEvent event) {
         log.trace("onPostUpdate");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.update");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.update");
     }
 
     public void onPostDelete(PostDeleteEvent event) {
         log.trace("onPostDelete");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.delete");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.delete");
     }
 
 
 	public void onPostRecreateCollection(PostCollectionRecreateEvent event) {
         log.trace("onPostRecreateCollection");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.collection-recreate");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.collection-recreate");
     }
 
 	public void onPostUpdateCollection(PostCollectionUpdateEvent event) {
         log.trace("onPostUpdateCollection");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.collection-update");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.collection-update");
     }
 
 	public void onPostRemoveCollection(PostCollectionRemoveEvent event) {
         log.trace("onPostRemoveCollection");
-        StopWatchHelper.getThreadStopWatch().stop("hibernate.collection-remove");
+        StopWatchHelper.getThreadStopWatch("hibernate").stop("hibernate.collection-remove");
     }
 
 }
