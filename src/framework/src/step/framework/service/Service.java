@@ -69,7 +69,10 @@ public abstract class Service<R> {
             txCommited = true;
             return returnValue;
         } finally {
-            if (!txCommited && tx != null) { tx.rollback(); }
+            finallyAfter();
+            if (!txCommited && tx != null) {
+                tx.rollback();
+            }
         }
 
     }
@@ -88,6 +91,10 @@ public abstract class Service<R> {
 
     protected final void after() throws DomainException, ServiceException {
         extManager.interceptAfterService(this);
+    }
+
+    protected final void finallyAfter() throws DomainException, ServiceException {
+        extManager.interceptFinallyAfterService(this);
     }
 
 }

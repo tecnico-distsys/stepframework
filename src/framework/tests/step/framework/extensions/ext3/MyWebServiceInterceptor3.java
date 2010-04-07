@@ -2,12 +2,11 @@ package step.framework.extensions.ext3;
 
 import javax.xml.ws.soap.SOAPFaultException;
 
-import step.framework.extensions.WebServiceInterceptor;
-import step.framework.extensions.WebServiceInterceptorParameter;
-import step.framework.extensions.WebServiceInterceptorException;
+import step.framework.extensions.*;
 
-public class MyWebServiceInterceptor3 implements WebServiceInterceptor {
+public class MyWebServiceInterceptor3 extends WebServiceInterceptorBase {
 
+    @Override
     public boolean interceptMessage(WebServiceInterceptorParameter param)
     throws SOAPFaultException, WebServiceInterceptorException {
         /*
