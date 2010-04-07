@@ -49,13 +49,25 @@ public class PersistenceUtil {
 
                 // Create the SessionFactory from hibernate.cfg.xml
                 log.info("Setting up hibernate persistence...");
-                sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+                sessionFactory = new AnnotationConfiguration()
+                    .configure()
+                    .buildSessionFactory();
             }
 
         } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
-            StringBuilder logMessage = new StringBuilder("\n==================================================\n");
+            StringBuilder logMessage = new StringBuilder();
+            logMessage.append("\n==================================================\n");
             logMessage.append("Initial SessionFactory creation failed.\n");
+
+            logMessage.append("Error messages: ");
+            Throwable t = ex;
+            while(t != null) {
+                logMessage.append(t.getMessage());
+                logMessage.append("\n");
+                t = t.getCause();
+            }
+
             logMessage.append("Please check that:\n");
             logMessage.append("- hibernate.cfg.xml exists and is syntactically correct\n");
             logMessage.append("- the database is well configured and the tables have been correctly created\n");
