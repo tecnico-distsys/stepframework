@@ -65,10 +65,26 @@ public class ServiceInterceptorManager {
             log.trace("entering interceptAfter()");
             InterceptConfigData configData = prepareForIntercept(serviceInstance);
             if(configData != null) {
-                interceptAfter(serviceInstance, configData);
+                interceptAfter(serviceInstance, configData, false /* !isFinally */);
             }
         } finally {
             log.trace("finally exiting interceptAfter()");
+        }
+    }
+
+    /**
+     *  Intercept service finally after main action (and commit or error)
+     */
+    public void interceptFinallyAfterService(Object serviceInstance)
+    throws DomainException, ServiceException {
+        try {
+            log.trace("entering interceptFinallyAfter()");
+            InterceptConfigData configData = prepareForIntercept(serviceInstance);
+            if(configData != null) {
+                interceptAfter(serviceInstance, configData, true /* isFinally */);
+            }
+        } finally {
+            log.trace("finally exiting interceptFinallyAfter()");
         }
     }
 
@@ -189,13 +205,14 @@ public class ServiceInterceptorManager {
 
 
     // Helper method to actually perform after service interception
-    private void interceptAfter(Object serviceInstance, InterceptConfigData configData)
+    private void interceptAfter(Object serviceInstance, InterceptConfigData configData, boolean isFinally)
     throws DomainException, ServiceException {
 
         // log service being intercepted
         if(log.isDebugEnabled()) {
             log.debug("Intercepting service " +
                       serviceInstance.getClass().getName() +
+                      (isFinally ? " FINALLY " : "") +
                       " AFTER its execution");
             //          -----
         }
@@ -231,8 +248,13 @@ public class ServiceInterceptorManager {
                     new ServiceInterceptorParameter(this.engine, ext, serviceInstance);
 
                 log.trace("call service interceptor");
-                interceptor.interceptAfter(param);
-                //          --------------
+                if(!isFinally) {
+                    interceptor.interceptAfter(param);
+                    //          --------------
+                } else {
+                    interceptor.interceptFinallyAfter(param);
+                    //          ---------------------
+                }
 
             } catch(DomainException de) {
                 handleDomainException(de);

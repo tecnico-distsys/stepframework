@@ -25,4 +25,12 @@ public abstract class ServiceInterceptorBase implements ServiceInterceptor {
         throws DomainException, ServiceInterceptorException {
     }
 
+    /**
+     *  Empty implementation of finally after service execution.<br />
+     *  <br />
+     */
+    public void interceptFinallyAfter(ServiceInterceptorParameter param)
+        throws DomainException, ServiceInterceptorException {
+    }
+
 }

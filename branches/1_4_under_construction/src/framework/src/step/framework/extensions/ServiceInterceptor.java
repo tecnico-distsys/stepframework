@@ -30,4 +30,14 @@ public interface ServiceInterceptor extends Interceptor {
     public void interceptAfter(ServiceInterceptorParameter param)
         throws DomainException, ServiceInterceptorException;
 
+    /**
+     *  Executed finally after service execution. Transaction has been committed or is about to be aborted.<br />
+     *  <br />
+     *  @param param object that provides access to configuration and context data
+     *  @throws DomainException to abort service processing due to a domain condition
+     *  @throws ServiceInterceptorException to abort service processing due to another condition
+     */
+    public void interceptFinallyAfter(ServiceInterceptorParameter param)
+        throws DomainException, ServiceInterceptorException;
+
 }
