@@ -27,6 +27,9 @@
         1. Server setup stage =======================================
     -->
 
+    <import file="${root.rel-dir}/lib/tomcat-mgmt.xml" />
+
+<!--
     <target name="detect-platform">
         <condition property="is-unix">
             <os family="unix"/>
@@ -117,7 +120,7 @@
                      defaultexcludes="false"/>
         </delete>
     </target>
-
+-->
 
     <!--
         2. Build testbed =======================================
