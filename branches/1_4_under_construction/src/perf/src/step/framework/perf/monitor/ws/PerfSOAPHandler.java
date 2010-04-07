@@ -68,10 +68,10 @@ public class PerfSOAPHandler implements SOAPHandler<SOAPMessageContext> {
 
             if(!isOutbound) {
                 // inbound
-                StopWatchHelper.getThreadStopWatch().start("soap");
+                StopWatchHelper.getThreadStopWatch("soap").start("soap");
             } else {
                 // outbound
-                StopWatchHelper.getThreadStopWatch().stop("soap");
+                StopWatchHelper.getThreadStopWatch("soap").stop("soap");
             }
 
         } finally {

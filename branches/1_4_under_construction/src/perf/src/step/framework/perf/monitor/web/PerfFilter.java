@@ -56,8 +56,7 @@ public class PerfFilter implements Filter {
 
         log.trace("BEFORE request");
         {
-            StopWatch stopWatch = StopWatchHelper.getThreadStopWatch(true);
-            stopWatch.start("filter");
+            StopWatchHelper.getThreadStopWatch("filter").start("filter");
         }
 
         // invoke the next processor in the chain
@@ -66,9 +65,8 @@ public class PerfFilter implements Filter {
 
         log.trace("AFTER request");
         {
-            StopWatch stopWatch = StopWatchHelper.getThreadStopWatch();
-            stopWatch.stop("filter");
-            StopWatchHelper.deleteThreadStopWatch();
+            StopWatchHelper.getThreadStopWatch("filter").stop("filter");
+            StopWatchHelper.deleteAllThreadStopWatches();
         }
 
     }

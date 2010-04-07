@@ -3,18 +3,9 @@
  */
 
 System.err.println("Running " + this.class.getSimpleName() + " with arguments " + args);
- 
-def i = System.in;
-def o = System.out;
+def i = FileIOHelper.initI(args);
+def o = FileIOHelper.initO(args);
 
-if(args.length >= 1) {
-    i = new File(args[0]);
-    assert i.exists();
-}
-
-if(args.length >= 2) {
-    o = new PrintStream(new File(args[1]));
-}
 
 // ~ creates a Pattern
 // =~ creates a Matcher

@@ -29,7 +29,7 @@ import step.framework.ws.*;
  *  extensions.properties and e.g. extension-perf.properties.<br />
  *  <br />
  */
-public class PerfWebServiceInterceptor implements WebServiceInterceptor {
+public class PerfWebServiceInterceptor extends WebServiceInterceptorBase {
 
     /** Logging */
     private static Log log = LogFactory.getLog(PerfWebServiceInterceptor.class);
@@ -39,6 +39,7 @@ public class PerfWebServiceInterceptor implements WebServiceInterceptor {
     //  WebServiceInterceptor
     //
 
+    @Override
     public boolean interceptMessage(WebServiceInterceptorParameter param)
         throws SOAPFaultException, WebServiceInterceptorException {
         try {
@@ -68,10 +69,10 @@ public class PerfWebServiceInterceptor implements WebServiceInterceptor {
             if(isServerSide) {
                 if(!isOutbound) {
                     // inbound
-                    StopWatchHelper.getThreadStopWatch().start("wsi");
+                    StopWatchHelper.getThreadStopWatch("wsi").start("wsi");
                 } else {
                     // outbound
-                    StopWatchHelper.getThreadStopWatch().stop("wsi");
+                    StopWatchHelper.getThreadStopWatch("wsi").stop("wsi");
                 }
             }
 

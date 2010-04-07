@@ -1,9 +1,9 @@
 package step.framework.perf.monitor;
 
+import java.util.*;
+
 import org.perf4j.*;
 import org.perf4j.log4j.*;
-
-import step.framework.context.*;
 
 
 /**
@@ -11,35 +11,47 @@ import step.framework.context.*;
  */
 public class StopWatchHelper {
 
-    private static final String STOP_WATCH_PROPERTY = "step.framework.perf.StopWatch";
+    /** ThreadLocal stopwatch collection - each thread has one of its own */
+    private static final ThreadLocal<Map<String,StopWatch>> stopWatches =
+        new ThreadLocal<Map<String,StopWatch>>() {
 
-    /**
-     *  Access current thread stop watch.
-     */
-    public static StopWatch getThreadStopWatch() {
-        return getThreadStopWatch(false);
+        @Override protected Map<String,StopWatch> initialValue() {
+            return newMap();
+        }
+
+    };
+
+    /** Decide new map implementation */
+    private static Map<String,StopWatch> newMap() {
+        return new HashMap<String,StopWatch>();
     }
 
+
     /**
-     *  Access current thread stop watch.
-     *  A new stop watch is created if one does not exist and create is true.
+     *  Access one of the current thread's stop watches.
+     *  A new stop watch is created if it does not exist.
      */
-    public static StopWatch getThreadStopWatch(boolean create) {
-        ThreadContext thrCtx = ThreadContext.getInstance();
-        StopWatch stopWatch = (StopWatch) thrCtx.get(STOP_WATCH_PROPERTY);
-        if(stopWatch == null && create) {
+    public static StopWatch getThreadStopWatch(String stopWatchId) {
+        StopWatch stopWatch = stopWatches.get().get(stopWatchId);
+        if(stopWatch == null) {
             stopWatch = new Log4JStopWatch();
-            thrCtx.put(STOP_WATCH_PROPERTY, stopWatch);
+            stopWatches.get().put(stopWatchId, stopWatch);
         }
         return stopWatch;
     }
 
     /**
-     *  Delete current thread stop watch.
+     *  Delete one of the current thread's stop watches.
      */
-    public static void deleteThreadStopWatch() {
-        ThreadContext thrCtx = ThreadContext.getInstance();
-        thrCtx.remove(STOP_WATCH_PROPERTY);
+    public static StopWatch deleteThreadStopWatch(String stopWatchId) {
+        return stopWatches.get().remove(stopWatchId);
+    }
+
+    /**
+     *  Delete all of the current thread's stop watches.
+     */
+    public static void deleteAllThreadStopWatches() {
+        stopWatches.get().clear();
     }
 
 }
