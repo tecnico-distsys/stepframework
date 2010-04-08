@@ -3,49 +3,110 @@ package org.tripplanner.flight.ws;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.tripplanner.flight.exception.FlightDomainException;
-import org.tripplanner.flight.service.CreateFlightReservationService;
-import org.tripplanner.flight.view.ReservationVoucher;
-import org.tripplanner.flight.wsdl.FlightFault;
-import org.tripplanner.flight.wsdl.FlightFault_Exception;
-import org.tripplanner.flight.wsdl.FlightPortType;
-import org.tripplanner.flight.wsdl.Passenger;
-import org.tripplanner.flight.wsdl.ServiceError;
-import org.tripplanner.flight.wsdl.ServiceError_Exception;
+import org.tripplanner.flight.exception.*;
+import org.tripplanner.flight.service.*;
+import org.tripplanner.flight.view.*;
+import org.tripplanner.flight.wsdl.*;
 
 @javax.jws.WebService(endpointInterface = "org.tripplanner.flight.wsdl.FlightPortType")
 public class FlightWebServiceImpl implements FlightPortType {
 
-	/** logging */
-	private Log log = LogFactory.getLog(FlightWebServiceImpl.class);
+    /** logging */
+    private Log log = LogFactory.getLog(FlightWebServiceImpl.class);
 
-	/** create reservation */
-	public ReservationVoucher createReservation(String departure,
-			String arrival, Passenger passenger) throws FlightFault_Exception,
-			ServiceError_Exception {
 
-		try {
-			// invoke local service
-			CreateFlightReservationService service;
-			service = new CreateFlightReservationService(departure, arrival,
-					passenger.getId(), passenger.getName());
-			ReservationVoucher voucher = service.execute();
-			return voucher;
-		} catch (FlightDomainException e) {
-			// log exception
-			log.error(e.getMessage(), e);
-			// convert domain exceptions to web service faults
-			FlightFault ff = new FlightFault();
-			ff.setFaultType(e.getClass().getName());
-			throw new FlightFault_Exception(e.getMessage(), ff, e);
-		} catch (Exception e) {
-			// log exception
-			log.error(e.getMessage(), e);
-			// return fallback web service fault
-			throw new ServiceError_Exception(
-					"Service currently unavailable. Please try again later.",
-					new ServiceError(), e);
-		}
-	}
+    //
+    //  Web Service operations
+    //
+
+    /** Search flights */
+    public SearchFlightsOutput searchFlights(SearchFlightsInput input)
+        throws FlightFault_Exception, ServiceUnavailable_Exception {
+
+        log.debug("searchFlights");
+        SearchFlightsOutput output = new SearchFlightsOutput();
+        try {
+
+            if(false)
+                throw new NoFlightAvailableForReservationException("");
+
+
+        } catch (FlightDomainException e) {
+            handleDomainException(e);
+        } catch (Exception e) {
+            handleOtherException(e);
+        }
+        return output;
+    }
+
+
+    /** create single reservation */
+    public CreateSingleReservationOutput createSingleReservation(CreateSingleReservationInput input)
+        throws FlightFault_Exception, ServiceUnavailable_Exception {
+
+        log.debug("createSingleReservation");
+        CreateSingleReservationOutput output = null;
+        try {
+            // invoke local service
+            //
+            output = new CreateSingleReservationService(input).execute();
+            return output;
+
+        } catch (FlightDomainException e) {
+            handleDomainException(e);
+        } catch (Exception e) {
+            handleOtherException(e);
+        }
+        return output;
+    }
+
+
+    /** create multiple reservations */
+    public CreateMultipleReservationsOutput createMultipleReservations(CreateMultipleReservationsInput input)
+        throws FlightFault_Exception, ServiceUnavailable_Exception {
+
+        log.debug("createMultipleReservations");
+        CreateMultipleReservationsOutput output = new CreateMultipleReservationsOutput();
+        try {
+
+            if(false)
+                throw new NoFlightAvailableForReservationException("");
+
+
+        } catch (FlightDomainException e) {
+            handleDomainException(e);
+        } catch (Exception e) {
+            handleOtherException(e);
+        }
+        return output;
+    }
+
+
+    //
+    //  Helper methods
+    //
+
+    /** Handling of domain exceptions */
+    private void handleDomainException(FlightDomainException e) throws FlightFault_Exception {
+        // log exception
+        log.error(e.getMessage());
+        log.debug("Domain exception details", e);
+        // throw fault
+        log.trace("Converting domain exception to web service fault");
+        FlightFault ff = new FlightFault();
+        ff.setFaultType(e.getClass().getName());
+        throw new FlightFault_Exception(e.getMessage(), ff, e);
+    }
+
+    /** Handling of other exceptions */
+    private void handleOtherException(Exception e) throws ServiceUnavailable_Exception {
+        // log exception
+        log.error(e.getMessage());
+        log.debug("Exception details", e);
+        // throw fallback fault
+        throw new ServiceUnavailable_Exception(
+                "Service currently unavailable. Please try again later.",
+                new ServiceUnavailable(), e);
+    }
 
 }
