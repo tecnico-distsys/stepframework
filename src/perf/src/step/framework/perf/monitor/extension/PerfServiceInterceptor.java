@@ -34,6 +34,13 @@ public class PerfServiceInterceptor extends ServiceInterceptorBase {
         throws DomainException, ServiceInterceptorException {
 
         log.trace("interceptBefore");
+
+        Object service = param.getServiceInstance();
+        Class serviceClass = service.getClass();
+        if(log.isTraceEnabled()) {
+            log.trace("Service class: " + serviceClass);
+        }
+
         StopWatchHelper.getThreadStopWatch("si").start("si");
     }
 
@@ -49,6 +56,10 @@ public class PerfServiceInterceptor extends ServiceInterceptorBase {
         throws DomainException, ServiceInterceptorException {
 
         log.trace("interceptFinallyAfter");
+
+        Object service = param.getServiceInstance();
+        Class serviceClass = service.getClass();
+
         StopWatchHelper.getThreadStopWatch("si").stop("si");
     }
 

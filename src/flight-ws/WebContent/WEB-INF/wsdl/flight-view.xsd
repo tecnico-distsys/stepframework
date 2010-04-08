@@ -7,13 +7,92 @@
     elementFormDefault="qualified"
 >
 
+    <!-- Records -->
+
+    <xsd:complexType name="Currency">
+        <xsd:sequence>
+            <xsd:element name="currencyCode" type="xsd:string"/>
+            <xsd:element name="value" type="xsd:decimal"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="currency" type="tns:Currency"/>
+
+    <xsd:complexType name="Flight">
+        <xsd:sequence>
+            <xsd:element name="number" type="xsd:string" />
+            <xsd:element name="airline" type="xsd:string" />
+            <xsd:element name="date" type="xsd:date" />
+            <xsd:element name="depart" type="xsd:string" />
+            <xsd:element name="arrive" type="xsd:string" />
+            <xsd:element name="price" type="tns:Currency" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="flight" type="tns:Flight"/>
+
+    <xsd:complexType name="Passenger">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string" />
+            <xsd:element name="id" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="passenger" type="tns:Passenger" />
+
     <xsd:complexType name="ReservationVoucher">
         <xsd:sequence>
             <xsd:element name="reservationCode" type="xsd:string"/>
             <xsd:element name="flightNumber" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
-
     <xsd:element name="reservationVoucher" type="tns:ReservationVoucher"/>
+
+
+    <!-- Service inputs and outputs -->
+
+    <xsd:complexType name="SearchFlightsInput">
+        <xsd:sequence>
+            <xsd:element name="depart" type="xsd:string" />
+            <xsd:element name="arrive" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="searchFlightsInput" type="tns:SearchFlightsInput" />
+
+    <xsd:complexType name="SearchFlightsOutput">
+        <xsd:sequence>
+            <xsd:element name="flights" type="tns:Flight" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="searchFlightsOutput" type="tns:SearchFlightsOutput" />
+
+
+    <xsd:complexType name="CreateSingleReservationInput">
+        <xsd:sequence>
+            <xsd:element name="flightNumber" type="xsd:string"/>
+            <xsd:element name="passenger" type="tns:Passenger" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="createSingleReservationInput" type="tns:CreateSingleReservationInput" />
+
+    <xsd:complexType name="CreateSingleReservationOutput">
+        <xsd:sequence>
+            <xsd:element name="reservationVoucher" type="tns:ReservationVoucher" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="createSingleReservationOutput" type="tns:CreateSingleReservationOutput" />
+
+
+    <xsd:complexType name="CreateMultipleReservationsInput">
+        <xsd:sequence>
+            <xsd:element name="flightNumber" type="xsd:string"/>
+            <xsd:element name="passengers" type="tns:Passenger" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="createMultipleReservationsInput" type="tns:CreateMultipleReservationsInput" />
+
+    <xsd:complexType name="CreateMultipleReservationsOutput">
+        <xsd:sequence>
+            <xsd:element name="reservationVoucher" type="tns:ReservationVoucher" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="createMultipleReservationsOutput" type="tns:CreateMultipleReservationsOutput" />
 
 </xsd:schema>
