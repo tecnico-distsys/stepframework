@@ -1,5 +1,7 @@
 package org.tripplanner.flight.service;
 
+import java.util.*;
+
 import org.tripplanner.flight.domain.*;
 import org.tripplanner.flight.exception.*;
 import org.tripplanner.flight.view.*;
@@ -25,10 +27,20 @@ public class CreateMultipleReservationsService extends
         FlightManager flightManager = getFlightReservationManager();
 
         // execute business logic
-        //FlightReservation fr = flightManager.reserveFlight(origin, destination, id, name);
+        List<PassengerView> passengerList = input.getPassengers();
+
+        CreateMultipleReservationsOutput output = new CreateMultipleReservationsOutput();
+        List<ReservationView> reservationList = output.getReservations();
+
+        for(PassengerView passenger : passengerList) {
+            FlightReservation flightReservation = flightManager.reserveFlight(
+                input.getFlightNumber(), passenger.getId(), passenger.getName());
+
+            ReservationView reservationView = ViewHelper.convert(flightReservation);
+            reservationList.add(reservationView);
+        }
 
         // return view
-        CreateMultipleReservationsOutput output = new CreateMultipleReservationsOutput();
         return output;
     }
 

@@ -178,6 +178,7 @@ public class Flight extends FlightDomainObject {
 	// Domain logic -----------------------------------------------------------
 	//
 
+    /** Calculate passenger cost */
 	protected void calculateCostPerPassenger() {
 		BigDecimal totalCost = BigDecimal.ZERO;
 		totalCost = totalCost.add(this.getAirplane().getCostPerUse());
@@ -188,8 +189,8 @@ public class Flight extends FlightDomainObject {
 
 		BigDecimal costPerPassenger = BigDecimal.ZERO;
 		costPerPassenger = costPerPassenger.add(totalCost);
-		costPerPassenger = costPerPassenger.divide(capacityBigDecimal,
-				RoundingMode.HALF_UP);
+		costPerPassenger =
+		    costPerPassenger.divide(capacityBigDecimal, RoundingMode.HALF_UP);
 
 		this.costPerPassenger = costPerPassenger;
 	}
@@ -199,13 +200,15 @@ public class Flight extends FlightDomainObject {
 		this.pricePerPassenger = this.costPerPassenger.multiply(profitMargin);
 	}
 
+    /** Create new reservation for this flight */
 	protected FlightReservation createReservation(Passenger passenger) {
 		String code = this.number + "-" + ++this.reservationId;
 
-		FlightReservation reservation = new FlightReservation(code, passenger,
-				this).init();
+		FlightReservation reservation =
+		    new FlightReservation(code, passenger, this).init();
 		this.addReservation(reservation);
 
 		return reservation;
 	}
+
 }
