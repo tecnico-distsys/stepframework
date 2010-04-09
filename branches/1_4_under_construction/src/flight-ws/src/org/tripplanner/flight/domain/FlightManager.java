@@ -143,11 +143,11 @@ public class FlightManager extends FlightDomainObject {
 	//
 
 	/**
-	 * Find existing flights from 'origin' to 'destination' ordered by cost
+	 * Find existing flights from 'origin' to 'destination' ordered by price
 	 *
 	 * @return A SortedSet of flights ordered by cost-per-passenger
 	 */
-	protected SortedSet<Flight> findAvailableFlights(String origin,
+	public SortedSet<Flight> findAvailableFlights(String origin,
 			String destination) {
 		SortedSet<Flight> foundFlights = new TreeSet<Flight>(
 				new FlightComparator());

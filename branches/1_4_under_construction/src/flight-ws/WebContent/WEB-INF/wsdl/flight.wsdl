@@ -28,6 +28,21 @@
                 schemaLocation="flight-view.xsd"
             />
 
+            <!-- create reservation for lowest price flight -->
+            <xsd:complexType name="CreateLowPriceReservation">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateLowPriceReservationInput" name="input"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createLowPriceReservation" type="tns:CreateLowPriceReservation" />
+
+            <xsd:complexType name="CreateLowPriceReservationResponse">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateLowPriceReservationOutput" name="output"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createLowPriceReservationResponse" type="tns:CreateLowPriceReservationResponse" />
+
             <!-- search flights -->
             <xsd:complexType name="SearchFlights">
                 <xsd:sequence>
@@ -87,6 +102,13 @@
         </xsd:schema>
     </types>
 
+    <message name="createLowPriceReservation">
+        <part name="parameters" element="tns:createLowPriceReservation" />
+    </message>
+    <message name="createLowPriceReservationResponse">
+        <part name="result" element="tns:createLowPriceReservationResponse" />
+    </message>
+
     <message name="searchFlights">
         <part name="parameters" element="tns:searchFlights" />
     </message>
@@ -116,6 +138,12 @@
     </message>
 
     <portType name="FlightPortType">
+        <operation name="createLowPriceReservation">
+            <input message="tns:createLowPriceReservation" name="createLowPriceReservation"/>
+            <output message="tns:createLowPriceReservationResponse" name="createLowPriceReservationResponse"/>
+            <fault message="tns:flightFault" name="flightFault"/>
+            <fault message="tns:serviceUnavailable" name="serviceUnavailable"/>
+        </operation>
         <operation name="searchFlights">
             <input message="tns:searchFlights" name="searchFlights"/>
             <output message="tns:searchFlightsResponse" name="searchFlightsResponse"/>
@@ -141,6 +169,21 @@
             transport="http://schemas.xmlsoap.org/soap/http"
             style="document"
         />
+        <operation name="createLowPriceReservation">
+            <soap:operation soapAction="" />
+            <input name="createLowPriceReservation">
+                <soap:body use="literal" />
+            </input>
+            <output name="createLowPriceReservationResponse">
+                <soap:body use="literal" />
+            </output>
+            <fault name="flightFault">
+                <soap:fault name="flightFault" use="literal" />
+            </fault>
+            <fault name="serviceUnavailable">
+                <soap:fault name="serviceUnavailable" use="literal" />
+            </fault>
+        </operation>
         <operation name="searchFlights">
             <soap:operation soapAction="" />
             <input name="searchFlights">

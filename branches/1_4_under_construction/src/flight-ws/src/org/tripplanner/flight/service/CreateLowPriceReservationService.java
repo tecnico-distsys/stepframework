@@ -7,29 +7,30 @@ import org.tripplanner.flight.view.*;
 
 /**
  *  This Flight application service
- *  creates a single reservation for a specific flight.
+ *  creates a reservation for the lowest price flight available
+ *  departing from and destined to the input cities.
  */
-public class CreateSingleReservationService extends
-        FlightBaseService<CreateSingleReservationOutput> {
+public class CreateLowPriceReservationService extends
+        FlightBaseService<CreateLowPriceReservationOutput> {
 
-    private CreateSingleReservationInput input;
+    private CreateLowPriceReservationInput input;
 
-    public CreateSingleReservationService(CreateSingleReservationInput input) {
+    public CreateLowPriceReservationService(CreateLowPriceReservationInput input) {
         this.input = input;
     }
 
     @Override
-    protected CreateSingleReservationOutput action() throws FlightDomainException {
+    protected CreateLowPriceReservationOutput action() throws FlightDomainException {
         // access domain root
         FlightManager flightManager = getFlightReservationManager();
 
         // execute business logic
-        // TODO use flight number instead of fixed origin and destination
         FlightReservation fr = flightManager.reserveFlight(
-            "Lisbon", "New York", input.getPassenger().getId(), input.getPassenger().getName());
+            input.getDeparture(), input.getDestination(),
+            input.getPassenger().getId(), input.getPassenger().getName());
 
         // return view
-        CreateSingleReservationOutput output = new CreateSingleReservationOutput();
+        CreateLowPriceReservationOutput output = new CreateLowPriceReservationOutput();
         ReservationView reservationView = new ReservationView();
         reservationView.setCode(fr.getCode());
 		reservationView.setFlightNumber(fr.getFlight().getNumber());

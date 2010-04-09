@@ -2,8 +2,10 @@ package org.tripplanner.mediator.service;
 
 import step.framework.domain.DomainException;
 
-import org.tripplanner.flight.view.*;
-import org.tripplanner.flight.ws.client.service.CreateSingleReservationService;
+import org.tripplanner.flight.view.PassengerView;
+import org.tripplanner.flight.view.CreateLowPriceReservationInput;
+import org.tripplanner.flight.view.CreateLowPriceReservationOutput;
+import org.tripplanner.flight.ws.client.service.CreateLowPriceReservationService;
 
 import org.tripplanner.mediator.exception.MediatorDomainException;
 import org.tripplanner.mediator.service.CreateReservationService;
@@ -30,23 +32,26 @@ public class BookFlightService extends MediatorWorkflowService<ReservationView> 
         try {
             // invoke flight's create single reservation service
             //
-            CreateSingleReservationInput csrInput = new CreateSingleReservationInput();
-            // TODO set flight number
-            // csrInput.setFlightNumber("123-TODO-testvalue");
-            Passenger passenger = new Passenger();
-            passenger.setId(id);
-            passenger.setName(name);
-            csrInput.setPassenger(passenger);
+            CreateLowPriceReservationInput remoteInput =
+                new CreateLowPriceReservationInput();
+            remoteInput.setDeparture(origin);
+            remoteInput.setDestination(destination);
+            PassengerView passengerView = new PassengerView();
+            passengerView.setId(id);
+            passengerView.setName(name);
+            remoteInput.setPassenger(passengerView);
 
-            CreateSingleReservationService csrService = new CreateSingleReservationService(csrInput);
+            CreateLowPriceReservationService remoteService =
+                new CreateLowPriceReservationService(remoteInput);
 
-            CreateSingleReservationOutput csrOutput = csrService.execute();
+            CreateLowPriceReservationOutput remoteOutput =
+                remoteService.execute();
 
             // invoke mediator's create reservation service
-            CreateReservationService crService = new CreateReservationService(
-                id, name, csrOutput.getReservationVoucher().getReservationCode());
+            CreateReservationService localService = new CreateReservationService(
+                id, name, remoteOutput.getReservation().getCode());
 
-            ReservationView reservation = crService.execute();
+            ReservationView reservation = localService.execute();
 
             // return mediator view
             return reservation;

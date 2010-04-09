@@ -15,6 +15,8 @@ public class Airport extends FlightDomainObject {
 	//
 
 	@Column(unique = true)
+	private String code;
+
 	private String city;
 
 	private BigDecimal costPerUse;
@@ -26,8 +28,9 @@ public class Airport extends FlightDomainObject {
 		super();
 	}
 
-	public Airport(String city, BigDecimal costPerUse) {
+	public Airport(String code, String city, BigDecimal costPerUse) {
 		super();
+		this.code = code;
 		this.city = city;
 		this.costPerUse = costPerUse;
 	}
@@ -44,6 +47,14 @@ public class Airport extends FlightDomainObject {
 	//
 	// Property methods -------------------------------------------------------
 	//
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	public String getCity() {
 		return city;
 	}
@@ -64,8 +75,9 @@ public class Airport extends FlightDomainObject {
 	// Output -----------------------------------------------------------------
 	//
 	public String toString() {
-		return "Airport: city " + this.getCity() + " cost-per-use "
-				+ this.getCostPerUse();
+        final String FORMAT = "Airport: code %s city %s cost %s";
+		return String.format(
+            FORMAT, this.getCode(), this.getCity(), this.getCostPerUse().toString());
 	}
 
 }

@@ -31,6 +31,7 @@ public class Flight extends FlightDomainObject {
 	private BigDecimal costPerPassenger;
 	private BigDecimal pricePerPassenger;
 
+    /** last issued reservation identifier */
 	private int reservationId;
 
 	@ManyToOne

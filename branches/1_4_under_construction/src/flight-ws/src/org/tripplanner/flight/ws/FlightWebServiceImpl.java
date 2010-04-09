@@ -19,17 +19,15 @@ public class FlightWebServiceImpl implements FlightPortType {
     //  Web Service operations
     //
 
-    /** Search flights */
-    public SearchFlightsOutput searchFlights(SearchFlightsInput input)
+    public CreateLowPriceReservationOutput createLowPriceReservation(CreateLowPriceReservationInput input)
         throws FlightFault_Exception, ServiceUnavailable_Exception {
 
-        log.debug("searchFlights");
-        SearchFlightsOutput output = new SearchFlightsOutput();
+        log.debug("createLowPriceReservation");
+        CreateLowPriceReservationOutput output = null;
         try {
-
-            if(false)
-                throw new NoFlightAvailableForReservationException("");
-
+            // invoke local service
+            output = new CreateLowPriceReservationService(input).execute();
+            return output;
 
         } catch (FlightDomainException e) {
             handleDomainException(e);
@@ -40,7 +38,25 @@ public class FlightWebServiceImpl implements FlightPortType {
     }
 
 
-    /** create single reservation */
+    public SearchFlightsOutput searchFlights(SearchFlightsInput input)
+        throws FlightFault_Exception, ServiceUnavailable_Exception {
+
+        log.debug("searchFlights");
+        SearchFlightsOutput output = null;
+        try {
+            // invoke local service
+            output = new SearchFlightsService(input).execute();
+            return output;
+
+        } catch (FlightDomainException e) {
+            handleDomainException(e);
+        } catch (Exception e) {
+            handleOtherException(e);
+        }
+        return output;
+    }
+
+
     public CreateSingleReservationOutput createSingleReservation(CreateSingleReservationInput input)
         throws FlightFault_Exception, ServiceUnavailable_Exception {
 
@@ -48,7 +64,6 @@ public class FlightWebServiceImpl implements FlightPortType {
         CreateSingleReservationOutput output = null;
         try {
             // invoke local service
-            //
             output = new CreateSingleReservationService(input).execute();
             return output;
 
@@ -61,17 +76,15 @@ public class FlightWebServiceImpl implements FlightPortType {
     }
 
 
-    /** create multiple reservations */
     public CreateMultipleReservationsOutput createMultipleReservations(CreateMultipleReservationsInput input)
         throws FlightFault_Exception, ServiceUnavailable_Exception {
 
         log.debug("createMultipleReservations");
-        CreateMultipleReservationsOutput output = new CreateMultipleReservationsOutput();
+        CreateMultipleReservationsOutput output = null;
         try {
-
-            if(false)
-                throw new NoFlightAvailableForReservationException("");
-
+            // invoke local service
+            output = new CreateMultipleReservationsService(input).execute();
+            return output;
 
         } catch (FlightDomainException e) {
             handleDomainException(e);

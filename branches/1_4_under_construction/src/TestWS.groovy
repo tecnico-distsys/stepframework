@@ -16,16 +16,39 @@ def port = service.getFlightPort();
 def StubUtil = Class.forName("step.framework.ws.StubUtil");
 StubUtil.setPortEndpointAddress(port, "http://localhost:8080/flight-ws/endpoint");
 
+//
+//  Search flights
+//
+
 // fill in request
-def passenger = Class.forName("org.tripplanner.flight.wsdl.Passenger").newInstance();
-passenger.id = 1;
-passenger.name = "Mike";
+def sfIn = Class.forName("org.tripplanner.flight.view.SearchFlightsInput").newInstance();
+sfIn.depart = "Lisbon";
+sfIn.arrive = "New York";
 
 try {
     // invoke
-    def result = port.createReservation("Lisbon", "New York", passenger);
+    def sfOut = port.searchFlights(sfIn);
     // print results
-    printf("Reservation code: %s, Flight Number: %s %n", result.reservationCode, result.flightNumber);
+    println "Response includes " + sfOut.flights.size() + " flights";
+    sfOut.flights.each {
+        println it.number;
+        println it.date;
+        println it.depart;
+        println it.arrive;
+        println it.price.currencyCode + " " + it.price.value;
+    }
+
 } catch(e) {
     println("Caught exception " + e);
 }
+
+
+//
+//  Create single reservation
+//
+
+
+//
+//  Create multiple reservations
+//
+
