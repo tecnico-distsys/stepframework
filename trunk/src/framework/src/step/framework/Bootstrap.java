@@ -13,10 +13,8 @@ public class Bootstrap {
     private static Log log = LogFactory.getLog(Bootstrap.class);
 
 	public static void init() {
-		// write startup message
 		log.info("Initializing STEPframework...");
 
-		// initialize persistence support
 		log.trace("Initializing persistence support...");
 		try {
 			Persistence.init();
@@ -24,7 +22,6 @@ public class Bootstrap {
 			log.warn("Persistence support initialization failed", e);
 		}
 
-		// initialize Extension engine
 		log.trace("Initializing extension engine");
 		ExtensionEngine engine = ExtensionEngine.getInstance();
 		try {
@@ -33,6 +30,10 @@ public class Bootstrap {
 			log.warn("Extensions engine init failed", e);
 		}
 		log.trace("Extensions engine " + (engine.isEnabled() ? "enabled" : "disabled"));
+
+        log.debug("Disable JAX-WS option to capture stack trace in SOAP fault messages");
+        System.getProperties().setProperty("com.sun.xml.ws.fault.SOAPFaultBuilder.disableCaptureStackTrace", "false");
+       
 		log.info("STEPframework successfully initialized.");
 	}
 
