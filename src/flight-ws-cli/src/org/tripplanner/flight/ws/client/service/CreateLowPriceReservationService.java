@@ -19,24 +19,24 @@ import org.tripplanner.flight.wsdl.*;
  *  This is Flight application service stub.
  *  See remote service for details.
  */
-public class SearchFlightsService extends
-        FlightBaseService<SearchFlightsOutput> {
+public class CreateLowPriceReservationService extends
+        FlightBaseService<CreateLowPriceReservationOutput> {
 
-    private SearchFlightsInput input;
+    private CreateLowPriceReservationInput input;
 
-    public SearchFlightsService(SearchFlightsInput input) {
+    public CreateLowPriceReservationService(CreateLowPriceReservationInput input) {
         this.input = input;
     }
 
     @Override
-    protected SearchFlightsOutput action() throws FlightDomainException {
+    protected CreateLowPriceReservationOutput action() throws FlightDomainException {
         try {
             // create Web Service stub
             FlightPortType port =
                 FlightStubFactory.getInstance().getPortUsingConfig();
 
             // invoke remote Web Service
-            SearchFlightsOutput output = port.searchFlights(input);
+            CreateLowPriceReservationOutput output = port.createLowPriceReservation(input);
             return output;
 
         } catch (FlightFault_Exception e) {

@@ -5,6 +5,11 @@ import org.tripplanner.flight.exception.*;
 import org.tripplanner.flight.view.*;
 
 
+/**
+ *  This Flight application service
+ *  creates multiple reservations for a specific flight.
+ *  Either all or none of the reservations are created.
+ */
 public class CreateMultipleReservationsService extends
         FlightBaseService<CreateMultipleReservationsOutput> {
 

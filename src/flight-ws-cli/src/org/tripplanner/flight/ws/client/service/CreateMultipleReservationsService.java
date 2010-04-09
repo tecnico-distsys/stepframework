@@ -15,6 +15,10 @@ import org.tripplanner.flight.ws.client.FlightStubFactory;
 import org.tripplanner.flight.wsdl.*;
 
 
+/**
+ *  This is Flight application service stub.
+ *  See remote service for details.
+ */
 public class CreateMultipleReservationsService extends
         FlightBaseService<CreateMultipleReservationsOutput> {
 
