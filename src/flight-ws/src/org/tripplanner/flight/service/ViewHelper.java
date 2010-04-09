@@ -40,4 +40,14 @@ class ViewHelper {
         return flightView;
     }
 
+    /** Create Reservation view from Flight Reservation entity */
+    static ReservationView convert(FlightReservation flightReservation) {
+        ReservationView reservationView = new ReservationView();
+
+        reservationView.setCode(flightReservation.getCode());
+        reservationView.setFlightNumber(flightReservation.getFlight().getNumber());
+
+        return reservationView;
+    }
+
 }

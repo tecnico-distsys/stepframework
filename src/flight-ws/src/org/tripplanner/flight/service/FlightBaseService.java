@@ -8,6 +8,7 @@ import org.tripplanner.flight.exception.FlightDomainException;
 import step.framework.service.LocalService;
 
 public abstract class FlightBaseService<T> extends LocalService<T> {
+
 	protected Log log;
 
 	public FlightBaseService() {
@@ -20,4 +21,5 @@ public abstract class FlightBaseService<T> extends LocalService<T> {
 
 	@Override
 	protected abstract T action() throws FlightDomainException;
+
 }

@@ -24,15 +24,12 @@ public class CreateSingleReservationService extends
         FlightManager flightManager = getFlightReservationManager();
 
         // execute business logic
-        // TODO use flight number instead of fixed origin and destination
-        FlightReservation fr = flightManager.reserveFlight(
-            "Lisbon", "New York", input.getPassenger().getId(), input.getPassenger().getName());
+        FlightReservation flightReservation = flightManager.reserveFlight(
+            input.getFlightNumber(), input.getPassenger().getId(), input.getPassenger().getName());
 
         // return view
         CreateSingleReservationOutput output = new CreateSingleReservationOutput();
-        ReservationView reservationView = new ReservationView();
-        reservationView.setCode(fr.getCode());
-		reservationView.setFlightNumber(fr.getFlight().getNumber());
+        ReservationView reservationView = ViewHelper.convert(flightReservation);
         output.setReservation(reservationView);
 
         return output;
