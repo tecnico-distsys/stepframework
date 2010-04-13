@@ -1,6 +1,7 @@
 package step.framework.ws;
 
 import java.io.*;
+import java.util.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -9,6 +10,7 @@ import static org.junit.Assert.*;
 public class XMLUtilTest {
 
     static final private String LINE_SEPARATOR = System.getProperty("line.separator");
+    private PrintStream out = System.out;
     
     @Before
     public void setUp() {

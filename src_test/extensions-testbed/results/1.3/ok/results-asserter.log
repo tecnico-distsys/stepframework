@@ -1,0 +1,23 @@
+[2010-03-19 14:56:36,995] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 14:56:36,998]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 14:56:37,003]DEBUG     8[main](AssertMain.java:22) - args[0] 'ok'
+[2010-03-19 14:56:37,003]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\ok'
+[2010-03-19 14:56:37,003]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-19 14:56:37,020]TRACE    25[main](AssertMain.java:66) - Context:
+[2010-03-19 14:56:37,020]TRACE    25[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\ok
+[2010-03-19 14:56:37,020]TRACE    25[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\ok\soap-trace-client.log
+[2010-03-19 14:56:37,021]TRACE    26[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\ok\log-server.log
+[2010-03-19 14:56:37,021]TRACE    26[main](AssertMain.java:68) - config: ok
+[2010-03-19 14:56:37,021]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\ok\soap-trace-server.log
+[2010-03-19 14:56:37,021]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\ok\log-client.log
+[2010-03-19 14:56:37,025]DEBUG    30[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 14:56:37,025]DEBUG    30[main](AssertMain.java:79) - Asserting configuration 'ok'
+[2010-03-19 14:56:37,043] INFO    48[main](Assertions.java:20) - assertClientNoException
+[2010-03-19 14:56:37,064] INFO    69[main](Assertions.java:28) - assertClientHelloFriend
+[2010-03-19 14:56:37,065] INFO    70[main](Assertions.java:116) - assertSOAPCounts
+[2010-03-19 14:56:37,065] INFO    70[main](Assertions.java:93) - assertCountClientSOAPEnvelopes
+[2010-03-19 14:56:37,066] INFO    71[main](Assertions.java:98) - assertCountServerSOAPEnvelopes
+[2010-03-19 14:56:37,068] INFO    73[main](Assertions.java:103) - assertCountClientSOAPFaults
+[2010-03-19 14:56:37,069] INFO    74[main](Assertions.java:108) - assertCountServerSOAPFaults
+[2010-03-19 14:56:37,069] INFO    74[main](AssertMain.java:153) - All assertions executed successfully for configuration 'ok'
+[2010-03-19 14:56:37,069] INFO    74[main](AssertMain.java:37) - End of results asserter.

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="mediator-web" default="build" basedir=".">
+
+    <description>Web Application build file. Customize as required.</description>
+
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <!-- properties with default folder locations -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="tests.src.rel-dir" value="tests"/>
+    <property name="web-content.rel-dir" value="WebContent"/>
+    <property name="build.rel-dir" value="build/classes"/>
+    <property name="dist.rel-dir" value="dist"/>
+
+
+    <!-- import external definitions -->
+    <import file="../lib/tomcat.xml" />
+    <import file="../lib/jax.xml" />
+
+
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.rel-dir}" />
+        <!-- project libraries -->
+        <fileset dir="${web-content.rel-dir}/WEB-INF">
+            <include name="lib/**/*.jar" />
+        </fileset>
+        <!-- shared libraries -->
+        <fileset dir="../lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- referenced libraries -->
+        <fileset dir="../flight-ws/dist">
+            <include name="*.jar" /><!-- exceptions -->
+        </fileset>
+        <fileset dir="../flight-ws-cli/dist">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+    </target>
+
+
+    <!-- jax-b -->
+
+    <target name="xjc" depends="init" unless="recompile.flag">
+    <!-- description="Create Java classes from XML Schema definitions" -->
+        <!-- generate data binding sources -->
+        <xjc destdir="${build.rel-dir}" extension="true">
+            <schema dir="${src.rel-dir}" includes="*.xsd"/>
+            <binding dir="${src.rel-dir}" includes="*.xjb"/>
+            <produces dir="${build.rel-dir}/org/tripplanner/mediator/view" />
+        </xjc>
+        <!-- compile data binding classes -->
+        <javac
+            srcdir="${build.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+            <!-- project classpath is required because some classes may use existing types -->
+        </javac>
+    </target>
+
+
+    <!-- compile -->
+
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <target name="compile" depends="xjc,prepare-resources">
+    <!-- description="Compile source code" -->
+        <javac
+            srcdir="${src.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+
+    <!-- hibernate -->
+
+    <target name="hibernatetool" depends="compile"
+        description="Create database schema based on the hibernate model">
+
+        <taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="project.classpath" />
+
+        <hibernatetool destdir="${dist.rel-dir}">
+            <classpath refid="project.classpath" />
+            <annotationconfiguration configurationfile="${build.rel-dir}/hibernate.cfg.xml"/>
+            <hbm2ddl
+                export="true"
+                update="false"
+                drop="true"
+                create="true"
+                outputfilename="application-schema.sql"
+                format="true"
+                haltonerror="false"/>
+        </hibernatetool>
+    </target>
+
+
+    <!-- tests -->
+
+    <target name="compile-tests" depends="compile">
+    <!-- description="Compile tests for service classes" -->
+        <antcall target="compile">
+            <param name="src.rel-dir" value="${tests.src.rel-dir}" />
+            <param name="recompile.flag" value="true" />
+        </antcall>
+    </target>
+
+    <target name="run-tests" depends="compile-tests"
+        description="Run tests for service classes">
+        <junit
+            printsummary="false"
+            fork="true"
+            forkmode="perTest"
+            haltonerror="false"
+            errorproperty=""
+            haltonfailure="true"
+            failureproperty=""
+            filtertrace="true"
+            jvm="java"
+            dir="${build.rel-dir}"
+            newenvironment="false"
+            includeantruntime="true"
+            showoutput=""
+            tempdir="${java.io.tmpdir}"
+            reloading="true"
+        >
+            <formatter unless="junit.formatter.classname"
+                       type="plain" usefile="false" />
+            <batchtest>
+                <fileset dir="${tests.src.rel-dir}"
+                         includes="**/*.java"
+                         excludes="**/*DefaultServiceTest.java" />
+            </batchtest>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+            <sysproperty key="step.framework.persistence.factory" value="hibernate" />
+        </junit>
+    </target>
+
+
+    <!-- web application -->
+
+    <property name="deploy.context" value="${ant.project.name}" />
+    <property name="deploy.war.rel-file" value="${dist.rel-dir}/${ant.project.name}.war" />
+
+    <target name="create-war" depends="compile">
+    <!-- description="Create Web application ARchive" -->
+
+        <!-- unjar *-ws-cli.jar to build folder because of a Java or JAX-WS or Tomcat bug
+            that locks the file on the server and prevents undeploy from working as expected -->
+        <unjar
+            src="../flight-ws-cli/dist/flight-ws-cli.jar"
+            dest="${build.rel-dir}"
+            overwrite="true" />
+
+        <jar destfile="${deploy.war.rel-file}">
+            <!-- web content -->
+            <zipfileset dir="${web-content.rel-dir}"
+                        includes="**/*" />
+            <!-- compiled classes and resource files -->
+            <zipfileset dir="${build.rel-dir}"
+                        includes="**/*.class,**/*.properties,**/*.xml"
+                        prefix="WEB-INF/classes" />
+            <!-- shared libs -->
+            <zipfileset dir="../lib"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+            <!-- referenced libraries -->
+            <zipfileset dir="../flight-ws/dist"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+            <!-- ../flight-ws-cli/dist/*.jar - see unjar comment above -->
+            <zipfileset dir="../extensions/dist"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+        </jar>
+
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" depends="create-war"
+        description="Build the program">
+    </target>
+
+    <target name="rebuild" depends="clean,build" >
+    <!-- description="Rebuild the project" -->
+    </target>
+
+
+</project>

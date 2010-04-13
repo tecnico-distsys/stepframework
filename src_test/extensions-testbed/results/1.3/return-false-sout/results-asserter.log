@@ -1,0 +1,22 @@
+[2010-03-19 14:58:39,138] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 14:58:39,141]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 14:58:39,146]DEBUG     8[main](AssertMain.java:22) - args[0] 'return-false-sout'
+[2010-03-19 14:58:39,146]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-sout'
+[2010-03-19 14:58:39,146]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-19 14:58:39,161]TRACE    23[main](AssertMain.java:66) - Context:
+[2010-03-19 14:58:39,162]TRACE    24[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-sout
+[2010-03-19 14:58:39,162]TRACE    24[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-sout\soap-trace-client.log
+[2010-03-19 14:58:39,162]TRACE    24[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-sout\log-server.log
+[2010-03-19 14:58:39,163]TRACE    25[main](AssertMain.java:68) - config: return-false-sout
+[2010-03-19 14:58:39,163]TRACE    25[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-sout\soap-trace-server.log
+[2010-03-19 14:58:39,163]TRACE    25[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-sout\log-client.log
+[2010-03-19 14:58:39,163]DEBUG    25[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 14:58:39,163]DEBUG    25[main](AssertMain.java:79) - Asserting configuration 'return-false-sout'
+[2010-03-19 14:58:39,182] INFO    44[main](Assertions.java:20) - assertClientNoException
+[2010-03-19 14:58:39,210] INFO    72[main](Assertions.java:116) - assertSOAPCounts
+[2010-03-19 14:58:39,210] INFO    72[main](Assertions.java:93) - assertCountClientSOAPEnvelopes
+[2010-03-19 14:58:39,211] INFO    73[main](Assertions.java:98) - assertCountServerSOAPEnvelopes
+[2010-03-19 14:58:39,212] INFO    74[main](Assertions.java:103) - assertCountClientSOAPFaults
+[2010-03-19 14:58:39,213] INFO    75[main](Assertions.java:108) - assertCountServerSOAPFaults
+[2010-03-19 14:58:39,213] INFO    75[main](AssertMain.java:153) - All assertions executed successfully for configuration 'return-false-sout'
+[2010-03-19 14:58:39,213] INFO    75[main](AssertMain.java:37) - End of results asserter.

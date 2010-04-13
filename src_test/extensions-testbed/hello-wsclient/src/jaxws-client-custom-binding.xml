@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<jaxws:bindings
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+    wsdlLocation="../../hello-ws/web/WEB-INF/wsdl/hello.wsdl">
+
+    <jaxws:bindings node="wsdl:definitions" xmlns:jws="http://java.sun.com/xml/ns/javaee">
+        <jws:handler-chains>
+            <jws:handler-chain>
+                <jws:handler>
+                    <jws:handler-class>step.framework.extensions.Handler</jws:handler-class>
+                </jws:handler>
+            </jws:handler-chain>
+        </jws:handler-chains>
+    </jaxws:bindings>
+</jaxws:bindings>

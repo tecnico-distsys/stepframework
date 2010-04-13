@@ -1,87 +1,203 @@
-TRIP PLANNER 2.0
+STEP Framework Demo: Trip Planner
 
-DESCRIPTION:
+Table of contents
+==============================
 
-The TripPlanner distributed system is provided as a working example of the
-complete STEPframework.  It is made of two applications: Flight, an airline
-flight management system; and Mediator, a simple travel agency that allows it's
-customers to plan and book trips (currently only flights are possible),
-relying on the Flight application to perform the actual flight reservation.
-
-Each application exercises the STEP architecture, having it's domain model
-described in DML and implemented with the Fénix Framework, a thin-layer
-providing service abstraction and a browser-based interface using GWT.  In
-addition, the Flight application also provides a web-services interface for
-remote invocation, and exemplifies the use of STEP extensions.
+1. Introduction
+2. Structure
+3. Compiling
+4. Installing
+5. Deploying
+6. Running
+7. Testing
+8. Extensions
 
 
-REQUIREMENTS:
+1. Introduction
+==============================
 
-- Java SE 6.0 (update 16)
-- STEPcat 2.0_6.0.14
-  (Apache Tomcat 6.0.14, Apache Ant 1.7.1, GWT 2.0.0 and shared libraries of
-  the STEPframework 2.0)
+The Trip Planner is a system for selling trip packages via a web interface.
+It is composed by several distributed systems, which act together through a
+mediator that interacts with the clients.
 
+This demonstration version of the Trip Planner supports booking a flight
+and uses 3 demonstration Framework Extensions:
+- hello - just says hi when it intercepts the services or web services
+- trace - prints tracing data
+- errors - allows creating test errors
 
-DISTRIBUTION FILES:
-
-- TripPlanner_2.0.zip (applications)
-- lib.zip (non-shareable libraries)
-
-
-CONFIGURATION:
-
-Each application uses it's own database (the Flight application uses a
-'flight' database, while the Mediator application uses a 'mediator' database).
-Both applications expect a user 'step' with no password to have access to the
-configured database.
-These configurations are defined in the application's
-'src/persistence.properties' file and on its build.xml (on the setup target).
+Extensions enable the programmer to add code around the services layer
+and around the Web Services layer, orthogonally to the application code.
+Each extension can be enabled or disabled simply by editing the
+extensions.properties configuration file.
 
 
-DEPLOYMENT:
 
-1. Unzip the TripPlanner_2.0.zip:
- $ unzip TripPlanner_2.0.zip
+2. Structure
+==============================
 
-2. Unzip lib.zip to directory TripPlanner/flight:
- $ unzip lib.zip -d TripPlanner/flight
+The Trip Planner system is composed by 2 separate domains: flight and
+mediator.  The flight domain manages flight reservations.  The mediator domain
+mediates the interaction between client and the other reservation domains
+(only the flight in this demonstration).
 
-3. Unzip lib.zip to directory TripPlanner/mediator:
- $ unzip lib.zip -d TripPlanner/mediator
+Conceptually, each application consists of 4 layers:
 
-4. Build and deploy Flight application into STEPcat:
- $ ant -f TripPlanner/flight/build.xml create-war deploy
+        +--------------+
+        | Presentation |
+        +--------------+
+        | Services     |
+        +--------------+
+        | Domain model |
+        +--------------+
+        | Data access  |
+        +--------------+
 
-5. Build and deploy Mediator application into STEPcat:
- $ ant -f TripPlanner/mediator/build.xml create-war deploy
+These layers are developed in sub-sub-projects of the flight and the mediator
+sub-projects.  The entire project' structure is as follows:
 
-It is now possible to access the Flight application at
-http://localhost:8080/flight and the Mediator application at
-http://localhost:8080/mediator (assuming STEPcat is running on the same machine
-and on the default 8080 port)
+        .
+        |-- flight
+        |   |-- core
+        |   `-- view
+        `-- mediator
+            |-- core
+            |-- view
+            `-- web
+
+Both 'core' sub-sub-projects implement all the layers from the bottom up to
+the services layer.  The 'view' sub-sub-projects implement the classes that
+can be returned from the services to the presentation layer; this also
+includes any exceptions that can be thrown.  The 'web' sub-sub-project
+implements the presentation layer of the mediator.  There are no presentation
+layers implemented for the flight domain.
 
 
-ANT TARGETS:
+3. Compiling
+==============================
 
-The following describes the essential ant targets:
- - clean: cleans the project of all generated artifacts;
- - compile: compiles the application, including any requried source-code
-   generation;
- - build: builds the application from scratch (including the web-services
-   client JAR in the Flight application);
- - create-war: builds the WAR (Web application ARchive) of the application;
- - deploy: deploys the WAR created by the create-war target in the STEPcat
-   application server;
- - setup: resets the Database and populates it with initial data;
- - run: books a flight;
- - client-run: books a flight through a web-services remote invocation.
+The project uses Apache Ant and the ImportAnt library.  At each level there is
+a build file that takes care of building the project at that specific level.
+Thus, the entire project can be built simply by invoking at the top level:
 
- - eclipse-compile: compiles the application and then copies the resulting
-   artifacts to the war/WEB-INF/classes directory (pre-configured in the
-   Eclipse project to be a classes folder) - required in order to be able to
-   use the Eclipse IDE for executing and debugging without Eclipse interfering
-   with the build process
+$ ant
 
-The Mediator application requires the Flight web-services client JAR for its
-remote invocations, so the Flight application should be built first.
+Note that Ant and JWSDP should be properly installed for this command to work.
+
+
+4. Installing
+==============================
+
+Two databases must be configured before running the distributed applications.
+By default these are:
+
+- For flight:
+
+database.host=localhost
+database.name=flight
+database.username=step
+database.password=
+
+- For mediator:
+
+database.host=localhost
+database.name=mediator
+database.username=step
+database.password=
+
+Therefore, either:
+
+- create the default databases on the localhost's mysql server with the
+  configured username and password access, or;
+
+- change in the hibernate.cfg.xml and dbunit.properties files the database information
+  (flight-ws/src/hibernate.cfg.xml, flight-ws/tests/dbunit.properties, and
+   mediator-web/src/hibernate.cfg.xml, mediator-web/src/dbunit.properties).
+
+Note: after making changes to the configuration propertied you should rebuild
+you applications to ensure that the new values have been correctly propagated
+to the packed jars. ("ant clean build" at the top level ensures that)
+
+After the database locations are configured, we need to create the databases.
+
+To create the tables execute at the top level:
+
+$ ant hibernatetool
+
+When executing creating the tables for the first time, some errors like the
+following may appear:
+
+"[hibernatetool] Error #1: com.mysql.jdbc.exceptions.MySQLSyntaxErrorException: Table mediator.Client' doesn't exist"
+
+They should all be ignored.
+
+Then check that the tables have been correctly created in each database.
+
+
+5. Deploying
+==============================
+
+It is now possible to deploy the flight and mediator applications.  Each
+application can be deployed by its own build.xml file, but for convenience
+there is a top level ant target to do that.  Execute:
+
+$ ant deploy
+
+If any of these application is already deployed use the corresponding
+"redeploy" target instead.
+
+
+6. Running
+==============================
+
+Point your favourite web browser to http://localhost:8080/mediator-web to start
+using the application. Try booking a flight from Lisbon to New York!
+
+
+
+7. Testing
+==============================
+
+Running tests in a distributed system requires all the tables to be stored
+in the same database.
+This is necessary because of the way that DBUnit populates data before each
+test method.
+
+The data populated for the tests can then be used for user testing the application.
+
+To run tests for the distributed application, edit flight-ws/tests/dbunit.properties and
+mediator-web/tests/dbunit.properties and set the same database in both.
+
+Then, at the top level rebuild the applications and create the tables.
+
+$ ant clean build hibernatetool
+
+Then, redeploy the flight web service and mediator web application
+
+$ ant redeploy
+
+
+To run tests for one domain at a time:
+
+$ ant run-tests-flight
+$ ant run-tests-mediator
+
+To run all tests:
+
+$ ant run-tests
+
+
+8. Extensions
+==============================
+
+To see output from the extension engine and from the extensions themselves,
+look at the application server's log file.
+
+Feel free to experiment with the extensions configuration files and source code.
+
+The flight extensions configuration is located in flight-ws/src.
+The mediator extensions configuration is located in mediator-web/src.
+
+The logging produced by the extensions engine can be adjusted in the
+log4j.properties files, for each component and application.
+
