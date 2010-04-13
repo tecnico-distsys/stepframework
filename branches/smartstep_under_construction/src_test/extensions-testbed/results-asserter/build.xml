@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="assert-results" default="build" basedir=".">
+
+    <description>Assert results.</description>
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <property name="root.rel-dir" value="../../../src"/>
+    <property name="rootextra.rel-dir" value="../../../src_extra"/>
+
+    <!-- properties with default folder locations -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="build.rel-dir" value="bin"/>
+    <property name="dist.rel-dir" value="dist"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="${root.rel-dir}/build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+
+    <!-- import external definitions -->
+    <import file="${root.rel-dir}/lib/jax.xml" />
+
+
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.rel-dir}" />
+        <!-- shared libraries -->
+        <fileset dir="${root.rel-dir}/lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- STEP libraries -->
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+    </target>
+
+
+    <!-- compile -->
+
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <target name="compile" depends="prepare-resources">
+    <!-- description="Compile source code" -->
+        <javac
+            srcdir="${src.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+
+    <!-- console -->
+
+    <property name="run.main-class" value="step.test.AssertMain"/>
+
+    <target name="execute">
+    <!-- description="Execute the program as-is - no compilation is performed" -->
+        <java classname="${run.main-class}" fork="true">
+            <arg line="${run.args}" />
+            <classpath>
+               <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="ask-run-args" unless="run.args">
+        <input message="Please enter run arguments line:"
+            addproperty="run.args"
+        />
+    </target>
+
+    <target name="run" depends="build,ask-run-args,execute"
+        description="Run the program">
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" depends="compile"
+        description="Build the program">
+    </target>
+
+    <target name="rebuild" depends="clean,build" >
+    <!-- description="Rebuild the project" -->
+    </target>
+
+</project>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="project" basedir="." default="build">
+
+    <description>Project super-build file. Customize as required.</description>
+
+
+    <!-- Extensions -->
+    <target name="build-extensions"
+        description="Build extensions library">
+        <echo message="***** BUILDING EXTENSIONS *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="extensions" target="build" />
+    </target>
+
+    <target name="clean-extensions"
+        description="Clean extensions library">
+        <ant inheritAll="false" dir="extensions" target="clean" />
+    </target>
+
+    <target name="rebuild-extensions" depends="clean-extensions,build-extensions" />
+
+
+    <!-- Flight -->
+    <target name="build-flight"
+        description="Build flight">
+        <echo message="***** BUILDING flight APPLICATION *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="flight-ws" target="build" />
+        <ant inheritAll="false" dir="flight-ws-cli" target="build" />
+    </target>
+
+    <target name="clean-flight"
+        description="Clean flight">
+        <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
+        <ant inheritAll="false" dir="flight-ws" target="clean" />
+    </target>
+
+    <target name="rebuild-flight" depends="clean-flight,build-flight" />
+
+    <target name="deploy-flight"
+        description="Deploy flight">
+        <ant inheritAll="false" dir="flight-ws" target="deploy" />
+    </target>
+
+    <target name="redeploy-flight"
+        description="Redeploy flight">
+        <ant inheritAll="false" dir="flight-ws" target="redeploy" />
+    </target>
+
+    <target name="undeploy-flight"
+        description="Undeploy flight">
+        <ant inheritAll="false" dir="flight-ws" target="undeploy" />
+    </target>
+
+    <target name="hibernatetool-flight"
+        description="Create tables for flight domain">
+        <echo message="------ CREATING flight DATABASE -----" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="flight-ws" target="hibernatetool" />
+    </target>
+
+    <target name="run-tests-flight"
+        description="Run all flight service tests">
+        <echo message="##### RUNNING flight TESTS #####" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="flight-ws" target="run-tests" />
+    </target>
+
+
+    <!-- Mediator -->
+    <target name="build-mediator"
+        description="Build mediator">
+        <echo message="***** BUILDING mediator APPLICATION *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="mediator-web" target="build" />
+    </target>
+
+    <target name="clean-mediator"
+        description="Clean mediator">
+        <ant inheritAll="false" dir="mediator-web" target="clean" />
+    </target>
+
+    <target name="rebuild-mediator" depends="clean-mediator,build-mediator" />
+
+    <target name="deploy-mediator"
+        description="Deploy mediator">
+        <ant inheritAll="false" dir="mediator-web" target="deploy" />
+    </target>
+
+    <target name="redeploy-mediator"
+        description="Redeploy mediator">
+        <ant inheritAll="false" dir="mediator-web" target="redeploy" />
+    </target>
+
+    <target name="undeploy-mediator"
+        description="Undeploy mediator">
+        <ant inheritAll="false" dir="mediator-web" target="undeploy" />
+    </target>
+
+    <target name="hibernatetool-mediator"
+        description="Create tables for mediator domain">
+        <echo message="------ CREATING mediator DATABASE -----" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="mediator-web" target="hibernatetool" />
+    </target>
+
+    <target name="run-tests-mediator"
+        description="Run all mediator service tests">
+        <echo message="##### RUNNING mediator TESTS #####" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="mediator-web" target="run-tests" />
+    </target>
+
+
+    <!-- ALL -->
+    <target name="build" depends="build-extensions,build-flight,build-mediator"
+        description="Build all projects in the correct order">
+    </target>
+
+    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions"
+        description="Clean all projects">
+    </target>
+
+    <target name="rebuild" depends="clean,build"
+        description="Rebuild all projects in the correct order">
+    </target>
+
+    <target name="deploy" depends="deploy-flight,deploy-mediator"
+        description="Deploy all web applications">
+    </target>
+
+    <target name="redeploy" depends="redeploy-flight,redeploy-mediator"
+        description="Redeploy all web applications">
+    </target>
+
+    <target name="undeploy" depends="undeploy-mediator,undeploy-flight"
+        description="Undeploy all web applications">
+    </target>
+
+    <target name="hibernatetool" depends="hibernatetool-flight,hibernatetool-mediator"
+        description="Generate all database schemas">
+    </target>
+
+    <target name="run-tests" depends="run-tests-flight,run-tests-mediator"
+        description="Run all service tests">
+    </target>
+
+
+</project>

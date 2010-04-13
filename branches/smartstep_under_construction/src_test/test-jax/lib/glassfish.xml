@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="glassfish">
+
+    <description>Build environment for Glassfish</description>
+
+    <property name="glassfish.dir" location="${env.GLASSFISH_HOME}" />
+
+    <property name="glassfish.password.file-name" value="glassfish-passfile" />
+    <property name="glassfish.password.file" location="${user.home}/${glassfish.password.file-name}" />
+
+
+    <!-- Java EE -->
+    <path id="glassfish.javaee.jars.path">
+        <fileset dir="${glassfish.dir}/lib">
+            <include name="javaee.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Web Services run-time -->
+    <path id="glassfish.web-services-run-time.jars.path">
+        <fileset dir="${glassfish.dir}/lib">
+            <include name="webservices-rt.jar"/>
+            <include name="activation.jar"/>
+            <include name="mail.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Web Services tools -->
+    <path id="glassfish.web-services-tools.jars.path">
+        <fileset dir="${glassfish.dir}/lib">
+            <include name="webservices-tools.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Ant tasks -->
+    <path id="glassfish.ant-tasks.jars.path">
+        <fileset dir="${glassfish.dir}/lib">
+            <include name="sun-appserv-ant.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Other libraries -->
+    <path id="glassfish.appserv.jars.path">
+        <fileset dir="${glassfish.dir}/lib">
+            <include name="appserv-rt.jar"/>
+            <include name="appserv-jstl.jar"/>
+            <include name="appserv-tags.jar"/>
+        </fileset>
+    </path>
+
+    <!-- Glassfish libraries - same set as Eclipse plug-in Glassfish library -->
+    <path id="glassfish.jars.path">
+        <path refid="glassfish.javaee.jars.path" />
+        <path refid="glassfish.web-services-run-time.jars.path" />
+        <path refid="glassfish.web-services-tools.jars.path" />
+        <path refid="glassfish.appserv.jars.path" />
+    </path>
+
+
+    <!-- Sun App Server tasks -->
+    <taskdef name="sun-appserv-deploy"
+             classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.DeployTask">
+        <classpath refid="glassfish.ant-tasks.jars.path" />
+    </taskdef>
+
+    <taskdef name="sun-appserv-undeploy"
+             classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.UndeployTask">
+        <classpath refid="glassfish.ant-tasks.jars.path" />
+    </taskdef>
+
+    <taskdef name="sun-appserv-instance"
+             classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.InstanceTask">
+        <classpath refid="glassfish.ant-tasks.jars.path"/>
+    </taskdef>
+
+    <taskdef name="sun-appserv-component"
+             classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.ComponentTask">
+        <classpath refid="glassfish.ant-tasks.jars.path"/>
+    </taskdef>
+
+    <taskdef name="sun-appserv-admin" classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.AdminTask">
+        <classpath refid="glassfish.ant-tasks.jars.path"/>
+    </taskdef>
+
+    <taskdef name="sun-appserv-input" classname="org.apache.tools.ant.taskdefs.Input">
+        <classpath refid="glassfish.ant-tasks.jars.path"/>
+    </taskdef>
+
+    <taskdef name="sun-appserv-jspc" classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.SunJspc">
+        <classpath refid="glassfish.ant-tasks.jars.path"/>
+    </taskdef>
+
+    <taskdef name="sun-appserv-update" classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.UpdateTask">
+        <classpath refid="glassfish.ant-tasks.jars.path"/>
+    </taskdef>
+
+
+    <target name="deploy">
+        <fail message="MUST DEFINE deploy.war.rel-file PROPERTY" unless="deploy.war.rel-file" />
+        <property name="deploy.war.file" location="${deploy.war.rel-file}" />
+        <sun-appserv-deploy
+            file="${web-app-env.deploy.war.file}"
+            passwordfile="${glassfish.password.file}"
+            asinstalldir="${glassfish.dir}"
+        />
+    </target>
+
+    <target name="undeploy">
+        <sun-appserv-undeploy
+            name="${web-app-env.deploy.context}"
+            passwordfile="${glassfish.password.file}"
+            asinstalldir="${glassfish.dir}"
+        />
+    </target>
+
+</project>

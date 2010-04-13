@@ -1,0 +1,22 @@
+[2010-03-19 15:11:35,308] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 15:11:35,311]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 15:11:35,316]DEBUG     8[main](AssertMain.java:22) - args[0] 'throw-nullpointerexception-sout'
+[2010-03-19 15:11:35,316]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-sout'
+[2010-03-19 15:11:35,317]DEBUG     9[main](AssertMain.java:45) - Building context
+[2010-03-19 15:11:35,332]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-19 15:11:35,333]TRACE    25[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-sout
+[2010-03-19 15:11:35,333]TRACE    25[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-sout\soap-trace-client.log
+[2010-03-19 15:11:35,334]TRACE    26[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-sout\log-server.log
+[2010-03-19 15:11:35,334]TRACE    26[main](AssertMain.java:68) - config: throw-nullpointerexception-sout
+[2010-03-19 15:11:35,334]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-sout\soap-trace-server.log
+[2010-03-19 15:11:35,334]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1509\throw-nullpointerexception-sout\log-client.log
+[2010-03-19 15:11:35,335]DEBUG    27[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 15:11:35,335]DEBUG    27[main](AssertMain.java:79) - Asserting configuration 'throw-nullpointerexception-sout'
+[2010-03-19 15:11:35,352] INFO    44[main](Assertions.java:52) - assertClientSOAPFaultException
+[2010-03-19 15:11:35,372] INFO    64[main](Assertions.java:115) - assertSOAPCounts
+[2010-03-19 15:11:35,372] INFO    64[main](Assertions.java:92) - assertCountClientSOAPEnvelopes
+[2010-03-19 15:11:35,373] INFO    65[main](Assertions.java:97) - assertCountServerSOAPEnvelopes
+[2010-03-19 15:11:35,374] INFO    66[main](Assertions.java:102) - assertCountClientSOAPFaults
+[2010-03-19 15:11:35,376] INFO    68[main](Assertions.java:107) - assertCountServerSOAPFaults
+[2010-03-19 15:11:35,377] INFO    69[main](AssertMain.java:153) - All assertions executed successfully for configuration 'throw-nullpointerexception-sout'
+[2010-03-19 15:11:35,377] INFO    69[main](AssertMain.java:37) - End of results asserter.
