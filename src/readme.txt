@@ -25,7 +25,7 @@ REQUIREMENTS:
 
 DISTRIBUTION FILES:
 
-- TripPlanner_2.0.zip (applications)
+- TripPlanner.zip (applications)
 - lib.zip (non-shareable libraries)
 
 
@@ -41,8 +41,8 @@ These configurations are defined in the application's
 
 DEPLOYMENT:
 
-1. Unzip the TripPlanner_2.0.zip:
- $ unzip TripPlanner_2.0.zip
+1. Unzip the TripPlanner.zip:
+ $ unzip TripPlanner.zip
 
 2. Unzip lib.zip to directory TripPlanner/flight:
  $ unzip lib.zip -d TripPlanner/flight
@@ -50,10 +50,20 @@ DEPLOYMENT:
 3. Unzip lib.zip to directory TripPlanner/mediator:
  $ unzip lib.zip -d TripPlanner/mediator
 
-4. Build and deploy Flight application into STEPcat:
+4. Build the TripPlanner extensions:
+ $ ant -f TripPlanner/extensions/build.xml build
+
+5. Create the databases needed for the Flight and Mediator applications
+   Definitions are in TripPlanner/{flight,mediator}/src/persistence.properties
+
+6. Setup the databases
+ $ ant -f TripPlanner/flight/build.xml setup
+ $ ant -f TripPlanner/mediator/build.xml setup
+
+7. Build and deploy Flight application into STEPcat:
  $ ant -f TripPlanner/flight/build.xml create-war deploy
 
-5. Build and deploy Mediator application into STEPcat:
+8. Build and deploy Mediator application into STEPcat:
  $ ant -f TripPlanner/mediator/build.xml create-war deploy
 
 It is now possible to access the Flight application at
