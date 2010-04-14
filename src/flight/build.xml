@@ -233,11 +233,12 @@
 			description="Create WAR deployable module">
 		<war destfile="${deploy.war.rel-file}"
 			 webxml="${web-content.rel-dir}/WEB-INF/web.xml">
-			<fileset dir="${web-content.rel-dir}" excludes="WEB-INF/**"/>
-			<classes dir="${build.classes.rel-dir}" excludes="config.properties"/>
+			<fileset dir="${web-content.rel-dir}"
+					 excludes="WEB-INF/web.xml,WEB-INF/classes/**,WEB-INF/lib/**"/>
 			<lib dir="${lib.rel-dir}" excludes="gwt-servlet.jar"/>
 			<lib dir="${env.GWT_HOME}" includes="gwt-servlet.jar" />
 			<lib dir="../extensions/dist" includes="*.jar" /><!-- Extensions -->
+			<classes dir="${build.classes.rel-dir}" excludes="config.properties"/>
 		</war>
 	</target>
 	

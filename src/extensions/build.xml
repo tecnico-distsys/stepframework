@@ -25,7 +25,7 @@
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
         <!-- non-sharable framework dependencies -->
-        <fileset dir="../lib/" includes="*.jar" />
+        <fileset dir="../../lib" includes="**/application-specific/*.jar" excludes="**/gwt-servlet.jar"/>
         <!-- sharable dependencies -->
         <fileset dir="${env.STEP_HOME}/lib" includes="*.jar" />
         <!-- framework library -->
