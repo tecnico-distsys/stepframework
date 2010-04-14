@@ -19,6 +19,7 @@ StubUtil.setPortEndpointAddress(port, "http://localhost:8080/flight-ws/endpoint"
 //
 //  Search flights
 //
+println "Search flights";
 
 def flightToBook = null;
 
@@ -52,6 +53,7 @@ try {
 //
 //  Create single reservation
 //
+println "Create single reservation";
 
 // fill in request
 def csrIn = Class.forName("org.tripplanner.flight.view.CreateSingleReservationInput").newInstance();
@@ -76,10 +78,12 @@ try {
 //
 //  Create multiple reservations
 //
+println "Create multiple reservations";
 
 // fill in request
 def cmrIn = Class.forName("org.tripplanner.flight.view.CreateMultipleReservationsInput").newInstance();
-cmrIn.flightNumber = flightToBook.number;
+//cmrIn.flightNumber = flightToBook.number;
+cmrIn.flightNumber = "0";
 
 def passengerList = cmrIn.passengers;
 

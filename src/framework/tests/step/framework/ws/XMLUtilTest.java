@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class XMLUtilTest {
 
-    static final private String LINE_SEPARATOR = System.getProperty("line.separator");
+    static final private String BR = System.getProperty("line.separator");
     private PrintStream out = System.out;
     
     @Before
@@ -25,15 +25,15 @@ public class XMLUtilTest {
         final String XML = 
             "<grandfather name=\"Tony\"><father name=\"Tony\">" +   
             "<son name=\"Mike\"/><son name=\"John\"></son>" +   
-            "</father></grandfather>" + LINE_SEPARATOR;
+            "</father></grandfather>" + BR;
         
         final String EXPECTED = 
-            "<grandfather name=\"Tony\">" + LINE_SEPARATOR + 
-            "  <father name=\"Tony\">" + LINE_SEPARATOR + 
-            "    <son name=\"Mike\"/>" + LINE_SEPARATOR + 
-            "    <son name=\"John\"/>" + LINE_SEPARATOR + 
-            "  </father>" + LINE_SEPARATOR + 
-            "</grandfather>" + LINE_SEPARATOR;
+            "<grandfather name=\"Tony\">" + BR + 
+            "  <father name=\"Tony\">" + BR + 
+            "    <son name=\"Mike\"/>" + BR + 
+            "    <son name=\"John\"/>" + BR + 
+            "  </father>" + BR + 
+            "</grandfather>" + BR;
         
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         XMLUtil.prettyPrint(XML, baos);

@@ -6,12 +6,17 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
+
 
 /**
  *  This class contains XML-related utility methods.
  */
 public class XMLUtil {
+
+    //
+    //  Pretty Print
+    //
 
     private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
@@ -20,7 +25,7 @@ public class XMLUtil {
     private static final boolean DEFAULT_INDENT = true;
     private static final int DEFAULT_INDENT_AMOUNT = 2;
 
-    /** 
+    /**
      *  Print XML source to XML result using specified option parameters.
      */
     public static void prettyPrint(Source sourceXml, Result resultXml,
@@ -37,21 +42,21 @@ public class XMLUtil {
             tf.setOutputProperty(OutputKeys.INDENT, "yes");
             tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indentAmount));
         }
-        
+
         tf.transform(sourceXml, resultXml);
     }
 
-    /** 
+    /**
      *  Print XML source to XML result using default indent options.
      */
     public static void prettyPrint(Source sourceXml, Result resultXml)
         throws TransformerConfigurationException, TransformerFactoryConfigurationError, TransformerException {
 
-        prettyPrint(sourceXml, resultXml, 
+        prettyPrint(sourceXml, resultXml,
                     DEFAULT_OMIT, DEFAULT_ENCODING, DEFAULT_INDENT, DEFAULT_INDENT_AMOUNT);
     }
 
-    /** 
+    /**
      *  Print XML node to output stream using specified option parameters.
      */
     public static void prettyPrint(Node xmlNode, OutputStream out,
@@ -61,8 +66,8 @@ public class XMLUtil {
         prettyPrint(new DOMSource(xmlNode), new StreamResult(out),
                     omitXmlDeclaration, encoding, indent, indentAmount);
     }
-    
-    /** 
+
+    /**
      *  Print XML node to output stream using default indent options.
      */
     public static void prettyPrint(Node xmlNode, OutputStream out)
@@ -71,8 +76,8 @@ public class XMLUtil {
         prettyPrint(xmlNode, out,
                     DEFAULT_OMIT, DEFAULT_ENCODING, DEFAULT_INDENT, DEFAULT_INDENT_AMOUNT);
     }
-    
-    /** 
+
+    /**
      *  Print XML string to output stream using specified option parameters.
      */
     public static void prettyPrint(String xmlString, OutputStream out,
@@ -83,7 +88,7 @@ public class XMLUtil {
                     omitXmlDeclaration, encoding, indent, indentAmount);
     }
 
-    /** 
+    /**
      *  Print XML string to output stream using default indent options.
      */
     public static void prettyPrint(String xmlString, OutputStream out)
@@ -91,6 +96,34 @@ public class XMLUtil {
 
         prettyPrint(xmlString, out,
                     DEFAULT_OMIT, DEFAULT_ENCODING, DEFAULT_INDENT, DEFAULT_INDENT_AMOUNT);
+    }
+
+
+    //
+    //  DOM Navigation helpers
+    //
+
+    /**
+     *  Obtain first child element from provided node.
+     *  Other nodes (like text, comments, etc) are ignored.
+     */
+    public static Element getFirstChildElement(Node parent) {
+        return getFirstChildElement((Element)parent);
+    }
+
+    /**
+     *  Obtain first child element from provided element.
+     *  Other nodes (like text, comments, etc) are ignored.
+     *  Returns null if no child element is found.
+     */
+    public static Element getFirstChildElement(Element parent) {
+        for(Node node = parent.getFirstChild(); node != null; node = node.getNextSibling()) {
+            if(node.getNodeType() == Node.ELEMENT_NODE) {
+                return (Element) node;
+            }
+        }
+        // no child element found
+        return null;
     }
 
 }

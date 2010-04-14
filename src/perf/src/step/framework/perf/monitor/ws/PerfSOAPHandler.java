@@ -4,16 +4,16 @@ import java.io.*;
 import java.util.*;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.handler.soap.SOAPHandler;
-import javax.xml.ws.handler.soap.SOAPMessageContext;
+import javax.xml.soap.*;
+import javax.xml.ws.handler.*;
+import javax.xml.ws.handler.soap.*;
 
 import org.apache.commons.logging.*;
 
 import org.perf4j.*;
 
 import step.framework.perf.monitor.*;
+import step.framework.ws.SOAPUtil;
 
 
 /**
@@ -57,21 +57,57 @@ public class PerfSOAPHandler implements SOAPHandler<SOAPMessageContext> {
 
     private boolean monitor(SOAPMessageContext smc) {
         try {
-            Boolean isOutbound = (Boolean)
-                smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+            Boolean isOutbound = 
+                (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+            SOAPMessage message = smc.getMessage();
 
             if(log.isTraceEnabled()) {
                 log.trace((isOutbound ? "Outbound" : "Inbound") + " SOAP Message");
             }
 
-            //SOAPMessage message = smc.getMessage();
-
             if(!isOutbound) {
-                // inbound
-                StopWatchHelper.getThreadStopWatch("soap").start("soap");
+                //
+                // inbound message
+                //
+                
+                // identify message payload
+                String bodyName = null;
+                SOAPElement element = SOAPUtil.getBodyPayload(message);
+                if(element != null)
+                    bodyName = element.getElementQName().getLocalPart();
+
+                // store message name in message context
+                smc.put("step.framework.perf.monitor.ws.bodyName", bodyName);
+
+                // start clock
+                StopWatchHelper.getThreadStopWatch("soap").start();
             } else {
-                // outbound
-                StopWatchHelper.getThreadStopWatch("soap").stop("soap");
+                //
+                // outbound message
+                //
+                
+                // identify fault payload (stays null if it does not exist)
+                String faultName = null;
+                SOAPElement element = SOAPUtil.getFaultPayload(message);
+                if(element != null)
+                    faultName = element.getElementQName().getLocalPart();
+
+                // retrieve body name
+                String bodyName = (String) smc.get("step.framework.perf.monitor.ws.bodyName");
+
+                // create SOAP message tag name
+                StringBuilder tagNameBuilder = new StringBuilder();
+                tagNameBuilder.append("soap");
+                if(bodyName != null) {
+                    tagNameBuilder.append(".").append(bodyName);
+                    if(faultName != null) {
+                        tagNameBuilder.append(".").append(faultName);
+                    }
+                }
+                String tagName = tagNameBuilder.toString();
+
+                // stop the clock and log using tag
+                StopWatchHelper.getThreadStopWatch("soap").stop(tagName);
             }
 
         } finally {
