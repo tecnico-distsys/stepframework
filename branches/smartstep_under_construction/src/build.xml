@@ -10,7 +10,7 @@
         <echo message="***** BUILDING STEP *****" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="framework" target="build" />
+        <ant inheritAll="false" dir="framework" target="dist-to-lib" />
     </target>
 
     <target name="clean-step"
@@ -19,6 +19,11 @@
     </target>
 
     <target name="rebuild-step" depends="clean-step,build-step" />
+	
+    <target name="build-test-step"
+        description="Build and test step framework">
+        <ant inheritAll="false" dir="framework" target="build" />
+    </target>
 
     <!-- Extensions -->
     <target name="build-extensions"
