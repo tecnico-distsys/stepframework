@@ -4,6 +4,21 @@
 
     <description>Project super-build file. Customize as required.</description>
 
+    <!-- STEP -->
+    <target name="build-step"
+        description="Build step framework">
+        <echo message="***** BUILDING STEP *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="framework" target="build" />
+    </target>
+
+    <target name="clean-step"
+        description="Clean step framework">
+        <ant inheritAll="false" dir="framework" target="clean" />
+    </target>
+
+    <target name="rebuild-step" depends="clean-step,build-step" />
 
     <!-- Extensions -->
     <target name="build-extensions"
@@ -121,11 +136,11 @@
 
 
     <!-- ALL -->
-    <target name="build" depends="build-extensions,build-flight,build-mediator"
+    <target name="build" depends="build-step,build-extensions,build-flight,build-mediator"
         description="Build all projects in the correct order">
     </target>
 
-    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions"
+    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions,clean-step"
         description="Clean all projects">
     </target>
 
