@@ -35,34 +35,51 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     //***********************************************************************
     // Constructor
     
-    public WSConfigHandler() throws WSConfigurationException, ConfigException
+    public WSConfigHandler() throws WSConfigurationException
     {
     	this.log = LogFactory.getLog(WSConfigHandler.class);
     	
     	initConfigurator();
     }
     
-    private void initConfigurator() throws WSConfigurationException, ConfigException
+    private void initConfigurator() throws WSConfigurationException
     {
-    	String className = loadClassName();
-    	
-    	if(className == null)
-    		instantiateConfigurator(DEFAULT_CONFIGURATOR);
-    	else
-    		instantiateConfigurator(className);
+		String className = null;
+		
+		try
+		{
+			className = loadClassName();
+		}
+		catch(WSConfigurationException e)
+		{
+			configurator = null;
+			return;
+		}
+			
+		if(className == null)
+			instantiateConfigurator(DEFAULT_CONFIGURATOR);
+		else
+			instantiateConfigurator(className);
     }
     
-    private String loadClassName() throws ConfigException
+    private String loadClassName() throws WSConfigurationException
     {
 		log.debug("Trying to load configurator name from config");
 		
-		Config.getInstance().load();
-		String filename = Config.getInstance().getInitParameter(CONFIGURATOR_PROPERTY_NAME);
+		try
+		{
+			Config.getInstance().load();
+			String filename = Config.getInstance().getInitParameter(CONFIGURATOR_PROPERTY_NAME);
 
-		if(filename == null)
-			log.debug("Loading default configurator");
-		
-		return filename;
+			if(filename == null)
+				log.debug("Loading default configurator");
+				
+			return filename;
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
     }
     
     @SuppressWarnings("unchecked")
