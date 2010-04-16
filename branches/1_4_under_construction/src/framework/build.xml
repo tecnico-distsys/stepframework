@@ -158,12 +158,4 @@
     <!-- description="Rebuild the project" -->
     </target>
 
-    <target name="dist-to-lib" depends="clean,create-jar"> <!-- exclude test code -->
-    <!-- description="Rebuild the program and distribute it to lib folder" -->
-        <copy todir="../lib" overwrite="true">
-            <fileset file="${jar.rel-file}"/>
-        </copy>
-    </target>
-
-
 </project>

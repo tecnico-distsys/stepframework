@@ -29,14 +29,21 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- shared libraries -->
-        <fileset dir="../lib">
-            <include name="*.jar" />
-        </fileset>
-        <!-- referenced libraries -->
+
+        <!-- libraries -->
+
         <fileset dir="../flight-ws/dist">
             <include name="*.jar" /><!-- exception classes -->
         </fileset>
+
+        <fileset dir="../framework/dist">
+            <include name="*.jar" />
+        </fileset>
+
+        <fileset dir="../lib">
+            <include name="*.jar" />
+        </fileset>
+
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>

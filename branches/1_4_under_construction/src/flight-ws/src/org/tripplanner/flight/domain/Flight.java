@@ -32,7 +32,7 @@ public class Flight extends FlightDomainObject {
 	private BigDecimal pricePerPassenger;
 
     /** last issued reservation identifier */
-	private int reservationId;
+	private int lastReservationId;
 
 	@ManyToOne
 	private Airport origin;
@@ -66,14 +66,14 @@ public class Flight extends FlightDomainObject {
 
 		this.calculateCostPerPassenger();
 		this.calculatePricePerPassenger(profitMargin);
-		this.reservationId = 0;
+		this.lastReservationId = 0;
 	}
 
 	public Flight(String number, Date dateTime, BigDecimal profitMargin,
 			Airport origin, Airport destination, Airplane airplane,
 			int initialReservationId) {
 		this(number, dateTime, profitMargin, origin, destination, airplane);
-		this.reservationId = initialReservationId;
+		this.lastReservationId = initialReservationId;
 	}
 
 	public Flight init() {
@@ -202,7 +202,7 @@ public class Flight extends FlightDomainObject {
 
     /** Create new reservation for this flight */
 	protected FlightReservation createReservation(Passenger passenger) {
-		String code = this.number + "-" + ++this.reservationId;
+		String code = this.number + "-" + ++this.lastReservationId;
 
 		FlightReservation reservation =
 		    new FlightReservation(code, passenger, this).init();

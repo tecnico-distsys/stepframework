@@ -24,11 +24,17 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-        <!-- shared libraries -->
+
+        <!-- libraries -->
+
+        <fileset dir="../framework/dist">
+            <include name="*.jar" />
+        </fileset>
+
         <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
-        <!-- referenced libraries -->
+
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>

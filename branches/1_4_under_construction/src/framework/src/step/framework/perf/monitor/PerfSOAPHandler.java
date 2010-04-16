@@ -1,4 +1,4 @@
-package step.framework.perf.monitor.ws;
+package step.framework.perf.monitor;
 
 import java.io.*;
 import java.util.*;
