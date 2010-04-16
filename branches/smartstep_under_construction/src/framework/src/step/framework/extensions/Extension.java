@@ -630,5 +630,25 @@ public class Extension {
             log.trace("finally exiting stop");
         }
     }
-
+    
+    //**********************************************************************************
+    //Automatic configuration liaison methods
+    
+    public void enable() throws ExtensionException
+    {
+    	if(!enabled)
+    	{
+    		this.enabled = true;
+        	start();
+    	}
+    }
+    
+    public void disable() throws ExtensionException
+    {
+    	if(enabled)
+    	{
+    		this.enabled = false;
+        	stop();
+    	}
+    }
 }
