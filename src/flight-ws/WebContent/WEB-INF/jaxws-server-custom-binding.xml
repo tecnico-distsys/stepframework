@@ -13,7 +13,7 @@
                     <jws:handler-class>step.framework.extensions.Handler</jws:handler-class>
                 </jws:handler>
                 <jws:handler>
-                    <jws:handler-class>step.framework.perf.monitor.ws.PerfSOAPHandler</jws:handler-class>
+                    <jws:handler-class>step.framework.perf.monitor.PerfSOAPHandler</jws:handler-class>
                 </jws:handler>
             </jws:handler-chain>
         </jws:handler-chains>

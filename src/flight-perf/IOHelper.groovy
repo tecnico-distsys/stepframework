@@ -1,8 +1,8 @@
 /**
- *  File IO Helper
+ *  Input Output Helper
+ *
  */
-
-class FileIOHelper {
+class IOHelper {
 
     static def initI(args) {
 

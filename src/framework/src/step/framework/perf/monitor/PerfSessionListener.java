@@ -1,4 +1,4 @@
-package step.framework.perf.monitor.web;
+package step.framework.perf.monitor;
 
 import javax.servlet.http.*;
 

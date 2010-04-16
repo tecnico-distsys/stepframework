@@ -33,12 +33,9 @@
         <pathelement location="${build.rel-dir}" />
 
         <!-- libraries -->
+
         <fileset dir="${web-content.rel-dir}/WEB-INF">
             <include name="lib/**/*.jar" />
-        </fileset>
-
-        <fileset dir="../lib">
-            <include name="*.jar" />
         </fileset>
 
         <fileset dir="../flight-ws/dist">
@@ -52,7 +49,11 @@
             <include name="*.jar" />
         </fileset>
 
-        <fileset dir="../perf/dist">
+        <fileset dir="../framework/dist">
+            <include name="*.jar" />
+        </fileset>
+
+        <fileset dir="../lib">
             <include name="*.jar" />
         </fileset>
 
@@ -238,9 +239,10 @@
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
 
-            <zipfileset dir="../perf/dist"
+            <zipfileset dir="../framework/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
+
         </jar>
 
     </target>

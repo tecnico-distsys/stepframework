@@ -8,6 +8,23 @@
     <import file="lib/tomcat-mgmt.xml" />
 
     
+    <!-- Framework -->
+    <target name="build-framework"
+        description="Build framework library">
+        <echo message="***** BUILDING FRAMEWORK *****" />
+        <sleep seconds="1"/>
+
+        <ant inheritAll="false" dir="framework" target="build" />
+    </target>
+
+    <target name="clean-framework"
+        description="Clean framework library">
+        <ant inheritAll="false" dir="framework" target="clean" />
+    </target>
+
+    <target name="rebuild-framework" depends="clean-framework,build-framework" />
+
+
     <!-- Extensions -->
     <target name="build-extensions"
         description="Build extensions library">
@@ -23,23 +40,6 @@
     </target>
 
     <target name="rebuild-extensions" depends="clean-extensions,build-extensions" />
-
-
-    <!-- Performance -->
-    <target name="build-perf"
-        description="Build performance library">
-        <echo message="***** BUILDING Performance library *****" />
-        <sleep seconds="1"/>
-
-        <ant inheritAll="false" dir="perf" target="build" />
-    </target>
-
-    <target name="clean-perf"
-        description="Clean performance library">
-        <ant inheritAll="false" dir="perf" target="clean" />
-    </target>
-
-    <target name="rebuild-perf" depends="clean-perf,build-perf" />
 
 
     <!-- Flight -->
@@ -141,11 +141,11 @@
 
 
     <!-- ALL -->
-    <target name="build" depends="build-extensions,build-perf,build-flight,build-mediator"
+    <target name="build" depends="build-framework,build-extensions,build-flight,build-mediator"
         description="Build all projects in the correct order">
     </target>
 
-    <target name="clean" depends="clean-mediator,clean-flight,clean-perf,clean-extensions"
+    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions,clean-framework"
         description="Clean all projects">
     </target>
 

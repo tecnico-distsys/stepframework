@@ -9,7 +9,7 @@ import org.perf4j.log4j.*;
 /**
  *  Performance stop-watch helper methods.
  */
-public class StopWatchHelper {
+class StopWatchHelper {
 
     /** ThreadLocal stopwatch collection - each thread has one of its own */
     private static final ThreadLocal<Map<String,StopWatch>> stopWatches =

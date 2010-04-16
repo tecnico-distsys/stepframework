@@ -25,10 +25,10 @@
 
     <!-- Performance monitoring listeners -->
     <listener>
-        <listener-class>step.framework.perf.monitor.web.PerfContextListener</listener-class>
+        <listener-class>step.framework.perf.monitor.PerfContextListener</listener-class>
     </listener>
     <listener>
-        <listener-class>step.framework.perf.monitor.web.PerfSessionListener</listener-class>
+        <listener-class>step.framework.perf.monitor.PerfSessionListener</listener-class>
     </listener>
 
 
@@ -39,7 +39,7 @@
     <!-- Performance monitoring filter -->
     <filter>
         <filter-name>PerfFilter</filter-name>
-        <filter-class>step.framework.perf.monitor.web.PerfFilter</filter-class>
+        <filter-class>step.framework.perf.monitor.PerfFilter</filter-class>
     </filter>
 
     <filter-mapping>
