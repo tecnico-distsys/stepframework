@@ -29,7 +29,7 @@
             <param name="ConversionPattern" value="%m%n"/>
         </layout>
     </appender>
-    
+
 
     <!--  #                                                           -->
     <!-- # # Loggers (control which messages are enabled or disabled) -->
@@ -40,10 +40,10 @@
         <level value="INFO"/>
         <appender-ref ref="perfLogFile"/>
     </logger>
-    
+
     <!-- Application loggers -->
-    <logger name="step.framework.perf">
-        <level value="TRACE"/>
+    <logger name="step.framework">
+        <level value="INFO"/>
     </logger>
 
     <!-- Root logger -->
