@@ -2,11 +2,10 @@
  *  Groovy script to invoke Web Service
  */
 
-def root = ".";
-
 // add library locations to class loader
-this.class.classLoader.rootLoader.addURL(FileURLHelper.toFileURL(root + "/lib/stepframework.jar"))
-this.class.classLoader.rootLoader.addURL(FileURLHelper.toFileURL(root + "/flight-ws-cli/dist/flight-ws-cli.jar"))
+def root = "..";
+ClassLoaderHelper.addFile(root + "/framework/dist/stepframework.jar");
+ClassLoaderHelper.addFile(root + "/flight-ws-cli/dist/flight-ws-cli.jar");
 
 // create Web Service stub
 def service = Class.forName("org.tripplanner.flight.wsdl.FlightService").newInstance();
@@ -25,8 +24,8 @@ def flightToBook = null;
 
 // fill in request
 def sfIn = Class.forName("org.tripplanner.flight.view.SearchFlightsInput").newInstance();
-sfIn.depart = "Lisbon";
-sfIn.arrive = "New York";
+sfIn.depart = "Linga Linga";
+sfIn.arrive = "Utapao";
 
 try {
     // invoke
@@ -43,6 +42,9 @@ try {
     if(sfOut.flights.size() > 0) {
         flightToBook = sfOut.flights.get(0);
         println "Picked flight " + flightToBook.number + " to book reservations";
+    } else {
+        println "No flight found. Finishing earlier than expected.";
+        return;
     }
 
 } catch(e) {
@@ -82,8 +84,8 @@ println "Create multiple reservations";
 
 // fill in request
 def cmrIn = Class.forName("org.tripplanner.flight.view.CreateMultipleReservationsInput").newInstance();
-//cmrIn.flightNumber = flightToBook.number;
-cmrIn.flightNumber = "0";
+cmrIn.flightNumber = flightToBook.number;
+//cmrIn.flightNumber = "0";
 
 def passengerList = cmrIn.passengers;
 
