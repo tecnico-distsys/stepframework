@@ -9,7 +9,7 @@ class DBHelper {
 
         // load environment properties
         def env = System.getenv();
-        
+
         // load database settings
         def db = new Properties();
         db.load(new FileInputStream("database.properties"));
@@ -32,19 +32,24 @@ class DBHelper {
     }
 
     static def pickRandomAirplane(sql, random) {
-        def row = sql.firstRow("SELECT id FROM airplane ORDER BY rand(?) LIMIT ?;", [random.nextInt(), 1]);
+        def row = sql.firstRow("SELECT * FROM airplane ORDER BY rand(?) LIMIT ?;", [random.nextInt(), 1]);
         assert(row != null);
-        def id = row.id;
-        assert(id != null);
-        return id;
+        return row;
     }
 
     static def pickRandomAirport(sql, random) {
-        def row = sql.firstRow("SELECT id FROM airport ORDER BY rand(?) LIMIT ?;", [random.nextInt(), 1]);
-        assert(row != null);
-        def id = row.id;
-        assert(id != null);
-        return id;
+        def row = sql.firstRow("SELECT * FROM airport ORDER BY rand(?) LIMIT ?;", [random.nextInt(), 1]);
+        return row;
+    }
+
+    static def pickRandomFlight(sql, random) {
+        def row = sql.firstRow("SELECT * FROM flight ORDER BY rand(?) LIMIT ?;", [random.nextInt(), 1]);
+        return row;
+    }
+
+    static def getAirport(sql, id) {
+        def row = sql.firstRow("SELECT * FROM airport WHERE id=?;", [id]);
+        return row;
     }
 
 }

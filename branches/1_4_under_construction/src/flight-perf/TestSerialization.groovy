@@ -21,7 +21,7 @@ def csrIn = Class.forName("org.tripplanner.flight.view.CreateSingleReservationIn
 csrIn.flightNumber = "12345";
 def singlePassenger = Class.forName("org.tripplanner.flight.view.PassengerView").newInstance();
 singlePassenger.id = "123";
-singlePassenger.id = "Alpha";
+singlePassenger.name = "Alpha";
 csrIn.passenger = singlePassenger;
 
 // create multiple reservations
@@ -32,12 +32,12 @@ def passengerList = cmrIn.passengers;
 
 def passenger1 = Class.forName("org.tripplanner.flight.view.PassengerView").newInstance();
 passenger1.id = "1010";
-passenger1.id = "Number One";
+passenger1.name = "Number One";
 passengerList.add(passenger1);
 
 def passenger2 = Class.forName("org.tripplanner.flight.view.PassengerView").newInstance();
 passenger2.id = "2020";
-passenger2.id = "Number Two";
+passenger2.name = "Number Two";
 passengerList.add(passenger2);
 
 
@@ -45,7 +45,7 @@ passengerList.add(passenger2);
 //  Serialize requests
 //
 
-FileOutputStream fos = new FileOutputStream("gendata/requests.obj");
+FileOutputStream fos = new FileOutputStream("build/requests.obj");
 ObjectOutputStream oos = new ObjectOutputStream(fos);
 oos.writeObject(sfIn);
 oos.writeObject(csrIn);
@@ -57,7 +57,7 @@ oos.close();
 //  Deserialize requests
 //
 
-FileInputStream fis = new FileInputStream("gendata/requests.obj");
+FileInputStream fis = new FileInputStream("build/requests.obj");
 ObjectInputStream ois = new ObjectInputStream(fis);
 def sfIn2 = ois.readObject();
 def csrIn2 = ois.readObject();
