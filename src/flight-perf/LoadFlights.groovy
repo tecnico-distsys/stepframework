@@ -55,29 +55,29 @@ def count = 0;
 while(count < total) {
 
     // pick origin and destination
-    originId = DBHelper.pickRandomAirport(sql, random);
-    destinationId = DBHelper.pickRandomAirport(sql, random);
+    originId = DBHelper.pickRandomAirport(sql, random).id;
+    destinationId = DBHelper.pickRandomAirport(sql, random).id;
 
     def toGen = random.nextInt(MAX_TO_GEN) + 1;
     if(total - count < toGen)
         toGen = total - count;
-    
+
     // generate flights between origin and destination (within total limit)
     for(int i = 0; i < toGen; i++) {
-        airplaneId = DBHelper.pickRandomAirplane(sql, random);
+        airplaneId = DBHelper.pickRandomAirplane(sql, random).id;
         costPerPassenger = random.nextInt(MAX_COST);
         pricePerPassenger = costPerPassenger * (1.0 + PROFIT);
-        
+
         number = originId + "-" + destinationId + "-" + random.nextInt(MAX_NUMBER);
-        
+
         def keys = sql.executeInsert("INSERT INTO flight (objVersion, costPerPassenger, dateTime, number," +
-        "pricePerPassenger, lastReservationId, airplane_id, destination_id, origin_id)" + 
-        " VALUES (?,?,?,?,?,?,?,?,?)", 
-        [objVersion, costPerPassenger, dateTime, number, 
+        "pricePerPassenger, lastReservationId, airplane_id, destination_id, origin_id)" +
+        " VALUES (?,?,?,?,?,?,?,?,?)",
+        [objVersion, costPerPassenger, dateTime, number,
         pricePerPassenger, lastReservationId, airplaneId, destinationId, originId]);
         def id = keys[0][0];
         sql.execute("INSERT INTO flightmanager_flight (FlightManager_id, flights_id) " +
-        " VALUES (?,?)", [flightManagerId, id]); 
+        " VALUES (?,?)", [flightManagerId, id]);
 
         count++;
     }

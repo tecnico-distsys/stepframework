@@ -62,7 +62,7 @@ def csrIn = Class.forName("org.tripplanner.flight.view.CreateSingleReservationIn
 csrIn.flightNumber = flightToBook.number;
 def singlePassenger = Class.forName("org.tripplanner.flight.view.PassengerView").newInstance();
 singlePassenger.id = "123";
-singlePassenger.id = "Alpha";
+singlePassenger.name = "Alpha";
 csrIn.passenger = singlePassenger;
 
 try {
@@ -91,12 +91,12 @@ def passengerList = cmrIn.passengers;
 
 def passenger1 = Class.forName("org.tripplanner.flight.view.PassengerView").newInstance();
 passenger1.id = "1010";
-passenger1.id = "Number One";
+passenger1.name = "Number One";
 passengerList.add(passenger1);
 
 def passenger2 = Class.forName("org.tripplanner.flight.view.PassengerView").newInstance();
 passenger2.id = "2020";
-passenger2.id = "Number Two";
+passenger2.name = "Number Two";
 passengerList.add(passenger2);
 
 try {
