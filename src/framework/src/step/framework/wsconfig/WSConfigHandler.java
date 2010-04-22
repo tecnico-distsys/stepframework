@@ -11,7 +11,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import step.framework.config.Config;
-import step.framework.config.ConfigException;
 
 /**
  *  JAX-WS SOAP Handler that intercepts web service message flow
