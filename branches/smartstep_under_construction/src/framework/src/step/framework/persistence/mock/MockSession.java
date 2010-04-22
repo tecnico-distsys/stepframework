@@ -16,6 +16,7 @@ import org.hibernate.type.Type;
  *  <br />
  *  Read more about <a href="http://en.wikipedia.org/wiki/Mock_object">Mock objects</a>.
  */
+@SuppressWarnings("unchecked")
 public class MockSession implements Session {
     private static final long serialVersionUID = 1L;
 
@@ -24,10 +25,10 @@ public class MockSession implements Session {
     /**
      * Stores all objects touched in this session
      **/
-    private Map<Class, LinkedHashSet<Object>> persistentObjects;
+    private Map<Class<?>, LinkedHashSet<Object>> persistentObjects;
 
     private MockSession() {
-        persistentObjects = new HashMap<Class, LinkedHashSet<Object>>();
+        persistentObjects = new HashMap<Class<?>, LinkedHashSet<Object>>();
     }
 
     public static synchronized Session getInstance() {
@@ -42,7 +43,7 @@ public class MockSession implements Session {
      **/
     public <T> T getObject(Class<T> clazz) {
         T result = null;
-	Iterator instanceIterator;
+	Iterator<Object> instanceIterator;
 
 	if (persistentObjects.containsKey(clazz)) {
 	    instanceIterator = persistentObjects.get(clazz).iterator();
@@ -55,7 +56,7 @@ public class MockSession implements Session {
     }
 
     private void addObject(Object object) {
-        Class currentClass = null;
+        Class<?> currentClass = null;
 	LinkedHashSet<Object> objectSet;
 
 	if (object != null) currentClass = object.getClass();
@@ -73,7 +74,7 @@ public class MockSession implements Session {
     }
 
     private void removeObject(Object object) {
-        Class currentClass = null;
+        Class<?> currentClass = null;
 	LinkedHashSet<Object> objectSet;
 
 	if (object != null && persistentObjects.containsKey(object.getClass())) currentClass = object.getClass();
@@ -87,20 +88,20 @@ public class MockSession implements Session {
 
 
     /* org.hibernate.classic.Session methods */
-    @Deprecated public Query createSQLQuery(String sql, String[] returnAliases, Class[] returnClasses) { throw new UnsupportedOperationException(); }
-    @Deprecated public Query createSQLQuery(String sql, String returnAlias, Class returnClass) { throw new UnsupportedOperationException(); }
+	@Deprecated public Query createSQLQuery(String sql, String[] returnAliases, Class[] returnClasses) { throw new UnsupportedOperationException(); }
+	@Deprecated public Query createSQLQuery(String sql, String returnAlias, Class returnClass) { throw new UnsupportedOperationException(); }
     @Deprecated public int delete(String query) { throw new UnsupportedOperationException(); }
     @Deprecated public int delete(String query, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
     @Deprecated public int delete(String query, Object value, Type type) { throw new UnsupportedOperationException(); }
-    @Deprecated public Collection filter(Object collection, String filter) { throw new UnsupportedOperationException(); }
-    @Deprecated public Collection filter(Object collection, String filter, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
-    @Deprecated public Collection filter(Object collection, String filter, Object value, Type type) { throw new UnsupportedOperationException(); }
-    @Deprecated public List find(String query) { throw new UnsupportedOperationException(); }
-    @Deprecated public List find(String query, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
-    @Deprecated public List find(String query, Object value, Type type) { throw new UnsupportedOperationException(); }
-    @Deprecated public Iterator iterate(String query) { throw new UnsupportedOperationException(); }
-    @Deprecated public Iterator iterate(String query, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
-    @Deprecated public Iterator iterate(String query, Object value, Type type) { throw new UnsupportedOperationException(); }
+    @Deprecated public Collection<?> filter(Object collection, String filter) { throw new UnsupportedOperationException(); }
+    @Deprecated public Collection<?> filter(Object collection, String filter, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
+    @Deprecated public Collection<?> filter(Object collection, String filter, Object value, Type type) { throw new UnsupportedOperationException(); }
+    @Deprecated public List<?> find(String query) { throw new UnsupportedOperationException(); }
+    @Deprecated public List<?> find(String query, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
+    @Deprecated public List<?> find(String query, Object value, Type type) { throw new UnsupportedOperationException(); }
+    @Deprecated public Iterator<?> iterate(String query) { throw new UnsupportedOperationException(); }
+    @Deprecated public Iterator<?> iterate(String query, Object[] values, Type[] types) { throw new UnsupportedOperationException(); }
+    @Deprecated public Iterator<?> iterate(String query, Object value, Type type) { throw new UnsupportedOperationException(); }
     @Deprecated public void save(Object object, Serializable id) { throw new UnsupportedOperationException(); }
     @Deprecated public void save(String entityName, Object object, Serializable id) { throw new UnsupportedOperationException(); }
     @Deprecated public Object saveOrUpdateCopy(Object object) { throw new UnsupportedOperationException(); }
@@ -119,10 +120,12 @@ public class MockSession implements Session {
     public Connection close() { throw new UnsupportedOperationException(); }
     @Deprecated public Connection connection() { throw new UnsupportedOperationException(); }
     public boolean contains(Object object) { throw new UnsupportedOperationException(); }
-    public Criteria createCriteria(Class persistentClass) {
+    @SuppressWarnings("unchecked")
+	public Criteria createCriteria(Class persistentClass) {
         return new MockCriteria(this, persistentClass);
     }
-    public Criteria createCriteria(Class persistentClass, String alias) { throw new UnsupportedOperationException(); }
+    @SuppressWarnings("unchecked")
+	public Criteria createCriteria(Class persistentClass, String alias) { throw new UnsupportedOperationException(); }
     public Criteria createCriteria(String entityName) { throw new UnsupportedOperationException(); }
     public Criteria createCriteria(String entityName, String alias) { throw new UnsupportedOperationException(); }
     public Query createFilter(Object collection, String queryString) { throw new UnsupportedOperationException(); }
@@ -138,7 +141,7 @@ public class MockSession implements Session {
     public Filter enableFilter(String filterName) { throw new UnsupportedOperationException(); }
     public void evict(Object object) { throw new UnsupportedOperationException(); }
     public void flush() { throw new UnsupportedOperationException(); }
-    public Object get(Class clazz, Serializable id) { throw new UnsupportedOperationException(); }
+	public Object get(Class clazz, Serializable id) { throw new UnsupportedOperationException(); }
     public Object get(Class clazz, Serializable id, LockMode lockMode) { throw new UnsupportedOperationException(); }
     public Object get(String entityName, Serializable id) { throw new UnsupportedOperationException(); }
     public Object get(String entityName, Serializable id, LockMode lockMode) { throw new UnsupportedOperationException(); }

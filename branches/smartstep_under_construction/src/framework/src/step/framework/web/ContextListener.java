@@ -32,7 +32,6 @@ public class ContextListener implements ServletContextListener {
        
         log.trace("Initializing extension engine");
         ExtensionEngine engine = ExtensionEngine.getInstance();
-        boolean extEnabled = false;
         try {
             engine.init();
         } catch(ExtensionEngineException e) {

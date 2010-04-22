@@ -1,6 +1,5 @@
 package step.framework.extensions.badext;
 
-import step.framework.extensions.WebServiceInterceptor;
 import step.framework.extensions.WebServiceInterceptorParameter;
 
 public class BadWebServiceInterceptor /*implements WebServiceInterceptor*/ {

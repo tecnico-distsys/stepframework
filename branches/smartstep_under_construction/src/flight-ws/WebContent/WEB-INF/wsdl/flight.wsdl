@@ -107,7 +107,7 @@
 		<wsp:Policy>
 			<wsp:ExactlyOne>
 			  <wsp:All>
-				<ssp:Cipher/>
+				<ssp:Cipher extension="cipher"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>

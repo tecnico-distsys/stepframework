@@ -16,9 +16,9 @@ public class MockCriteria implements Criteria {
     private static final long serialVersionUID = 1L;
 
     private MockSession session;
-    private Class clazz;
+    private Class<?> clazz;
 
-    public MockCriteria(MockSession session, Class clazz) {
+    public MockCriteria(MockSession session, Class<?> clazz) {
         this.session = session;
 	this.clazz = clazz;
     }
