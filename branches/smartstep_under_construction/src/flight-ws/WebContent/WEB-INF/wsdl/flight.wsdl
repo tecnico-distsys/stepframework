@@ -7,7 +7,9 @@
     xmlns="http://schemas.xmlsoap.org/wsdl/"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
->
+    xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+    xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+    xmlns:ssp="http://stepframework.sourceforge.net/smartstep/policy" >
 
     <!-- This file is NOT generated automatically -->
 
@@ -83,10 +85,7 @@
     </portType>
 
     <binding name="FlightBinding" type="tns:FlightPortType">
-        <soap:binding
-            transport="http://schemas.xmlsoap.org/soap/http"
-            style="document"
-        />
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <operation name="createReservation">
             <soap:operation soapAction="" />
             <input>
@@ -105,6 +104,13 @@
     </binding>
 
     <service name="FlightService">
+		<wsp:Policy>
+			<wsp:ExactlyOne>
+			  <wsp:All>
+				<ssp:Cipher/>
+			  </wsp:All>
+			</wsp:ExactlyOne>
+		</wsp:Policy>
         <port name="FlightPort" binding="tns:FlightBinding">
             <soap:address location="REPLACE_WITH_ACTUAL_URL" />
         </port>

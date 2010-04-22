@@ -3,11 +3,14 @@ package step.framework.wsconfig;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
+import org.apache.neethi.builders.AssertionBuilder;
 
 import step.framework.config.Config;
 import step.framework.config.ConfigException;
@@ -16,11 +19,15 @@ import step.framework.config.ConfigException;
  * Utility class for policy loading
  */
 public class WSPolicyConfigurator implements WSConfigurator {
+
+	public static final String NSSMARTSTEP = "http://stepframework.sourceforge.net/smartstep/policy";
 	
 	private static final String FILENAME_PROPERTY_NAME = "wsconfig.policy.filename";
 
     /** Logging */
     private Log log;
+    
+    private AssertionBuilder assertionBuilder;
 	
 	//********************************************************
 	//constructors
@@ -28,6 +35,13 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	public WSPolicyConfigurator()
 	{
     	this.log = LogFactory.getLog(WSPolicyConfigurator.class);
+    	this.assertionBuilder = new STEPAssertionBuilder();
+    	
+    	QName[] names = assertionBuilder.getKnownElements();
+    	for(int i=0; i<names.length; i++)
+    	{
+    		PolicyEngine.registerBuilder(names[i], assertionBuilder);
+    	}
 	}
 	
 	//********************************************************
@@ -97,7 +111,8 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	private Policy loadPolicy(String filename) throws WSConfigurationException
 	{
 		log.debug("Loading policy from file \"" + filename + "\"");
-		
+		if(!filename.startsWith("/"))
+			filename = "/" + filename;
 		Policy policy = PolicyEngine.getPolicy(WSPolicyConfigurator.class.getResourceAsStream(filename));
 		
 		if(policy == null)
@@ -160,7 +175,14 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		
 		for(int i=0; i<alternative.size(); i++)
 		{
-			String id = alternative.get(i).getName().getLocalPart();
+			Assertion assertion = alternative.get(i);
+			String id = null;
+			
+			if(assertion instanceof STEPAssertion)
+				id=((STEPAssertion) assertion).getExtension();
+			else
+				id=assertion.getName().getLocalPart();
+			
 			log.debug("Enabling extension: " + id);
 			ExtensionLiaison.enable(id);
 		}

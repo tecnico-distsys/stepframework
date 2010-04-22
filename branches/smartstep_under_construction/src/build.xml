@@ -144,12 +144,20 @@
     <target name="build" depends="build-step,build-extensions,build-flight,build-mediator"
         description="Build all projects in the correct order">
     </target>
+	
+    <target name="build-apps" depends="build-extensions,build-flight,build-mediator"
+        description="Build all apps in the correct order">
+    </target>
 
     <target name="clean" depends="clean-mediator,clean-flight,clean-extensions,clean-step"
         description="Clean all projects">
     </target>
 
     <target name="rebuild" depends="clean,build"
+        description="Rebuild all projects in the correct order">
+    </target>
+
+    <target name="rebuild-apps" depends="clean,build-apps"
         description="Rebuild all projects in the correct order">
     </target>
 
