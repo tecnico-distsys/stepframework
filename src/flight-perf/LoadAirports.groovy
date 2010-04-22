@@ -1,69 +1,117 @@
 /**
- *  Groovy script to load airports into database
+ *  Database command to load airports into database
  */
+import org.apache.commons.cli.*;
 
-//
-//  check arguments
-//
+public class LoadAirports extends DBCommand {
 
-System.err.println("Running " + this.class.getSimpleName() + " with arguments " + args);
-if(args.length < 1) {
-    System.err.println("Please provide data file as argument.");
-    return;
-}
+    // --- static ---
 
-
-//
-//  initialization
-//
-
-def dataFile = new File(args[0]);
-assert dataFile.exists();
-
-def random = null;
-if(args.length >= 2) {
-    def seed = Long.parseLong(args[1]);
-    println "Using random seed value of " + seed;
-    random = new Random(seed);
-} else {
-    println "Using default random seed";
-    random = new Random();
-}
-
-def sql = DBHelper.init();
-sql.connection.autoCommit = false;
-
-def flightManagerId = DBHelper.getFlightManagerId(sql);
-
-// id is auto incremented
-def objVersion = 0;
-def city;
-def code;
-def costPerUse;
-
-final def MAX_COST = 10000;
-
-dataFile.eachLine{line ->
-
-    // ~ creates a Pattern
-    // =~ creates a Matcher
-    // ==~ tests if String matches the pattern
-
-    def matcher = (line =~ "\"(.*?)\",\"(.*?)\".*");
-    //                           | reluctant
-    if(matcher.matches()) {
-        code = matcher.group(1);
-        city = matcher.group(2);
-        costPerUse = random.nextInt(MAX_COST);
-    
-        def keys = sql.executeInsert("INSERT INTO airport (objVersion, city, code, costPerUse) " +
-        " VALUES (?,?,?,?)", [objVersion, city, code, costPerUse]);
-        def id = keys[0][0];
-        
-        sql.execute("INSERT INTO flightmanager_airport (FlightManager_id, airports_id) " +
-        " VALUES (?,?)", [flightManagerId, id]); 
+    public static void main(String[] args) {
+        LoadAirports instance = new LoadAirports();
+        if (instance.parseArgs(args)) {
+            instance.run();
+        }
     }
 
-}
+    // --- instance ---
 
-sql.connection.commit();
+    //
+    //  Members
+    //
+    Long seed;
+    Random random;
+
+    File dataFile;
+    Integer maxCost;
+
+
+    //
+    //  Initialization
+    //
+
+    @Override protected void setDefaultValues() {
+        super.setDefaultValues();
+
+        seed = null;
+        random = null;
+
+        dataFile = null;
+        maxCost = 10000;
+    }
+
+    @Override protected Options createOptions() {
+        Options options = super.createOptions();
+
+        CommandHelper.addSeedOption(options);
+        CommandHelper.addDataFileOption(options);
+        CommandHelper.addMaxCostOption(options);
+
+        return options;
+    }
+
+    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
+        if (!super.handleOptions(options, cmdLine)) return false;
+
+        String seedValue = getSetting(CommandHelper.SEED_OPT, cmdLine);
+        seed = CommandHelper.initLong(seedValue, seedValue);
+
+        random = CommandHelper.initRandom(seed);
+
+        String dataFileValue = getSetting(CommandHelper.DATA_FILE_OPT, cmdLine);
+        dataFile = CommandHelper.initFile(dataFileValue, dataFile);
+        if (dataFile == null || !dataFile.exists()) {
+            err.println("Data file is missing or file does not exist!");
+            return false;
+        }
+
+        String maxCostValue = getSetting(CommandHelper.MAX_COST_OPT, cmdLine);
+        maxCost = CommandHelper.initInteger(maxCostValue, maxCost);
+
+        return true;
+    }
+
+
+    @Override protected void dbRun() {
+
+        err.println("Running " + this.class.simpleName);
+        err.printf("data file %s, max cost %d", dataFile, maxCost);
+        if(seed != null) err.printf(", random seed %d", seed);
+        err.println();
+
+
+        def flightManagerId = FlightDBHelper.getFlightManagerId(sql);
+
+        // id is auto incremented
+        def objVersion = 0;
+        def city;
+        def code;
+        def costPerUse;
+
+        dataFile.eachLine{line ->
+
+            // ~ creates a Pattern
+            // =~ creates a Matcher
+            // ==~ tests if String matches the pattern
+
+            def matcher = (line =~ "\"(.*?)\",\"(.*?)\".*");
+            //                           | reluctant
+            if(matcher.matches()) {
+                code = matcher.group(1);
+                city = matcher.group(2);
+                costPerUse = random.nextInt(maxCost);
+
+                def keys = sql.executeInsert("INSERT INTO airport (objVersion, city, code, costPerUse) " +
+                " VALUES (?,?,?,?)", [objVersion, city, code, costPerUse]);
+                def id = keys[0][0];
+
+                sql.execute("INSERT INTO flightmanager_airport (FlightManager_id, airports_id) " +
+                " VALUES (?,?)", [flightManagerId, id]);
+            }
+
+        }
+
+    }
+
+
+}

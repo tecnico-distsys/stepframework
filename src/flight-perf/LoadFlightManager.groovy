@@ -1,21 +1,29 @@
 /**
- *  Groovy script create the single flight manager
+ *  Database command to the single flight manager
  */
 
-//
-//  check arguments
-//
+public class LoadFlightManager extends DBCommand {
 
-System.err.println("Running " + this.class.getSimpleName() + " with arguments " + args);
+    // --- static ---
 
+    public static void main(String[] args) {
+        LoadFlightManager instance = new LoadFlightManager();
+        if (instance.parseArgs(args)) {
+            instance.run();
+        }
+    }
 
-//
-//  initialization
-//
+    // --- instance ---
 
-def sql = DBHelper.init();
+    @Override protected void dbRun() {
 
-// id is auto incremented
-def objVersion = 0;
+        err.println("Running " + this.class.simpleName);
 
-sql.execute("INSERT INTO flightmanager (objVersion) VALUES (?)", [objVersion]);
+        // id is auto incremented
+        def objVersion = 0;
+
+        sql.execute("INSERT INTO flightmanager (objVersion) VALUES (?)", [objVersion]);
+
+    }
+
+}

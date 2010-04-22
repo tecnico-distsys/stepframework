@@ -1,87 +1,143 @@
 /**
- *  Groovy script to load flights into database
+ *  Database command to load flights into database
  */
+import org.apache.commons.cli.*;
 
-//
-//  check arguments
-//
+public class LoadFlights extends DBCommand {
 
-System.err.println("Running " + this.class.getSimpleName() + " with arguments " + args);
-if(args.length < 1) {
-    System.err.println("Please provide number of flights to generate as argument.");
-    return;
-}
+    // --- static ---
+
+    public static void main(String[] args) {
+        LoadFlights instance = new LoadFlights();
+        if (instance.parseArgs(args)) {
+            instance.run();
+        }
+    }
+
+    // --- instance ---
+
+    //
+    //  Members
+    //
+    Long seed;
+    Random random;
+
+    Integer maxCost;
+    Double profit;
+
+    Integer nr;
+    Integer maxGroup;
 
 
-//
-//  initialization
-//
+    //
+    //  Initialization
+    //
 
-def total = Integer.parseInt(args[0]);
-assert(total > 0);
+    @Override protected void setDefaultValues() {
+        super.setDefaultValues();
 
-def random = null;
-if(args.length >= 2) {
-    def seed = Long.parseLong(args[1]);
-    println "Using random seed value of " + seed;
-    random = new Random(seed);
-} else {
-    println "Using default random seed";
-    random = new Random();
-}
+        seed = null;
+        random = null;
 
-def sql = DBHelper.init();
-sql.connection.autoCommit = false;
+        maxCost = 1000;
+        profit = 0.15;
 
-def flightManagerId = DBHelper.getFlightManagerId(sql);
+        nr = 100;
+        maxGroup = 10;
+    }
 
-// id is auto incremented
-def objVersion = 0;
-def costPerPassenger;
-def dateTime = (new GregorianCalendar(2012, Calendar.MARCH, 14, 0, 0, 0)).getTime();
-def number;
-def pricePerPassenger;
-def lastReservationId = 0;
-def airplaneId;
-def destinationId;
-def originId;
+    @Override protected Options createOptions() {
+        Options options = super.createOptions();
 
-final def MAX_TO_GEN = 5;
-final def MAX_COST = 1000;
-final def PROFIT = 0.2;
-final def MAX_NUMBER = 10000;
+        CommandHelper.addSeedOption(options);
 
-def count = 0;
-while(count < total) {
+        CommandHelper.addMaxCostOption(options);
+        CommandHelper.addProfitOption(options);
 
-    // pick origin and destination
-    originId = DBHelper.pickRandomAirport(sql, random).id;
-    destinationId = DBHelper.pickRandomAirport(sql, random).id;
+        CommandHelper.addNrOption(options);
+        CommandHelper.addMaxGroupOption(options);
 
-    def toGen = random.nextInt(MAX_TO_GEN) + 1;
-    if(total - count < toGen)
-        toGen = total - count;
+        return options;
+    }
 
-    // generate flights between origin and destination (within total limit)
-    for(int i = 0; i < toGen; i++) {
-        airplaneId = DBHelper.pickRandomAirplane(sql, random).id;
-        costPerPassenger = random.nextInt(MAX_COST);
-        pricePerPassenger = costPerPassenger * (1.0 + PROFIT);
+    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
+        if (!super.handleOptions(options, cmdLine)) return false;
 
-        number = originId + "-" + destinationId + "-" + random.nextInt(MAX_NUMBER);
+        String seedValue = getSetting(CommandHelper.SEED_OPT, cmdLine);
+        seed = CommandHelper.initLong(seedValue, seedValue);
 
-        def keys = sql.executeInsert("INSERT INTO flight (objVersion, costPerPassenger, dateTime, number," +
-        "pricePerPassenger, lastReservationId, airplane_id, destination_id, origin_id)" +
-        " VALUES (?,?,?,?,?,?,?,?,?)",
-        [objVersion, costPerPassenger, dateTime, number,
-        pricePerPassenger, lastReservationId, airplaneId, destinationId, originId]);
-        def id = keys[0][0];
-        sql.execute("INSERT INTO flightmanager_flight (FlightManager_id, flights_id) " +
-        " VALUES (?,?)", [flightManagerId, id]);
+        random = CommandHelper.initRandom(seed);
 
-        count++;
+        String maxCostValue = getSetting(CommandHelper.MAX_COST_OPT, cmdLine);
+        maxCost = CommandHelper.initInteger(maxCostValue, maxCost);
+
+        String profitValue = getSetting(CommandHelper.PROFIT_OPT, cmdLine);
+        profit = CommandHelper.initDouble(profitValue, profit);
+
+        String nrValue = getSetting(CommandHelper.NR_OPT, cmdLine);
+        nr = CommandHelper.initInteger(nrValue, nr);
+
+        String maxGroupValue = getSetting(CommandHelper.MAX_GROUP_OPT, cmdLine);
+        maxGroup = CommandHelper.initInteger(maxGroupValue, maxGroup);
+
+        return true;
+    }
+
+
+    @Override protected void dbRun() {
+
+        err.println("Running " + this.class.simpleName);
+        err.printf("Generate %d flights (max group size %d), max cost %d, profit %.2f",
+            nr, maxGroup, maxCost, profit);
+        if(seed != null) err.printf(", random seed %d", seed);
+        err.println();
+
+        def flightManagerId = FlightDBHelper.getFlightManagerId(sql);
+
+        // id is auto incremented
+        def objVersion = 0;
+        def costPerPassenger;
+        def dateTime = (new GregorianCalendar(2012, Calendar.MARCH, 14, 0, 0, 0)).getTime();    // TODO
+        def number;
+        def pricePerPassenger;
+        def lastReservationId = 0;
+        def airplaneId;
+        def destinationId;
+        def originId;
+
+        def count = 0;
+        while(count < nr) {
+
+            // pick origin and destination
+            originId = FlightDBHelper.pickRandomAirport(sql, random).id;
+            destinationId = FlightDBHelper.pickRandomAirport(sql, random).id;
+
+            def toGen = random.nextInt(maxGroup) + 1;
+            if(nr - count < toGen)
+                toGen = nr - count;
+
+            // generate flights between origin and destination (within total limit)
+            for(int i = 0; i < toGen; i++) {
+                airplaneId = FlightDBHelper.pickRandomAirplane(sql, random).id;
+                costPerPassenger = random.nextInt(maxCost);
+                pricePerPassenger = costPerPassenger * (1.0 + profit);
+
+                number = originId + "-" + destinationId + "-" + random.nextInt(Integer.MAX_VALUE);
+
+                def keys = sql.executeInsert("INSERT INTO flight (objVersion, costPerPassenger, dateTime, number," +
+                "pricePerPassenger, lastReservationId, airplane_id, destination_id, origin_id)" +
+                " VALUES (?,?,?,?,?,?,?,?,?)",
+                [objVersion, costPerPassenger, dateTime, number,
+                pricePerPassenger, lastReservationId, airplaneId, destinationId, originId]);
+                def id = keys[0][0];
+                sql.execute("INSERT INTO flightmanager_flight (FlightManager_id, flights_id) " +
+                " VALUES (?,?)", [flightManagerId, id]);
+
+                count++;
+            }
+
+        }
+
     }
 
 }
-
-sql.connection.commit();

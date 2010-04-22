@@ -1,49 +1,97 @@
 /**
- *  Groovy script to load database
+ *  Command script to load database
  */
+import org.apache.commons.cli.*;
 
-System.err.println("Running " + this.class.getSimpleName() + " with arguments " + args);
+public class LoadDB extends DBCommand {
 
-// default values
-def seed = 20120314;
-def nrFlights = 185*30; // a month's worth of flights
-def airplanesDataFilePath = "data\\fleet-BA.csv";
-def airportDataFilePath = "data\\airports.csv";
+    // --- static ---
 
-if(args.length > 0) {
-    if("default".equals(args[0])) {
-        seed = null;
-    } else {
-        seed = Integer.parseInt(args[0]);
+    //
+    //  Command line execution
+    //
+    public static void main(String[] args) {
+        LoadDB instance = new LoadDB();
+        if (instance.parseArgs(args)) {
+            instance.run();
+        }
     }
+
+
+    // --- instance ---
+
+    //
+    //  Members
+    //
+    Long seed;
+    Random random;
+
+
+    //
+    //  Initialization
+    //
+
+    @Override protected void setDefaultValues() {
+        super.setDefaultValues();
+
+        seed = null;
+        random = null;
+    }
+
+    @Override protected Options createOptions() {
+        Options options = super.createOptions();
+
+        CommandHelper.addSeedOption(options);
+
+        return options;
+    }
+
+    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
+        if (!super.handleOptions(options, cmdLine)) return false;
+
+        if (!super.handleOptions(options, cmdLine)) return false;
+
+        String seedValue = getSetting(CommandHelper.SEED_OPT, cmdLine);
+        seed = CommandHelper.initLong(seedValue, seedValue);
+
+        random = CommandHelper.initRandom(seed);
+
+        return true;
+    }
+
+
+    //
+    //  Runnable
+    //
+    @Override public void dbRun() {
+
+        def del = new DeleteDB().init();
+        del.sql = this.sql;
+        del.dbRun();
+
+        def flightMan = new LoadFlightManager().init();
+        flightMan.sql = this.sql;
+        flightMan.dbRun();
+
+        def airports = new LoadAirports().init();
+        airports.dataFile = new File("data\\airports.csv");
+        airports.sql = this.sql;
+        airports.random = this.random;
+        airports.dbRun();
+
+        def airplanes = new LoadAirplanes().init();
+        airplanes.dataFile = new File("data\\fleet-BA.csv");
+        airplanes.sql = this.sql;
+        airplanes.random = this.random;
+        airplanes.dbRun();
+
+        def flights = new LoadFlights().init();
+        flights.sql = this.sql;
+        flights.random = this.random;
+        flights.dbRun();
+
+        println "Done!";
+
+    }
+
 }
-if(args.length > 1) nrFlights = args[1];
-if(args.length > 2) airplanesDataFilePath = args[2];
-if(args.length > 3) airportDataFilePath = args[3];
-
-def random = null;
-if(seed != null) {
-    println "Using random seed value of " + seed;
-    random = new Random(seed);
-} else {
-    println "Using default random seed";
-    random = new Random();
-}
-
-DeleteDB.main();
-
-LoadFlightManager.main();
-
-LoadAirports.main(
-    (String[]) [airportDataFilePath,
-               random.nextInt()]);
-
-LoadAirplanes.main(
-    (String[]) [airplanesDataFilePath,
-               random.nextInt()]);
-
-LoadFlights.main(
-    (String[]) [nrFlights,
-               random.nextInt()]);
-
-println "Done!";
