@@ -56,15 +56,12 @@ DEPLOYMENT:
 5. Create the databases needed for the Flight and Mediator applications
    Definitions are in TripPlanner/{flight,mediator}/src/persistence.properties
 
-6. Setup the databases
- $ ant -f TripPlanner/flight/build.xml setup
- $ ant -f TripPlanner/mediator/build.xml setup
+6. Build, setup its database and deploy the Flight application into STEPcat:
+ $ ant -f TripPlanner/flight/build.xml create-war setup deploy
 
-7. Build and deploy Flight application into STEPcat:
- $ ant -f TripPlanner/flight/build.xml create-war deploy
+7. Build, setup its database and deploy the Mediator application into STEPcat:
+ $ ant -f TripPlanner/mediator/build.xml create-war setup deploy
 
-8. Build and deploy Mediator application into STEPcat:
- $ ant -f TripPlanner/mediator/build.xml create-war deploy
 
 It is now possible to access the Flight application at
 http://localhost:8080/flight and the Mediator application at

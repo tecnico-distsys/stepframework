@@ -64,7 +64,7 @@
 	<property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/${wsdl.filename}" />
 
 	<pathconvert property="package.project.rel-dir" pathsep=".">
-		<unpackagemapper from="${basedir}/*" to="*"/>
+		<unpackagemapper from="${basedir}${file.separator}*" to="*"/>
 		<path location="${package.project.name}"/>
 	</pathconvert>
 
