@@ -1,27 +1,9 @@
 /**
- *  Database Helper.
+ *  Flight Database access helper.
  */
 import groovy.sql.Sql;
 
-class DBHelper {
-
-    static def init() {
-
-        // load environment properties
-        def env = System.getenv();
-
-        // load database settings
-        def db = new Properties();
-        db.load(new FileInputStream("database.properties"));
-
-        // load libraries
-        ClassLoaderHelper.addJarDir(env["STEP_HOME"] + "/lib");
-
-        // create database connection
-        def sql = Sql.newInstance(db["url"], db["user"], db["pass"], db["driver"]);
-
-        return sql;
-    }
+class FlightDBHelper {
 
     static def getFlightManagerId(sql) {
         def row = sql.firstRow("SELECT id FROM flightmanager ORDER BY id ASC");

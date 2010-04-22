@@ -1,35 +1,43 @@
 /**
- *  Groovy script to delete all records from database
+ *  Database command to delete all records from flight database
  */
 
-//
-//  check arguments
-//
+public class DeleteDB extends DBCommand {
 
-System.err.println("Running " + this.class.getSimpleName() + " with arguments " + args);
+    // --- static ---
 
-//
-//  initialization
-//
+    public static void main(String[] args) {
+        DeleteDB instance = new DeleteDB();
+        if (instance.parseArgs(args)) {
+            instance.run();
+        }
+    }
 
-def sql = DBHelper.init();
-sql.connection.autoCommit = false;
+    // --- instance ---
 
-// delete taking dependencies into account
-sql.execute("DELETE FROM flightreservation");
+    @Override protected void dbRun() {
 
-sql.execute("DELETE FROM flightmanager_passenger");
-sql.execute("DELETE FROM passenger");
+        err.println("Running " + this.class.simpleName);
+        err.printf("url %s", this.url);
+        err.println();
 
-sql.execute("DELETE FROM flightmanager_flight");
-sql.execute("DELETE FROM flight");
+        // delete taking dependencies into account
+        sql.execute("DELETE FROM flightreservation");
 
-sql.execute("DELETE FROM flightmanager_airplane");
-sql.execute("DELETE FROM airplane");
+        sql.execute("DELETE FROM flightmanager_passenger");
+        sql.execute("DELETE FROM passenger");
 
-sql.execute("DELETE FROM flightmanager_airport");
-sql.execute("DELETE FROM airport");
+        sql.execute("DELETE FROM flightmanager_flight");
+        sql.execute("DELETE FROM flight");
 
-sql.execute("DELETE FROM flightmanager");
+        sql.execute("DELETE FROM flightmanager_airplane");
+        sql.execute("DELETE FROM airplane");
 
-sql.connection.commit();
+        sql.execute("DELETE FROM flightmanager_airport");
+        sql.execute("DELETE FROM airport");
+
+        sql.execute("DELETE FROM flightmanager");
+
+    }
+
+}
