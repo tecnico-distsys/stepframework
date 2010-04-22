@@ -20,7 +20,7 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
 	
 	private static final String ENABLED_PROPERTY_NAME = "wsconfig.enabled";
 	private static final String CONFIGURATOR_PROPERTY_NAME = "wsconfig.configurator";
-	private static final String DEFAULT_CONFIGURATOR = "step.framework.wsconfig.WSPolicyConfigurator";
+	private static final String DEFAULT_CONFIGURATOR = "step.framework.wsconfig.policy.WSPolicyConfigurator";
 
     //***********************************************************************
     // Members
@@ -122,7 +122,7 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
             }
             else
         	{
-            	return configurator.config();
+            	return configurator.config(smc);
         	}
         }
         catch(WSConfigurationException e)

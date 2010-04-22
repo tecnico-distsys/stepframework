@@ -1,16 +1,17 @@
 package step.framework.ws;
 
-import java.io.*;
-import java.util.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import java.io.ByteArrayOutputStream;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 public class XMLUtilTest {
 
     static final private String LINE_SEPARATOR = System.getProperty("line.separator");
-    private PrintStream out = System.out;
     
     @Before
     public void setUp() {

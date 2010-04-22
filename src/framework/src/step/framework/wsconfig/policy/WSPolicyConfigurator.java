@@ -1,9 +1,10 @@
-package step.framework.wsconfig;
+package step.framework.wsconfig.policy;
 
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +15,10 @@ import org.apache.neethi.builders.AssertionBuilder;
 
 import step.framework.config.Config;
 import step.framework.config.ConfigException;
+import step.framework.wsconfig.ExtensionLiaison;
+import step.framework.wsconfig.WSConfigurationException;
+import step.framework.wsconfig.WSConfigurator;
+import step.framework.wsconfig.wsdl.HTTPWSDLObtainer;
 
 /*
  * Utility class for policy loading
@@ -22,7 +27,8 @@ public class WSPolicyConfigurator implements WSConfigurator {
 
 	public static final String NSSMARTSTEP = "http://stepframework.sourceforge.net/smartstep/policy";
 	
-	private static final String FILENAME_PROPERTY_NAME = "wsconfig.policy.filename";
+	private static final String LOCAL_POLICY_PROPERTY_NAME = "wsconfig.policy.local";
+	private static final String SERVER_POLICY_PROPERTY_NAME = "wsconfig.policy.server";
 
     /** Logging */
     private Log log;
@@ -47,14 +53,16 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	//********************************************************
 	//configurator interface
 
-	public boolean config() throws WSConfigurationException
+	public boolean config(SOAPMessageContext smc) throws WSConfigurationException
 	{
 		log.debug("Starting web service policy configuration");
 		
 		try
 		{
 			String filename = loadFilenameFromConfig();
-			Policy policy = loadPolicy(filename);
+			Policy localPolicy = loadPolicy(filename);
+			Policy serverPolicy = getServerPolicy(smc);
+			Policy policy = PolicyUtil.intersect(localPolicy, serverPolicy);
 			List<Assertion> alternative = getAlternative(policy);
 			enableExtensions(alternative);
 			
@@ -92,10 +100,10 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		log.debug("Loading policy filename from config");
 		
 		Config.getInstance().load();
-		String filename = Config.getInstance().getInitParameter(FILENAME_PROPERTY_NAME);
+		String filename = Config.getInstance().getInitParameter(LOCAL_POLICY_PROPERTY_NAME);
 		
 		if(filename == null)
-			throw new WSConfigurationException("Policy filename property definition is undefined");
+			throw new WSConfigurationException("Local policy property is undefined");
 		
 		return filename;
 	}
@@ -119,6 +127,35 @@ public class WSPolicyConfigurator implements WSConfigurator {
 			throw new WSConfigurationException("File \"" + filename + "\" does not define a valid policy");
 		
 		return policy;
+	}
+	
+	/**
+	 * Loads a policy from the file given by filename
+	 * 
+	 * @param	smc			SOAP message context
+	 * @return 				Server policy defined for the invoked service
+	 * @throws WSConfigurationException When the policy can't be retrieved
+	 */
+	private Policy getServerPolicy(SOAPMessageContext smc) throws WSConfigurationException
+	{
+		try
+		{
+			String wsdlUrl = Config.getInstance().getInitParameter(SERVER_POLICY_PROPERTY_NAME);
+			if(wsdlUrl == null)
+				throw new WSConfigurationException("Server policy property is undefined");
+			
+			ServerPolicyObtainer policyObt = new ServerPolicyObtainer(new HTTPWSDLObtainer(wsdlUrl));
+			
+			return policyObt.getServicePolicy();
+		}
+		catch(WSConfigurationException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
 	}
 	
 	/**

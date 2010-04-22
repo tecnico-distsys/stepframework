@@ -55,7 +55,7 @@ public abstract class WebServiceInterceptorBaseClient extends WebServiceIntercep
     public final boolean interceptInboundMessage(WebServiceInterceptorParameter param)
         throws SOAPFaultException, WebServiceInterceptorException {
 
-        boolean isClientSide = checkClientSide(param);
+        checkClientSide(param);
 
         boolean isFault = param.isFaultSOAPMessage();
         if(isFault) {
@@ -75,7 +75,7 @@ public abstract class WebServiceInterceptorBaseClient extends WebServiceIntercep
     public final boolean interceptOutboundMessage(WebServiceInterceptorParameter param)
         throws SOAPFaultException, WebServiceInterceptorException {
 
-        boolean isClientSide = checkClientSide(param);
+       checkClientSide(param);
 
         boolean isFault = param.isFaultSOAPMessage();
         if(isFault) {

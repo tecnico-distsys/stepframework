@@ -1,4 +1,4 @@
-package step.framework.wsconfig;
+package step.framework.wsconfig.policy;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -37,7 +37,8 @@ public class STEPAssertion implements Assertion {
 
 	public PolicyComponent normalize()
 	{
-		return this.normalize();
+		//TODO: normalize inner policies
+		return this;
 	}
 
 	public void serialize(XMLStreamWriter arg0) throws XMLStreamException

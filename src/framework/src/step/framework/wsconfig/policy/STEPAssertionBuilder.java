@@ -1,4 +1,4 @@
-package step.framework.wsconfig;
+package step.framework.wsconfig.policy;
 
 import javax.xml.namespace.QName;
 
@@ -6,6 +6,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
 import org.apache.neethi.builders.AssertionBuilder;
+
 
 public class STEPAssertionBuilder implements AssertionBuilder {
 
