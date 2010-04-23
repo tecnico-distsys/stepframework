@@ -3,6 +3,7 @@
 	<ExactlyOne>
 	  <All>
 		<ssp:Cipher extension="cipher" />
+		<ssp:Identification extension="id" />
 	  </All>
 	</ExactlyOne>
 </Policy>
