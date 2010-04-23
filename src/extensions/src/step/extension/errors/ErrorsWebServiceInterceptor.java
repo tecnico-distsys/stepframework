@@ -44,7 +44,6 @@ public class ErrorsWebServiceInterceptor implements WebServiceInterceptor {
 
         boolean isServerSide = param.isServerSide();
         boolean isOutbound = param.isOutboundSOAPMessage();
-        boolean isFault = param.isFaultSOAPMessage();
 
         // return
         final String RETURN_PROP_NAME = "web-service-interceptor.return";

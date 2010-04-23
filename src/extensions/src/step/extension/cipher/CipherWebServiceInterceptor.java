@@ -14,6 +14,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.w3c.dom.Node;
+
 import step.framework.extensions.WebServiceInterceptor;
 import step.framework.extensions.WebServiceInterceptorException;
 import step.framework.extensions.WebServiceInterceptorParameter;
@@ -55,7 +57,6 @@ public class CipherWebServiceInterceptor implements WebServiceInterceptor {
         DESKeySpec keySpec = new DESKeySpec(KEY.getBytes());
         SecretKey key = SecretKeyFactory.getInstance("DES").generateSecret(keySpec);
         DesEncrypter des = new DesEncrypter(key);
-        
         String enc = des.encrypt(soapMessage);
         
         soapEnvelope.removeChild(soapBody);
@@ -72,7 +73,10 @@ public class CipherWebServiceInterceptor implements WebServiceInterceptor {
         DESKeySpec keySpec = new DESKeySpec(KEY.getBytes());
         SecretKey key = SecretKeyFactory.getInstance("DES").generateSecret(keySpec);
         DesEncrypter des = new DesEncrypter(key);
-        SOAPMessage dec = des.decrypt(encSoapBody.getElementsByTagName("message").item(0).getTextContent());
+        Node message = encSoapBody.getElementsByTagName("message").item(0);
+        if(message == null)
+        	return;
+        SOAPMessage dec = des.decrypt(message.getTextContent());
         
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         dec.writeTo(bos);

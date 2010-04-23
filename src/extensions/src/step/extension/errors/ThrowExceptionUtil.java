@@ -12,13 +12,13 @@ class ThrowExceptionUtil {
     throws Exception {
 
         // we assume the exception has a 1 String argument constructor
-        Class ec = null;
+        Class<?> ec = null;
         Exception exception = null;
         try {
             // search and instantiate the runtime exception class
             ec = Class.forName(exceptionClassname);
 
-            Constructor constructor = ec.getConstructor(java.lang.String.class);
+            Constructor<?> constructor = ec.getConstructor(java.lang.String.class);
             String exceptionMessage = "Test Exception generated in method " + throwMethodName;
             exception = (Exception) constructor.newInstance(exceptionMessage);
         } catch(Exception e) {
