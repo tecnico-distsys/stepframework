@@ -185,7 +185,6 @@ public class IDWebServiceInterceptor implements WebServiceInterceptor {
 	    		//if element is empty, ignore
 	    		if(elements[i].trim().length() != 0)
 	    		{
-	    			System.out.println("ELEMENT: " + elements[i]);
 	    			//separate id and secret by :
 	    			String[] element = elements[i].split(":");
 		    		map.put(element[0].trim(), element[1].trim());

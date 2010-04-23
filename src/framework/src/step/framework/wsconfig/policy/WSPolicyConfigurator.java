@@ -4,6 +4,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import org.apache.commons.logging.Log;
@@ -26,6 +30,8 @@ import step.framework.wsconfig.wsdl.HTTPWSDLObtainer;
 public class WSPolicyConfigurator implements WSConfigurator {
 
 	public static final String NSSMARTSTEP = "http://stepframework.sourceforge.net/smartstep/policy";
+	
+	private static final QName QN_POLICY_HEADER = new QName(NSSMARTSTEP, "UsedPolicy");
 	
 	private static final String LOCAL_POLICY_PROPERTY_NAME = "wsconfig.policy.local";
 	private static final String SERVER_POLICY_PROPERTY_NAME = "wsconfig.policy.server";
@@ -61,8 +67,10 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		{
 			String filename = loadFilenameFromConfig();
 			Policy localPolicy = loadPolicy(filename);
-			Policy serverPolicy = getServerPolicy(smc);
+			Policy serverPolicy = getServerPolicy(smc);	
 			Policy policy = PolicyUtil.intersect(localPolicy, serverPolicy);
+			if(hasAlternatives(serverPolicy))
+				addPolicyHeader(smc.getMessage(), policy);
 			List<Assertion> alternative = getAlternative(policy);
 			enableExtensions(alternative);
 			
@@ -151,6 +159,44 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		catch(WSConfigurationException e)
 		{
 			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
+	}
+	
+	private boolean hasAlternatives(Policy policy)
+	{
+		Iterator<?> it = policy.getAlternatives();
+		
+		//has at least one alternative?
+		if(it.hasNext())
+		{
+			it.next();
+			//has more than one?
+			return it.hasNext();
+		}
+		else
+		{
+			//doesn't have any
+			return false;
+		}
+	}
+	
+	private void addPolicyHeader(SOAPMessage message, Policy policy) throws WSConfigurationException
+	{
+		try
+		{
+			SOAPEnvelope soapEnvelope = message.getSOAPPart().getEnvelope();
+			SOAPHeader soapHeader = soapEnvelope.getHeader();
+			if(soapHeader == null)
+				soapHeader = soapEnvelope.addHeader();
+			
+			SOAPHeaderElement element = soapHeader.addHeaderElement(QN_POLICY_HEADER);
+			String strPolicy = PolicyUtil.toString(policy);
+			element.setTextContent(strPolicy);
+			System.out.println("POLICY_HEADER\n" + strPolicy + "END_POLICY_HEADER");
 		}
 		catch(Exception e)
 		{

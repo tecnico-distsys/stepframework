@@ -2,8 +2,11 @@ package step.framework.wsconfig.policy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -94,6 +97,24 @@ public class PolicyUtil {
 		{
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	public static String toString(Policy policy)
+	{
+		try
+		{
+			StringWriter string = new StringWriter();
+			XMLOutputFactory fact = XMLOutputFactory.newInstance();
+			XMLStreamWriter writer = fact.createXMLStreamWriter(string);
+			policy.serialize(writer);
+			
+			return string.toString();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return new String();
 		}
 	}
 }
