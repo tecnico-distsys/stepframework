@@ -41,7 +41,7 @@ public class TraceServiceInterceptor implements ServiceInterceptor {
         Object service = param.getServiceInstance();
 
         // ok, lets print the service's field
-        Class serviceClass = service.getClass();
+        Class<?> serviceClass = service.getClass();
         out.println("Tracing service: " + serviceClass);
 
         Field[] declaredFields = serviceClass.getDeclaredFields();

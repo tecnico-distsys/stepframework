@@ -27,7 +27,8 @@ public class TraceWebServiceInterceptor implements WebServiceInterceptor {
     /**
      *   Prints the intercepted SOAP messages.
      */
-    public boolean interceptMessage(WebServiceInterceptorParameter param)
+    @SuppressWarnings("finally")
+	public boolean interceptMessage(WebServiceInterceptorParameter param)
     throws SOAPFaultException, WebServiceInterceptorException {
         // where to write the information
         PrintStream out = getPrintStream(param);
