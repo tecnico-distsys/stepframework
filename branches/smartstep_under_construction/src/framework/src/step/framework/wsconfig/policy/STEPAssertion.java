@@ -43,7 +43,7 @@ public class STEPAssertion implements Assertion {
 
 	public void serialize(XMLStreamWriter arg0) throws XMLStreamException
 	{
-		throw new UnsupportedOperationException();
+		element.serialize(arg0);
 	}
 
 	public boolean equal(PolicyComponent arg0)
@@ -59,5 +59,10 @@ public class STEPAssertion implements Assertion {
 	public String getExtension()
 	{
 		return element.getAttributeValue(QNEXTENSION);
+	}
+	
+	public OMElement getValue()
+	{
+		return element;
 	}
 }

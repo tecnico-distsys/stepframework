@@ -105,9 +105,13 @@ public class PolicyPrinter {
 		tab(depth);
 		System.out.println("ASSERTION: " + assertion.getName().getLocalPart() + (assertion.isOptional() ? " (optional)" : ""));
 		
-		XmlPrimtiveAssertion xml = (XmlPrimtiveAssertion) assertion;
+		OMElement element = null;
+		if(assertion instanceof STEPAssertion)
+			element = ((STEPAssertion) assertion).getValue();
+		else
+			element = ((XmlPrimtiveAssertion) assertion).getValue();
 		
-		Iterator<OMNode> it = xml.getValue().getChildren();
+		Iterator<OMNode> it = element.getChildren();
 		while(it.hasNext())
 		{
 			try

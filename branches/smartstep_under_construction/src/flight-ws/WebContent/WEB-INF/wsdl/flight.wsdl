@@ -110,6 +110,10 @@
 				<ssp:Cipher extension="cipher"/>
 				<ssp:Identification extension="id"/>
 			  </wsp:All>
+			  <wsp:All>
+				<ssp:Cipher extension="cipher"/>
+				<ssp:Identification extension="id"/>
+			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>
         <port name="FlightPort" binding="tns:FlightBinding">
