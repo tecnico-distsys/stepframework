@@ -108,6 +108,7 @@
 			<wsp:ExactlyOne>
 			  <wsp:All>
 				<ssp:Cipher extension="cipher"/>
+				<ssp:Identification extension="id"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>
