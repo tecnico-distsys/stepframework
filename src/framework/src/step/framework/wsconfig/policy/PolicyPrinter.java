@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.neethi.All;
@@ -25,14 +27,30 @@ public class PolicyPrinter {
 	
 	public static void printPolicy(Policy policy)
 	{
-		full = true;
-		print(policy, 0);
+		try
+		{
+			if(policy == null)
+				System.out.println("NULL POLICY");
+			full = true;
+			print(policy, 0);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static void printAlternatives(Policy policy)
 	{
-		full = false;
-		printAlternatives(policy, 0);
+		try
+		{
+			full = false;
+			printAlternatives(policy, 0);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -103,13 +121,9 @@ public class PolicyPrinter {
 	private static void print(Assertion assertion, int depth)
 	{
 		tab(depth);
-		System.out.println("ASSERTION: " + assertion.getName().getLocalPart() + (assertion.isOptional() ? " (optional)" : ""));
+		System.out.println("ASSERTION: " + "{" + assertion.getName().getNamespaceURI() + "}" + assertion.getName().getLocalPart() + (assertion.isOptional() ? " (optional)" : ""));
 		
-		OMElement element = null;
-		if(assertion instanceof STEPAssertion)
-			element = ((STEPAssertion) assertion).getValue();
-		else
-			element = ((XmlPrimtiveAssertion) assertion).getValue();
+		OMElement element = ((XmlPrimtiveAssertion) assertion).getValue();
 		
 		Iterator<OMNode> it = element.getChildren();
 		while(it.hasNext())
@@ -145,7 +159,7 @@ public class PolicyPrinter {
 					}					
 				}				
 			}
-			catch(Exception e)
+			catch(XMLStreamException e)
 			{
 				e.printStackTrace();
 			}

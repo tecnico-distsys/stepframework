@@ -5,6 +5,7 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.AssertionBuilderFactory;
+import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 
 
@@ -24,5 +25,13 @@ public class STEPAssertionBuilder implements AssertionBuilder {
 		
 		return names;
 	}
-
+	
+	public void register()
+	{
+    	QName[] names = getKnownElements();
+    	for(int i=0; i<names.length; i++)
+    	{
+    		PolicyEngine.registerBuilder(names[i], this);
+    	}
+	}
 }

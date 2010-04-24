@@ -11,6 +11,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import step.framework.config.Config;
+import step.framework.extensions.WebServiceInterceptorManager;
+import step.framework.ws.SOAPUtil;
 
 /**
  *  JAX-WS SOAP Handler that intercepts web service message flow
@@ -24,39 +26,34 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
 
     //***********************************************************************
     // Members
-	
+
+    /** Web Service interceptor manager */
+    private WebServiceInterceptorManager manager;
+    
 	/** Web Service Configurator */
 	private WSConfigurator configurator;
 
     /** Logging */
-    private Log log;
+    private Log log = LogFactory.getLog(WSConfigHandler.class);
     
     //***********************************************************************
     // Constructor
     
     public WSConfigHandler() throws WSConfigurationException
     {
-    	this.log = LogFactory.getLog(WSConfigHandler.class);
-    	
+        this.manager = new WebServiceInterceptorManager();    	
     	initConfigurator();
     }
     
     private void initConfigurator() throws WSConfigurationException
     {
-		String className = null;
-		
-		try
-		{
-			className = loadClassName();
-		}
-		catch(WSConfigurationException e)
-		{
-			configurator = null;
-			return;
-		}
+		String className = loadClassName();
 			
 		if(className == null)
+		{
+			log.debug("Loading default configurator");
 			instantiateConfigurator(DEFAULT_CONFIGURATOR);
+		}
 		else
 			instantiateConfigurator(className);
     }
@@ -68,12 +65,7 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
 		try
 		{
 			Config.getInstance().load();
-			String filename = Config.getInstance().getInitParameter(CONFIGURATOR_PROPERTY_NAME);
-
-			if(filename == null)
-				log.debug("Loading default configurator");
-				
-			return filename;
+			return Config.getInstance().getInitParameter(CONFIGURATOR_PROPERTY_NAME);
 		}
 		catch(Exception e)
 		{
@@ -115,15 +107,16 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
                 
         try
         {
-        	if(!isEnabled())
-            {
-                log.trace("WSConfigurator disabled - ignoring message");
-            	return true;
-            }
-            else
-        	{
-            	return configurator.config(smc);
-        	}
+        	//TODO: save extensions state before
+        	if(isEnabled())
+        		configure(smc);
+        	
+        	boolean extensionsResult = manager.interceptHandleMessageWebServiceHandler(smc);
+
+        	if(isEnabled())
+        		reset();
+        	
+        	return extensionsResult; 
         }
         catch(WSConfigurationException e)
         {
@@ -134,37 +127,22 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     
     public boolean handleFault(SOAPMessageContext smc)
     {
-    	//TODO: what to do in case of fault???
-        return true;
+    	//TODO: configure in case of fault???
+    	
+        log.trace("WSConfigHandler - handleFault()");
+        return manager.interceptHandleFaultWebServiceHandler(smc);
     }
 
     public void close(MessageContext messageContext)
     {
         log.trace("WSConfigHandler - close()");
-        
-        try
-        {
-        	if(!isEnabled())
-            {
-                log.trace("WSConfigurator disabled - ignoring close");
-            	return;
-            }
-            else
-        	{
-            	configurator.reset();
-        	}
-		}
-        catch (WSConfigurationException e)
-        {
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e);
-		}
+        manager.interceptCloseWebServiceHandler(messageContext);        
     }
 
     //***********************************************************************
     // Auxiliary methods
     
-    public boolean isEnabled()
+    private boolean isEnabled()
     {
     	try
     	{
@@ -176,6 +154,33 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     	catch(Exception e)
     	{
     		return false;
+    	}
+    }
+    
+    private void configure(SOAPMessageContext smc) throws WSConfigurationException
+    {
+		boolean isServerSide = SOAPUtil.isServerSideMessage(smc);
+		boolean isOutbound = SOAPUtil.isOutboundMessage(smc);		
+
+		if(!isServerSide && isOutbound)
+			configurator.configClientOutbound(smc);
+		if(isServerSide && !isOutbound)
+			configurator.configServerInbound(smc);
+		if(isServerSide && isOutbound)
+			configurator.configServerOutbound(smc);
+		if(!isServerSide && !isOutbound)
+			configurator.configClientInbound(smc);
+    }
+    
+	private void reset() throws WSConfigurationException
+    {
+    	try
+    	{
+    		//TODO: reset extension engine to state before configuration
+    	}
+    	catch(Exception e)
+    	{
+    		throw new WSConfigurationException(e);
     	}
     }
 }
