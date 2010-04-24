@@ -15,14 +15,15 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
-import org.apache.neethi.builders.AssertionBuilder;
 
 import step.framework.config.Config;
 import step.framework.config.ConfigException;
+import step.framework.context.ApplicationContext;
 import step.framework.wsconfig.ExtensionLiaison;
 import step.framework.wsconfig.WSConfigurationException;
 import step.framework.wsconfig.WSConfigurator;
 import step.framework.wsconfig.wsdl.HTTPWSDLObtainer;
+import step.framework.wsconfig.wsdl.LocalWSDLObtainer;
 
 /*
  * Utility class for policy loading
@@ -35,11 +36,11 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	
 	private static final String LOCAL_POLICY_PROPERTY_NAME = "wsconfig.policy.local";
 	private static final String SERVER_POLICY_PROPERTY_NAME = "wsconfig.policy.server";
+	
+	private static final String CONTEXT_KEY_ALTERNATIVE = "wsconfig.policy";
 
     /** Logging */
     private Log log;
-    
-    private AssertionBuilder assertionBuilder;
 	
 	//********************************************************
 	//constructors
@@ -47,21 +48,15 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	public WSPolicyConfigurator()
 	{
     	this.log = LogFactory.getLog(WSPolicyConfigurator.class);
-    	this.assertionBuilder = new STEPAssertionBuilder();
-    	
-    	QName[] names = assertionBuilder.getKnownElements();
-    	for(int i=0; i<names.length; i++)
-    	{
-    		PolicyEngine.registerBuilder(names[i], assertionBuilder);
-    	}
+    	new STEPAssertionBuilder().register();
 	}
 	
 	//********************************************************
 	//configurator interface
 
-	public boolean config(SOAPMessageContext smc) throws WSConfigurationException
+	public void configClientOutbound(SOAPMessageContext smc) throws WSConfigurationException
 	{
-		log.debug("Starting web service policy configuration");
+		log.debug("Configuring extensions for outbound client message");
 		
 		try
 		{
@@ -73,8 +68,7 @@ public class WSPolicyConfigurator implements WSConfigurator {
 				addPolicyHeader(smc.getMessage(), policy);
 			List<Assertion> alternative = getAlternative(policy);
 			enableExtensions(alternative);
-			
-			return true;
+			ApplicationContext.getInstance().put(CONTEXT_KEY_ALTERNATIVE, alternative);
 		}
 		catch(WSConfigurationException e)
 		{
@@ -86,23 +80,74 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		}
 	}
 
-	public void reset() throws WSConfigurationException
+	public void configServerInbound(SOAPMessageContext smc) throws WSConfigurationException
 	{
-		log.debug("Reseting policy configurations");
+		log.debug("Configuring extensions for inbound server message");
 		
-		//TODO: do nothing for now
+		try
+		{
+			Policy policy = getPolicyFromHeader(smc.getMessage());
+			if(policy == null)
+			{				
+				policy = getPolicyFromWSDL(smc);
+				if(policy == null)
+					throw new WSConfigurationException("Error loading server local policy.");					
+				if(hasAlternatives(policy))
+					throw new WSConfigurationException("Unspecified policy alternative.");
+			}
+			else
+			{
+				//TODO: validate
+			}
+			List<Assertion> alternative = getAlternative(policy);
+			enableExtensions(alternative);
+			ApplicationContext.getInstance().put(CONTEXT_KEY_ALTERNATIVE, alternative);		
+		}
+		catch(WSConfigurationException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void configServerOutbound(SOAPMessageContext smc) throws WSConfigurationException
+	{
+		log.debug("Configuring extensions for outbound server message");
+		
+		try
+		{
+			List<Assertion> alternative = (List<Assertion>) ApplicationContext.getInstance().get(CONTEXT_KEY_ALTERNATIVE);
+			enableExtensions(alternative);
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void configClientInbound(SOAPMessageContext smc) throws WSConfigurationException
+	{
+		log.debug("Configuring extensions for inbound client message");
+		
+		try
+		{
+			List<Assertion> alternative = (List<Assertion>) ApplicationContext.getInstance().get(CONTEXT_KEY_ALTERNATIVE);
+			enableExtensions(alternative);
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
 	}
 	
 	//********************************************************
 	//auxiliary methods
 	
-	/**
-	 * Loads the configuration property defining the policy file to use
-	 * 
-	 * @return String representing the name of the policy file defined
-	 * @throws ConfigException When an exception occurs trying to load the property
-	 * @throws WSConfigurationException When the property is undefined
-	 */
 	private String loadFilenameFromConfig() throws ConfigException, WSConfigurationException
 	{
 		log.debug("Loading policy filename from config");
@@ -116,14 +161,6 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		return filename;
 	}
 	
-	/**
-	 * Loads a policy from the file given by filename
-	 * 
-	 * @param	filename	The name of the file to load as policy
-	 * @return 				Policy defined by the specified filename
-	 * @throws WSConfigurationException When the file given by filename doesn't exist
-	 * 		   or doesn't specify a valid policy
-	 */
 	private Policy loadPolicy(String filename) throws WSConfigurationException
 	{
 		log.debug("Loading policy from file \"" + filename + "\"");
@@ -137,13 +174,6 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		return policy;
 	}
 	
-	/**
-	 * Loads a policy from the file given by filename
-	 * 
-	 * @param	smc			SOAP message context
-	 * @return 				Server policy defined for the invoked service
-	 * @throws WSConfigurationException When the policy can't be retrieved
-	 */
 	private Policy getServerPolicy(SOAPMessageContext smc) throws WSConfigurationException
 	{
 		try
@@ -153,6 +183,28 @@ public class WSPolicyConfigurator implements WSConfigurator {
 				throw new WSConfigurationException("Server policy property is undefined");
 			
 			ServerPolicyObtainer policyObt = new ServerPolicyObtainer(new HTTPWSDLObtainer(wsdlUrl));
+			
+			return policyObt.getServicePolicy();
+		}
+		catch(WSConfigurationException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
+	}
+	
+	private Policy getPolicyFromWSDL(SOAPMessageContext smc) throws WSConfigurationException
+	{
+		try
+		{
+			String wsdlUrl = Config.getInstance().getInitParameter(SERVER_POLICY_PROPERTY_NAME);
+			if(wsdlUrl == null)
+				throw new WSConfigurationException("Server policy property is undefined");
+			
+			ServerPolicyObtainer policyObt = new ServerPolicyObtainer(new LocalWSDLObtainer(wsdlUrl));
 			
 			return policyObt.getServicePolicy();
 		}
@@ -195,8 +247,8 @@ public class WSPolicyConfigurator implements WSConfigurator {
 			
 			SOAPHeaderElement element = soapHeader.addHeaderElement(QN_POLICY_HEADER);
 			String strPolicy = PolicyUtil.toString(policy);
-			element.setTextContent(strPolicy);
-			System.out.println("POLICY_HEADER\n" + strPolicy + "END_POLICY_HEADER");
+			System.out.println("POLICY_HEADER" + strPolicy + "END_POLICY_HEADER");
+			element.setValue(strPolicy);
 		}
 		catch(Exception e)
 		{
@@ -204,13 +256,34 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		}
 	}
 	
-	/**
-	 * Interprets the policy in order to find a valid alternative
-	 * 
-	 * @param	policy 	The loaded policy to be interpreted
-	 * @return			A list of assertions/components that must be configured 
-	 * @throws WSConfigurationException When the policy has no valid alternatives
-	 */
+	@SuppressWarnings("unchecked")
+	private Policy getPolicyFromHeader(SOAPMessage message) throws WSConfigurationException
+	{
+		try
+		{
+            SOAPHeader soapHeader = message.getSOAPPart().getEnvelope().getHeader();            
+            if(soapHeader == null)
+            	return null;
+            
+			Iterator<SOAPHeaderElement> it = (Iterator<SOAPHeaderElement>) soapHeader.examineAllHeaderElements();
+			while(it.hasNext())
+			{
+				SOAPHeaderElement current = it.next();
+				if(current.getElementQName().equals(QN_POLICY_HEADER))
+				{
+					//found policy header
+					return PolicyUtil.getPolicy(current);
+				}
+			}
+			
+			return null;
+		}
+		catch(Exception e)
+		{
+			throw new WSConfigurationException(e);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	private List<Assertion> getAlternative(Policy policy) throws WSConfigurationException
 	{
@@ -245,13 +318,6 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		throw new WSConfigurationException("The defined policy has no valid alternatives");
 	}
 	
-	/**
-	 * Tries to enable the required extensions to meet the requirements specified by alternative
-	 * 
-	 * @param	alternative	The list of conditions/assertions that must be met
-	 * @return 				<b>true</b> or <b>false</b> according to the success of the configuration process
-	 * @throws WSConfigurationException When it wasn't possible to enable an extension
-	 */
 	private void enableExtensions(List<Assertion> alternative) throws WSConfigurationException
 	{
 		log.debug("Configuring necessary extensions to meet policy requirements");

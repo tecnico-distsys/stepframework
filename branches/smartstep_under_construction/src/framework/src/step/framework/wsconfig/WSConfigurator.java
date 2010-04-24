@@ -4,21 +4,8 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 public interface WSConfigurator {
 	
-	/**
-	 * Configures the extension engine.
-	 * <p>
-	 * Returns true or false according to configuration success.
-	 * 
-	 * @return								<b>true</b> or <b>false</b> according to configuration success
-	 * @throws	WSConfigurationException	If an unexpected, irrecoverable exception occured	
-	 */
-	public boolean config(SOAPMessageContext smc) throws WSConfigurationException;
-	
-	/**
-	 * Resets the configured changes made to the extension engine.
-	 * 
-	 * @throws	WSConfigurationException	If an unexpected, irrecoverable exception occured	
-	 */
-	public void reset() throws WSConfigurationException;
-
+	public void configClientOutbound(SOAPMessageContext smc) throws WSConfigurationException;
+	public void configServerInbound(SOAPMessageContext smc) throws WSConfigurationException;
+	public void configServerOutbound(SOAPMessageContext smc) throws WSConfigurationException;
+	public void configClientInbound(SOAPMessageContext smc) throws WSConfigurationException;
 }

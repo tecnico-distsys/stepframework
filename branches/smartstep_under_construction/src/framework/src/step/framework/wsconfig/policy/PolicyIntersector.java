@@ -8,7 +8,7 @@ import org.apache.neethi.Assertion;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
 
-public class Intersector {
+public class PolicyIntersector {
 
 	@SuppressWarnings("unchecked")
 	public static Policy intersect(Policy policy1, Policy policy2)
