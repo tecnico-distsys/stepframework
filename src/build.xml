@@ -4,25 +4,26 @@
 
     <description>Project super-build file. Customize as required.</description>
 
-
-    <!-- Framework -->
-    <target name="build-framework"
-        description="Build STEP framework">
-        <echo message="***** BUILDING FRAMEWORK *****" />
+    <!-- STEP -->
+    <target name="build-step"
+        description="Build step framework">
+        <echo message="***** BUILDING STEP *****" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="framework" target="build" />
+        <ant inheritAll="false" dir="framework" target="dist-to-lib" />
     </target>
 
-    <target name="clean-framework" depends="dist-clean"
-        description="Clean STEP framework">
+    <target name="clean-step"
+        description="Clean step framework">
         <ant inheritAll="false" dir="framework" target="clean" />
     </target>
 
-    <target name="rebuild-framework" depends="clean-framework,build-framework" />
-
-
-    <!-- EXAMPLES -->
+    <target name="rebuild-step" depends="clean-step,build-step" />
+	
+    <target name="build-test-step"
+        description="Build and test step framework">
+        <ant inheritAll="false" dir="framework" target="build" />
+    </target>
 
     <!-- Extensions -->
     <target name="build-extensions"
@@ -40,72 +41,6 @@
 
     <target name="rebuild-extensions" depends="clean-extensions,build-extensions" />
 
-    <!-- propagate libraries to sub-projects -->
-    <macrodef name="dist-to-dir">
-        <attribute name="dir"/>
-        <sequential>
-            <ant inheritAll="false" dir="framework" target="dist-to-dir">
-                <property name="to.dir" location="@{dir}"/>
-            </ant>
-            <copy todir="@{dir}/war/WEB-INF/lib" overwrite="true">
-                <fileset dir="../lib/fenix-framework/application-specific" includes="*.jar"/>
-            </copy>
-<!--
-            <copy todir="@{dir}/war/WEB-INF/lib" overwrite="true" flatten="true">
-                <fileset dir="../lib" includes="**/application-specific/*.jar"/>
-            </copy>
-            <copy todir="@{dir}/lib" overwrite="true" flatten="true">
-                <fileset dir="../lib" includes="**/development-time/*.jar"/>
-            </copy>
--->
-        </sequential>
-    </macrodef>
-
-    <macrodef name="clean-from-dir">
-        <attribute name="dir" />
-        <sequential>
-            <ant inheritAll="false" dir="framework" target="dist-clean">
-                <property name="from.dir" location="@{dir}"/>
-            </ant>
-            <delete includeemptydirs="true" deleteonexit="true" failonerror="false">
-                <fileset dir="@{dir}/war/WEB-INF/lib">
-                    <present targetdir="../lib/fenix-framework/application-specific"/>
-                </fileset>
-<!--
-                <fileset dir="@{dir}/war/WEB-INF/lib">
-                    <present targetdir="../lib">
-                        <mapper type="regexp" from="^(?:.+/)?development-time/([^/]+\.jar)" to="\1"/>
-                    </present>
-                </fileset>
-                <fileset dir="@{dir}/lib">
-                    <present targetdir="../lib">
-                        <mapper type="regexp" from="^(?:.+/)?development-time/([^/]+\.jar)" to="\1"/>
-                    </present>
-                </fileset>
--->
-            </delete>
-        </sequential>
-    </macrodef>
-
-
-    <target name="dist-framework"
-        description="Copy required libraries to each sub-project">
-        <echo message="***** DISTRIBUTE LIBRARIES TO SUB-PROJECTS *****" />
-        <sleep seconds="1"/>
-
-        <dist-to-dir dir="flight"/>
-        <dist-to-dir dir="mediator"/>
-    </target>
-
-    <target name="dist-clean"
-        description="Delete required libraries from all sub-projects">
-        <echo message="***** REMOVE LIBRARIES FROM SUB-PROJECTS *****" />
-        <sleep seconds="1"/>
-
-        <clean-from-dir dir="flight"/>
-        <clean-from-dir dir="mediator"/>
-    </target>
-
 
     <!-- Flight -->
     <target name="build-flight"
@@ -113,45 +48,49 @@
         <echo message="***** BUILDING flight APPLICATION *****" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="flight" target="create-war" />
+        <ant inheritAll="false" dir="flight-ws" target="build" />
+        <ant inheritAll="false" dir="flight-ws-cli" target="build" />
     </target>
 
     <target name="clean-flight"
         description="Clean flight">
-        <ant inheritAll="false" dir="flight" target="clean" />
+        <ant inheritAll="false" dir="flight-ws-cli" target="clean" />
+        <ant inheritAll="false" dir="flight-ws" target="clean" />
     </target>
+
+    <target name="rebuild-flight" depends="clean-flight,build-flight" />
 
     <target name="deploy-flight"
         description="Deploy flight">
-        <ant inheritAll="false" dir="flight" target="deploy" />
+        <ant inheritAll="false" dir="flight-ws" target="deploy" />
     </target>
 
     <target name="redeploy-flight"
         description="Redeploy flight">
-        <ant inheritAll="false" dir="flight" target="redeploy" />
+        <ant inheritAll="false" dir="flight-ws" target="redeploy" />
     </target>
 
     <target name="undeploy-flight"
         description="Undeploy flight">
-        <ant inheritAll="false" dir="flight" target="undeploy" />
+        <ant inheritAll="false" dir="flight-ws" target="undeploy" />
     </target>
 
-    <target name="setup-flight"
-        description="Prepares flight database for usage">
-        <echo message="------ SETTING UP flight DATABASE -----" />
+    <target name="hibernatetool-flight"
+        description="Create tables for flight domain">
+        <echo message="------ CREATING flight DATABASE -----" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="flight" target="setup" />
+        <ant inheritAll="false" dir="flight-ws" target="hibernatetool" />
     </target>
-<!--
+
     <target name="run-tests-flight"
         description="Run all flight service tests">
-        <echo message="##### RUNNING mediator TESTS #####" />
+        <echo message="##### RUNNING flight TESTS #####" />
         <sleep seconds="1"/>
 
         <ant inheritAll="false" dir="flight-ws" target="run-tests" />
     </target>
--->
+
 
     <!-- Mediator -->
     <target name="build-mediator"
@@ -159,37 +98,39 @@
         <echo message="***** BUILDING mediator APPLICATION *****" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="mediator" target="create-war" />
+        <ant inheritAll="false" dir="mediator-web" target="build" />
     </target>
 
     <target name="clean-mediator"
         description="Clean mediator">
-        <ant inheritAll="false" dir="mediator" target="clean" />
+        <ant inheritAll="false" dir="mediator-web" target="clean" />
     </target>
+
+    <target name="rebuild-mediator" depends="clean-mediator,build-mediator" />
 
     <target name="deploy-mediator"
         description="Deploy mediator">
-        <ant inheritAll="false" dir="mediator" target="deploy" />
+        <ant inheritAll="false" dir="mediator-web" target="deploy" />
     </target>
 
     <target name="redeploy-mediator"
         description="Redeploy mediator">
-        <ant inheritAll="false" dir="mediator" target="redeploy" />
+        <ant inheritAll="false" dir="mediator-web" target="redeploy" />
     </target>
 
     <target name="undeploy-mediator"
         description="Undeploy mediator">
-        <ant inheritAll="false" dir="mediator" target="undeploy" />
+        <ant inheritAll="false" dir="mediator-web" target="undeploy" />
     </target>
 
-    <target name="setup-mediator"
-        description="Prepares mediator database for usage">
-        <echo message="------ SETTING UP mediator DATABASE -----" />
+    <target name="hibernatetool-mediator"
+        description="Create tables for mediator domain">
+        <echo message="------ CREATING mediator DATABASE -----" />
         <sleep seconds="1"/>
 
-        <ant inheritAll="false" dir="mediator" target="setup" />
+        <ant inheritAll="false" dir="mediator-web" target="hibernatetool" />
     </target>
-<!--
+
     <target name="run-tests-mediator"
         description="Run all mediator service tests">
         <echo message="##### RUNNING mediator TESTS #####" />
@@ -197,18 +138,26 @@
 
         <ant inheritAll="false" dir="mediator-web" target="run-tests" />
     </target>
--->
+
 
     <!-- ALL -->
-    <target name="build" depends="build-extensions,build-flight,build-mediator"
+    <target name="build" depends="build-step,build-extensions,build-flight,build-mediator"
         description="Build all projects in the correct order">
     </target>
+	
+    <target name="build-apps" depends="build-extensions,build-flight,build-mediator"
+        description="Build all apps in the correct order">
+    </target>
 
-    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions"
+    <target name="clean" depends="clean-mediator,clean-flight,clean-extensions,clean-step"
         description="Clean all projects">
     </target>
 
     <target name="rebuild" depends="clean,build"
+        description="Rebuild all projects in the correct order">
+    </target>
+
+    <target name="rebuild-apps" depends="clean,build-apps"
         description="Rebuild all projects in the correct order">
     </target>
 
@@ -224,13 +173,13 @@
         description="Undeploy all web applications">
     </target>
 
-    <target name="setup" depends="setup-flight,setup-mediator"
+    <target name="hibernatetool" depends="hibernatetool-flight,hibernatetool-mediator"
         description="Generate all database schemas">
     </target>
-<!--
+
     <target name="run-tests" depends="run-tests-flight,run-tests-mediator"
         description="Run all service tests">
     </target>
--->
+
 
 </project>

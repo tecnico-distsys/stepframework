@@ -1,7 +1,6 @@
 package step.framework.extensions;
 
 import java.util.Collections;
-//import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -630,5 +629,25 @@ public class Extension {
             log.trace("finally exiting stop");
         }
     }
-
+    
+    //**********************************************************************************
+    //Automatic configuration liaison methods
+    
+    public void enable() throws ExtensionException
+    {
+    	if(!enabled)
+    	{
+    		this.enabled = true;
+        	start();
+    	}
+    }
+    
+    public void disable() throws ExtensionException
+    {
+    	if(enabled)
+    	{
+    		this.enabled = false;
+        	stop();
+    	}
+    }
 }

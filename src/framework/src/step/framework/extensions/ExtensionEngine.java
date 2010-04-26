@@ -649,4 +649,18 @@ public class ExtensionEngine {
         }
     }
 
+    //**********************************************************************************
+    //Automatic configuration liaison methods
+    
+    public Extension getExtension(String id)
+    {
+    	for(int i=0; i<extensionList.size(); i++)
+    	{
+    		Extension extension = extensionList.get(i);
+    		if(extension.getId().equals(id))
+    			return extension;
+    	}
+    	
+    	return null;
+    }
 }

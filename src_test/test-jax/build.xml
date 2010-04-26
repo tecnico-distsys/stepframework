@@ -12,7 +12,6 @@
         <ant inheritAll="false" dir="ws-cli" target="clean" />
         <ant inheritAll="false" dir="ws-cli-web" target="clean" />
         <ant inheritAll="false" dir="ws-handlers" target="clean" />
-        <ant inheritAll="false" dir="r" target="clean" />
     </target>
 
     <target name="build"
@@ -23,7 +22,6 @@
         <ant inheritAll="false" dir="ws" target="build" />
         <ant inheritAll="false" dir="ws-cli" target="build" />
         <ant inheritAll="false" dir="ws-cli-web" target="build" />
-        <ant inheritAll="false" dir="r" target="build" />
     </target>
 
     <target name="rebuild" depends="clean,build" >

@@ -1,9 +1,12 @@
 package step.framework.extensions;
 
+import static org.junit.Assert.*;
+
 import java.util.Map;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 
 public class ExtensionEngineTest {

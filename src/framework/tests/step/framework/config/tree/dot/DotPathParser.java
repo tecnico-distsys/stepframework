@@ -6,6 +6,7 @@ import step.framework.config.tree.*;
 
 
 public class DotPathParser implements ConfigPathParser {
+
 	private static final long serialVersionUID = 1L;
 
 	public List<String> parseConfigPath(String configPath) throws IllegalArgumentException {

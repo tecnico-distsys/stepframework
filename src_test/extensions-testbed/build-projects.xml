@@ -1,0 +1,47 @@
+<project name="testbed" basedir="." default="build">
+    <!-- project build file -->
+
+    <target name="clean" description="Clean all projects">
+        <ant inheritAll="false" dir="helloclient-web" target="clean" />
+        <ant inheritAll="false" dir="hello-ws" target="clean" />
+        <ant inheritAll="false" dir="hello-wsclient" target="clean" />
+        <ant inheritAll="false" dir="results-asserter" target="clean" />
+    </target>
+
+    <target name="build" description="Build all projects in the correct order">
+
+        <ant inheritAll="false" dir="results-asserter" target="build" />
+
+    	<echo message="***** BUILDING WEB SERVICE *****" />
+    	<sleep seconds="2"/>
+        <ant inheritAll="false" dir="hello-ws" target="build" />
+
+    	<echo message="***** BUILDING WEB SERVICE CLIENT *****" />
+    	<sleep seconds="2"/>
+        <ant inheritAll="false" dir="hello-wsclient" target="build" />
+
+    	<echo message="***** BUILDING WEB APPLICATION *****" />
+    	<sleep seconds="2"/>
+        <ant inheritAll="false" dir="helloclient-web" target="build" />
+    </target>
+
+    <target name="rebuild" depends="clean,build">
+    <!-- description="Rebuild the project" -->
+    </target>
+
+    <target name="deploy" description="Deploy server web application">
+        <ant inheritAll="false" dir="hello-ws" target="deploy" />
+        <ant inheritAll="false" dir="helloclient-web" target="deploy" />
+    </target>
+
+    <target name="redeploy" description="Redeploy server web application">
+        <ant inheritAll="false" dir="hello-ws" target="redeploy" />
+        <ant inheritAll="false" dir="helloclient-web" target="redeploy" />
+    </target>
+
+    <target name="undeploy" description="Undeploy web server application">
+        <ant inheritAll="false" dir="hello-ws" target="undeploy" />
+        <ant inheritAll="false" dir="helloclient-web" target="undeploy" />
+    </target>
+
+</project>

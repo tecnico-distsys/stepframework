@@ -1,5 +1,6 @@
 package step.framework.config.tree.dot;
 
+
 public class DotConfig {
 
     public String data;
