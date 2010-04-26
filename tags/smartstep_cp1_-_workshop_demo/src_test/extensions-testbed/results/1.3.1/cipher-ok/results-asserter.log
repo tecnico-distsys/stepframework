@@ -1,0 +1,26 @@
+[2010-03-23 21:45:38,796] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:45:38,799]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:45:38,804]DEBUG     8[main](AssertMain.java:22) - args[0] 'cipher-ok'
+[2010-03-23 21:45:38,804]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-ok'
+[2010-03-23 21:45:38,804]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-23 21:45:38,820]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-23 21:45:38,820]TRACE    24[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-ok
+[2010-03-23 21:45:38,821]TRACE    25[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-ok\soap-trace-client.log
+[2010-03-23 21:45:38,821]TRACE    25[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-ok\log-server.log
+[2010-03-23 21:45:38,821]TRACE    25[main](AssertMain.java:68) - config: cipher-ok
+[2010-03-23 21:45:38,822]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-ok\soap-trace-server.log
+[2010-03-23 21:45:38,822]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-ok\log-client.log
+[2010-03-23 21:45:38,822]DEBUG    26[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:45:38,822]DEBUG    26[main](AssertMain.java:79) - Asserting configuration 'cipher-ok'
+[2010-03-23 21:45:38,841] INFO    45[main](Assertions.java:20) - assertClientNoException
+[2010-03-23 21:45:38,862] INFO    66[main](Assertions.java:28) - assertClientHelloFriend
+[2010-03-23 21:45:38,864] INFO    68[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:45:38,865] INFO    69[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:45:38,866] INFO    70[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:45:38,867] INFO    71[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:45:38,867] INFO    71[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:45:38,868] INFO    72[main](Assertions.java:172) - assertSOAPBodyCipherCounts
+[2010-03-23 21:45:38,868] INFO    72[main](Assertions.java:138) - assertCountClientSOAPBodyCipher
+[2010-03-23 21:45:38,869] INFO    73[main](Assertions.java:143) - assertCountServerSOAPBodyCipher
+[2010-03-23 21:45:38,869] INFO    73[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'cipher-ok'
+[2010-03-23 21:45:38,869] INFO    73[main](AssertMain.java:37) - End of results asserter.

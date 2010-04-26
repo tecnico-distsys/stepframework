@@ -1,0 +1,31 @@
+<project name="hibernate-mysql-bigdecimal-patch" default="build" basedir=".">
+
+    <!-- PROPERTIES before imports (overrides) -->
+    <property name="import-ant" value="../../src/import-ant" />
+
+    <!-- IMPORTS -->
+    <import file="${import-ant}/core.xml" />
+    <import file="${import-ant}/library.xml" />
+
+    <!-- PROPERTIES after imports -->
+
+    <!-- CLASSPATHS -->
+    <property name="jar.external.enabled" value="" />
+    <path id="jar.external.path">
+        <fileset dir="../../src/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <path id="compile.classpath">
+        <path refid="project.lib.path" />
+        <path refid="jar.external.path" />
+    </path>
+
+    <!-- TARGETS -->
+    <target name="build"
+            depends="config,build-library"
+            description="Build the project">
+    </target>
+
+</project>
