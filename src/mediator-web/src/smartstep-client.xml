@@ -2,7 +2,7 @@
 		xmlns:ssp="http://stepframework.sourceforge.net/smartstep/policy">
 	<ExactlyOne>
 	  <All>
-		<ssp:Cipher extension="cipher" />
+		<!--<ssp:Cipher extension="cipher" />-->
 		<ssp:Identification extension="id" />
 	  </All>
 	</ExactlyOne>

@@ -106,12 +106,10 @@
     <service name="FlightService">
 		<wsp:Policy>
 			<wsp:ExactlyOne>
-			  <wsp:All>
+			  <!--<wsp:All>
 				<ssp:Cipher extension="cipher"/>
-				<ssp:Identification extension="id"/>
-			  </wsp:All>
+			  </wsp:All>-->
 			  <wsp:All>
-				<ssp:Cipher extension="cipher"/>
 				<ssp:Identification extension="id"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
