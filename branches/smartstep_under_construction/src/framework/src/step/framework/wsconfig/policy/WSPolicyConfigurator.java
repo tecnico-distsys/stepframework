@@ -37,7 +37,8 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	private static final String LOCAL_POLICY_PROPERTY_NAME = "wsconfig.policy.local";
 	private static final String SERVER_POLICY_PROPERTY_NAME = "wsconfig.policy.server";
 	
-	private static final String CONTEXT_KEY_ALTERNATIVE = "wsconfig.policy";
+	private static final String CONTEXT_KEY_ALTERNATIVE = "wsconfig.context.alternative";
+	private static final String CONTEXT_KEY_POLICY = "wsconfig.context.policy";
 
     /** Logging */
     private Log log;
@@ -56,19 +57,33 @@ public class WSPolicyConfigurator implements WSConfigurator {
 
 	public void configClientOutbound(SOAPMessageContext smc) throws WSConfigurationException
 	{
+		System.out.println("\nCONFIG CLIENT OUTBOUND\n");
+		
 		log.debug("Configuring extensions for outbound client message");
 		
 		try
 		{
 			String filename = loadFilenameFromConfig();
 			Policy localPolicy = loadPolicy(filename);
-			Policy serverPolicy = getServerPolicy(smc);	
+			Policy serverPolicy = getServerPolicy(smc);		
 			Policy policy = PolicyUtil.intersect(localPolicy, serverPolicy);
+			//TODO: start debug
+			System.out.println("\nLOCAL_POLICY");
+			PolicyUtil.printAlternatives(localPolicy);
+			System.out.println("END_LOCAL_POLICY\n");
+			System.out.println("\nSERVER_POLICY");
+			PolicyUtil.printAlternatives(serverPolicy);
+			System.out.println("END_SERVER_POLICY\n");
+			System.out.println("\nUSED_POLICY");
+			PolicyUtil.printAlternatives(policy);
+			System.out.println("END_USED_POLICY\n");
+			//TODO: end debug
 			if(hasAlternatives(serverPolicy))
 				addPolicyHeader(smc.getMessage(), policy);
 			List<Assertion> alternative = getAlternative(policy);
 			enableExtensions(alternative);
 			ApplicationContext.getInstance().put(CONTEXT_KEY_ALTERNATIVE, alternative);
+			ApplicationContext.getInstance().put(CONTEXT_KEY_POLICY, policy);
 		}
 		catch(WSConfigurationException e)
 		{
@@ -82,6 +97,8 @@ public class WSPolicyConfigurator implements WSConfigurator {
 
 	public void configServerInbound(SOAPMessageContext smc) throws WSConfigurationException
 	{
+		System.out.println("\nCONFIG SERVER INBOUND\n");
+		
 		log.debug("Configuring extensions for inbound server message");
 		
 		try
@@ -94,14 +111,25 @@ public class WSPolicyConfigurator implements WSConfigurator {
 					throw new WSConfigurationException("Error loading server local policy.");					
 				if(hasAlternatives(policy))
 					throw new WSConfigurationException("Unspecified policy alternative.");
+
+				//TODO: start debug
+				System.out.println("\nWSDL_POLICY");
+				PolicyUtil.printPolicy(policy);
+				System.out.println("END_WSDL_POLICY\n");
+				//TODO: end debug
 			}
 			else
 			{
-				//TODO: validate
+				//TODO: start debug
+				System.out.println("\nPOLICY_HEADER");
+				PolicyUtil.printPolicy(policy);
+				System.out.println("END_POLICY_HEADER\n");
+				//TODO: end debug
 			}
 			List<Assertion> alternative = getAlternative(policy);
 			enableExtensions(alternative);
-			ApplicationContext.getInstance().put(CONTEXT_KEY_ALTERNATIVE, alternative);		
+			ApplicationContext.getInstance().put(CONTEXT_KEY_ALTERNATIVE, alternative);
+			ApplicationContext.getInstance().put(CONTEXT_KEY_POLICY, policy);
 		}
 		catch(WSConfigurationException e)
 		{
@@ -116,10 +144,18 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	@SuppressWarnings("unchecked")
 	public void configServerOutbound(SOAPMessageContext smc) throws WSConfigurationException
 	{
+		System.out.println("\nCONFIG SERVER OUTBOUND\n");
+		
 		log.debug("Configuring extensions for outbound server message");
 		
 		try
 		{
+			//TODO: start debug
+			Policy policy = (Policy) ApplicationContext.getInstance().get(CONTEXT_KEY_POLICY);
+			System.out.println("\nSAVED_POLICY");
+			PolicyUtil.printPolicy(policy);
+			System.out.println("END_SAVED_POLICY\n");
+			//TODO: end debug			
 			List<Assertion> alternative = (List<Assertion>) ApplicationContext.getInstance().get(CONTEXT_KEY_ALTERNATIVE);
 			enableExtensions(alternative);
 		}
@@ -132,10 +168,18 @@ public class WSPolicyConfigurator implements WSConfigurator {
 	@SuppressWarnings("unchecked")
 	public void configClientInbound(SOAPMessageContext smc) throws WSConfigurationException
 	{
+		System.out.println("\nCONFIG CLIENT INBOUND\n");
+		
 		log.debug("Configuring extensions for inbound client message");
 		
 		try
 		{
+			//TODO: start debug
+			Policy policy = (Policy) ApplicationContext.getInstance().get(CONTEXT_KEY_POLICY);
+			System.out.println("\nSAVED_POLICY");
+			PolicyUtil.printPolicy(policy);
+			System.out.println("END_SAVED_POLICY\n");
+			//TODO: end debug
 			List<Assertion> alternative = (List<Assertion>) ApplicationContext.getInstance().get(CONTEXT_KEY_ALTERNATIVE);
 			enableExtensions(alternative);
 		}
@@ -247,7 +291,6 @@ public class WSPolicyConfigurator implements WSConfigurator {
 			
 			SOAPHeaderElement element = soapHeader.addHeaderElement(QN_POLICY_HEADER);
 			String strPolicy = PolicyUtil.toString(policy);
-			System.out.println("POLICY_HEADER" + strPolicy + "END_POLICY_HEADER");
 			element.setValue(strPolicy);
 		}
 		catch(Exception e)
@@ -271,7 +314,7 @@ public class WSPolicyConfigurator implements WSConfigurator {
 				SOAPHeaderElement current = it.next();
 				if(current.getElementQName().equals(QN_POLICY_HEADER))
 				{
-					//found policy header
+					soapHeader.removeChild(current);
 					return PolicyUtil.getPolicy(current);
 				}
 			}
