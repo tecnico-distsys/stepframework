@@ -1,3 +1,7 @@
+/**
+ *  DBCommand - template for groovy commands that use a database
+ */
+
 import org.apache.commons.cli.*;
 import groovy.sql.Sql;
 
@@ -10,7 +14,7 @@ public class DBCommand extends ByYourCommand {
     //
     public static void main(String[] args) {
         DBCommand instance = new DBCommand();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
@@ -28,8 +32,6 @@ public class DBCommand extends ByYourCommand {
             // load libraries
             ClassLoaderHelper.addJarDir(env["STEP_HOME"] + "/lib");
 
-            //System.err.println("Adding STEP libraries location to class loader");
-
             // clear flag
             setupFlag = false;
         }
@@ -46,13 +48,16 @@ public class DBCommand extends ByYourCommand {
     String user;
     String pass;
 
+    /** Database object */
+    def sql;
+
 
     //
     //  Initialization
     //
 
-    @Override protected Options createOptions() {
-        Options options = super.createOptions();
+    @Override protected Options createCommandLineOptions() {
+        Options options = super.createCommandLineOptions();
 
         Option dOption = new Option("driver", "driver",
             /* hasArg */ true, "JDBC driver class name");
@@ -81,51 +86,46 @@ public class DBCommand extends ByYourCommand {
         return options;
     }
 
-    @Override protected void setDefaultValues() {
-        super.setDefaultValues();
-
-        driver = "com.mysql.jdbc.Driver";   // MySQL
-        url = "jdbc:mysql://localhost:3306/";
-        user = "";
-        pass = "";
-    }
-
-    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
-        if (!super.handleOptions(options, cmdLine)) return false;
-
-        String driverValue = getSetting("driver", cmdLine);
-        if (driverValue != null) {
-            driver = driverValue;
-        }
-
-        String urlValue = getSetting("url", cmdLine);
-        if (urlValue != null) {
-            url = urlValue;
-        }
-
-        String userValue = getSetting("user", cmdLine);
-        if (userValue != null) {
-            user = userValue;
-        }
-
-        String passValue = getSetting("pass", cmdLine);
-        if (passValue != null) {
-            pass = passValue;
-        }
-
-        return true;
-    }
-
 
     //
     //  Runnable
     //
 
+    @Override protected boolean cmdInit() {
+        if (!super.cmdInit()) return false;
+
+        if (sql == null) {
+
+            String driverValue = settings["driver"];
+            if (driverValue == null) driverValue = "com.mysql.jdbc.Driver";   // MySQL
+
+            String urlValue = settings["url"];
+            if (urlValue == null) {
+                err.println("Database URL setting is missing!");
+                return false;
+            }
+
+            String userValue = settings["user"];
+            if (userValue == null) userValue = "";
+
+            String passValue = settings["pass"];
+            if (passValue == null) passValue = "";
+
+            this.driver = driverValue;
+            this.url = urlValue;
+            this.user = userValue;
+            this.pass = passValue;
+
+        }
+
+        return true;
+    }
+
     /**
      *  Run template method.
      *  Subclasses should override invoked methods to customize behavior.
      **/
-    @Override final public void run() {
+    @Override final public void cmdRun() {
         DBCommand.setup();
 
         try {
@@ -142,9 +142,6 @@ public class DBCommand extends ByYourCommand {
 
     }
 
-    /** Database connection */
-    protected def sql;
-
     /** run step: open database connection */
     protected void dbOpen() {
         // create database connection
@@ -156,7 +153,7 @@ public class DBCommand extends ByYourCommand {
 
     /** run step: execute database commands */
     protected void dbRun() {
-        println("By your DataBase command!");
+        println("By your DataBase command ;-)");
     }
 
     /** run step: commit transaction */

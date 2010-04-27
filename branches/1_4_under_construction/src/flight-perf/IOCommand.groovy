@@ -1,3 +1,7 @@
+/**
+ *  IOCommand - template for groovy commands that accept file input and output
+ */
+ 
 import org.apache.commons.cli.*;
 
 public class IOCommand extends ByYourCommand {
@@ -9,7 +13,7 @@ public class IOCommand extends ByYourCommand {
     //
     public static void main(String[] args) {
         IOCommand instance = new IOCommand();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
@@ -28,8 +32,8 @@ public class IOCommand extends ByYourCommand {
     //  Initialization
     //
 
-    @Override protected Options createOptions() {
-        Options options = super.createOptions();
+    @Override protected Options createCommandLineOptions() {
+        Options options = super.createCommandLineOptions();
 
         Option iOption = new Option("i", "input",
             /* hasArg */ true, "input file (stdin by default)");
@@ -46,34 +50,37 @@ public class IOCommand extends ByYourCommand {
         return options;
     }
 
-    @Override protected void setDefaultValues() {
-        super.setDefaultValues();
-        i = System.in;
-        o = System.out;
-    }
 
-    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
-        if (!super.handleOptions(options, cmdLine)) return false;
+    //
+    //  Runnable
+    //
 
-        String iValue = getSetting("i", cmdLine);
-        if (iValue != null) {
-            i = new FileInputStream(iValue);
+    @Override protected boolean cmdInit() {
+        if (!super.cmdInit()) return false;
+
+        if (i == null) {
+            def iValue = settings["input"];
+            if (iValue == null) {
+                i = System.in;
+            } else {
+                i = new FileInputStream(iValue);
+            }
         }
 
-        String oValue = getSetting("o", cmdLine);
-        if (oValue != null) {
-            o = new PrintStream(new FileOutputStream(oValue));
+        if (o == null) {
+            def oValue = settings["output"];
+            if (oValue == null) {
+                o = System.out;
+            } else {
+                o = new PrintStream(new FileOutputStream(oValue));
+            }
         }
 
         return true;
     }
 
-
-    //
-    //  Runnable
-    //
-    @Override public void run() {
-        o.println("By your i/o command!");
+    @Override protected void cmdRun() {
+        o.println("By your Input/Output command ;-)");
     }
 
 }

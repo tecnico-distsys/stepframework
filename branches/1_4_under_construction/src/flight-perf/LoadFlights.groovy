@@ -9,16 +9,13 @@ public class LoadFlights extends DBCommand {
 
     public static void main(String[] args) {
         LoadFlights instance = new LoadFlights();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
 
     // --- instance ---
 
-    //
-    //  Members
-    //
     Long seed;
     Random random;
 
@@ -29,56 +26,46 @@ public class LoadFlights extends DBCommand {
     Integer maxGroup;
 
 
-    //
-    //  Initialization
-    //
+    @Override protected Options createCommandLineOptions() {
+        Options options = super.createCommandLineOptions();
 
-    @Override protected void setDefaultValues() {
-        super.setDefaultValues();
+        options.addOption(CommandHelper.buildSeedOption());
 
-        seed = null;
-        random = null;
+        options.addOption(CommandHelper.buildMaxCostOption());
+        options.addOption(CommandHelper.buildProfitOption());
 
-        maxCost = 1000;
-        profit = 0.15;
-
-        nr = 100;
-        maxGroup = 10;
-    }
-
-    @Override protected Options createOptions() {
-        Options options = super.createOptions();
-
-        CommandHelper.addSeedOption(options);
-
-        CommandHelper.addMaxCostOption(options);
-        CommandHelper.addProfitOption(options);
-
-        CommandHelper.addNrOption(options);
-        CommandHelper.addMaxGroupOption(options);
+        options.addOption(CommandHelper.buildNrOption());
+        options.addOption(CommandHelper.buildMaxGroupOption());
 
         return options;
     }
 
-    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
-        if (!super.handleOptions(options, cmdLine)) return false;
+    @Override protected boolean cmdInit() {
+        if (!super.cmdInit()) return false;
 
-        String seedValue = getSetting(CommandHelper.SEED_OPT, cmdLine);
-        seed = CommandHelper.initLong(seedValue, seedValue);
+        if (seed == null) {
+            seed = CommandHelper.initLong(settings[CommandHelper.SEED_LOPT], null);
+        }
 
-        random = CommandHelper.initRandom(seed);
+        if (random == null) {
+            random = CommandHelper.initRandom(seed);
+        }
 
-        String maxCostValue = getSetting(CommandHelper.MAX_COST_OPT, cmdLine);
-        maxCost = CommandHelper.initInteger(maxCostValue, maxCost);
+        if (maxCost == null) {
+            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], 1000);
+        }
 
-        String profitValue = getSetting(CommandHelper.PROFIT_OPT, cmdLine);
-        profit = CommandHelper.initDouble(profitValue, profit);
+        if (profit == null) {
+            profit = CommandHelper.initDouble(settings[CommandHelper.PROFIT_LOPT], 0.15);
+        }
 
-        String nrValue = getSetting(CommandHelper.NR_OPT, cmdLine);
-        nr = CommandHelper.initInteger(nrValue, nr);
+        if (nr == null) {
+            nr = CommandHelper.initInteger(settings[CommandHelper.NR_LOPT], 100);
+        }
 
-        String maxGroupValue = getSetting(CommandHelper.MAX_GROUP_OPT, cmdLine);
-        maxGroup = CommandHelper.initInteger(maxGroupValue, maxGroup);
+        if (maxGroup == null) {
+            maxGroup = CommandHelper.initInteger(settings[CommandHelper.MAX_GROUP_LOPT], 10);
+        }
 
         return true;
     }

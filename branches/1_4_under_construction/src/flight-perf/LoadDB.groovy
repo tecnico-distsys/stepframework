@@ -12,7 +12,7 @@ public class LoadDB extends DBCommand {
     //
     public static void main(String[] args) {
         LoadDB instance = new LoadDB();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
@@ -20,78 +20,70 @@ public class LoadDB extends DBCommand {
 
     // --- instance ---
 
-    //
-    //  Members
-    //
     Long seed;
     Random random;
 
 
-    //
-    //  Initialization
-    //
+    @Override protected Options createCommandLineOptions() {
+        Options options = super.createCommandLineOptions();
 
-    @Override protected void setDefaultValues() {
-        super.setDefaultValues();
-
-        seed = null;
-        random = null;
-    }
-
-    @Override protected Options createOptions() {
-        Options options = super.createOptions();
-
-        CommandHelper.addSeedOption(options);
+        options.addOption(CommandHelper.buildSeedOption());
 
         return options;
     }
 
-    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
-        if (!super.handleOptions(options, cmdLine)) return false;
+    @Override protected boolean cmdInit() {
+        if (!super.cmdInit()) return false;
 
-        if (!super.handleOptions(options, cmdLine)) return false;
-
-        String seedValue = getSetting(CommandHelper.SEED_OPT, cmdLine);
-        seed = CommandHelper.initLong(seedValue, seedValue);
-
-        random = CommandHelper.initRandom(seed);
+        if (seed == null) {                
+            seed = CommandHelper.initLong(settings[CommandHelper.SEED_LOPT], null);
+        }
+        
+        if (random == null) {
+            random = CommandHelper.initRandom(seed);
+        }
 
         return true;
     }
 
 
-    //
-    //  Runnable
-    //
     @Override public void dbRun() {
 
-        def del = new DeleteDB().init();
-        del.sql = this.sql;
-        del.dbRun();
-
-        def flightMan = new LoadFlightManager().init();
+        def del = new DeleteDB();
+        //del.loadSettingsFromProperties("db.properties");
+        del.settings["url"] = settings["url"];
+        del.settings["user"] = settings["user"];
+        del.settings["pass"] = settings["pass"];
+        del.run();
+/*
+        def flightMan = new LoadFlightManager();
+        flightMan.settings = this.settings;
         flightMan.sql = this.sql;
         flightMan.dbRun();
 
-        def airports = new LoadAirports().init();
+        def airports = new LoadAirports();
+        airports.settings = this.settings;
         airports.dataFile = new File("data\\airports.csv");
         airports.sql = this.sql;
         airports.random = this.random;
         airports.dbRun();
 
-        def airplanes = new LoadAirplanes().init();
+        def airplanes = new LoadAirplanes();
+        airplanes.settings = this.settings;
         airplanes.dataFile = new File("data\\fleet-BA.csv");
         airplanes.sql = this.sql;
         airplanes.random = this.random;
         airplanes.dbRun();
 
-        def flights = new LoadFlights().init();
+        def flights = new LoadFlights();
+        flights.settings = this.settings;
         flights.sql = this.sql;
         flights.random = this.random;
         flights.dbRun();
-
-        println "Done!";
+*/
+        println("Done!");
 
     }
+
 
 }

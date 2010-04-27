@@ -1,3 +1,11 @@
+/**
+ *  ByYourCommand - template for groovy commands
+ *
+ *  Features:
+ *  - define settings using command line, property files, or scripting
+ *  - run commands using command line or scripting
+ */
+
 import org.apache.commons.cli.*;
 
 public class ByYourCommand implements Runnable {
@@ -7,7 +15,7 @@ public class ByYourCommand implements Runnable {
     /** Main method - create instance, parse commands, and run! */
     public static void main(String[] args) {
         ByYourCommand instance = new ByYourCommand();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
@@ -20,29 +28,36 @@ public class ByYourCommand implements Runnable {
     //
 
     /** Shortcut for Standard Error output */
-    final protected PrintStream err = System.err;
+    final protected def err = System.err;
 
-    /** Settings read from property files */
-    protected Properties settings;
+    /** Settings */
+    public def settings = [ : ];
 
 
     //
     //  Initialization
     //
 
-    /** Initialize objects with default values */
-    public Object init() {
-        this.setDefaultValues();
-        return this;
+    /** Load settings from properties file */
+    public void loadSettingsFromProperties(String propFilePath) {
+        def props = new Properties();
+        props.load(new FileInputStream(propFilePath));
+        Enumeration enumeration = props.propertyNames();
+        while (enumeration.hasMoreElements()) {
+            String key = enumeration.nextElement();
+            settings.put(key, props.getProperty(key));
+        }
     }
 
-    /**
-     *  Parse arguments template method.
-     *  Subclasses should override invoked methods to customize behavior.
-     **/
-    protected boolean parseArgs(String[] args) {
-        Options options = this.createOptions();
 
+    /**
+     *  Handle command line arguments template method.
+     **/
+    protected boolean handleCommandLineArgs(String[] args) {
+        // create command line options
+        Options options = this.createCommandLineOptions();
+
+        // parse command line
         CommandLine cmdLine = null;
         try {
             cmdLine = this.parseCommandLine(options, args);
@@ -51,14 +66,13 @@ public class ByYourCommand implements Runnable {
             return false;
         }
 
-        this.setDefaultValues();
-
-        return this.handleOptions(options, cmdLine);
+        // handle options
+        return this.handleCommandLineOptions(options, cmdLine);
     }
 
 
     /** parseArgs step: create options */
-    protected Options createOptions() {
+    protected Options createCommandLineOptions() {
         Options options = new Options();
 
         Option hOption = new Option("h", "help",
@@ -80,17 +94,34 @@ public class ByYourCommand implements Runnable {
         return parser.parse(options, args);
     }
 
-    /** parseArgs step: set default values */
-    protected void setDefaultValues() {
-        settings = new Properties();
-    }
-
     /** parseArgs step: handle options */
-    protected boolean handleOptions(Options options, CommandLine cmdLine) {
+    protected boolean handleCommandLineOptions(Options options, CommandLine cmdLine) {
         if (!this.handleHelpOption(options, cmdLine))
             return false;
         if (!this.handlePropertiesOption(options, cmdLine))
             return false;
+
+        // copy option values to settings
+        for (Option option : cmdLine.options) {
+            // key is either long option or short option
+            def key = option.longOpt;
+            if (key == null) key = option.opt;
+            assert(key != null);
+
+            // store value in settings as object or as array
+            def valueArray = cmdLine.getOptionValues(key);
+            assert(valueArray.length > 0);
+            if(valueArray.length == 1) {
+                settings.put(key, valueArray[0]);
+            } else {
+                settings.put(key, valueArray);
+            }
+        }
+        def leftOverArray = cmdLine.getArgs();
+        if (leftOverArray.length > 0) {
+            settings.put("leftovers", leftOverArray);
+        }
+
         return true;    // proceed to run
     }
 
@@ -128,8 +159,7 @@ public class ByYourCommand implements Runnable {
             try {
                 String[] propPaths = cmdLine.getOptionValues("p");
                 for (int idx=0; idx < propPaths.length; idx++) {
-                    //err.println("Loading settings from " + propPaths[idx]);
-                    settings.load(new FileInputStream(propPaths[idx]));
+                    loadSettingsFromProperties(propPaths[idx]);
                 }
             } catch (IOException ioe) {
                 err.println(ioe.getMessage());
@@ -140,20 +170,24 @@ public class ByYourCommand implements Runnable {
     }
 
 
-    /** access setting value giving precedence to command line over loaded properties */
-    protected String getSetting(String key, CommandLine cmdLine) {
-        Object value = cmdLine.getOptionValue(key);
-        if (value == null) {
-            value = settings.get(key);
-        }
-        return value;
-    }
-
-
     //
     //  Runnable
     //
-    public void run() {
+
+    /** Template method */
+    final public void run() {
+        if (this.cmdInit()) {
+            this.cmdRun();
+        }
+    }
+
+    /** run step - initialize command using settings */
+    protected boolean cmdInit() {
+        return true;
+    }
+
+    /** run step - run command */
+    protected void cmdRun() {
         println("By your command ;-)");
     }
 
