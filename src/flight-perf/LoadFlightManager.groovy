@@ -8,7 +8,7 @@ public class LoadFlightManager extends DBCommand {
 
     public static void main(String[] args) {
         LoadFlightManager instance = new LoadFlightManager();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }

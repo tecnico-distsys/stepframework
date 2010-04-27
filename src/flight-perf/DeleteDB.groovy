@@ -8,7 +8,7 @@ public class DeleteDB extends DBCommand {
 
     public static void main(String[] args) {
         DeleteDB instance = new DeleteDB();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
@@ -18,10 +18,10 @@ public class DeleteDB extends DBCommand {
     @Override protected void dbRun() {
 
         err.println("Running " + this.class.simpleName);
-        err.printf("url %s", this.url);
+        err.printf("url %s", settings["url"]);
         err.println();
 
-        // delete taking dependencies into account
+        // delete all tables taking dependencies into account
         sql.execute("DELETE FROM flightreservation");
 
         sql.execute("DELETE FROM flightmanager_passenger");

@@ -9,16 +9,13 @@ public class LoadAirports extends DBCommand {
 
     public static void main(String[] args) {
         LoadAirports instance = new LoadAirports();
-        if (instance.parseArgs(args)) {
+        if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
     }
 
     // --- instance ---
 
-    //
-    //  Members
-    //
     Long seed;
     Random random;
 
@@ -26,49 +23,40 @@ public class LoadAirports extends DBCommand {
     Integer maxCost;
 
 
-    //
-    //  Initialization
-    //
+    @Override protected Options createCommandLineOptions() {
+        Options options = super.createCommandLineOptions();
 
-    @Override protected void setDefaultValues() {
-        super.setDefaultValues();
-
-        seed = null;
-        random = null;
-
-        dataFile = null;
-        maxCost = 10000;
-    }
-
-    @Override protected Options createOptions() {
-        Options options = super.createOptions();
-
-        CommandHelper.addSeedOption(options);
-        CommandHelper.addDataFileOption(options);
-        CommandHelper.addMaxCostOption(options);
+        options.addOption(CommandHelper.buildSeedOption());
+        options.addOption(CommandHelper.buildFileOption());
+        options.addOption(CommandHelper.buildMaxCostOption());
 
         return options;
     }
 
-    @Override protected boolean handleOptions(Options options, CommandLine cmdLine) {
-        if (!super.handleOptions(options, cmdLine)) return false;
+    @Override protected boolean cmdInit() {
+        if (!super.cmdInit()) return false;
 
-        String seedValue = getSetting(CommandHelper.SEED_OPT, cmdLine);
-        seed = CommandHelper.initLong(seedValue, seedValue);
-
-        random = CommandHelper.initRandom(seed);
-
-        String dataFileValue = getSetting(CommandHelper.DATA_FILE_OPT, cmdLine);
-        dataFile = CommandHelper.initFile(dataFileValue, dataFile);
-        if (dataFile == null || !dataFile.exists()) {
-            err.println("Data file is missing or file does not exist!");
-            return false;
+        if (seed == null) {                
+            seed = CommandHelper.initLong(settings[CommandHelper.SEED_LOPT], null);
+        }
+        
+        if (random == null) {
+            random = CommandHelper.initRandom(seed);
         }
 
-        String maxCostValue = getSetting(CommandHelper.MAX_COST_OPT, cmdLine);
-        maxCost = CommandHelper.initInteger(maxCostValue, maxCost);
+        if (dataFile == null) {
+            dataFile = CommandHelper.initFile(settings[CommandHelper.FILE_LOPT], null);
+            if (dataFile == null || !dataFile.exists()) {
+                err.println("Data file is missing or does not exist!");
+                return false;
+            }
+        }
+        
+        if (maxCost == null) {
+            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], 10000);
+        }
 
-        return true;
+        return true
     }
 
 
@@ -78,7 +66,6 @@ public class LoadAirports extends DBCommand {
         err.printf("data file %s, max cost %d", dataFile, maxCost);
         if(seed != null) err.printf(", random seed %d", seed);
         err.println();
-
 
         def flightManagerId = FlightDBHelper.getFlightManagerId(sql);
 
@@ -112,6 +99,5 @@ public class LoadAirports extends DBCommand {
         }
 
     }
-
 
 }
