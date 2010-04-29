@@ -35,10 +35,10 @@ public class LoadDB extends DBCommand {
     @Override protected boolean cmdInit() {
         if (!super.cmdInit()) return false;
 
-        if (seed == null) {                
+        if (seed == null) {
             seed = CommandHelper.initLong(settings[CommandHelper.SEED_LOPT], null);
         }
-        
+
         if (random == null) {
             random = CommandHelper.initRandom(seed);
         }
@@ -49,38 +49,38 @@ public class LoadDB extends DBCommand {
 
     @Override public void dbRun() {
 
-        def del = new DeleteDB();
-        //del.loadSettingsFromProperties("db.properties");
-        del.settings["url"] = settings["url"];
-        del.settings["user"] = settings["user"];
-        del.settings["pass"] = settings["pass"];
-        del.run();
-/*
-        def flightMan = new LoadFlightManager();
-        flightMan.settings = this.settings;
-        flightMan.sql = this.sql;
-        flightMan.dbRun();
+        def dbDel = new DeleteDB();
+        dbDel.dbImportSettings(this);
+        dbDel.run();
 
-        def airports = new LoadAirports();
-        airports.settings = this.settings;
-        airports.dataFile = new File("data\\airports.csv");
-        airports.sql = this.sql;
-        airports.random = this.random;
-        airports.dbRun();
+        def dbFM = new LoadFlightManager();
+        dbFM.dbImportSettings(this);
+        dbFM.run();
 
-        def airplanes = new LoadAirplanes();
-        airplanes.settings = this.settings;
-        airplanes.dataFile = new File("data\\fleet-BA.csv");
-        airplanes.sql = this.sql;
-        airplanes.random = this.random;
-        airplanes.dbRun();
+        def dbAirports = new LoadAirports();
+        dbAirports.dbImportSettings(this);
+        dbAirports.settings["seed"] = random.nextInt();
+        dbAirports.settings["file"] = "data\\airports.csv";
+        dbAirports.settings["maxcost"] = 150000;
+        dbAirports.run();
 
-        def flights = new LoadFlights();
-        flights.settings = this.settings;
-        flights.sql = this.sql;
-        flights.random = this.random;
-        flights.dbRun();
-*/
+        def dbAirplanes = new LoadAirplanes();
+        dbAirplanes.dbImportSettings(this);
+        dbAirplanes.settings["seed"] = random.nextInt();
+        dbAirplanes.settings["file"] = "data\\fleet-BA.csv";
+        dbAirports.settings["maxcost"] = 100000;
+        dbAirplanes.run();
+
+        def dbFlights = new LoadFlights();
+        dbFlights.dbImportSettings(this);
+        dbFlights.settings["seed"] = random.nextInt();
+        dbFlights.settings["maxcost"] = 1500;
+        dbFlights.settings["profit"] = 0.20;
+        def number = 235 * 0.80 * 30; // fleet size * use rate * number of days
+        dbFlights.settings["number"] = number.intValue();
+        dbFlights.settings["maxgroup"] = 50;   // maximum nr of flights between destinations
+        dbFlights.run();
+
         println("Done!");
 
     }

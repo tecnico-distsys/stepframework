@@ -86,6 +86,14 @@ public class DBCommand extends ByYourCommand {
         return options;
     }
 
+    /** copy database settings from another DB commmand */
+    def dbImportSettings(dbCmd) {
+        this.settings["driver"] = dbCmd.settings["driver"];
+        this.settings["url"] = dbCmd.settings["url"];
+        this.settings["user"] = dbCmd.settings["user"];
+        this.settings["pass"] = dbCmd.settings["pass"];
+    }
+
 
     //
     //  Runnable
