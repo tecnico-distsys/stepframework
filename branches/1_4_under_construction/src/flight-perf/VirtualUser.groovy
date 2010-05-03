@@ -3,7 +3,6 @@
  */
 
 import org.apache.commons.cli.*;
-import groovy.sql.Sql;
 
 public class VirtualUser extends ByYourCommand {
 
@@ -43,6 +42,7 @@ public class VirtualUser extends ByYourCommand {
     // --- instance ---
 
     File inputFile;
+    PrintStream o;
 
     ObjectInputStream ois;
     String endpoint;
@@ -52,13 +52,12 @@ public class VirtualUser extends ByYourCommand {
         Options options = super.createCommandLineOptions();
 
         options.addOption(CommandHelper.buildInputOption());
-        options.addOption(CommandHelper.buildOutputOption());
 
-        Option endpointOption = new Option("e", "endpoint",
-            /* hasArg */ true, "Web Service endpoint address");
-        endpointOption.setArgName("url");
-        endpointOption.setArgs(1);
-        options.addOption(endpointOption);
+        Option oOption = CommandHelper.buildOutputOption();
+        oOption.description = "Output file (stdout by default)";
+        options.addOption(oOption);
+
+        options.addOption(CommandHelper.buildEndpointOption());
 
         return options;
     }
@@ -71,6 +70,15 @@ public class VirtualUser extends ByYourCommand {
             if (inputFile == null) {
                 err.println("Input file setting is missing!");
                 return false;
+            }
+        }
+
+        if (o == null) {
+            def oValue = settings[CommandHelper.OUTPUT_LOPT];
+            if (oValue == null) {
+                o = System.out;
+            } else {
+                o = new PrintStream(new FileOutputStream(oValue));
             }
         }
 
@@ -93,8 +101,7 @@ public class VirtualUser extends ByYourCommand {
         VirtualUser.setup();
 
         err.println("Running " + this.class.simpleName);
-        err.printf("input file %s, endpoint %s",
-            inputFile, endpoint);
+        err.printf("input file %s, endpoint %s", inputFile, endpoint);
         err.println();
 
         // create Web Service stub
@@ -117,23 +124,23 @@ public class VirtualUser extends ByYourCommand {
                 if ("THINK".equals(operation)) {
                     def thinkSeconds = ois.readObject();
                     if(thinkSeconds > 0) {
-                        err.println("Think " + thinkSeconds + " seconds");
+                        o.println("Think " + thinkSeconds + " seconds");
                         Thread.sleep(thinkSeconds * 1000);
                     }
 
                 } else if ("SEARCH_FLIGHTS".equals(operation)) {
                     def sfIn = ois.readObject();
-                    err.println("Search flights from " + sfIn.depart + " to " + sfIn.arrive);
+                    o.println("Search flights from " + sfIn.depart + " to " + sfIn.arrive);
                     port.searchFlights(sfIn);
 
                 } else if ("CREATE_SINGLE_RESERVATION".equals(operation)) {
                     def csrIn = ois.readObject();
-                    err.println("Create single reservation for flight " + csrIn.flightNumber);
+                    o.println("Create single reservation for flight " + csrIn.flightNumber);
                     port.createSingleReservation(csrIn);
 
                 } else if ("CREATE_MULTIPLE_RESERVATIONS".equals(operation)) {
                     def cmrIn = ois.readObject();
-                    err.println("Create " + cmrIn.passengers.size() + " reservations for flight " + cmrIn.flightNumber);
+                    o.println("Create " + cmrIn.passengers.size() + " reservations for flight " + cmrIn.flightNumber);
                     port.createMultipleReservations(cmrIn);
 
                 } else {
@@ -143,8 +150,7 @@ public class VirtualUser extends ByYourCommand {
             } catch(EOFException eofe) {
                 eof = true;
             } catch(Exception e) {
-                err.println("Caught " + e);
-                err.println("Proceeding");
+                o.println("Caught " + e + ". Proceeding");
             }
         }
 
