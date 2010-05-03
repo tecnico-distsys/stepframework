@@ -1,7 +1,7 @@
 /**
  *  IOCommand - template for groovy commands that accept file input and output
  */
- 
+
 import org.apache.commons.cli.*;
 
 public class IOCommand extends ByYourCommand {
@@ -36,13 +36,13 @@ public class IOCommand extends ByYourCommand {
         Options options = super.createCommandLineOptions();
 
         Option iOption = new Option("i", "input",
-            /* hasArg */ true, "input file (stdin by default)");
+            /* hasArg */ true, "Input file (stdin by default)");
         iOption.setArgName("file");
         iOption.setArgs(1);
         options.addOption(iOption);
 
         Option oOption = new Option("o", "output",
-            /* hasArg */ true, "output file (stdout by default)");
+            /* hasArg */ true, "Output file (stdout by default)");
         oOption.setArgName("file");
         oOption.setArgs(1);
         options.addOption(oOption);

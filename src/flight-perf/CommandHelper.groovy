@@ -17,6 +17,9 @@ public class CommandHelper {
     static def FILE_OPT = "f";
     static def FILE_LOPT = "file";
 
+    static def ENDPOINT_OPT = "e";
+    static def ENDPOINT_LOPT = "endpoint";
+
     static def MAX_COST_OPT = "Mc";
     static def MIN_COST_OPT = "mc";
     static def MAX_COST_LOPT = "maxcost";
@@ -51,7 +54,7 @@ public class CommandHelper {
 
     static def buildInputOption() {
         Option iOption = new Option(INPUT_OPT, INPUT_LOPT,
-            /* hasArg */ true, "input file");
+            /* hasArg */ true, "Input file");
         iOption.setArgName("file");
         iOption.setArgs(1);
         return iOption;
@@ -59,8 +62,17 @@ public class CommandHelper {
 
     static def buildOutputOption() {
         Option oOption = new Option(OUTPUT_OPT, OUTPUT_LOPT,
-            /* hasArg */ true, "output file");
+            /* hasArg */ true, "Output file");
         oOption.setArgName("file");
+        oOption.setArgs(1);
+        return oOption;
+    }
+
+
+    static def buildEndpointOption(desc) {
+        Option oOption = new Option(ENDPOINT_OPT, ENDPOINT_LOPT,
+            /* hasArg */ true, "Endpoint address");
+        oOption.setArgName("url");
         oOption.setArgs(1);
         return oOption;
     }
@@ -75,7 +87,7 @@ public class CommandHelper {
 
     static def buildFileOption() {
         Option dOption = new Option(FILE_OPT, FILE_LOPT,
-            /* hasArg */ true, "Data file");
+            /* hasArg */ true, "File");
         dOption.setArgName("file");
         dOption.setArgs(1);
         return dOption;
@@ -99,7 +111,7 @@ public class CommandHelper {
 
     static def buildMaxGroupOption() {
         Option mgOption = new Option(MAX_GROUP_OPT, MAX_GROUP_LOPT,
-            /* hasArg */ true, "Maximum size of group");
+            /* hasArg */ true, "Maximum group size");
         mgOption.setArgName("number");
         mgOption.setArgs(1);
         return mgOption;
@@ -108,14 +120,14 @@ public class CommandHelper {
     static def buildDateOption() {
         Option mgOption = new Option(DATE_OPT, DATE_LOPT,
             /* hasArg */ true, "Date");
-        mgOption.setArgName("date YYYYMMDD");
+        mgOption.setArgName("date");
         mgOption.setArgs(1);
         return mgOption;
     }
 
     static def buildProfitOption() {
         Option mgOption = new Option(PROFIT_OPT, PROFIT_LOPT,
-            /* hasArg */ true, "Maximum profit");
+            /* hasArg */ true, "Profit");
         mgOption.setArgName("decimal number");
         mgOption.setArgs(1);
         return mgOption;
