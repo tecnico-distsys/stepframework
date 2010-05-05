@@ -1,2 +1,3 @@
 @ECHO OFF
-CALL groovy LoadDB.groovy -s 20120314 -p db.properties
+REM Load database generating random data with specified seed
+CALL groovy LoadDB.groovy -s 20120313 -p db.properties

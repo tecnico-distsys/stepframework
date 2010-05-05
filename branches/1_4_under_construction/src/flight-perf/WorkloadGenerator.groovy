@@ -102,18 +102,35 @@ public class WorkloadGenerator extends DBCommand {
 
         if (number == null) {
             number = CommandHelper.initInteger(settings[CommandHelper.NR_LOPT], null);
-            if (number == null || number <= 0) {
-                err.println("Number of request sessions is missing or does not make sense!");
+            if (number == null) {
+                err.println("Number is missing!");
+                return false;
+            } else if (number <= 0) {
+                err.println("Number can not be negative or zero!");
                 return false;
             }
         }
 
         if (maxGroup == null) {
-            maxGroup = CommandHelper.initInteger(settings[CommandHelper.MAX_GROUP_LOPT], 10);
+            maxGroup = CommandHelper.initInteger(settings[CommandHelper.MAX_GROUP_LOPT], null);
+            if (maxGroup == null) {
+                err.println("Maximum group size is missing!");
+                return false;
+            } else if (maxGroup <= 0) {
+                err.println("Maximum group size can not be negative or zero!");
+                return false;
+            }
         }
 
         if (maxThinkTime == null) {
-            maxThinkTime = CommandHelper.initInteger(settings["maxthinktime"], 5);  // seconds
+            maxThinkTime = CommandHelper.initInteger(settings["maxthinktime"], null);  // in seconds
+            if (maxThinkTime == null) {
+                err.println("Maximum think time is missing!");
+                return false;
+            } else if (maxThinkTime < 0) {
+                err.println("Maximum think time can not be negative!");
+                return false;
+            }
         }
 
         if (namesFile == null) {
@@ -189,10 +206,7 @@ public class WorkloadGenerator extends DBCommand {
             //
             //  generate think time
             //
-            operation = "THINK";
-
-            oos.writeObject(operation);
-            oos.writeObject(random.nextInt(maxThinkTime));
+            generateThinkTime(oos);
 
 
             //
@@ -246,10 +260,7 @@ public class WorkloadGenerator extends DBCommand {
             //
             //  generate think time
             //
-            operation = "THINK";
-
-            oos.writeObject(operation);
-            oos.writeObject(random.nextInt(maxThinkTime));
+            generateThinkTime(oos);
 
         }
 
@@ -260,6 +271,14 @@ public class WorkloadGenerator extends DBCommand {
         oos.close();
 
 
+    }
+
+
+    private def generateThinkTime(oos) {
+        def operation = "THINK";
+
+        oos.writeObject(operation);
+        oos.writeObject(random.nextInt(maxThinkTime * 1000));
     }
 
 }

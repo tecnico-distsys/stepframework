@@ -53,7 +53,14 @@ public class LoadAirplanes extends DBCommand {
         }
 
         if (maxCost == null) {
-            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], 50000);
+            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], null);
+            if (maxCost == null) {
+                err.println("Maximum cost is missing!");
+                return false;
+            } else if (maxCost <= 0) {
+                err.println("Maximum cost can not be negative or zero!");
+                return false;
+            }
         }
 
         return true;

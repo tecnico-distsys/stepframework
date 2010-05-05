@@ -36,10 +36,10 @@ public class LoadAirports extends DBCommand {
     @Override protected boolean cmdInit() {
         if (!super.cmdInit()) return false;
 
-        if (seed == null) {                
+        if (seed == null) {
             seed = CommandHelper.initLong(settings[CommandHelper.SEED_LOPT], null);
         }
-        
+
         if (random == null) {
             random = CommandHelper.initRandom(seed);
         }
@@ -51,9 +51,16 @@ public class LoadAirports extends DBCommand {
                 return false;
             }
         }
-        
+
         if (maxCost == null) {
-            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], 10000);
+            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], null);
+            if (maxCost == null) {
+                err.println("Maximum cost is missing!");
+                return false;
+            } else if (maxCost <= 0) {
+                err.println("Maximum cost can not be negative or zero!");
+                return false;
+            }
         }
 
         return true

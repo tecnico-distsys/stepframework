@@ -122,10 +122,10 @@ public class VirtualUser extends ByYourCommand {
                 def operation = ois.readObject();
 
                 if ("THINK".equals(operation)) {
-                    def thinkSeconds = ois.readObject();
-                    if(thinkSeconds > 0) {
-                        o.println("Think " + thinkSeconds + " seconds");
-                        Thread.sleep(thinkSeconds * 1000);
+                    def thinkMilliseconds = ois.readObject();
+                    if(thinkMilliseconds > 0) {
+                        o.println("Think " + thinkMilliseconds + " milliseconds");
+                        Thread.sleep(thinkMilliseconds);
                     }
 
                 } else if ("SEARCH_FLIGHTS".equals(operation)) {

@@ -68,7 +68,7 @@ public class LoadDB extends DBCommand {
         dbAirplanes.dbImportSettings(this);
         dbAirplanes.settings["seed"] = random.nextInt();
         dbAirplanes.settings["file"] = "data\\fleet-BA.csv";
-        dbAirports.settings["maxcost"] = 100000;
+        dbAirplanes.settings["maxcost"] = 100000;
         dbAirplanes.run();
 
         def dbFlights = new LoadFlights();

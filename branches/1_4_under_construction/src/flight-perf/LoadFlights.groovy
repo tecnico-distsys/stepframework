@@ -52,19 +52,47 @@ public class LoadFlights extends DBCommand {
         }
 
         if (maxCost == null) {
-            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], 1000);
+            maxCost = CommandHelper.initInteger(settings[CommandHelper.MAX_COST_LOPT], null);
+            if (maxCost == null) {
+                err.println("Maximum cost is missing!");
+                return false;
+            } else if (maxCost <= 0) {
+                err.println("Maximum cost can not be negative or zero!");
+                return false;
+            }
         }
 
         if (profit == null) {
-            profit = CommandHelper.initDouble(settings[CommandHelper.PROFIT_LOPT], 0.15);
+            profit = CommandHelper.initDouble(settings[CommandHelper.PROFIT_LOPT], null);
+            if (profit == null) {
+                err.println("Profit is missing!");
+                return false;
+            } else if (profit < 0.0) {
+                err.println("Profit can not be negative!");
+                return false;
+            }
         }
 
         if (nr == null) {
-            nr = CommandHelper.initInteger(settings[CommandHelper.NR_LOPT], 100);
+            nr = CommandHelper.initInteger(settings[CommandHelper.NR_LOPT], null);
+            if (nr == null) {
+                err.println("Number is missing!");
+                return false;
+            } else if (nr <= 0) {
+                err.println("Number can not be negative or zero!");
+                return false;
+            }
         }
 
         if (maxGroup == null) {
-            maxGroup = CommandHelper.initInteger(settings[CommandHelper.MAX_GROUP_LOPT], 10);
+            maxGroup = CommandHelper.initInteger(settings[CommandHelper.MAX_GROUP_LOPT], null);
+            if (maxGroup == null) {
+                err.println("Maximum group size is missing!");
+                return false;
+            } else if (maxGroup <= 0) {
+                err.println("Maximum group size can not be negative or zero!");
+                return false;
+            }
         }
 
         return true;
@@ -84,7 +112,7 @@ public class LoadFlights extends DBCommand {
         // id is auto incremented
         def objVersion = 0;
         def costPerPassenger;
-        def dateTime = (new GregorianCalendar(2012, Calendar.MARCH, 14, 0, 0, 0)).getTime();    // TODO
+        def dateTime = (new GregorianCalendar(2012, Calendar.MARCH, 13, 0, 0, 0)).getTime();    // TODO
         def number;
         def pricePerPassenger;
         def lastReservationId = 0;
