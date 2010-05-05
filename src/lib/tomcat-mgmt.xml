@@ -106,11 +106,11 @@
         </delete>
     </target>
 
-    <target name="start-server-fresh"
+    <target name="start-server!"
             depends="reset-server,start-server">
     </target>
 
-    <target name="restart-server-fresh"
+    <target name="restart-server!"
             depends="stop-server,reset-server,start-server">
     </target>
 
