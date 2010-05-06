@@ -8,4 +8,6 @@ public interface WSConfigurator {
 	public void configServerInbound(SOAPMessageContext smc) throws WSConfigurationException;
 	public void configServerOutbound(SOAPMessageContext smc) throws WSConfigurationException;
 	public void configClientInbound(SOAPMessageContext smc) throws WSConfigurationException;
+	
+	public void reset();
 }

@@ -107,21 +107,20 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
                 
         try
         {
-        	//TODO: save extensions state before
         	if(isEnabled())
         		configure(smc);
         	
-        	boolean extensionsResult = manager.interceptHandleMessageWebServiceHandler(smc);
-
-        	if(isEnabled())
-        		reset();
-        	
-        	return extensionsResult; 
+        	return manager.interceptHandleMessageWebServiceHandler(smc);
         }
         catch(WSConfigurationException e)
-        {
+        {        	
         	log.error(e.getMessage(), e);
         	throw new RuntimeException(e);
+        }
+        finally
+        {
+        	if(isEnabled())
+        		reset();    	
         }
     }
     
@@ -172,15 +171,8 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
 			configurator.configClientInbound(smc);
     }
     
-	private void reset() throws WSConfigurationException
+	private void reset()
     {
-    	try
-    	{
-    		//TODO: reset extension engine to state before configuration
-    	}
-    	catch(Exception e)
-    	{
-    		throw new WSConfigurationException(e);
-    	}
+    	configurator.reset();
     }
 }

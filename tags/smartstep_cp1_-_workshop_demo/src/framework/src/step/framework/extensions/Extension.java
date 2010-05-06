@@ -647,7 +647,6 @@ public class Extension {
     	if(enabled)
     	{
     		this.enabled = false;
-        	stop();
     	}
     }
 }
