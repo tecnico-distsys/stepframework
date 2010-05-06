@@ -1,9 +1,18 @@
 <Policy xmlns="http://schemas.xmlsoap.org/ws/2004/09/policy"
 		xmlns:ssp="http://stepframework.sourceforge.net/smartstep/policy">
+	<!-- demo1 -->
 	<ExactlyOne>
-	  <All>
-		<!--<ssp:Cipher extension="cipher" />-->
-		<ssp:Identification extension="id" />
-	  </All>
+		<All>
+			<ssp:Cipher extension="cipher"/>
+		</All>
+		<All>
+			<ssp:Identification extension="id"/>
+		</All>
 	</ExactlyOne>
+	<!-- demo2 && demo3 -->
+	<!--<ExactlyOne>
+		<All>
+			<ssp:Identification extension="id"/>
+		</All>
+	</ExactlyOne>-->
 </Policy>

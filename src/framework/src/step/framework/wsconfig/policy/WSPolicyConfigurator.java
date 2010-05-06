@@ -1,5 +1,10 @@
 package step.framework.wsconfig.policy;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -189,6 +194,20 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void reset()
+	{
+		try
+		{
+			List<Assertion> alternative = (List<Assertion>) ApplicationContext.getInstance().get(CONTEXT_KEY_ALTERNATIVE);
+			disableExtensions(alternative);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	//********************************************************
 	//auxiliary methods
 	
@@ -205,12 +224,14 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		return filename;
 	}
 	
-	private Policy loadPolicy(String filename) throws WSConfigurationException
+	private Policy loadPolicy(String filename) throws WSConfigurationException, IOException
 	{
 		log.debug("Loading policy from file \"" + filename + "\"");
+			
 		if(!filename.startsWith("/"))
 			filename = "/" + filename;
-		Policy policy = PolicyEngine.getPolicy(WSPolicyConfigurator.class.getResourceAsStream(filename));
+		URL url = WSPolicyConfigurator.class.getResource(filename);
+		Policy policy = PolicyEngine.getPolicy(url.openStream());
 		
 		if(policy == null)
 			throw new WSConfigurationException("File \"" + filename + "\" does not define a valid policy");
@@ -380,5 +401,26 @@ public class WSPolicyConfigurator implements WSConfigurator {
 		}
 		
 		log.debug("Extensions configured successfully");
+	}
+	
+	private void disableExtensions(List<Assertion> alternative) throws WSConfigurationException
+	{
+		log.debug("Disabling used extensions");
+		
+		for(int i=0; i<alternative.size(); i++)
+		{
+			Assertion assertion = alternative.get(i);
+			String id = null;
+			
+			if(assertion instanceof STEPAssertion)
+				id=((STEPAssertion) assertion).getExtension();
+			else
+				id=assertion.getName().getLocalPart();
+			
+			log.debug("Disabling extension: " + id);
+			ExtensionLiaison.disable(id);
+		}
+		
+		log.debug("Extensions disabled successfully");
 	}
 }

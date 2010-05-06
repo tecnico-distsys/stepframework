@@ -104,16 +104,42 @@
     </binding>
 
     <service name="FlightService">
+		<!-- demo1 - part1 -->
 		<wsp:Policy>
 			<wsp:ExactlyOne>
-			  <!--<wsp:All>
+			  <wsp:All>
 				<ssp:Cipher extension="cipher"/>
-			  </wsp:All>-->
+			  </wsp:All>
+			</wsp:ExactlyOne>
+		</wsp:Policy>
+		<!-- demo1 - part2 -->
+		<!--<wsp:Policy>
+			<wsp:ExactlyOne>
 			  <wsp:All>
 				<ssp:Identification extension="id"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
-		</wsp:Policy>
+		</wsp:Policy>-->
+		<!-- demo2 -->
+		<!--<wsp:Policy>
+			<wsp:ExactlyOne>
+			  <wsp:All>
+				<ssp:Cipher extension="cipher"/>
+			  </wsp:All>
+			  <wsp:All>
+				<ssp:Identification extension="id"/>
+			  </wsp:All>
+			</wsp:ExactlyOne>
+		</wsp:Policy>-->
+		<!-- demo3 -->
+		<!--<wsp:Policy>
+			<wsp:ExactlyOne>
+			  <wsp:All>
+				<ssp:Cipher extension="cipher"/>
+				<ssp:Identification extension="id"/>
+			  </wsp:All>
+			</wsp:ExactlyOne>
+		</wsp:Policy>-->
         <port name="FlightPort" binding="tns:FlightBinding">
             <soap:address location="REPLACE_WITH_ACTUAL_URL" />
         </port>
