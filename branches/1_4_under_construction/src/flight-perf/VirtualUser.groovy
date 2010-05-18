@@ -116,6 +116,9 @@ public class VirtualUser extends ByYourCommand {
         //  Send requests
         //
 
+        def sessionCounter = 0; // sessions start with search flights request
+        def invocationCounter = 0;
+
         def eof = false;
         while (!eof) {
             try {
@@ -129,16 +132,25 @@ public class VirtualUser extends ByYourCommand {
                     }
 
                 } else if ("SEARCH_FLIGHTS".equals(operation)) {
+                    invocationCounter++;
+
+                    sessionCounter++;
+                    o.println("Starting session " + sessionCounter);
+
                     def sfIn = ois.readObject();
                     o.println("Search flights from " + sfIn.depart + " to " + sfIn.arrive);
                     port.searchFlights(sfIn);
 
                 } else if ("CREATE_SINGLE_RESERVATION".equals(operation)) {
+                    invocationCounter++;
+
                     def csrIn = ois.readObject();
                     o.println("Create single reservation for flight " + csrIn.flightNumber);
                     port.createSingleReservation(csrIn);
 
                 } else if ("CREATE_MULTIPLE_RESERVATIONS".equals(operation)) {
+                    invocationCounter++;
+
                     def cmrIn = ois.readObject();
                     o.println("Create " + cmrIn.passengers.size() + " reservations for flight " + cmrIn.flightNumber);
                     port.createMultipleReservations(cmrIn);
@@ -152,8 +164,14 @@ public class VirtualUser extends ByYourCommand {
             } catch(Exception e) {
                 o.println("Caught " + e + ". Proceeding");
             }
+
+            // report progress
+            err.print("Session #" + sessionCounter + ", Invocation #" + invocationCounter + "                    \r");
         }
 
+        o.printf("Processed %d sessions with %d invocations%n", sessionCounter, invocationCounter);
+
+        err.println();
         err.println("Done!");
 
     }

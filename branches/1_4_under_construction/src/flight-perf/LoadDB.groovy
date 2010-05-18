@@ -78,7 +78,7 @@ public class LoadDB extends DBCommand {
         dbFlights.settings["profit"] = 0.20;
         def number = 235 * 0.80 * 30; // fleet size * use rate * number of days
         dbFlights.settings["number"] = number.intValue();
-        dbFlights.settings["maxgroup"] = 50;   // maximum nr of flights between destinations
+        dbFlights.settings["maxgroup"] = 20;   // maximum nr of flights between destinations
         dbFlights.run();
 
         println("Done!");
