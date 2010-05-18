@@ -278,7 +278,12 @@ public class WorkloadGenerator extends DBCommand {
         def operation = "THINK";
 
         oos.writeObject(operation);
-        oos.writeObject(random.nextInt(maxThinkTime * 1000));
+        if (maxThinkTime == 0) {
+            // think time will be zero, no need to randomize
+            oos.writeObject(0);
+        } else {
+            oos.writeObject(random.nextInt(maxThinkTime * 1000));
+        }
     }
 
 }
