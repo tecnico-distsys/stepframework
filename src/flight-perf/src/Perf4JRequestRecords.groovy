@@ -9,7 +9,7 @@ import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 
-public class RequestTotals extends ByYourCommand {
+public class Perf4JRequestRecords extends ByYourCommand {
 
     // --- static ---
 
@@ -17,7 +17,7 @@ public class RequestTotals extends ByYourCommand {
     //  Command line execution
     //
     public static void main(String[] args) {
-        RequestTotals instance = new RequestTotals();
+        Perf4JRequestRecords instance = new Perf4JRequestRecords();
         if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
@@ -29,8 +29,8 @@ public class RequestTotals extends ByYourCommand {
     //
     //  Members
     //
-    InputStream i;
-    File file;
+    File iFile;
+    File oFile;
 
 
     //
@@ -41,7 +41,7 @@ public class RequestTotals extends ByYourCommand {
         Options options = super.createCommandLineOptions();
 
         options.addOption(CommandHelper.buildInputOption());
-        options.addOption(CommandHelper.buildFileOption());
+        options.addOption(CommandHelper.buildOutputOption());
 
         return options;
     }
@@ -49,22 +49,23 @@ public class RequestTotals extends ByYourCommand {
     @Override protected boolean cmdInit() {
         if (!super.cmdInit()) return false;
 
-        if (i == null) {
+        if (iFile == null) {
             def iValue = settings[CommandHelper.INPUT_LOPT];
             if (iValue == null) {
-                i = System.in;
+                err.println("Input file is missing!");
+                return false;
             } else {
-                i = new FileInputStream(iValue);
+                iFile = new File(iValue);
             }
         }
 
-        if (file == null) {
-            def fileValue = settings[CommandHelper.FILE_LOPT];
-            if (fileValue == null) {
-                err.println("File is missing!");
+        if (oFile == null) {
+            def oValue = settings[CommandHelper.OUTPUT_LOPT];
+            if (oValue == null) {
+                err.println("Output file is missing!");
                 return false;
             } else {
-                file = new File(fileValue);
+                oFile = new File(oValue);
             }
         }
 
@@ -84,15 +85,11 @@ public class RequestTotals extends ByYourCommand {
         //
         //  Define output file structure
         //
-        ICsvMapWriter writer = new CsvMapWriter(new FileWriter(file), CsvPreference.STANDARD_PREFERENCE);
+        ICsvMapWriter writer = new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
 
-        def headerList = ["filter", "soap", "soap-meta", "wsi", "si", "hibernate"];
-        final String[] headerArray = new String[headerList.size];
-        for (int i = 0; i < headerArray.length; i++) {
-            headerArray[i] = headerList[i];
-        }
-
-        // write header
+        // write headers
+        def headerList = CSVHelper.getRequestRecordsHeaderList();
+        final String[] headerArray = CSVHelper.headerListToArray(headerList);
         writer.writeHeader(headerArray);
 
 
@@ -106,7 +103,8 @@ public class RequestTotals extends ByYourCommand {
             totalMap[headerArray[i]] = "";
         }
 
-        i.eachLine { line ->
+        def iStream = new FileInputStream(iFile);
+        iStream.eachLine { line ->
 
             //
             //  Extract current line data
