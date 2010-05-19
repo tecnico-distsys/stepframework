@@ -60,14 +60,14 @@ public class LoadDB extends DBCommand {
         def dbAirports = new LoadAirports();
         dbAirports.dbImportSettings(this);
         dbAirports.settings["seed"] = random.nextInt();
-        dbAirports.settings["file"] = "data\\airports.csv";
+        dbAirports.settings["file"] = "..\\data\\airports.csv";
         dbAirports.settings["maxcost"] = 150000;
         dbAirports.run();
 
         def dbAirplanes = new LoadAirplanes();
         dbAirplanes.dbImportSettings(this);
         dbAirplanes.settings["seed"] = random.nextInt();
-        dbAirplanes.settings["file"] = "data\\fleet-BA.csv";
+        dbAirplanes.settings["file"] = "..\\data\\fleet-BA.csv";
         dbAirplanes.settings["maxcost"] = 100000;
         dbAirplanes.run();
 

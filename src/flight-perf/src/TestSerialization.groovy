@@ -3,7 +3,7 @@
  */
 
 // add library locations to class loader
-def root = "..";
+def root = "../..";
 ClassLoaderHelper.addFile(root + "/framework/dist/stepframework.jar");
 ClassLoaderHelper.addFile(root + "/flight-ws-cli/dist/flight-ws-cli.jar");
 
