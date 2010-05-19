@@ -30,8 +30,8 @@ public class VirtualUser extends ByYourCommand {
             def env = System.getenv();
             // load libraries
             //ClassLoaderHelper.addJarDir(env["STEP_HOME"] + "/lib");
-            ClassLoaderHelper.addFile("../framework/dist/stepframework.jar");
-            ClassLoaderHelper.addFile("../flight-ws-cli/dist/flight-ws-cli.jar");
+            //ClassLoaderHelper.addFile("../framework/dist/stepframework.jar");
+            //ClassLoaderHelper.addFile("../flight-ws-cli/dist/flight-ws-cli.jar");
 
             // clear flag
             setupFlag = false;
