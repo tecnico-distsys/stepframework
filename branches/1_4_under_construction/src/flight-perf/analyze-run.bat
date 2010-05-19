@@ -8,7 +8,7 @@ SET CLASSPATH=%CLASSPATH%;%STEP_HOME%\lib\SuperCSV-1.52.jar;%STEP_HOME%\lib\comm
 
 :check_args
 IF "%1%"=="" GOTO error_arg1
-SET NR=%2
+SET NR=%1
 
 GOTO main
 
@@ -27,9 +27,15 @@ ECHO.
 REM ----------------------------------------------------------------------------
 
 PUSHD src
-CALL groovy Perf4JAggregateContiguousEntries.groovy -i ..\build\logs\flight-ws_perfLog-%NR%.txt -o ..\build\logs\perfLog-aggregate-%NR%.txt
-CALL groovy Perf4JRequestTotals.groovy -i ..\build\logs\perfLog-aggregate-%NR%.txt -file ..\build\logs\perfLog-requests-%NR%.csv
 
+IF NOT EXIST ..\build\logs\perfLog-aggregate-%NR%.txt (
+    CALL groovy Perf4JAggregateContiguousEntries.groovy -i ..\build\logs\flight-ws_perfLog-%NR%.txt  -o ..\build\logs\perfLog-aggregate-%NR%.txt
+)
+
+CALL groovy Perf4JRequestRecords.groovy             -i ..\build\logs\perfLog-aggregate-%NR%.txt  -o ..\build\logs\perfLog-requests-%NR%.csv
+CALL groovy CSVRequestStatistics.groovy             -i ..\build\logs\perfLog-requests-%NR%.csv   -o ..\build\logs\perfLog-statistics-%NR%.csv
+
+POPD
 
 REM ----------------------------------------------------------------------------
 

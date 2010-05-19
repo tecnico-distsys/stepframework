@@ -1,5 +1,5 @@
 /**
- *  Groovy command to calculate request totals in perf4j performance log file.
+ *  Groovy command to calculate request statistics.
  *  Output is in CSV format.
  */
 
@@ -12,7 +12,7 @@ import org.apache.commons.math.stat.*;
 import org.apache.commons.math.stat.descriptive.*;
 
 
-public class RequestTotals extends ByYourCommand {
+public class CSVRequestStatistics extends ByYourCommand {
 
     // --- static ---
 
@@ -20,7 +20,7 @@ public class RequestTotals extends ByYourCommand {
     //  Command line execution
     //
     public static void main(String[] args) {
-        RequestTotals instance = new RequestTotals();
+        CSVRequestStatistics instance = new CSVRequestStatistics();
         if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
@@ -32,8 +32,8 @@ public class RequestTotals extends ByYourCommand {
     //
     //  Members
     //
-    InputStream i;
-    File file;
+    File iFile;
+    File oFile;
 
 
     //
@@ -44,7 +44,7 @@ public class RequestTotals extends ByYourCommand {
         Options options = super.createCommandLineOptions();
 
         options.addOption(CommandHelper.buildInputOption());
-        options.addOption(CommandHelper.buildFileOption());
+        options.addOption(CommandHelper.buildOutputOption());
 
         return options;
     }
@@ -52,22 +52,23 @@ public class RequestTotals extends ByYourCommand {
     @Override protected boolean cmdInit() {
         if (!super.cmdInit()) return false;
 
-        if (i == null) {
+        if (iFile == null) {
             def iValue = settings[CommandHelper.INPUT_LOPT];
             if (iValue == null) {
-                i = System.in;
+                err.println("Input file is missing!");
+                return false;
             } else {
-                i = new FileInputStream(iValue);
+                iFile = new File(iValue);
             }
         }
 
-        if (file == null) {
-            def fileValue = settings[CommandHelper.FILE_LOPT];
-            if (fileValue == null) {
-                err.println("File is missing!");
+        if (oFile == null) {
+            def oValue = settings[CommandHelper.OUTPUT_LOPT];
+            if (oValue == null) {
+                err.println("Output file is missing!");
                 return false;
             } else {
-                file = new File(fileValue);
+                oFile = new File(oValue);
             }
         }
 
@@ -83,75 +84,101 @@ public class RequestTotals extends ByYourCommand {
 
         err.println("Running " + this.class.simpleName);
 
-        def csvFile = new File("build\\logs\\18-05-2010\\requests-4.csv");
+        CsvMapReader csvMR = new CsvMapReader(new FileReader(iFile), CsvPreference.STANDARD_PREFERENCE);
 
-        //
-        //  Read headers from 1st line of file
-        //
-        def csvFileReader = new FileReader(csvFile);
-        CsvListReader csvLR = new CsvListReader(csvFileReader, CsvPreference.STANDARD_PREFERENCE);
+        def recordsHeaderList = CSVHelper.getRequestRecordsHeaderList();
+        def recordsHeaderArray = CSVHelper.headerListToArray(recordsHeaderList);
 
-        def headerList = csvLR.read();
-        csvLR.close();
-
-        // create header array
-        String[] headerArray = new String[headerList.size];
-        for (int i = 0; i < headerArray.length; i++) {
-            headerArray[i] = (String) headerList[i];
-        }
-
-
-        //
-        //  Process rows
-        //
-
-        csvFileReader = new FileReader(csvFile);
-        CsvMapReader csvMR = new CsvMapReader(csvFileReader, CsvPreference.STANDARD_PREFERENCE);
+        int recordNr = 0;
 
         // ignore 1st line (headers)
-        int recordNr = 0;
-        csvMR.read(headerArray);
+        csvMR.read(recordsHeaderArray);
+
+        // ignore 2nd line (first request - startup)
+        csvMR.read(recordsHeaderArray);
         recordNr++;
 
-        // ignore 2nd line (first request)
-        csvMR.read(headerArray);
-        recordNr++;
+
+        //
+        //  Initialize statistics objects
+        //
+
+        def statsMap = [ : ];
 
 
-        // Get a DescriptiveStatistics instance (values are stored in memory)
-        DescriptiveStatistics stats = new DescriptiveStatistics();
+        recordsHeaderList.each{ header ->
+            if (!header.endsWith("-meta")) {
+                // DescriptiveStatistics stores values in memory, but can compute percentiles
+                statsMap[header] = new DescriptiveStatistics();
+            }
+        }
 
-
+        //
         // process records
+        //
         def record = null;
-        while ( (record = csvMR.read(headerArray)) != null ) {
+        while ( (record = csvMR.read(recordsHeaderArray)) != null ) {
             recordNr++;
 
             // process record
-            double value = record["filter"].toDouble();
-            stats.addValue(value);
-
-            double mean = stats.getMean();
-            double std = stats.getStandardDeviation();
-            double cov = std / mean;
-            //printf("cov %.2f %n", cov);
+            recordsHeaderList.each{ header ->
+                if (!header.endsWith("-meta")) {
+                    double value = record[header].toDouble();
+                    statsMap[header].addValue(value);
+                }
+            }
 
         }
         csvMR.close();
 
 
+        //
+        //  Define output file structure
+        //
+        ICsvMapWriter csvMW = new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
+
+        // generate header list
+        def headerList = [ ];
+
+        recordsHeaderList.each{ header ->
+            if (!header.endsWith("-meta")) {
+                headerList.add(header + "-mean");
+                headerList.add(header + "-stdDev");
+                headerList.add(header + "-median");
+                headerList.add(header + "-lowerQ");
+                headerList.add(header + "-upperQ");
+            }
+        }
+
+        def headerArray = CSVHelper.headerListToArray(headerList);
+
+        // write headers
+        csvMW.writeHeader(headerArray);
+
+
         // Compute statistics
-        double mean = stats.getMean();
-        double std = stats.getStandardDeviation();
+        def resultMap = [ : ];
 
-        double median = stats.getPercentile(50);
-        double lowerQuartile = stats.getPercentile(25);
-        double upperQuartile = stats.getPercentile(75);
+        recordsHeaderList.each{ header ->
+            if (!header.endsWith("-meta")) {
+                double mean = statsMap[header].getMean();
+                double std = statsMap[header].getStandardDeviation();
 
-        println("Results:");
-        printf("mean %.2f , std dev %.2f %n", mean, std);
-        printf("lower quartile %.2f , median %.2f , upper quartile %.2f %n",
-            lowerQuartile, median, upperQuartile);
+                double median = statsMap[header].getPercentile(50);
+                double lowerQuartile = statsMap[header].getPercentile(25);
+                double upperQuartile = statsMap[header].getPercentile(75);
+
+                resultMap[header + "-mean"] = mean;
+                resultMap[header + "-stdDev"] = std;
+                resultMap[header + "-median"] = median;
+                resultMap[header + "-lowerQ"] = lowerQuartile;
+                resultMap[header + "-upperQ"] = upperQuartile;
+            }
+        }
+
+        // Write data
+        csvMW.write(resultMap, headerArray);
+        csvMW.close();
 
     }
 
