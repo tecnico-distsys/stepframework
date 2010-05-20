@@ -3,9 +3,9 @@ package step.extension.hello;
 import java.util.Properties;
 
 import step.framework.domain.DomainException;
-import step.framework.extensions.ServiceInterceptor;
-import step.framework.extensions.ServiceInterceptorException;
-import step.framework.extensions.ServiceInterceptorParameter;
+import step.framework.oldextensions.ServiceInterceptor;
+import step.framework.oldextensions.ServiceInterceptorException;
+import step.framework.oldextensions.ServiceInterceptorParameter;
 
 
 /**

@@ -16,9 +16,9 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import org.w3c.dom.Node;
 
-import step.framework.extensions.WebServiceInterceptor;
-import step.framework.extensions.WebServiceInterceptorException;
-import step.framework.extensions.WebServiceInterceptorParameter;
+import step.framework.oldextensions.WebServiceInterceptor;
+import step.framework.oldextensions.WebServiceInterceptorException;
+import step.framework.oldextensions.WebServiceInterceptorParameter;
 
 public class CipherWebServiceInterceptor implements WebServiceInterceptor {
 	

@@ -11,7 +11,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import step.framework.config.Config;
-import step.framework.extensions.WebServiceInterceptorManager;
+import step.framework.extensions.PipeFactory;
+import step.framework.extensions.WebServiceInterceptorPipe;
 import step.framework.ws.SOAPUtil;
 
 /**
@@ -28,7 +29,7 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     // Members
 
     /** Web Service interceptor manager */
-    private WebServiceInterceptorManager manager;
+    private PipeFactory pipeFactory;
     
 	/** Web Service Configurator */
 	private WSConfigurator configurator;
@@ -41,7 +42,7 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     
     public WSConfigHandler() throws WSConfigurationException
     {
-        this.manager = new WebServiceInterceptorManager();    	
+    	pipeFactory = PipeFactory.getInstance();
     	initConfigurator();
     }
     
@@ -110,7 +111,8 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
         	if(isEnabled())
         		configure(smc);
         	
-        	return manager.interceptHandleMessageWebServiceHandler(smc);
+        	//return manager.interceptHandleMessageWebServiceHandler(smc);
+        	return executePipe(pipeFactory.getWebServiceInterceptorPipe(smc), smc);
         }
         catch(WSConfigurationException e)
         {        	
@@ -129,13 +131,14 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     	//TODO: configure in case of fault???
     	
         log.trace("WSConfigHandler - handleFault()");
-        return manager.interceptHandleFaultWebServiceHandler(smc);
+        //return manager.interceptHandleFaultWebServiceHandler(smc);
+        return true;
     }
 
     public void close(MessageContext messageContext)
     {
         log.trace("WSConfigHandler - close()");
-        manager.interceptCloseWebServiceHandler(messageContext);        
+        //manager.interceptCloseWebServiceHandler(messageContext);        
     }
 
     //***********************************************************************
@@ -154,6 +157,17 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     	{
     		return false;
     	}
+    }
+    
+    private boolean executePipe(WebServiceInterceptorPipe pipe, SOAPMessageContext smc)
+    {
+		boolean isClientSide = !SOAPUtil.isServerSideMessage(smc);
+		boolean isOutbound = SOAPUtil.isOutboundMessage(smc);
+
+		if(isOutbound)
+			return pipe.executeOutbound(isClientSide);
+		else
+			return pipe.executeInbound(isClientSide);
     }
     
     private void configure(SOAPMessageContext smc) throws WSConfigurationException

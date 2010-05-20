@@ -14,9 +14,9 @@ import javax.xml.soap.SOAPPart;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import step.framework.extensions.WebServiceInterceptor;
-import step.framework.extensions.WebServiceInterceptorException;
-import step.framework.extensions.WebServiceInterceptorParameter;
+import step.framework.oldextensions.WebServiceInterceptor;
+import step.framework.oldextensions.WebServiceInterceptorException;
+import step.framework.oldextensions.WebServiceInterceptorParameter;
 import step.framework.ws.SOAPUtil;
 
 
