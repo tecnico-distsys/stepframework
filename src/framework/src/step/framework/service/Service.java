@@ -2,7 +2,8 @@ package step.framework.service;
 
 import step.framework.domain.DomainException;
 import step.framework.exception.ServiceException;
-import step.framework.extensions.ServiceInterceptorManager;
+import step.framework.extensions.PipeFactory;
+import step.framework.extensions.ServiceInterceptorPipe;
 
 /**
  *  This is the Framework's base service.<br />
@@ -21,17 +22,12 @@ public abstract class Service<R> {
     /** Transaction manager */
     protected TransactionManager txManager;
 
-    /** Extensions manager */
-    protected ServiceInterceptorManager extManager;
-
-
     //
     // Constructors
     //
 
     public Service() {
         this.txManager = TransactionManagerFactory.getDefaultTransactionManager();
-        this.extManager = new ServiceInterceptorManager();
     }
 
 
@@ -61,10 +57,11 @@ public abstract class Service<R> {
 
         try {
             tx = txManager.newTransaction();
+            ServiceInterceptorPipe pipe = PipeFactory.getInstance().getServiceInterceptorPipe(this);
             tx.begin();
-            before();
+            before(pipe);
             returnValue = action();
-            after();
+            after(pipe);
             tx.commit();
             txCommited = true;
             return returnValue;
@@ -82,12 +79,12 @@ public abstract class Service<R> {
     // Extensions interception
     //
 
-    protected final void before() throws DomainException, ServiceException {
-        extManager.interceptBeforeService(this);
+    protected final void before(ServiceInterceptorPipe pipe) throws DomainException, ServiceException {
+        pipe.executeBefore();
     }
 
-    protected final void after() throws DomainException, ServiceException {
-        extManager.interceptAfterService(this);
+    protected final void after(ServiceInterceptorPipe pipe) throws DomainException, ServiceException {
+        pipe.executeAfter();
     }
 
 }

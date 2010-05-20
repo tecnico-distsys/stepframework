@@ -1,7 +1,7 @@
 package step.framework.wsconfig;
 
-import step.framework.extensions.Extension;
-import step.framework.extensions.ExtensionEngine;
+import step.framework.oldextensions.Extension;
+import step.framework.oldextensions.ExtensionEngine;
 
 public class ExtensionLiaison {
 

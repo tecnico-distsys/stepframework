@@ -2,9 +2,9 @@ package step.extension.errors;
 
 import java.util.Properties;
 
-import step.framework.extensions.ExtensionException;
-import step.framework.extensions.ExtensionListener;
-import step.framework.extensions.ExtensionListenerParameter;
+import step.framework.oldextensions.ExtensionException;
+import step.framework.oldextensions.ExtensionListener;
+import step.framework.oldextensions.ExtensionListenerParameter;
 
 
 /**
