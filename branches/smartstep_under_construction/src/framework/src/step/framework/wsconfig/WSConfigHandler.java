@@ -27,9 +27,6 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
 
     //***********************************************************************
     // Members
-
-    /** Web Service interceptor manager */
-    private PipeFactory pipeFactory;
     
 	/** Web Service Configurator */
 	private WSConfigurator configurator;
@@ -42,7 +39,6 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
     
     public WSConfigHandler() throws WSConfigurationException
     {
-    	pipeFactory = PipeFactory.getInstance();
     	initConfigurator();
     }
     
@@ -112,7 +108,7 @@ public class WSConfigHandler  implements SOAPHandler<SOAPMessageContext> {
         		configure(smc);
         	
         	//return manager.interceptHandleMessageWebServiceHandler(smc);
-        	return executePipe(pipeFactory.getWebServiceInterceptorPipe(smc), smc);
+        	return executePipe(PipeFactory.getWebServiceInterceptorPipe(smc), smc);
         }
         catch(WSConfigurationException e)
         {        	

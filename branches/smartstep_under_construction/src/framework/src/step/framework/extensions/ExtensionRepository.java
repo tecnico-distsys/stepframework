@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import step.framework.extensions.exceptions.ExtensionException;
 
 public class ExtensionRepository {
 	

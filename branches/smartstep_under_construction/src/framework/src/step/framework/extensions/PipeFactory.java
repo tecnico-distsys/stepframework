@@ -1,58 +1,81 @@
 package step.framework.extensions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
+import step.framework.config.Config;
 import step.framework.service.Service;
 
-public class PipeFactory {
+public abstract class PipeFactory {
 	
+	private static final String FACTORY_PROPERTY = "extensions.factory";
+	private static final String NULLFACTORY = "null";
+	private static final String PROPERTIESFACTORY = "properties";
+	private static final String POLICYFACTORY = "policy";
+
 	private static PipeFactory instance;
-	
-	public static PipeFactory getInstance()
+
+	@SuppressWarnings("unchecked")
+	public static final ServiceInterceptorPipe getServiceInterceptorPipe(Service svc)
 	{
-		if(instance == null)
-			instance = new PipeFactory(ExtensionRepository.getInstance());
-		
-		return instance;
+		createInstance();
+		return instance.createServiceInterceptorPipe(svc);
 	}
 	
-	//**********************************************************
-	//pipe factory implementation
-	
-	private ExtensionRepository extRepository;
-	
-	private PipeFactory(ExtensionRepository extRepository)
+	public static final WebServiceInterceptorPipe getWebServiceInterceptorPipe(SOAPMessageContext smc)
 	{
-		this.extRepository = extRepository;
+		createInstance();
+		return instance.createWebServiceInterceptorPipe(smc);
+	}
+	
+	private static void createInstance()
+	{
+		if(instance != null)
+			return;
+		
+		instance = loadInstance();
+		
+		if(instance == null)
+			instance = new NullPipeFactory();
+    }
+    
+    @SuppressWarnings("unchecked")
+	private static PipeFactory loadInstance()
+    {
+    	String className = null;
+		try
+		{
+			className = Config.getInstance().getInitParameter(FACTORY_PROPERTY);
+			if(className == null || className.equals(NULLFACTORY))
+				return null;
+			if(className.equals(PROPERTIESFACTORY))
+				return new PropertiesPipeFactory();
+			if(className.equals(POLICYFACTORY))
+				return new PolicyPipeFactory();
+			
+    		Class<PipeFactory> clazz = (Class<PipeFactory>) Class.forName(className);
+    		
+    		return clazz.newInstance();
+		}
+		catch(Exception e)
+		{
+			System.out.println("[DEBUG] Error loading factory: " + className);
+			e.printStackTrace();
+			return null;
+		}
+    }
+	
+	//******************************************************************
+	//pipe factory abstract implementation
+	
+	protected PipeFactory() {
+	}
+	
+	protected ExtensionRepository getExtensionRepository()
+	{
+		return ExtensionRepository.getInstance();
 	}
 
 	@SuppressWarnings("unchecked")
-	public ServiceInterceptorPipe getServiceInterceptorPipe(Service svc)
-	{
-		List<Extension> extensionList = extRepository.getExtensions();
-		List<ServiceInterceptor> interceptors = new ArrayList<ServiceInterceptor>();
-		for(int i=0; i<extensionList.size(); i++)
-		{
-			Extension ext = extensionList.get(i);
-			if(ext.interceptsServices())
-				interceptors.add(ext.getServiceInterceptor());
-		}
-		return new ServiceInterceptorPipe(svc, interceptors);
-	}
-	
-	public WebServiceInterceptorPipe getWebServiceInterceptorPipe(SOAPMessageContext smc)
-	{
-		List<Extension> extensionList = extRepository.getExtensions();
-		List<WebServiceInterceptor> interceptors = new ArrayList<WebServiceInterceptor>();
-		for(int i=0; i<extensionList.size(); i++)
-		{
-			Extension ext = extensionList.get(i);
-			if(ext.interceptsWebServices())
-				interceptors.add(ext.getWebServiceInterceptor());
-		}
-		return new WebServiceInterceptorPipe(smc, interceptors);
-	}
+	protected abstract ServiceInterceptorPipe createServiceInterceptorPipe(Service svc);
+	protected abstract WebServiceInterceptorPipe createWebServiceInterceptorPipe(SOAPMessageContext smc);
 }

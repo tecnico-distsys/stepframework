@@ -2,7 +2,7 @@ package step.extension.newext;
 
 import step.framework.domain.DomainException;
 import step.framework.extensions.ServiceInterceptor;
-import step.framework.extensions.exceptions.InterceptorException;
+import step.framework.extensions.InterceptorException;
 import step.framework.service.Service;
 
 public class NewServiceInterceptor extends ServiceInterceptor {

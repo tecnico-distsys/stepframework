@@ -1,4 +1,4 @@
-package step.framework.extensions.exceptions;
+package step.framework.extensions;
 
 /**
  *  This exception is thrown when an extension has some problem
