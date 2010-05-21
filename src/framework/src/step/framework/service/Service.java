@@ -57,7 +57,7 @@ public abstract class Service<R> {
 
         try {
             tx = txManager.newTransaction();
-            ServiceInterceptorPipe pipe = PipeFactory.getInstance().getServiceInterceptorPipe(this);
+            ServiceInterceptorPipe pipe = PipeFactory.getServiceInterceptorPipe(this);
             tx.begin();
             before(pipe);
             returnValue = action();

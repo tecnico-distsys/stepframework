@@ -1,6 +1,5 @@
 package step.framework.extensions;
 
-import step.framework.extensions.exceptions.ExtensionException;
 
 public abstract class ExtensionInstaller {
 	

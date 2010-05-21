@@ -1,7 +1,6 @@
 package step.framework.extensions;
 
 import step.framework.domain.DomainException;
-import step.framework.extensions.exceptions.InterceptorException;
 import step.framework.service.Service;
 
 //TODO: annotations to define what services it intercepts???

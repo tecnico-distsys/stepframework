@@ -3,7 +3,7 @@ package step.extension.newext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 import step.framework.extensions.WebServiceInterceptor;
-import step.framework.extensions.exceptions.InterceptorException;
+import step.framework.extensions.InterceptorException;
 
 public class NewWebServiceInterceptor extends WebServiceInterceptor {
 

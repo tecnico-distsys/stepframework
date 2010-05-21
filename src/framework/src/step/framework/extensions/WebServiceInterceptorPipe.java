@@ -7,7 +7,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import step.framework.extensions.exceptions.InterceptorException;
 import step.framework.ws.SOAPUtil;
 
 @SuppressWarnings("unchecked")

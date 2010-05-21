@@ -5,7 +5,6 @@ import java.util.List;
 
 import step.framework.domain.DomainException;
 import step.framework.exception.ServiceException;
-import step.framework.extensions.exceptions.InterceptorException;
 import step.framework.service.Service;
 
 @SuppressWarnings("unchecked")

@@ -30,6 +30,6 @@ public abstract class MediatorAction implements ActionBean {
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}			
+		}
 	}
 }
