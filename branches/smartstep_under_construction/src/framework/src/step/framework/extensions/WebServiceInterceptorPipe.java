@@ -26,6 +26,7 @@ public class WebServiceInterceptorPipe {
 	
 	public boolean executeOutbound(boolean isClientSide)
 	{
+		this.inverted = false;
 		System.out.println("[DEBUG] Executing outbound " + ((isClientSide) ? "client" : "server") + " side pipe");
 		try
 		{
@@ -43,6 +44,7 @@ public class WebServiceInterceptorPipe {
 	
 	public boolean executeInbound(boolean isClientSide)
 	{
+		this.inverted = false;
 		System.out.println("[DEBUG] Executing inbound " + ((isClientSide) ? "client" : "server") + " side pipe");
 		try
 		{
