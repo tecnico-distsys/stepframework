@@ -6,6 +6,10 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import step.framework.extensions.ExtensionRepository;
+import step.framework.jarloader.JarException;
+import step.framework.jarloader.JarLoader;
+
 
 /**
  *  When web.xml is properly configured,
@@ -26,29 +30,21 @@ public class ContextListener implements ServletContextListener {
         
         log.debug("Disable JAX-WS option to capture stack trace in SOAP fault messages");
         System.getProperties().setProperty("com.sun.xml.ws.fault.SOAPFaultBuilder.disableCaptureStackTrace", "false");
-       
-        //TODO: replace extension engine
-        /*log.trace("Initializing extension engine");
-        ExtensionEngine engine = ExtensionEngine.getInstance();
-        try {
-            engine.init();
-        } catch(ExtensionEngineException e) {
-            log.warn("Extensions engine init failed", e);
+        
+        try
+        {
+        	JarLoader.load(ExtensionRepository.DEFAULT_PATH);
+            log.info("Extensions JarLoader initialized on path \"" + ExtensionRepository.DEFAULT_PATH + "\"");
         }
-        log.trace("Extensions engine " + (engine.isEnabled() ? "enabled" : "disabled"));*/
+        catch(JarException e)
+        {
+            log.info("Extensions JarLoader failed to initialize on path \"" + ExtensionRepository.DEFAULT_PATH + "\"", e);
+        }
     }
 
     /** Web application destroyed */
     public void contextDestroyed(ServletContextEvent sce) {
         log.info("Framework terminating...");
-
-        /*log.trace("Destroying extension engine");
-        ExtensionEngine engine = ExtensionEngine.getInstance();
-        try {
-            engine.destroy();
-        } catch(ExtensionEngineException e) {
-            log.debug("Extensions engine destroy failed", e);
-        }*/
     }
 
 }

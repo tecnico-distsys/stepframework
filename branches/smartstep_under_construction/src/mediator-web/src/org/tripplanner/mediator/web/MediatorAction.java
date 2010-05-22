@@ -6,9 +6,6 @@ import net.sourceforge.stripes.action.ActionBeanContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import step.extension.newext.NewExtensionInstaller;
-import step.framework.extensions.ExtensionRepository;
-
 public abstract class MediatorAction implements ActionBean {
 	protected MediatorContext context;
 	protected Log log;
@@ -23,13 +20,5 @@ public abstract class MediatorAction implements ActionBean {
 
 	public MediatorAction() {
 		this.log = LogFactory.getLog(this.getClass());
-		try
-		{
-			ExtensionRepository.getInstance().install(new NewExtensionInstaller());
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 }
