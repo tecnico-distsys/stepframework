@@ -8,7 +8,9 @@ import java.util.Map;
 
 public class ExtensionRepository {
 	
-	public static ExtensionRepository instance;
+	public static final String DEFAULT_PATH = "/extensions";
+	
+	private static ExtensionRepository instance;
 	
 	public static ExtensionRepository getInstance()
 	{
@@ -38,10 +40,8 @@ public class ExtensionRepository {
 		return extensions.get(id);
 	}
 	
-	public void install(ExtensionInstaller installer) throws ExtensionException
+	public void install(Extension ext) throws ExtensionException
 	{
-		Extension ext = ExtensionInstaller.initExtension(installer);
-		
 		if(!extensions.containsKey(ext.getID()))
 			extensions.put(ext.getID(), ext);
 	}

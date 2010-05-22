@@ -1,39 +1,34 @@
 package step.framework.extensions;
 
+import step.framework.jarloader.JarInstaller;
 
-public abstract class ExtensionInstaller {
+public abstract class ExtensionInstaller extends JarInstaller {
 	
-	static final Extension initExtension(ExtensionInstaller installer) throws ExtensionException
+	protected abstract String getExtensionID();
+	protected abstract Class<? extends ServiceInterceptor> getServiceInterceptorClass();
+	protected abstract Class<? extends WebServiceInterceptor> getWebServiceInterceptorClass();
+	
+	protected	final void install() throws ExtensionException
 	{
 		try
 		{
-			Extension ext = new Extension(installer.getExtensionID());
+			Extension ext = new Extension(getExtensionID());
 			
-			Class<? extends ServiceInterceptor> svcIntClass = installer.getServiceInterceptorClass();
+			Class<? extends ServiceInterceptor> svcIntClass = getServiceInterceptorClass();
 			ServiceInterceptor svcInt =svcIntClass.getConstructor().newInstance();
 			svcInt.setExtension(ext);
 			ext.setServiceInterceptor(svcInt);
 			
-			Class<? extends WebServiceInterceptor> wsIntClass = installer.getWebServiceInterceptorClass();
+			Class<? extends WebServiceInterceptor> wsIntClass = getWebServiceInterceptorClass();
 			WebServiceInterceptor wsInt = wsIntClass.getConstructor().newInstance() ;
 			wsInt.setExtension(ext);
 			ext.setWebServiceInterceptor(wsInt);
-			
-			return ext;
+
+			ExtensionRepository.getInstance().install(ext);
 		}
 		catch(Exception e)
 		{
 			throw new ExtensionException(e);
 		}
 	}
-	
-	//****************************************************
-	//ExtensionInstaller methods
-	
-	public ExtensionInstaller() { }
-	
-	public abstract String getExtensionID();
-	public abstract Class<? extends ServiceInterceptor> getServiceInterceptorClass();
-	public abstract Class<? extends WebServiceInterceptor> getWebServiceInterceptorClass();
-	
 }
