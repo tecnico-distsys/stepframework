@@ -126,4 +126,114 @@ public class XMLUtil {
         return null;
     }
 
+
+    //
+    //  XML Metrics
+    //
+
+    /** Inner class to hold XML metrics computed from a document */
+    public static class XMLMetrics {
+        /** Number of XML nodes (excluding attributes) */
+        public int nodeCount = 0;
+
+        /** Number of XML element nodes */
+        public int elemCount = 0;
+        /** Total element name text length (in characters) */
+        public int elemNameLen = 0;
+
+        /** Number of XML text nodes */
+        public int textCount = 0;
+        /** Total text length (in characters) */
+        public int textLen = 0;
+
+        /** Number of XML attributes */
+        public int attrCount = 0;
+        /** Total attribute name text length (in characters) */
+        public int attrNameLen = 0;
+
+        /** Maximum depth. A single node document has depth 1. */
+        public int maxDepth = 0;
+
+        /** length */
+        public int getLength() { return elemNameLen + textLen + attrNameLen; }
+    }
+
+    /** Compute XML Metrics for the given XML tree */
+    public static XMLMetrics computeMetrics(Node xmlNode) {
+        // create result object
+        XMLMetrics metrics = new XMLMetrics();
+        
+        // null node has 0 metrics
+        if (xmlNode == null)
+            return metrics;
+
+        // depth is 1 because at least 1 level exists (root)
+        int depth = 1;
+        metrics.maxDepth = depth;
+
+        final Node ROOT = xmlNode;
+        Node currentNode = ROOT;
+        Node lastNode = null;
+
+        while (currentNode != null) {
+            Node firstChild = currentNode.getFirstChild();
+            Node lastChild = currentNode.getLastChild();
+
+            // at root note (node count is 0) or seeing a node for the first time)
+            if (metrics.nodeCount == 0 || lastNode != lastChild) {
+                metrics.nodeCount++;
+                //System.out.println("Counting " + currentNode.getNodeName() + " element");
+                if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+                    metrics.elemCount++;
+                    metrics.elemNameLen += currentNode.getNodeName().length();
+
+                    NamedNodeMap attrs = currentNode.getAttributes();
+                    int attrsLength = attrs.getLength();
+                    metrics.attrCount += attrsLength;
+                    for (int i=0; i < attrsLength; i++) {
+                        Node attr = attrs.item(i);
+                        //System.out.println("Counting " + attr.getNodeName() + " attribute");
+                        metrics.attrNameLen += attr.getNodeName().length();
+                    }
+
+                } else if (currentNode.getNodeType() == Node.TEXT_NODE) {
+                    //System.out.println("Counting '" + currentNode.getNodeValue() + "' text");
+                    metrics.textCount++;
+                    metrics.textLen += currentNode.getNodeValue().length();
+                }
+            }
+
+            if (firstChild != null && lastNode != lastChild) {
+                //System.out.println("descend");
+                depth++;
+                if (depth > metrics.maxDepth) metrics.maxDepth = depth;
+                lastNode = currentNode;
+                currentNode = firstChild;
+                continue;
+            } else {
+                Node nextSibling = currentNode.getNextSibling();
+                if (nextSibling != null) {
+                    //System.out.println("advance");
+                    lastNode = currentNode;
+                    currentNode = nextSibling;
+                    continue;
+                } else {
+                    //System.out.println("ascend");
+                    depth--;
+                    Node parent = currentNode.getParentNode();
+                    lastNode = currentNode;
+                    currentNode = parent;
+                    if (parent == ROOT) {
+                        // reached initial node. End.
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        } // while
+        return metrics;
+    }
+
+
 }
