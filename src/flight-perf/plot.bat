@@ -5,19 +5,19 @@ REM Plot graphs using gnuplot (http://www.gnuplot.info/)
 SETLOCAL
 
 :check
-IF "%PLOT_DIR%"=="" GOTO error_plotdir
+IF "%PERF_PLOT_DIR%"=="" GOTO error_plotdir
 GOTO main
 
 :error_plotdir
-ECHO Error: environment variable PLOT_DIR is not set!
+ECHO Error: environment variable PERF_PLOT_DIR is not set!
 GOTO end
 
 :main
 PUSHD plot
 gnuplot *.gp
-MOVE *.png ..\%PLOT_DIR%
-MOVE *.tex ..\%PLOT_DIR%
-MOVE *.pdf ..\%PLOT_DIR%
+MOVE *.png ..\%PERF_PLOT_DIR%
+MOVE *.tex ..\%PERF_PLOT_DIR%
+MOVE *.pdf ..\%PERF_PLOT_DIR%
 POPD
 
 :end
