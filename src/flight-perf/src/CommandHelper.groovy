@@ -47,6 +47,9 @@ public class CommandHelper {
     static def PROFIT_OPT = "pft";
     static def PROFIT_LOPT = "profit";
 
+    static def ERROR_PROB_OPT = "ep";
+    static def ERROR_PROB_LOPT = "errorprobability";
+
 
     //
     //  Create options
@@ -128,6 +131,14 @@ public class CommandHelper {
     static def buildProfitOption() {
         Option mgOption = new Option(PROFIT_OPT, PROFIT_LOPT,
             /* hasArg */ true, "Profit");
+        mgOption.setArgName("decimal number");
+        mgOption.setArgs(1);
+        return mgOption;
+    }
+
+    static def buildErrorProbabilityOption() {
+        Option mgOption = new Option(ERROR_PROB_OPT, ERROR_PROB_LOPT,
+            /* hasArg */ true, "Error probability (value in the range 0.0 to 1.0)");
         mgOption.setArgName("decimal number");
         mgOption.setArgs(1);
         return mgOption;
