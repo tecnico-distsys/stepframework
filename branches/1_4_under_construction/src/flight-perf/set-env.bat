@@ -2,17 +2,37 @@
 REM Initialization procedure.
 REM Define environment variables used by other batch files.
 
-SET LOAD_DIR=build\load
-SET LOG_DIR=build\log
-SET PLOT_DIR=build\plot
+REM Options
+SET PERF_AGGREGATE_LOG=true
+SET PERF_INIT_DB=true
+SET PERF_COMPILE_FIRST_TIME=true
+
+REM Locations
+SET PERF_LOAD_DIR=build\load
+SET PERF_LOG_DIR=build\log
+SET PERF_PLOT_DIR=build\plot
 
 IF NOT "%1"=="" (
-    SET LOAD_DIR=%LOAD_DIR%\%1
-    SET LOG_DIR=%LOG_DIR%\%1
-    SET PLOT_DIR=%PLOT_DIR%\%1
+    SET PERF_LOAD_DIR=%PERF_LOAD_DIR%\%1
 )
 
-ECHO Flight WS Performance Environment set:
-ECHO LOAD_DIR=%LOAD_DIR%
-ECHO LOG_DIR=%LOG_DIR%
-ECHO PLOT_DIR=%PLOT_DIR%
+IF NOT "%2"=="" (
+    SET PERF_LOG_DIR=%PERF_LOG_DIR%\%2
+)
+
+IF NOT "%3"=="" (
+    SET PERF_PLOT_DIR=%PERF_PLOT_DIR%\%3
+)
+
+ECHO Flight WS Performance Environment:
+ECHO.
+ECHO Options:
+ECHO PERF_AGGREGATE_LOG=%PERF_AGGREGATE_LOG%
+ECHO PERF_INIT_DB=%PERF_INIT_DB%
+ECHO PERF_COMPILE_FIRST_TIME=%PERF_COMPILE_FIRST_TIME%
+ECHO.
+ECHO Locations:
+ECHO PERF_LOAD_DIR=%PERF_LOAD_DIR%
+ECHO PERF_LOG_DIR=%PERF_LOG_DIR%
+ECHO PERF_PLOT_DIR=%PERF_PLOT_DIR%
+ECHO.
