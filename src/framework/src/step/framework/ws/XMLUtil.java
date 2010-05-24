@@ -150,19 +150,52 @@ public class XMLUtil {
         public int attrCount = 0;
         /** Total attribute name text length (in characters) */
         public int attrNameLen = 0;
+        /** Total attribute value text length (in characters) */
+        public int attrValueLen = 0;
 
         /** Maximum depth. A single node document has depth 1. */
         public int maxDepth = 0;
 
-        /** length */
-        public int getLength() { return elemNameLen + textLen + attrNameLen; }
+        /** The logical length is the sum of
+         *  the length of element names, text length, attribute names, and attribute values.
+         *  The unit is 'characters' (not bytes).
+         *
+         *  The element name is counted only once even if there is an opening and closing tag
+         *  e.g. logical length of <root></root> is 4 and not 8 characters.  */
+        public int getLogicalLength() { return elemNameLen + textLen + attrNameLen + attrValueLen; }
+
+        /** report string */
+        public String toString() {
+            final String FORMAT = "XML document has a logical length of %d with " +
+                "%d nodes " +
+                "(%d elements with length %d, " +
+                "%d texts with length %d, " +
+                "%d attributes with length %d and value length %d, " +
+                "%d others) " +
+                "and with a maximum depth of %d.";
+            return String.format(FORMAT, getLogicalLength(),
+                nodeCount,
+                elemCount, elemNameLen,
+                textCount, textLen,
+                attrCount, attrNameLen, attrValueLen,
+                (nodeCount - elemCount - textCount - attrCount),
+                maxDepth);
+        }
+
+        /** compact report string */
+        public String toCompactString() {
+            final String FORMAT = "ll:%d nc:%d md:%d";
+            return String.format(FORMAT, getLogicalLength(),
+                nodeCount,
+                maxDepth);
+        }
     }
 
     /** Compute XML Metrics for the given XML tree */
     public static XMLMetrics computeMetrics(Node xmlNode) {
         // create result object
         XMLMetrics metrics = new XMLMetrics();
-        
+
         // null node has 0 metrics
         if (xmlNode == null)
             return metrics;
@@ -183,19 +216,25 @@ public class XMLUtil {
             if (metrics.nodeCount == 0 || lastNode != lastChild) {
                 metrics.nodeCount++;
                 //System.out.println("Counting " + currentNode.getNodeName() + " element");
+
+                // element node
                 if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
                     metrics.elemCount++;
                     metrics.elemNameLen += currentNode.getNodeName().length();
 
+                    // handle attributes
                     NamedNodeMap attrs = currentNode.getAttributes();
                     int attrsLength = attrs.getLength();
                     metrics.attrCount += attrsLength;
+                    metrics.nodeCount += attrsLength;
                     for (int i=0; i < attrsLength; i++) {
                         Node attr = attrs.item(i);
                         //System.out.println("Counting " + attr.getNodeName() + " attribute");
                         metrics.attrNameLen += attr.getNodeName().length();
+                        metrics.attrValueLen += attr.getNodeValue().length();
                     }
 
+                // text node
                 } else if (currentNode.getNodeType() == Node.TEXT_NODE) {
                     //System.out.println("Counting '" + currentNode.getNodeValue() + "' text");
                     metrics.textCount++;
@@ -231,7 +270,9 @@ public class XMLUtil {
                     }
                 }
             }
+
         } // while
+
         return metrics;
     }
 

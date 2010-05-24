@@ -14,6 +14,7 @@ import org.perf4j.*;
 
 import step.framework.perf.monitor.*;
 import step.framework.ws.SOAPUtil;
+import step.framework.ws.XMLUtil;
 
 
 /**
@@ -57,9 +58,11 @@ public class PerfSOAPHandler implements SOAPHandler<SOAPMessageContext> {
 
     private boolean monitor(SOAPMessageContext smc) {
         try {
-            Boolean isOutbound = 
+            Boolean isOutbound =
                 (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
             SOAPMessage message = smc.getMessage();
+            SOAPPart part = message.getSOAPPart();
+            SOAPEnvelope envelope = part.getEnvelope();
 
             if(log.isTraceEnabled()) {
                 log.trace((isOutbound ? "Outbound" : "Inbound") + " SOAP Message");
@@ -69,31 +72,41 @@ public class PerfSOAPHandler implements SOAPHandler<SOAPMessageContext> {
                 //
                 // inbound message
                 //
-                
+
                 // identify message payload
                 String bodyName = null;
                 SOAPElement element = SOAPUtil.getBodyPayload(message);
                 if(element != null)
                     bodyName = element.getElementQName().getLocalPart();
 
-                // store message name in message context
+                // compute request metrics
+                XMLUtil.XMLMetrics requestMetrics = XMLUtil.computeMetrics(envelope);
+
+                // store data in message context
                 smc.put("step.framework.perf.monitor.ws.bodyName", bodyName);
+                smc.put("step.framework.perf.monitor.ws.request.metrics", requestMetrics);
 
                 // start clock
                 StopWatchHelper.getThreadStopWatch("soap").start();
+
             } else {
                 //
                 // outbound message
                 //
-                
+
+                // compute response metrics
+                XMLUtil.XMLMetrics responseMetrics = XMLUtil.computeMetrics(envelope);
+
                 // identify fault payload (stays null if it does not exist)
                 String faultName = null;
                 SOAPElement element = SOAPUtil.getFaultPayload(message);
                 if(element != null)
                     faultName = element.getElementQName().getLocalPart();
 
-                // retrieve body name
+                // retrieve data from message context
                 String bodyName = (String) smc.get("step.framework.perf.monitor.ws.bodyName");
+                XMLUtil.XMLMetrics requestMetrics =
+                    (XMLUtil.XMLMetrics) smc.get("step.framework.perf.monitor.ws.request.metrics");
 
                 // create SOAP message tag name
                 StringBuilder tagNameBuilder = new StringBuilder();
@@ -106,8 +119,14 @@ public class PerfSOAPHandler implements SOAPHandler<SOAPMessageContext> {
                 }
                 String tagName = tagNameBuilder.toString();
 
-                // stop the clock and log using tag
-                StopWatchHelper.getThreadStopWatch("soap").stop(tagName);
+                StopWatch stopWatch = StopWatchHelper.getThreadStopWatch("soap");
+
+                String metricsReport = String.format("request %s response %s",
+                    requestMetrics.toCompactString(), responseMetrics.toCompactString());
+                stopWatch.setMessage(metricsReport);
+
+                // stop the clock and log using tag and set message
+                stopWatch.stop(tagName);
             }
 
         } finally {

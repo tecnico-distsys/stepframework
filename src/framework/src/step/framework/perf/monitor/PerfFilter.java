@@ -55,19 +55,15 @@ public class PerfFilter implements Filter {
         }
 
         log.trace("BEFORE request");
-        {
-            StopWatchHelper.getThreadStopWatch("filter").start("filter");
-        }
+        StopWatchHelper.getThreadStopWatch("filter").start("filter");
 
         // invoke the next processor in the chain
         // (can be another filter or the web resource)
         chain.doFilter(request, response);
 
         log.trace("AFTER request");
-        {
-            StopWatchHelper.getThreadStopWatch("filter").stop("filter");
-            StopWatchHelper.deleteAllThreadStopWatches();
-        }
+        StopWatchHelper.getThreadStopWatch("filter").stop("filter");
+        StopWatchHelper.deleteAllThreadStopWatches();
 
     }
 
