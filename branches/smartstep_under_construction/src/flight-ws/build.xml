@@ -214,9 +214,9 @@
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
             <!-- referenced libs -->
-            <zipfileset dir="../extensions/dist"
+            <!--<zipfileset dir="../extensions/dist"
                         includes="*.jar"
-                        prefix="WEB-INF/lib" />
+                        prefix="WEB-INF/lib" />-->
         </jar>
 
     </target>

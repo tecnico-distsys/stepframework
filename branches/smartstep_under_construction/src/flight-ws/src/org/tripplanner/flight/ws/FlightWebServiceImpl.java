@@ -13,11 +13,25 @@ import org.tripplanner.flight.wsdl.Passenger;
 import org.tripplanner.flight.wsdl.ServiceError;
 import org.tripplanner.flight.wsdl.ServiceError_Exception;
 
+//import step.extension.newext.NewExtensionInstaller;
+
 @javax.jws.WebService(endpointInterface = "org.tripplanner.flight.wsdl.FlightPortType")
 public class FlightWebServiceImpl implements FlightPortType {
 
 	/** logging */
 	private Log log = LogFactory.getLog(FlightWebServiceImpl.class);
+	
+	public FlightWebServiceImpl()
+	{
+		/*try
+		{
+			new NewExtensionInstaller().install();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}*/
+	}
 
 	/** create reservation */
 	public ReservationVoucher createReservation(String departure,

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ExtensionRepository {
 	
-	public static final String DEFAULT_PATH = "/extensions";
+	public static final String DEFAULT_PATH = "extensions";
 	
 	private static ExtensionRepository instance;
 	

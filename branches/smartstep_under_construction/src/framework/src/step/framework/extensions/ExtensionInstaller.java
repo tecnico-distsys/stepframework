@@ -8,21 +8,27 @@ public abstract class ExtensionInstaller extends JarInstaller {
 	protected abstract Class<? extends ServiceInterceptor> getServiceInterceptorClass();
 	protected abstract Class<? extends WebServiceInterceptor> getWebServiceInterceptorClass();
 	
-	protected	final void install() throws ExtensionException
+	public	final void install() throws ExtensionException
 	{
 		try
 		{
 			Extension ext = new Extension(getExtensionID());
 			
 			Class<? extends ServiceInterceptor> svcIntClass = getServiceInterceptorClass();
-			ServiceInterceptor svcInt =svcIntClass.getConstructor().newInstance();
-			svcInt.setExtension(ext);
-			ext.setServiceInterceptor(svcInt);
+			if(svcIntClass != null)
+			{
+				ServiceInterceptor svcInt =svcIntClass.getConstructor().newInstance();
+				svcInt.setExtension(ext);
+				ext.setServiceInterceptor(svcInt);
+			}
 			
 			Class<? extends WebServiceInterceptor> wsIntClass = getWebServiceInterceptorClass();
-			WebServiceInterceptor wsInt = wsIntClass.getConstructor().newInstance() ;
-			wsInt.setExtension(ext);
-			ext.setWebServiceInterceptor(wsInt);
+			if(wsIntClass != null)
+			{
+				WebServiceInterceptor wsInt = wsIntClass.getConstructor().newInstance() ;
+				wsInt.setExtension(ext);
+				ext.setWebServiceInterceptor(wsInt);
+			}
 
 			ExtensionRepository.getInstance().install(ext);
 		}
