@@ -93,10 +93,11 @@ public class XMLUtilTest {
 
         assertEquals("attribute count", 0, metrics.attrCount);
         assertEquals("attribute name text length", 0, metrics.attrNameLen);
+        assertEquals("attribute value text length", 0, metrics.attrValueLen);
 
         assertEquals("maximum depth", 1, metrics.maxDepth);
 
-        assertEquals("overall length", 4, metrics.getLength());
+        assertEquals("logical length", 4, metrics.getLogicalLength());
     }
 
     @Test
@@ -115,7 +116,7 @@ public class XMLUtilTest {
         XMLUtil.XMLMetrics metrics = XMLUtil.computeMetrics(node);
 
         // assert results
-        assertEquals("node count", 4, metrics.nodeCount);
+        assertEquals("node count", 8, metrics.nodeCount);
 
         assertEquals("element node count", 4, metrics.elemCount);
         assertEquals("element name text length", 11+6+(3*2), metrics.elemNameLen);
@@ -125,10 +126,11 @@ public class XMLUtilTest {
 
         assertEquals("attribute count", 4, metrics.attrCount);
         assertEquals("attribute name text length", 4*4, metrics.attrNameLen);
+        assertEquals("attribute value text length", 4*4, metrics.attrValueLen);
 
         assertEquals("maximum depth", 3, metrics.maxDepth);
 
-        assertEquals("overall length", (11+6+(3*2)) + 0 + 4*4, metrics.getLength());
+        assertEquals("logical length", (11+6+(3*2)) + 0 + 4*4 + 4*4, metrics.getLogicalLength());
     }
 
     @Test
@@ -147,7 +149,7 @@ public class XMLUtilTest {
         XMLUtil.XMLMetrics metrics = XMLUtil.computeMetrics(node);
 
         // assert results
-        assertEquals("node count", 3, metrics.nodeCount);
+        assertEquals("node count", 6, metrics.nodeCount);
 
         assertEquals("element node count", 3, metrics.elemCount);
         assertEquals("element name text length", 6+(3*2), metrics.elemNameLen);
@@ -157,11 +159,13 @@ public class XMLUtilTest {
 
         assertEquals("attribute count", 3, metrics.attrCount);
         assertEquals("attribute name text length", 3*4, metrics.attrNameLen);
+        assertEquals("attribute value text length", 3*4, metrics.attrValueLen);
 
         assertEquals("maximum depth", 2, metrics.maxDepth);
 
-        assertEquals("overall length", (6+(3*2)) + 0 + 3*4, metrics.getLength());
+        assertEquals("logical length", (6+(3*2)) + 0 + 3*4 + 3*4, metrics.getLogicalLength());
     }
+
 
     @Test
     public void testIndentedXMLMetrics() throws Exception {
@@ -179,7 +183,7 @@ public class XMLUtilTest {
         XMLUtil.XMLMetrics metrics = XMLUtil.computeMetrics(node);
 
         // assert results
-        assertEquals("node count", 4+5, metrics.nodeCount);
+        assertEquals("node count", 4+4+5, metrics.nodeCount);
 
         assertEquals("element node count", 4, metrics.elemCount);
         assertEquals("element name text length", 11+6+(3*2), metrics.elemNameLen);
@@ -189,10 +193,12 @@ public class XMLUtilTest {
 
         assertEquals("attribute count", 4, metrics.attrCount);
         assertEquals("attribute name text length", 4*4, metrics.attrNameLen);
+        assertEquals("attribute value text length", 4*4, metrics.attrValueLen);
 
         assertEquals("maximum depth", 3, metrics.maxDepth);
 
-        assertEquals("overall length", (11+6+(3*2)) + 17 + 4*4, metrics.getLength());
+        assertEquals("logical length", (11+6+(3*2)) + 17 + 4*4 + 4*4, metrics.getLogicalLength());
+
     }
 
     @Test
@@ -218,7 +224,7 @@ public class XMLUtilTest {
         XMLUtil.XMLMetrics metrics = XMLUtil.computeMetrics(node);
 
         // assert results
-        assertEquals("node count", 3+3, metrics.nodeCount);
+        assertEquals("node count", 3+3+3, metrics.nodeCount);
 
         assertEquals("element node count", 3, metrics.elemCount);
         assertEquals("element name text length", 6+(3*2), metrics.elemNameLen);
@@ -228,11 +234,45 @@ public class XMLUtilTest {
 
         assertEquals("attribute count", 3, metrics.attrCount);
         assertEquals("attribute name text length", 3*4, metrics.attrNameLen);
+        assertEquals("attribute value text length", 3*4, metrics.attrValueLen);
 
         assertEquals("maximum depth", 2, metrics.maxDepth);
 
-        assertEquals("overall length", (6+(3*2)) + 13 + 3*4, metrics.getLength());
+        assertEquals("logical length", (6+(3*2)) + 13 + 3*4 + 3*4, metrics.getLogicalLength());
     }
 
+    @Test
+    public void testToString() throws Exception {
+        Document document = stringToDocument(INDENTED_XML);
+        Node node = document.getDocumentElement();
+        assertEquals("grandfather", node.getNodeName());
+
+        // compute metrics
+        XMLUtil.XMLMetrics metrics = XMLUtil.computeMetrics(node);
+
+        // assert results
+        final String EXPECTED = "XML document has a logical length of 72 with " +
+            "13 nodes " +
+            "(4 elements with length 23, " +
+            "5 texts with length 17, " +
+            "4 attributes with length 16 and value length 16, " +
+            "0 others) " +
+            "and with a maximum depth of 3.";
+
+        assertEquals(EXPECTED, metrics.toString());
+    }
+
+    @Test
+    public void testToCompactString() throws Exception {
+        Document document = stringToDocument(COMPACT_XML);
+        Node node = document.getDocumentElement();
+        assertEquals("grandfather", node.getNodeName());
+
+        // compute metrics
+        XMLUtil.XMLMetrics metrics = XMLUtil.computeMetrics(node);
+
+        // assert results
+        assertEquals("ll:55 nc:8 md:3", metrics.toCompactString());
+    }
 
 }

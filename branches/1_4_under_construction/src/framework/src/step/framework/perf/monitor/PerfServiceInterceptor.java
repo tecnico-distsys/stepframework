@@ -18,6 +18,8 @@ import step.framework.service.*;
 /**
  *  This class implements the STEP Extensions Service Interceptor interface.
  *  Its purpose is intercept the service (business layer) invocations.
+ *
+ *  TODO: handle nested services properly
  */
 public class PerfServiceInterceptor extends ServiceInterceptorBase {
 
@@ -41,7 +43,7 @@ public class PerfServiceInterceptor extends ServiceInterceptorBase {
             log.trace("Service class: " + serviceClass);
         }
 
-        StopWatchHelper.getThreadStopWatch("si").start("si");
+        StopWatchHelper.getThreadStopWatch("si").start("si." + serviceClass.getName());
     }
 
     @Override
@@ -60,7 +62,7 @@ public class PerfServiceInterceptor extends ServiceInterceptorBase {
         Object service = param.getServiceInstance();
         Class serviceClass = service.getClass();
 
-        StopWatchHelper.getThreadStopWatch("si").stop("si");
+        StopWatchHelper.getThreadStopWatch("si").stop("si." + serviceClass.getName());
     }
 
 }
