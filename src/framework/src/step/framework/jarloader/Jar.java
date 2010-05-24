@@ -8,8 +8,8 @@ import java.util.Properties;
 
 class Jar {
 	
-	private static final String CONFIGFILE = "jarinstaller.properties";
-	private static final String INSTALLERPROPERTY = "jarinstaller.class";
+	private static final String CONFIGFILE = "installer.properties";
+	private static final String INSTALLERPROPERTY = "installer.class";
 	
 	private File file;
 	private JarInstaller installer;
@@ -36,12 +36,11 @@ class Jar {
 	{
 		try
 		{
+			System.out.println("[DEBUG] Creating a new ClassLoader for Jar: " + file.getName());
 			String urlStr = "jar:" + file.toURI() + "!/";
 			URL url = new URL(urlStr);
-			
-			URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-			
-			this.classLoader = classLoader;
+
+			classLoader = URLClassLoader.newInstance(new URL[]{url}, this.getClass().getClassLoader());
 		}
 		catch(Exception e)
 		{
@@ -57,15 +56,17 @@ class Jar {
 			InputStream is = classLoader.getResourceAsStream(CONFIGFILE);
 			if(is == null)
 				throw new JarException("The Jar file \"" + file.getName() + "\" does not contain a valid configuration file: " + CONFIGFILE);
-			
+
+			System.out.println("[DEBUG] Loading properties from \"" + CONFIGFILE + "\".");
 			Properties properties = new Properties();
 			properties.load(is);
 			is.close();
-			
+
 			String installerProperty = (String) properties.remove(INSTALLERPROPERTY);
 			if(installerProperty == null)
 				throw new JarException("The Jar file \"" + file.getName() + "\" does not define the \"" + INSTALLERPROPERTY + "\" property");
-	
+
+			System.out.println("[DEBUG] Loading installer \"" + installerProperty + "\".");
 			Class<JarInstaller> installerClass = (Class<JarInstaller>) classLoader.loadClass(installerProperty);
 			installer = installerClass.newInstance();
 			installer.setProperties(properties);
