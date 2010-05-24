@@ -5,13 +5,13 @@ REM
 :begin
 SETLOCAL
 
-:check_args
-IF "%1"=="" GOTO error_arg1
+:check
+IF "%1"=="" GOTO error_runs
 SET RUNS=%1
 
 GOTO main
 
-:error_arg1
+:error_runs
 ECHO Error: please provide total number of runs!
 GOTO usage
 

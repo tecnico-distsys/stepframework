@@ -58,6 +58,8 @@ public class WorkloadGenerator extends DBCommand {
     File outputFile;
     ObjectOutputStream oos;
 
+    Double errorProbability;
+
 
     @Override protected Options createCommandLineOptions() {
         Options options = super.createCommandLineOptions();
@@ -65,6 +67,8 @@ public class WorkloadGenerator extends DBCommand {
         options.addOption(CommandHelper.buildSeedOption());
         options.addOption(CommandHelper.buildNrOption());
         options.addOption(CommandHelper.buildMaxGroupOption());
+
+        options.addOption(CommandHelper.buildErrorProbabilityOption());
 
         Option mttOption = new Option("Mtt", "maxthinktime",
             /* hasArg */ true, "Maximum think time between requests");
@@ -122,6 +126,14 @@ public class WorkloadGenerator extends DBCommand {
             }
         }
 
+        if (errorProbability == null) {
+            errorProbability = CommandHelper.initDouble(settings[CommandHelper.ERROR_PROB_LOPT], 0.0);
+            if (errorProbability < 0.0 || errorProbability > 1.0 ) {
+                err.println("Error probability value must be inside range 0.0 to 1.0!");
+                return false;
+            }
+        }
+
         if (maxThinkTime == null) {
             maxThinkTime = CommandHelper.initInteger(settings["maxthinktime"], null);  // in seconds
             if (maxThinkTime == null) {
@@ -170,8 +182,8 @@ public class WorkloadGenerator extends DBCommand {
         WorkloadGenerator.setup();
 
         err.println("Running " + this.class.simpleName);
-        err.printf("output %d request sessions to %s, name data files %s %s, max group %d, max think time %d",
-            number, outputFile, namesFile, surnamesFile, maxGroup, maxThinkTime);
+        err.printf("output %d request sessions to %s, name data files %s %s, max group %d, max think time %d, error probability %.3f",
+            number, outputFile, namesFile, surnamesFile, maxGroup, maxThinkTime, errorProbability);
         if(seed != null) err.printf(", random seed %d", seed);
         err.println();
 
@@ -182,6 +194,7 @@ public class WorkloadGenerator extends DBCommand {
         def operation;
 
         def count = 0;
+        def errorCount = 0;
         while(count < number) {
             count++;
 
@@ -194,6 +207,13 @@ public class WorkloadGenerator extends DBCommand {
 
             def depart = FlightDBHelper.getAirport(sql, flight.origin_id).city;
             def arrive = FlightDBHelper.getAirport(sql, flight.destination_id).city;
+
+            // simulate user input error
+            if (random.nextDouble() < errorProbability) {
+                errorCount++;
+                depart += " intentional mistake";
+                arrive += " intentional mistake";
+            }
 
             def sfIn = Class.forName("org.tripplanner.flight.view.SearchFlightsInput").newInstance();
             sfIn.depart = depart;
@@ -230,6 +250,12 @@ public class WorkloadGenerator extends DBCommand {
                 singlePassenger.name = nameGenerator.nextName();
                 csrIn.passenger = singlePassenger;
 
+                // simulate user input error
+                if (random.nextDouble() < errorProbability) {
+                    errorCount++;
+                    csrIn.flightNumber = "intentional mistake " + csrIn.flightNumber;
+                }
+
                 oos.writeObject(operation);
                 oos.writeObject(csrIn);
 
@@ -251,6 +277,12 @@ public class WorkloadGenerator extends DBCommand {
                     passengerList.add(groupPassenger);
                 }
 
+                // simulate user input error
+                if (random.nextDouble() < errorProbability) {
+                    errorCount++;
+                    cmrIn.flightNumber = "intentional mistake " + cmrIn.flightNumber;
+                }
+
                 oos.writeObject(operation);
                 oos.writeObject(cmrIn);
 
@@ -270,6 +302,9 @@ public class WorkloadGenerator extends DBCommand {
         //
         oos.close();
 
+        err.printf("Generated %d request sessions with %d intentional request errors%n",
+            count, errorCount);
+        err.println("Done!");
 
     }
 
