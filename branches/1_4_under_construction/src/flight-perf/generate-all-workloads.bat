@@ -4,7 +4,7 @@ REM Generate all test workloads
 :begin
 SETLOCAL
 
-% n stands for number, mg stands for maxgroup
+REM n stands for number, mg stands for maxgroup
 
 CALL set-env.bat n1mg10
 CALL generate-workloads.bat 1 10

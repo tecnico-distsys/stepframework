@@ -3,7 +3,6 @@ REM Generate test workloads
 
 :begin
 SETLOCAL
-SET CLASSPATH=%CLASSPATH%;..\..\framework\dist\stepframework.jar;..\..\flight-ws-cli\dist\flight-ws-cli.jar
 
 :check
 IF "%PERF_LOAD_DIR%"=="" GOTO error_loaddir

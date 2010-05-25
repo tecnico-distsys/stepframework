@@ -2,12 +2,8 @@
 REM Initialization procedure.
 REM Define environment variables used by other batch files.
 
-REM Options
-SET PERF_AGGREGATE_LOG=true
-SET PERF_INIT_DB=true
-SET PERF_COMPILE_FIRST_TIME=true
+SET CLASSPATH=%CLASSPATH%;..\..\framework\dist\stepframework.jar;..\..\flight-ws-cli\dist\flight-ws-cli.jar;%STEP_HOME%\lib\SuperCSV-1.52.jar;%STEP_HOME%\lib\commons-math-2.1.jar
 
-REM Locations
 SET PERF_LOAD_DIR=build\load
 SET PERF_LOG_DIR=build\log
 SET PERF_PLOT_DIR=build\plot
@@ -25,11 +21,6 @@ IF NOT "%3"=="" (
 )
 
 ECHO Flight WS Performance Environment:
-ECHO.
-ECHO Options:
-ECHO PERF_AGGREGATE_LOG=%PERF_AGGREGATE_LOG%
-ECHO PERF_INIT_DB=%PERF_INIT_DB%
-ECHO PERF_COMPILE_FIRST_TIME=%PERF_COMPILE_FIRST_TIME%
 ECHO.
 ECHO Locations:
 ECHO PERF_LOAD_DIR=%PERF_LOAD_DIR%

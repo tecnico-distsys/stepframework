@@ -4,7 +4,6 @@ REM
 
 :begin
 SETLOCAL
-SET CLASSPATH=%CLASSPATH%;..\..\framework\dist\stepframework.jar;..\..\flight-ws-cli\dist\flight-ws-cli.jar
 
 :check
 IF "%PERF_LOAD_DIR%"=="" GOTO error_loaddir
@@ -38,9 +37,7 @@ ECHO.
 
 REM ----------------------------------------------------------------------------
 
-IF "%PERF_INIT_DB%"=="false" GOTO init_db_done
 CALL init-db.bat
-:init_db_done
 
 PUSHD ..
 CALL ant start-server!
@@ -57,14 +54,9 @@ PUSHD ..
 CALL ant stop-server
 POPD
 
-IF "%PERF_AGGREGATE_LOG%"=="false" (
-    COPY %CATALINA_HOME%\logs\flight-ws_perfLog.txt ..\%PERF_LOG_DIR%\flight-ws_perfLog-%NR%.txt
-    GOTO log_aggregation_done
-)
 PUSHD src
 CALL groovy Perf4JAggregateContiguousEntries.groovy -i %CATALINA_HOME%\logs\flight-ws_perfLog.txt -o ..\%PERF_LOG_DIR%\flight-ws_perfLog-%NR%.txt
 POPD
-:log_aggregation_done
 
 REM ----------------------------------------------------------------------------
 
