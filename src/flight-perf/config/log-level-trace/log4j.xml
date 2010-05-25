@@ -43,12 +43,12 @@
 
     <!-- Application loggers -->
     <logger name="step.framework">
-        <level value="FATAL"/>
+        <level value="TRACE"/>
     </logger>
 
     <!-- Root logger -->
     <root>
-        <level value="FATAL"/>
+        <level value="TRACE"/>
         <appender-ref ref="console"/>
         <appender-ref ref="logFile"/>
     </root>
