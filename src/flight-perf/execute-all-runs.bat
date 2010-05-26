@@ -1,78 +1,185 @@
 @ECHO OFF
-REM Generate all test workloads
+:: Execute all sets of test workloads
+::
+:: Author: Miguel Pardal
+:: Date:   2010-05-26
 
+:: -----------------------------------------------------------------------------
 :begin
 SETLOCAL
+SET ECHO=
 
-IF "%1"=="" GOTO end
-GOTO %1
+SET LOG4J_FILE_NAME=log4j.xml
+SET LOG4J_FILE=..\flight-ws\src\%LOG4J_FILE_NAME%
+SET LOG4J_FILE_BAK=%LOG4J_FILE%.bak
 
-:baseline
-CALL set-env.bat n100mg10 n100mg10
-CALL execute-runs.bat 50
+SET CONFIG_DIR=config
 
-:xml
-CALL set-env.bat n100mg100 n100mg100
-CALL execute-runs.bat 50
+:: -----------------------------------------------------------------------------
+:check
 
-CALL set-env.bat n100mg500 n100mg500
-CALL execute-runs.bat 50
+IF "%PERF_LOAD_DIR%"=="" GOTO error_loaddir
 
-CALL set-env.bat n100mg1000 n100mg1000
-CALL execute-runs.bat 50
+IF "%PERF_LOG_DIR%"=="" GOTO error_logdir
 
-:log
-COPY ..\flight-ws\src\log4j.xml ..\flight-ws\src\log4j.xml.bak
-COPY config\log-level-debug\log4j.xml ..\flight-ws\src\log4j.xml
-CALL set-env.bat n100mg10 n100mg10_log-level-debug
-CALL execute-runs.bat 50
-DEL ..\flight-ws\src\log4j.xml
-COPY ..\flight-ws\src\log4j.xml.bak ..\flight-ws\src\log4j.xml
-DEL ..\flight-ws\src\log4j.xml.bak
+IF "%1"=="" GOTO error_runs
+SET RUNS=%1
 
-COPY ..\flight-ws\src\log4j.xml ..\flight-ws\src\log4j.xml.bak
-COPY config\log-level-error\log4j.xml ..\flight-ws\src\log4j.xml
-CALL set-env.bat n100mg10 n100mg10_log-level-error
-CALL execute-runs.bat 50
-DEL ..\flight-ws\src\log4j.xml
-COPY ..\flight-ws\src\log4j.xml.bak ..\flight-ws\src\log4j.xml
-DEL ..\flight-ws\src\log4j.xml.bak
+GOTO main
 
-COPY ..\flight-ws\src\log4j.xml ..\flight-ws\src\log4j.xml.bak
-COPY config\log-level-info\log4j.xml ..\flight-ws\src\log4j.xml
-CALL set-env.bat n100mg10 n100mg10_log-level-info
-CALL execute-runs.bat 50
-DEL ..\flight-ws\src\log4j.xml
-COPY ..\flight-ws\src\log4j.xml.bak ..\flight-ws\src\log4j.xml
-DEL ..\flight-ws\src\log4j.xml.bak
+:error_loaddir
+ECHO Error: environment variable PERF_LOAD_DIR is not set!
+GOTO end
 
-COPY ..\flight-ws\src\log4j.xml ..\flight-ws\src\log4j.xml.bak
-COPY config\log-level-off\log4j.xml ..\flight-ws\src\log4j.xml
-CALL set-env.bat n100mg10 n100mg10_log-level-off
-CALL execute-runs.bat 50
-DEL ..\flight-ws\src\log4j.xml
-COPY ..\flight-ws\src\log4j.xml.bak ..\flight-ws\src\log4j.xml
-DEL ..\flight-ws\src\log4j.xml.bak
+:error_logdir
+ECHO Error: environment variable PERF_LOG_DIR is not set!
+GOTO end
 
-COPY ..\flight-ws\src\log4j.xml ..\flight-ws\src\log4j.xml.bak
-COPY config\log-level-trace\log4j.xml ..\flight-ws\src\log4j.xml
-CALL set-env.bat n100mg10 n100mg10_log-level-trace
-CALL execute-runs.bat 50
-DEL ..\flight-ws\src\log4j.xml
-COPY ..\flight-ws\src\log4j.xml.bak ..\flight-ws\src\log4j.xml
-DEL ..\flight-ws\src\log4j.xml.bak
+:error_runs
+ECHO Error: argument number-of-runs is missing!
+GOTO usage
 
-COPY ..\flight-ws\src\log4j.xml ..\flight-ws\src\log4j.xml.bak
-COPY config\log-level-warn\log4j.xml ..\flight-ws\src\log4j.xml
-CALL set-env.bat n100mg10 n100mg10_log-level-warn
-CALL execute-runs.bat 50
-DEL ..\flight-ws\src\log4j.xml
-COPY ..\flight-ws\src\log4j.xml.bak ..\flight-ws\src\log4j.xml
-DEL ..\flight-ws\src\log4j.xml.bak
+:usage
+ECHO Usage: %0 number-of-runs
+GOTO end
+
+:: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+:replace_log4j
+%ECHO% COPY %LOG4J_FILE% %LOG4J_FILE_BAK%
+%ECHO% COPY %CONFIG_DIR%\%CONFIG%\%LOG4J_FILE_NAME% %LOG4J_FILE%
+:: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+GOTO :EOF
+
+:: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+:restore_log4j
+%ECHO% DEL %LOG4J_FILE%
+%ECHO% COPY %LOG4J_FILE_BAK% %LOG4J_FILE%
+%ECHO% DEL %LOG4J_FILE_BAK%
+:: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+GOTO :EOF
 
 
-:hibernate_cache
 
-:cipher
+:: -----------------------------------------------------------------------------
+:main
 
+SET N=1
+SET MG=5
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=50
+SET MG=10
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=50
+SET MG=100
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=50
+SET MG=500
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=50
+SET MG=1000
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=100
+SET MG=10
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=100
+SET MG=100
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=100
+SET MG=500
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+SET N=100
+SET MG=1000
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+)
+
+:: -----------------------------------------------------------------------------
+:: log configuration runs
+
+SET N=50
+SET MG=10
+
+SET CONFIG=log-level-off
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+SET CONFIG=log-level-error
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+SET CONFIG=log-level-warn
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+SET CONFIG=log-level-info
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+SET CONFIG=log-level-debug
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+SET CONFIG=log-level-trace
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+
+:: -----------------------------------------------------------------------------
 :end

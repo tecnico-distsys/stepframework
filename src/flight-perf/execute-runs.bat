@@ -1,11 +1,16 @@
 @ECHO OFF
-REM Execute multiple test runs
-REM
+:: Execute multiple test runs
+::
+:: Author: Miguel Pardal
+:: Date:   2010-05-26
 
+:: -----------------------------------------------------------------------------
 :begin
 SETLOCAL
 
+:: -----------------------------------------------------------------------------
 :check
+
 IF "%1"=="" GOTO error_runs
 SET RUNS=%1
 
@@ -19,13 +24,15 @@ GOTO usage
 ECHO Usage: %0 total-runs
 GOTO end
 
+:: -----------------------------------------------------------------------------
 :main
 
 PUSHD ..
 CALL ant rebuild
 POPD
 
-REM Main loop
+:: Main loop
 FOR /L %%? IN (1, 1, %RUNS%) DO CALL execute-run.bat %%?
 
+:: -----------------------------------------------------------------------------
 :end
