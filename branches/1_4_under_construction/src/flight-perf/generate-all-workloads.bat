@@ -1,24 +1,91 @@
 @ECHO OFF
-REM Generate all test workloads
+:: Generate all sets of test workloads
+::
+:: Author: Miguel Pardal
+:: Date:   2010-05-26
 
+:: -----------------------------------------------------------------------------
 :begin
 SETLOCAL
+SET ECHO=
 
-REM n stands for number, mg stands for maxgroup
+:: -----------------------------------------------------------------------------
+:check
+IF "%PERF_LOAD_DIR%"=="" GOTO error_loaddir
 
-CALL set-env.bat n1mg10
-CALL generate-workloads.bat 1 10
+GOTO main
 
-CALL set-env.bat n100mg10
-CALL generate-workloads.bat 100 10
+:error_loaddir
+ECHO Error: environment variable PERF_LOAD_DIR is not set!
+GOTO end
 
-CALL set-env.bat n100mg100
-CALL generate-workloads.bat 100 100
+:: -----------------------------------------------------------------------------
+:main
 
-CALL set-env.bat n100mg500
-CALL generate-workloads.bat 100 500
+:: n stands for number, mg stands for maxgroup
 
-CALL set-env.bat n100mg1000
-CALL generate-workloads.bat 100 1000
+SET N=1
+SET MG=5
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
 
+SET N=50
+SET MG=10
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=50
+SET MG=100
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=50
+SET MG=500
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=50
+SET MG=1000
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=100
+SET MG=10
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=100
+SET MG=100
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=100
+SET MG=500
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+SET N=100
+SET MG=1000
+IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
+    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL generate-workloads.bat %N% %MG%
+)
+
+:: -----------------------------------------------------------------------------
 :end
