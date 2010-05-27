@@ -66,76 +66,84 @@ GOTO :EOF
 SET N=1
 SET MG=5
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=50
 SET MG=10
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=50
 SET MG=100
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=50
 SET MG=500
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=50
 SET MG=1000
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=100
 SET MG=10
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=100
 SET MG=100
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=100
 SET MG=500
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 SET N=100
 SET MG=1000
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%
     %ECHO% CALL execute-runs.bat %RUNS%
 )
 
 :: -----------------------------------------------------------------------------
 :: log configuration runs
 
-SET N=50
+SET N=5
 SET MG=10
 
 SET CONFIG=log-level-off
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
     CALL :replace_log4j
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL execute-runs.bat %RUNS%
+    CALL :restore_log4j
+)
+
+SET CONFIG=log-level-fatal
+IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
+    CALL :replace_log4j
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
     %ECHO% CALL execute-runs.bat %RUNS%
     CALL :restore_log4j
 )
@@ -143,7 +151,7 @@ IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
 SET CONFIG=log-level-error
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
     CALL :replace_log4j
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
     %ECHO% CALL execute-runs.bat %RUNS%
     CALL :restore_log4j
 )
@@ -151,7 +159,7 @@ IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
 SET CONFIG=log-level-warn
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
     CALL :replace_log4j
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
     %ECHO% CALL execute-runs.bat %RUNS%
     CALL :restore_log4j
 )
@@ -159,7 +167,7 @@ IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
 SET CONFIG=log-level-info
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
     CALL :replace_log4j
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
     %ECHO% CALL execute-runs.bat %RUNS%
     CALL :restore_log4j
 )
@@ -167,7 +175,7 @@ IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
 SET CONFIG=log-level-debug
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
     CALL :replace_log4j
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
     %ECHO% CALL execute-runs.bat %RUNS%
     CALL :restore_log4j
 )
@@ -175,7 +183,7 @@ IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
 SET CONFIG=log-level-trace
 IF NOT EXIST %PERF_LOG_DIR%\n%N%mg%MG%_%CONFIG% (
     CALL :replace_log4j
-    %ECHO% CALL set-env.bat n%N%mg%MG% n%N%mg%MG%_%CONFIG%
+    %ECHO% CALL env.bat set n%N%mg%MG% n%N%mg%MG%_%CONFIG%
     %ECHO% CALL execute-runs.bat %RUNS%
     CALL :restore_log4j
 )

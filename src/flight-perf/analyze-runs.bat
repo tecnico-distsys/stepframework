@@ -11,10 +11,22 @@ SETLOCAL
 :: -----------------------------------------------------------------------------
 :check
 
+IF "%PERF_LOAD_DIR%"=="" GOTO error_loaddir
+
+IF "%PERF_LOG_DIR%"=="" GOTO error_logdir
+
 IF "%1"=="" GOTO error_runs
 SET RUNS=%1
 
 GOTO main
+
+:error_loaddir
+ECHO Error: environment variable PERF_LOAD_DIR is not set!
+GOTO end
+
+:error_logdir
+ECHO Error: environment variable PERF_LOG_DIR is not set!
+GOTO end
 
 :error_runs
 ECHO Error: please provide total number of runs!

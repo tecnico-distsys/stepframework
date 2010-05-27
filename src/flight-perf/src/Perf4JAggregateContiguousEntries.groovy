@@ -28,9 +28,10 @@ public class Perf4JAggregateContiguousEntries extends IOCommand {
         def previousStart = 0L;
         def previousTime = 0L;
         def previousTag = "";
+        def previousMessage = "";
 
-        def sequenceStart;
-        def sequenceTimeSum;
+        def sequenceStart = 0L;
+        def sequenceTimeSum = 0L;
 
         def lineNr = 0;
         i.eachLine { line ->
@@ -39,13 +40,14 @@ public class Perf4JAggregateContiguousEntries extends IOCommand {
             //
             //  Extract current line data
             //
-            def lineMatcher = ( line =~ "start\\[(.*)\\] time\\[(.*)\\] tag\\[(.*)\\]" );
+            def lineMatcher = ( line =~ Perf4JHelper.PERF_LOG_LINE_REGEX );
             def lineMatchResult = lineMatcher.matches();
             assert(lineMatchResult);
 
-            def start = Long.parseLong(lineMatcher[0][1]);
-            def time = Long.parseLong(lineMatcher[0][2]);
-            def tag = lineMatcher[0][3];
+            def start = Long.parseLong(lineMatcher.group(1));
+            def time = Long.parseLong(lineMatcher.group(2));
+            def tag = lineMatcher.group(3);
+            def message = lineMatcher.group(4);
 
             if (!previousTag.equals(tag)) {
                 // change of tag
@@ -54,7 +56,7 @@ public class Perf4JAggregateContiguousEntries extends IOCommand {
                     // end of previous sequence
                     def newTime = previousStart - sequenceStart + sequenceTimeSum;
                     // write line for previous sequence
-                    o.printf("start[%d] time[%d] tag[%s]%n", sequenceStart, newTime, previousTag);
+                    o.printf(Perf4JHelper.sprintPerfLogLine(sequenceStart, newTime, previousTag, previousMessage));
                 }
 
                 // beginning of new sequence
@@ -70,13 +72,14 @@ public class Perf4JAggregateContiguousEntries extends IOCommand {
             previousStart = start;
             previousTime = time;
             previousTag = tag;
+            previousMessage = message;
         }
 
         if (previousTag.length() != 0) {
             // end of last sequence
             def newTime = previousStart - sequenceStart + sequenceTimeSum;
             // write line for last sequence
-            o.printf("start[%d] time[%d] tag[%s]%n", sequenceStart, newTime, previousTag);
+            o.printf(Perf4JHelper.sprintPerfLogLine(sequenceStart, newTime, previousTag, previousMessage));
         }
 
     }

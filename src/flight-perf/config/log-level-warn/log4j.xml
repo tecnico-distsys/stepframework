@@ -41,15 +41,9 @@
         <appender-ref ref="perfLogFile"/>
     </logger>
 
-    <!-- Application loggers -->
-    <logger name="step.framework">
-        <level value="WARN"/>
-    </logger>
-
     <!-- Root logger -->
     <root>
         <level value="WARN"/>
-        <appender-ref ref="console"/>
         <appender-ref ref="logFile"/>
     </root>
 

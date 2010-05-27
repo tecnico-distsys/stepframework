@@ -41,16 +41,10 @@
         <appender-ref ref="perfLogFile"/>
     </logger>
 
-    <!-- Application loggers -->
-    <logger name="step.framework">
-        <level value="INFO"/>
-    </logger>
-
     <!-- Root logger -->
     <root>
-        <level value="ERROR"/>
+        <level value="FATAL"/>
         <appender-ref ref="logFile"/>
-        <appender-ref ref="console"/>
     </root>
 
 </log4j:configuration>
