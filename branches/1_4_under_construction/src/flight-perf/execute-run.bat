@@ -61,7 +61,10 @@ POPD
 
 PUSHD src
 CALL groovy Perf4JAggregateContiguousEntries.groovy -i %CATALINA_HOME%\logs\flight-ws_perfLog.txt -o ..\%PERF_LOG_DIR%\flight-ws_perfLog-%NR%.txt
+REM COPY %CATALINA_HOME%\logs\flight-ws_perfLog.txt ..\%PERF_LOG_DIR%\flight-ws_perfLog-%NR%.txt
 POPD
+
+COPY %CATALINA_HOME%\logs\flight-ws_log.txt %PERF_LOG_DIR%\flight-ws_log-%NR%.txt
 
 ECHO Test run %NR% complete.
 

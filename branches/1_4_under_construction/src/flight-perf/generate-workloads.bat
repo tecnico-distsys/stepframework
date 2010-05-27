@@ -10,6 +10,7 @@ SETLOCAL
 
 :: -----------------------------------------------------------------------------
 :check
+
 IF "%PERF_LOAD_DIR%"=="" GOTO error_loaddir
 
 :: n stands for number, mg stands for maxgroup

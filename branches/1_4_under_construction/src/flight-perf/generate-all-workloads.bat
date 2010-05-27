@@ -27,63 +27,63 @@ GOTO end
 SET N=1
 SET MG=5
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=50
 SET MG=10
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=50
 SET MG=100
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=50
 SET MG=500
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=50
 SET MG=1000
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=100
 SET MG=10
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=100
 SET MG=100
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=100
 SET MG=500
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 
 SET N=100
 SET MG=1000
 IF NOT EXIST %PERF_LOAD_DIR%\n%N%mg%MG% (
-    %ECHO% CALL set-env.bat n%N%mg%MG%
+    %ECHO% CALL env.bat set n%N%mg%MG%
     %ECHO% CALL generate-workloads.bat %N% %MG%
 )
 

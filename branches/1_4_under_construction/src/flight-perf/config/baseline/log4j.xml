@@ -43,14 +43,14 @@
 
     <!-- Application loggers -->
     <logger name="step.framework">
-        <level value="FATAL"/>
+        <level value="INFO"/>
     </logger>
 
     <!-- Root logger -->
     <root>
-        <level value="FATAL"/>
-        <appender-ref ref="console"/>
+        <level value="ERROR"/>
         <appender-ref ref="logFile"/>
+        <appender-ref ref="console"/>
     </root>
 
 </log4j:configuration>
