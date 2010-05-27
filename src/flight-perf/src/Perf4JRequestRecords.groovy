@@ -89,7 +89,7 @@ public class Perf4JRequestRecords extends ByYourCommand {
 
         // write headers
         def headerList = CSVHelper.getRequestRecordsHeaderList();
-        final String[] headerArray = CSVHelper.headerListToArray(headerList);
+        final String[] headerArray = headerList as String[];
         writer.writeHeader(headerArray);
 
 
@@ -109,13 +109,14 @@ public class Perf4JRequestRecords extends ByYourCommand {
             //
             //  Extract current line data
             //
-            def lineMatcher = ( line =~ "start\\[(.*)\\] time\\[(.*)\\] tag\\[(.*)\\]" );
+            def lineMatcher = ( line =~ Perf4JHelper.PERF_LOG_LINE_REGEX );
             def lineMatcherResult = lineMatcher.matches();
             assert(lineMatcher.matches());
 
-            def start = Long.parseLong(lineMatcher[0][1]);
-            def time = Long.parseLong(lineMatcher[0][2]);
-            def tag = lineMatcher[0][3];
+            final def start = Long.parseLong(lineMatcher.group(1));
+            final def time = Long.parseLong(lineMatcher.group(2));
+            final def tag = lineMatcher.group(3);
+            final def message = lineMatcher.group(4);
 
             // process line
 
@@ -123,7 +124,7 @@ public class Perf4JRequestRecords extends ByYourCommand {
                 // process start of new request (implicit end of previous request)
 
                 // dump previous request data
-                totalMap[tag] = time;
+                totalMap["filter_time"] = time;
                 writer.write(totalMap, headerArray);
 
                 // reset map
@@ -140,22 +141,72 @@ public class Perf4JRequestRecords extends ByYourCommand {
                 def tagMatchResult = tagMatcher.matches();
                 assert(tagMatchResult);
 
-                def mainTag = tagMatcher[0][1];
-                def metaTag = mainTag + "-meta";
-                def metaData = tagMatcher[0][2];
+                final def mainTag = tagMatcher.group(1);
+                final def metaTag = tagMatcher.group(2);
+
+                def recordTagToUse = mainTag;
+
+                // handle special cases
+                if ("hibernate".equals(mainTag)) {
+
+                    if ("load".equals(metaTag)) {
+                        // read
+                        recordTagToUse += "_read_time";
+                    } else {
+                        // write
+                        recordTagToUse += "_write_time";
+                    }
+
+                } else if ("si".equals(mainTag)) {
+                    recordTagToUse += "_time";
+                    totalMap["si_name"] = metaTag;
+
+                } else if ("soap".equals(mainTag)) {
+                    recordTagToUse += "_time";
+                    totalMap["soap_name"] = metaTag;
+
+                    // match message
+                    def messageMatcher = ( message =~ "request ll:(\\d*+) nc:(\\d+) md:(\\d+) response ll:(\\d*+) nc:(\\d+) md:(\\d+)" );
+                    def messageMatchResult = messageMatcher.matches();
+                    assert(messageMatchResult);
+
+                    // retrieve XML metrics
+                    def value;
+
+                    value = Long.parseLong(messageMatcher.group(1));
+                    totalMap["soap_request_logical_length"] = value;
+
+                    value = Long.parseLong(messageMatcher.group(2));
+                    totalMap["soap_request_node_count"] = value;
+
+                    value = Long.parseLong(messageMatcher.group(3));
+                    totalMap["soap_request_max_depth"] = value;
+
+                    value = Long.parseLong(messageMatcher.group(4));
+                    totalMap["soap_response_logical_length"] = value;
+
+                    value = Long.parseLong(messageMatcher.group(5));
+                    totalMap["soap_response_node_count"] = value;
+
+                    value = Long.parseLong(messageMatcher.group(6));
+                    totalMap["soap_response_max_depth"] = value;
+
+                } else {
+                    // general case
+                    recordTagToUse += "_time";
+                }
+
+                assert(recordTagToUse); // make sure tag to use was initialized
 
                 // add value to total
-                def total = totalMap[mainTag];
+                def total = totalMap[recordTagToUse];
                 if (!total) total = 0;
                 total += time;
-                totalMap[mainTag] = total;
+                totalMap[recordTagToUse] = total;
 
-                // store meta-data
-                if (totalMap.containsKey(metaTag) && metaData) {
-                    totalMap[metaTag] = metaData;
-                }
             }
 
+            assert(totalMap.size() == headerArray.length);    // make sure no map keys were mistyped
         }
 
         // close file
