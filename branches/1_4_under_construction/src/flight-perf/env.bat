@@ -1,5 +1,5 @@
 @ECHO OFF
-:: Manage environment variables required by other batch files.
+:: Manage environment variables.
 ::
 :: Author: Miguel Pardal
 :: Date:   2010-05-26
@@ -24,7 +24,7 @@ ECHO Error: argument action %1 not recognized!
 GOTO usage
 
 :usage
-ECHO Usage: %0 print/clear/set (load) (log) (plot)
+ECHO Usage: %0 print/clear/set
 GOTO end
 
 :: -----------------------------------------------------------------------------
@@ -33,44 +33,28 @@ GOTO end
 :print
 ECHO Performance environment variables:
 ECHO.
+ECHO STEP_SRC_HOME=%STEP_SRC_HOME%
 ECHO CLASSPATH=%CLASSPATH%
-ECHO.
-ECHO PERF_LOAD_DIR=%PERF_LOAD_DIR%
-ECHO PERF_LOG_DIR=%PERF_LOG_DIR%
-ECHO PERF_PLOT_DIR=%PERF_PLOT_DIR%
 ECHO.
 
 GOTO end
 
 :set
 
-SET CLASSPATH=%CLASSPATH%;..\..\framework\dist\stepframework.jar;..\..\flight-ws-cli\dist\flight-ws-cli.jar;%STEP_HOME%\lib\SuperCSV-1.52.jar;%STEP_HOME%\lib\commons-math-2.1.jar
+:: SET STEP_SRC_HOME to absolute path
+CALL env-aux.bat ..\..
 
-SET PERF_LOAD_DIR=build\load
-SET PERF_LOG_DIR=build\log
-SET PERF_PLOT_DIR=build\plot
+SET CLASSPATH=%CLASSPATH%;%STEP_HOME%\lib\SuperCSV-1.52.jar;%STEP_HOME%\lib\commons-math-2.1.jar
+SET CLASSPATH=%CLASSPATH%;%STEP_SRC_HOME%\src\framework\dist\stepframework.jar;%STEP_SRC_HOME%\src\flight-ws-cli\dist\flight-ws-cli.jar
+SET CLASSPATH=%CLASSPATH%;%STEP_SRC_HOME%\src\flight-perf\common;%STEP_SRC_HOME%\src\flight-perf\0_domain-data-generator
+SET CLASSPATH=%CLASSPATH%;%STEP_SRC_HOME%\src\flight-perf\1_load-generator;%STEP_SRC_HOME%\src\flight-perf\2_load-executor
+SET CLASSPATH=%CLASSPATH%;%STEP_SRC_HOME%\src\flight-perf\4_analyzer;%STEP_SRC_HOME%\src\flight-perf\5_report-generator;%STEP_SRC_HOME%\src\flight-perf\test
 
-IF NOT "%2"=="" (
-    SET PERF_LOAD_DIR=%PERF_LOAD_DIR%\%2
-)
-
-IF NOT "%3"=="" (
-    SET PERF_LOG_DIR=%PERF_LOG_DIR%\%3
-)
-
-IF NOT "%4"=="" (
-    SET PERF_PLOT_DIR=%PERF_PLOT_DIR%\%4
-)
-
-GOTO print
+GOTO end
 
 :clear
 
 SET CLASSPATH=
-
-SET PERF_LOAD_DIR=
-SET PERF_LOG_DIR=
-SET PERF_PLOT_DIR=
 
 GOTO end
 
