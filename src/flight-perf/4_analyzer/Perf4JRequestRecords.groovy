@@ -88,7 +88,7 @@ public class Perf4JRequestRecords extends ByYourCommand {
         ICsvMapWriter writer = new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
 
         // write headers
-        def headerList = CSVHelper.getRequestRecordsHeaderList();
+        def headerList = CSVHelper.getRequestRecordHeaderList();
         final String[] headerArray = headerList as String[];
         writer.writeHeader(headerArray);
 

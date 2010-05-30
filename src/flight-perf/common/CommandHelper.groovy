@@ -17,6 +17,9 @@ public class CommandHelper {
     static def FILE_OPT = "f";
     static def FILE_LOPT = "file";
 
+    static def APPEND_OPT = "ap";
+    static def APPEND_LOPT = "append";
+
     static def ENDPOINT_OPT = "e";
     static def ENDPOINT_LOPT = "endpoint";
 
@@ -71,6 +74,13 @@ public class CommandHelper {
         return oOption;
     }
 
+    static def buildAppendOption() {
+        Option aOption = new Option(APPEND_OPT, APPEND_LOPT,
+            /* hasArg */ true, "Append to output file");
+        aOption.setArgName("boolean");
+        aOption.setArgs(1);
+        return aOption;
+    }
 
     static def buildEndpointOption(desc) {
         Option oOption = new Option(ENDPOINT_OPT, ENDPOINT_LOPT,
@@ -148,6 +158,14 @@ public class CommandHelper {
     //
     //  Type initializers
     //
+
+    static def initBoolean(value, defaultValue) {
+        if (value != null) {
+            return new Boolean(value);
+        } else {
+            return defaultValue;
+        }
+    }
 
     static def initInteger(value, defaultValue) {
         if (value != null) {

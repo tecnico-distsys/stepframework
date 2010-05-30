@@ -12,7 +12,7 @@ import org.apache.commons.math.stat.*;
 import org.apache.commons.math.stat.descriptive.*;
 
 
-public class CSVRequestStatistics extends ByYourCommand {
+public class CSVSampleStatistics extends ByYourCommand {
 
     // --- static ---
 
@@ -20,7 +20,7 @@ public class CSVRequestStatistics extends ByYourCommand {
     //  Command line execution
     //
     public static void main(String[] args) {
-        CSVRequestStatistics instance = new CSVRequestStatistics();
+        CSVSampleStatistics instance = new CSVSampleStatistics();
         if (instance.handleCommandLineArgs(args)) {
             instance.run();
         }
@@ -34,6 +34,7 @@ public class CSVRequestStatistics extends ByYourCommand {
     //
     File iFile;
     File oFile;
+    Boolean appendFlag;
 
 
     //
@@ -45,6 +46,7 @@ public class CSVRequestStatistics extends ByYourCommand {
 
         options.addOption(CommandHelper.buildInputOption());
         options.addOption(CommandHelper.buildOutputOption());
+        options.addOption(CommandHelper.buildAppendOption());
 
         return options;
     }
@@ -72,6 +74,10 @@ public class CSVRequestStatistics extends ByYourCommand {
             }
         }
 
+        if (appendFlag == null) {
+            appendFlag = CommandHelper.initBoolean(settings[CommandHelper.APPEND_LOPT], false);
+        }
+
         return true;
     }
 
@@ -84,10 +90,14 @@ public class CSVRequestStatistics extends ByYourCommand {
 
         err.println("Running " + this.class.simpleName);
 
-        CsvMapReader csvMR = new CsvMapReader(new FileReader(iFile), CsvPreference.STANDARD_PREFERENCE);
+        CsvMapReader csvMR = 
+            new CsvMapReader(new FileReader(iFile), CsvPreference.STANDARD_PREFERENCE);
 
-        def recordsHeaderList = CSVHelper.getRequestRecordsHeaderList();
-        def recordsHeaderArray = CSVHelper.headerListToArray(recordsHeaderList);
+        def recordsHeaderList = CSVHelper.getRequestRecordHeaderList();
+        def recordsHeaderArray = recordsHeaderList as String[];
+
+        def numericRecordsHeaderList = CSVHelper.getRequestRecordNumericHeaderList();
+        def numericRecordsHeaderArray = numericRecordsHeaderList as String[];
 
         int recordNr = 0;
 
@@ -104,13 +114,10 @@ public class CSVRequestStatistics extends ByYourCommand {
         //
 
         def statsMap = [ : ];
-
-
-        recordsHeaderList.each{ header ->
-            if (!header.endsWith("-meta")) {
-                // DescriptiveStatistics stores values in memory, but can compute percentiles
-                statsMap[header] = new DescriptiveStatistics();
-            }
+        
+        numericRecordsHeaderList.each{ header ->
+            // DescriptiveStatistics stores values in memory and can compute percentiles
+            statsMap[header] = new DescriptiveStatistics();
         }
 
         //
@@ -121,11 +128,14 @@ public class CSVRequestStatistics extends ByYourCommand {
             recordNr++;
 
             // process record
-            recordsHeaderList.each{ header ->
-                if (!header.endsWith("-meta")) {
-                    double value = record[header].toDouble();
-                    statsMap[header].addValue(value);
-                }
+            statsMap.keySet().each { key ->
+                double value;
+                // consider empty string as zero
+                if (record[key].length() == 0)
+                    value = 0.0;
+                else
+                    value = record[key].toDouble();
+                statsMap[key].addValue(value);
             }
 
         }
@@ -135,45 +145,34 @@ public class CSVRequestStatistics extends ByYourCommand {
         //
         //  Define output file structure
         //
-        ICsvMapWriter csvMW = new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
+        ICsvMapWriter csvMW = 
+            new CsvMapWriter(new FileWriter(oFile, appendFlag), CsvPreference.STANDARD_PREFERENCE);
 
         // generate header list
-        def headerList = [ ];
-
-        recordsHeaderList.each{ header ->
-            if (!header.endsWith("-meta")) {
-                headerList.add(header + "-mean");
-                headerList.add(header + "-stdDev");
-                headerList.add(header + "-median");
-                headerList.add(header + "-lowerQ");
-                headerList.add(header + "-upperQ");
-            }
-        }
-
-        def headerArray = CSVHelper.headerListToArray(headerList);
+        def headerList = CSVHelper.getSampleStatisticsHeaderList();
+        def headerArray = headerList as String[];
 
         // write headers
-        csvMW.writeHeader(headerArray);
-
+        if (!appendFlag) {
+            csvMW.writeHeader(headerArray);
+        }
 
         // Compute statistics
         def resultMap = [ : ];
 
-        recordsHeaderList.each{ header ->
-            if (!header.endsWith("-meta")) {
-                double mean = statsMap[header].getMean();
-                double std = statsMap[header].getStandardDeviation();
+        statsMap.keySet().each { key ->
+            double mean = statsMap[key].getMean();
+            double std = statsMap[key].getStandardDeviation();
 
-                double median = statsMap[header].getPercentile(50);
-                double lowerQuartile = statsMap[header].getPercentile(25);
-                double upperQuartile = statsMap[header].getPercentile(75);
+            double median = statsMap[key].getPercentile(50);
+            double lowerQuartile = statsMap[key].getPercentile(25);
+            double upperQuartile = statsMap[key].getPercentile(75);
 
-                resultMap[header + "-mean"] = mean;
-                resultMap[header + "-stdDev"] = std;
-                resultMap[header + "-median"] = median;
-                resultMap[header + "-lowerQ"] = lowerQuartile;
-                resultMap[header + "-upperQ"] = upperQuartile;
-            }
+            resultMap[key + "-mean"] = mean;
+            resultMap[key + "-stdDev"] = std;
+            resultMap[key + "-median"] = median;
+            resultMap[key + "-lowerQ"] = lowerQuartile;
+            resultMap[key + "-upperQ"] = upperQuartile;
         }
 
         // Write data
