@@ -37,7 +37,7 @@
 
     <!-- Perf4J logger -->
     <logger name="org.perf4j.TimingLogger" additivity="false">
-        <level value="INFO"/>
+        <level value="OFF"/>
         <appender-ref ref="perfLogFile"/>
     </logger>
 
