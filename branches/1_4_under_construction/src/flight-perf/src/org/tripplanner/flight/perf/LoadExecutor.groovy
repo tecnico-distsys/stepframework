@@ -62,7 +62,11 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert (SAMPLES >= 1)
 
     def loadId = runConfig.loadId;
+    assert(loadId ==~ "[A-Za-z0-9]+") : "Invalid load identifier"
+
     def configId = runConfig.configId;
+    assert(configId ==~ "[A-Za-z0-9]+") : "Invalid config identifier"
+
     def runId = loadId + "_" + configId;
 
     def loadOutputDir = new File(loadOutputBaseDir, loadId);

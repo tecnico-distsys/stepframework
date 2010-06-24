@@ -48,7 +48,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     loadConfig = loadConfig.perf.flight.load.instance;
     assert (loadConfig) : "Expecting flight load instance configuration file"
 
-    def outputDir = new File(outputBaseDir, loadConfig.id);
+    def loadId = loadConfig.id;
+    assert(loadId ==~ "[A-Za-z0-9]+") : "Invalid load identifier"
+
+    def outputDir = new File(outputBaseDir, loadId);
 
     // check if generation is necessary
     if (options.force ||

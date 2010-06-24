@@ -77,13 +77,5 @@ perf {
             overallFileName = "stats.csv"
         }
 
-//      ------------------------------------------------------------------------
-        report {
-            instanceDir = "etc/config/report"
-            instanceFileNameRegex = "Report(.*?).groovy"
-
-            outputBaseDir = "../../../flight-perf-work/report"
-        }
-
     }
 }
