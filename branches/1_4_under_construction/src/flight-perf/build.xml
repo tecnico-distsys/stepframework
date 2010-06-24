@@ -1,0 +1,94 @@
+<project name="flight-perf" default="build" basedir=".">
+
+    <description>
+    Groovy project build file
+    </description>
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <!-- default folder location properties -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="tests.src.rel-dir" value="tests"/>
+    <property name="etc.rel-dir" value="etc"/>
+    <property name="build.rel-dir" value="build"/>
+    <property name="dist.rel-dir" value="dist"/>
+    <property name="doc.rel-dir" value="${dist.rel-dir}/javadoc" />
+
+    <!-- project classpath -->
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.rel-dir}" />
+        <!-- libraries -->
+        <fileset dir="${env.GROOVY_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+    </target>
+
+    
+    <!-- compile -->
+
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <property name="compile.debug" value="true" />
+    <property name="compile.debuglevel" value="lines,vars,source" />
+
+    
+    <!-- groovy compile -->
+    
+    <taskdef name="groovyc"
+            classname="org.codehaus.groovy.ant.Groovyc"
+            classpathref="project.classpath"/>
+            
+    <target name="groovyc" depends="init,prepare-resources">
+    <!-- description="Compile groovy source code" -->
+        <groovyc srcdir="${src.rel-dir}" destdir="${build.rel-dir}">
+            <classpath refid="project.classpath" />
+            <javac debug="${compile.debug}"
+                   debuglevel="${compile.debuglevel}"
+            />
+        </groovyc>
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" depends="groovyc"
+        description="Build the project">
+    </target>
+
+    <target name="rebuild" depends="clean,build">
+    <!-- description="Rebuild the project" -->
+    </target>
+
+</project>
