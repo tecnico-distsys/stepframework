@@ -53,7 +53,11 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert (SAMPLES >= 1)
 
     def runId = statsConfig.runId;
+    assert(runId ==~ "[A-Za-z0-9_]+") : "Invalid run identifier"
+
     def filterId = statsConfig.filterId;
+    assert(filterId ==~ "[A-Za-z0-9]+") : "Invalid filter identifier"
+
     def statsId = runId + "_" + filterId;
 
     def runOutputDir = new File(runOutputBaseDir, runId);
@@ -95,7 +99,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             CsvListReader csvLR = new CsvListReader(new FileReader(requestsFile), CsvPreference.STANDARD_PREFERENCE);
             def csvHeaders = csvLR.read();
             csvLR.close();
-            
+
             // write headers
             CsvListWriter csvLW = new CsvListWriter(new FileWriter(filteredRequestsFile), CsvPreference.STANDARD_PREFERENCE);
             csvLW.write(csvHeaders);
