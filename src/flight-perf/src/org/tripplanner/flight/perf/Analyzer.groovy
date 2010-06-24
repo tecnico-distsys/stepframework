@@ -56,7 +56,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert(runId ==~ "[A-Za-z0-9_]+") : "Invalid run identifier"
 
     def filterId = statsConfig.filterId;
-    assert(filterId ==~ "[A-Za-z0-9]+") : "Invalid filter identifier"
+    assert(filterId ==~ "[A-Za-z0-9]*") : "Invalid filter identifier"
 
     def statsId = runId + "_" + filterId;
 
