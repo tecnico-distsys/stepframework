@@ -94,7 +94,7 @@ public class CSVSampleStatistics extends ByYourCommand {
 
         err.println("Running " + this.class.simpleName);
 
-        CsvMapReader csvMR = 
+        CsvMapReader csvMR =
             new CsvMapReader(new FileReader(iFile), CsvPreference.STANDARD_PREFERENCE);
 
         def recordsHeaderList = CSVHelper.getRequestRecordHeaderList();
@@ -109,8 +109,8 @@ public class CSVSampleStatistics extends ByYourCommand {
         csvMR.read(recordsHeaderArray);
 
         // ignore 2nd line (first request - startup)
-        csvMR.read(recordsHeaderArray);
-        recordNr++;
+        //csvMR.read(recordsHeaderArray);
+        //recordNr++;
 
 
         //
@@ -118,7 +118,7 @@ public class CSVSampleStatistics extends ByYourCommand {
         //
 
         def statsMap = [ : ];
-        
+
         numericRecordsHeaderList.each{ header ->
             // DescriptiveStatistics stores values in memory and can compute percentiles
             statsMap[header] = new DescriptiveStatistics();
@@ -149,7 +149,7 @@ public class CSVSampleStatistics extends ByYourCommand {
         //
         //  Define output file structure
         //
-        ICsvMapWriter csvMW = 
+        ICsvMapWriter csvMW =
             new CsvMapWriter(new FileWriter(oFile, appendFlag), CsvPreference.STANDARD_PREFERENCE);
 
         // generate header list

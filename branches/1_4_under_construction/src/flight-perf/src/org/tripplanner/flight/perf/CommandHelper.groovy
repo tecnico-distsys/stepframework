@@ -21,6 +21,9 @@ public class CommandHelper {
     static def APPEND_OPT = "ap";
     static def APPEND_LOPT = "append";
 
+    static def QUICK_OPT = "q";
+    static def QUICK_LOPT = "quick";
+
     static def ENDPOINT_OPT = "e";
     static def ENDPOINT_LOPT = "endpoint";
 
@@ -81,6 +84,14 @@ public class CommandHelper {
         aOption.setArgName("boolean");
         aOption.setArgs(1);
         return aOption;
+    }
+
+    static def buildQuickOption() {
+        Option qOption = new Option(QUICK_OPT, QUICK_LOPT,
+            /* hasArg */ true, "Quick mode");
+        qOption.setArgName("boolean");
+        qOption.setArgs(1);
+        return qOption;
     }
 
     static def buildEndpointOption(desc) {

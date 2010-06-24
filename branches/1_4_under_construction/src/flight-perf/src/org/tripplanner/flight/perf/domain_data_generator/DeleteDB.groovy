@@ -1,5 +1,6 @@
 package org.tripplanner.flight.perf.domain_data_generator;
 
+import org.apache.commons.cli.*;
 import step.groovy.command.*;
 import org.tripplanner.flight.perf.*;
 
@@ -19,6 +20,25 @@ public class DeleteDB extends DBCommand {
 
     // --- instance ---
 
+    Boolean quick;
+
+    @Override protected Options createCommandLineOptions() {
+        Options options = super.createCommandLineOptions();
+
+        options.addOption(CommandHelper.buildQuickOption());
+
+        return options;
+    }
+
+    @Override protected boolean cmdInit() {
+        if (!super.cmdInit()) return false;
+
+        if (quick == null) {
+            quick = CommandHelper.initBoolean(settings[CommandHelper.QUICK_LOPT], false);
+        }
+    }
+
+
     @Override protected void dbRun() {
 
         err.println("Running " + this.class.simpleName);
@@ -31,16 +51,22 @@ public class DeleteDB extends DBCommand {
         sql.execute("DELETE FROM flightmanager_passenger");
         sql.execute("DELETE FROM passenger");
 
-        sql.execute("DELETE FROM flightmanager_flight");
-        sql.execute("DELETE FROM flight");
+        if (quick) {
+            err.println("Quick mode - skipping flights, airplanes, airports and manager deletion");
 
-        sql.execute("DELETE FROM flightmanager_airplane");
-        sql.execute("DELETE FROM airplane");
+        } else {
+            sql.execute("DELETE FROM flightmanager_flight");
+            sql.execute("DELETE FROM flight");
 
-        sql.execute("DELETE FROM flightmanager_airport");
-        sql.execute("DELETE FROM airport");
+            sql.execute("DELETE FROM flightmanager_airplane");
+            sql.execute("DELETE FROM airplane");
 
-        sql.execute("DELETE FROM flightmanager");
+            sql.execute("DELETE FROM flightmanager_airport");
+            sql.execute("DELETE FROM airport");
+
+            sql.execute("DELETE FROM flightmanager");
+
+        }
 
     }
 
