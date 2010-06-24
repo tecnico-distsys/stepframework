@@ -81,7 +81,7 @@ perf {
 //      ------------------------------------------------------------------------
         report {
 
-            reportFilesDir = "etc/config/report"
+            reportFilesDir = "etc/plot"
 
             outputDir = "../../../flight-perf-work/report"
         }
