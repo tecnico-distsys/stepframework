@@ -8,7 +8,7 @@ perf {
         load {
             instance {
                 id = "test"
-                numberSessions = 5
+                numberSessions = 11
                 maxGroup = 10
                 numberSamples = 2
                 randomSeedList = [       1755,

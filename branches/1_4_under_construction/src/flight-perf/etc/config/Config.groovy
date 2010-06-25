@@ -75,7 +75,10 @@ perf {
             filteredRequestsFileNameFormat = "requests-%d-filtered.csv"
 
             samplesFileName = "samples-stats.csv"
+            samplesTextFileName = "samples-stats.txt"
+
             overallFileName = "stats.csv"
+            overallTextFileName = "stats.txt"
         }
 
 //      ------------------------------------------------------------------------

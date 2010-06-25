@@ -18,6 +18,9 @@ public class CommandHelper {
     static def FILE_OPT = "f";
     static def FILE_LOPT = "file";
 
+    static def FORMAT_OPT = "fmt";
+    static def FORMAT_LOPT = "format";
+
     static def APPEND_OPT = "ap";
     static def APPEND_LOPT = "append";
 
@@ -116,6 +119,14 @@ public class CommandHelper {
         dOption.setArgName("file");
         dOption.setArgs(1);
         return dOption;
+    }
+
+    static def buildFormatOption() {
+        Option fmtOption = new Option(FORMAT_OPT, FORMAT_LOPT,
+            /* hasArg */ true, "Desired format");
+        fmtOption.setArgName("format");
+        fmtOption.setArgs(1);
+        return fmtOption;
     }
 
     static def buildMaxCostOption() {

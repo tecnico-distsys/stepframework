@@ -39,6 +39,8 @@ public class CSVOverallStatistics extends ByYourCommand {
     File iFile;
     File oFile;
 
+    String format;
+
 
     //
     //  Initialization
@@ -49,6 +51,7 @@ public class CSVOverallStatistics extends ByYourCommand {
 
         options.addOption(CommandHelper.buildInputOption());
         options.addOption(CommandHelper.buildOutputOption());
+        options.addOption(CommandHelper.buildFormatOption());
 
         return options;
     }
@@ -76,6 +79,11 @@ public class CSVOverallStatistics extends ByYourCommand {
             }
         }
 
+        if (format == null) {
+            def fmtValue = settings[CommandHelper.FORMAT_LOPT];
+            format = fmtValue;
+        }
+
         return true;
     }
 
@@ -88,7 +96,7 @@ public class CSVOverallStatistics extends ByYourCommand {
 
         err.println("Running " + this.class.simpleName);
 
-        CsvMapReader csvMR = 
+        CsvMapReader csvMR =
             new CsvMapReader(new FileReader(iFile), CsvPreference.STANDARD_PREFERENCE);
 
         def requestRecordNumericHeaderList = CSVHelper.getRequestRecordNumericHeaderList();
@@ -132,19 +140,6 @@ public class CSVOverallStatistics extends ByYourCommand {
         csvMR.close();
 
 
-        //
-        //  Define output file structure
-        //
-        ICsvMapWriter csvMW = 
-            new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
-
-        // generate header list
-        def headerList = CSVHelper.getOverallStatisticsHeaderList();;
-        def headerArray = headerList as String[];
-
-        // write headers
-        csvMW.writeHeader(headerArray);
-
         // Compute statistics
         def resultMap = [ : ];
 
@@ -154,9 +149,9 @@ public class CSVOverallStatistics extends ByYourCommand {
 
             resultMap[key + "-mean"] = mean;
             resultMap[key + "-stdDev"] = std;
-            
+
             // compute confidence interval error
-                
+
             // lo = mean - c * s / sqrt(n)
             // hi = mean + c * s / sqrt(n)
 
@@ -171,10 +166,39 @@ public class CSVOverallStatistics extends ByYourCommand {
                 resultMap[key + "-mean-error-" + ckey + "pctconf"] = c_MAP[ckey] * std_over_sqrt_n;
             }
         }
-     
-        // Write data
-        csvMW.write(resultMap, headerArray);
-        csvMW.close();
+
+        if (format != null && format ==~ "(?i)te?xt") {
+            // text format
+
+            def o = new PrintStream(oFile);
+            o.println("Overall statistics");
+            o.println();
+
+            resultMap.keySet().sort().each {
+                o.println(it + " = " + resultMap[it]);
+            }
+
+            o.println();
+            o.close();
+
+        } else {
+            // default - CSV format
+
+            // define output file structure
+            ICsvMapWriter csvMW =
+                new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
+
+            // generate header list
+            def headerList = CSVHelper.getOverallStatisticsHeaderList();;
+            def headerArray = headerList as String[];
+
+            // write headers
+            csvMW.writeHeader(headerArray);
+
+            // Write data
+            csvMW.write(resultMap, headerArray);
+            csvMW.close();
+        }
 
     }
 
