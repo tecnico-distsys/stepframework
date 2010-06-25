@@ -131,25 +131,44 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         }
 
         println("compute sample statistics"); // -------------------------------
-        def sampleStatisticsFileName = config.perf.flight.stats.samplesFileName;
-        def sampleStatisticsFile = new File(outputDir, sampleStatisticsFileName);
+        def sampleStatsFileName = config.perf.flight.stats.samplesFileName;
+        def sampleStatsFile = new File(outputDir, sampleStatsFileName);
+
+        def sampleStatsTextFileName = config.perf.flight.stats.samplesTextFileName;
+        def sampleStatsTextFile = new File(outputDir, sampleStatsTextFileName);
 
         for (int i=0; i < SAMPLES; i++) {
             def filteredRequestsFileName = String.format(config.perf.flight.stats.filteredRequestsFileNameFormat, i+1);
             def filteredRequestsFile = new File(outputDir, filteredRequestsFileName);
 
             argv = ["-i", filteredRequestsFile as String,
-                    "-o", sampleStatisticsFile as String,
+                    "-o", sampleStatsFile as String,
+                    "-n", i+1 as String,
                     "--append", (i == 0 ? "false" : "true")];
+            CSVSampleStatistics.main(argv as String[]);
+
+            argv = ["-i", filteredRequestsFile as String,
+                    "-o", sampleStatsTextFile as String,
+                    "-n", i+1 as String,
+                    "--append", (i == 0 ? "false" : "true"),
+                    "--format", "text"];
             CSVSampleStatistics.main(argv as String[]);
         }
 
         println("compute overall statistics"); // ------------------------------
-        def overallStatisticsFileName = config.perf.flight.stats.overallFileName;
-        def overallStatisticsFile = new File(outputDir, overallStatisticsFileName);
+        def overallStatsFileName = config.perf.flight.stats.overallFileName;
+        def overallStatsFile = new File(outputDir, overallStatsFileName);
 
-        argv = ["-i", sampleStatisticsFile as String,
-                "-o", overallStatisticsFile as String]
+        argv = ["-i", sampleStatsFile as String,
+                "-o", overallStatsFile as String]
+        CSVOverallStatistics.main(argv as String[]);
+
+        def overallStatsTextFileName = config.perf.flight.stats.overallTextFileName;
+        def overallStatsTextFile = new File(outputDir, overallStatsTextFileName);
+
+        argv = ["-i", sampleStatsFile as String,
+                "-o", overallStatsTextFile as String,
+                "--format", "text"];
         CSVOverallStatistics.main(argv as String[]);
 
     } else {

@@ -38,8 +38,11 @@ public class CSVSampleStatistics extends ByYourCommand {
     //
     File iFile;
     File oFile;
-    Boolean appendFlag;
 
+    Integer number;
+
+    Boolean appendFlag;
+    String format;
 
     //
     //  Initialization
@@ -50,7 +53,9 @@ public class CSVSampleStatistics extends ByYourCommand {
 
         options.addOption(CommandHelper.buildInputOption());
         options.addOption(CommandHelper.buildOutputOption());
+        options.addOption(CommandHelper.buildNrOption());
         options.addOption(CommandHelper.buildAppendOption());
+        options.addOption(CommandHelper.buildFormatOption());
 
         return options;
     }
@@ -78,8 +83,22 @@ public class CSVSampleStatistics extends ByYourCommand {
             }
         }
 
+        if (number == null) {
+            def numberValue = settings[CommandHelper.NR_LOPT];
+            if (numberValue == null) {
+                err.println("Sample number is missing!");
+                return false;
+            } else {
+                number = numberValue as Integer;
+            }
+        }
+
         if (appendFlag == null) {
             appendFlag = CommandHelper.initBoolean(settings[CommandHelper.APPEND_LOPT], false);
+        }
+
+        if (format == null) {
+            format = settings[CommandHelper.FORMAT_LOPT];
         }
 
         return true;
@@ -146,21 +165,6 @@ public class CSVSampleStatistics extends ByYourCommand {
         csvMR.close();
 
 
-        //
-        //  Define output file structure
-        //
-        ICsvMapWriter csvMW =
-            new CsvMapWriter(new FileWriter(oFile, appendFlag), CsvPreference.STANDARD_PREFERENCE);
-
-        // generate header list
-        def headerList = CSVHelper.getSampleStatisticsHeaderList();
-        def headerArray = headerList as String[];
-
-        // write headers
-        if (!appendFlag) {
-            csvMW.writeHeader(headerArray);
-        }
-
         // Compute statistics
         def resultMap = [ : ];
 
@@ -179,9 +183,46 @@ public class CSVSampleStatistics extends ByYourCommand {
             resultMap[key + "-upperQ"] = upperQuartile;
         }
 
-        // Write data
-        csvMW.write(resultMap, headerArray);
-        csvMW.close();
+        if (format != null && format ==~ "(?i)te?xt") {
+            // text format
+
+            def o = new FileWriter(oFile, appendFlag);
+            def eol = System.getProperty("line.separator");
+
+            if (!appendFlag) {
+                o.write("Sample statistics"); o.write(eol);
+                o.write(eol);
+            }
+
+            o.write("Sample #" + number); o.write(eol);
+
+            resultMap.keySet().sort().each {
+                o.write(it + " = " + resultMap[it]); o.write(eol);
+            }
+
+            o.write(eol);
+            o.close();
+
+        } else {
+            // CSV format
+
+            //  Define output file structure
+            ICsvMapWriter csvMW =
+                new CsvMapWriter(new FileWriter(oFile, appendFlag), CsvPreference.STANDARD_PREFERENCE);
+
+            // generate header list
+            def headerList = CSVHelper.getSampleStatisticsHeaderList();
+            def headerArray = headerList as String[];
+
+            // write headers
+            if (!appendFlag) {
+                csvMW.writeHeader(headerArray);
+            }
+
+            // Write data
+            csvMW.write(resultMap, headerArray);
+            csvMW.close();
+        }
 
     }
 
