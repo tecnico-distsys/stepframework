@@ -8,9 +8,9 @@ perf {
         run {
             instance {
                 loadId = "medium"
-                configId = "noagg"
+                configId = "loglevelfatal"
                 numberSamples = 30
-                aggregatePerfLog = false
+                aggregatePerfLog = true
                 saveLog = false
             }
         }
