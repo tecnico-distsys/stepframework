@@ -75,20 +75,20 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert (loadOutputDir.exists() && loadOutputDir.isDirectory()): "Load not found"
     assert (loadOutputDir.listFiles().size() >= SAMPLES): "Not enough load samples"
 
-    def configFilesDir;
-    if (!configId) {
-        configFilesDir = new File(configFilesBaseDir, config.perf.flight.run.defaultConfigId);
-    } else {
+    def defaultConfigFilesDir = new File(configFilesBaseDir, config.perf.flight.run.defaultConfigId);
+    assert (defaultConfigFilesDir.exists() && defaultConfigFilesDir.isDirectory()): "Default configuration files not found"
+
+    def configFilesDir = null;
+    if (configId) {
         configFilesDir = new File(configFilesBaseDir, configId);
+        assert (configFilesDir.exists() && configFilesDir.isDirectory()): "Specific configuration files not found"
     }
-    assert (configFilesDir.exists() && configFilesDir.isDirectory()): "Configuration files not found"
 
     def outputDir = new File(outputBaseDir, runId);
 
     // check if execution is necessary
     if (options.force ||
-        !outputDir.exists() ||
-        outputDir.listFiles().size() == 0) {
+        !outputDir.exists()) {
 
         if (!outputDir.exists())
             outputDir.mkdir();
@@ -104,47 +104,51 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         // copy source code
         println("Copying source code to temporary location " + tempSourceCodeDir.absolutePath);
-        ant.sequential {
-            ant.copy(todir: tempSourceCodeDir.absolutePath) {
-                ant.fileset(dir: config.perf.flight.sourceCodeDir.absolutePath) {
-                    ant.exclude(name: "**/build/**/*")
-                    ant.exclude(name: "**/dist/**/*")
-                    ant.exclude(name: "flight-perf/**/*")
-                    /* svn directories are part of Ant's default excludes */
-                }
+        ant.copy(todir: tempSourceCodeDir.absolutePath) {
+            ant.fileset(dir: config.perf.flight.sourceCodeDir.absolutePath) {
+                ant.exclude(name: "**/build/**/*")
+                ant.exclude(name: "**/dist/**/*")
+                ant.exclude(name: "flight-perf/**/*")
+                /* svn directories are part of Ant's default excludes */
             }
         }
 
-        // apply configuration
-        println("Applying configuration from " + configFilesDir.absolutePath);
-        def sourceDir = configFilesDir;
-        def targetDir = tempSourceCodeDir;
+        // define apply configuration closure
+        def applyConfigClosure = { sourceDir, targetDir ->
+            sourceDir.eachFileRecurse { sourceFile ->
+                // ignore directories
+                if (sourceFile.isDirectory()) return;
+                // ignore files contained in SVN directories
+                if (sourceFile.absolutePath.indexOf(".svn") != -1) return;
 
-        sourceDir.eachFileRecurse { sourceFile ->
-            // ignore directories
-            if (sourceFile.isDirectory()) return;
-            // ignore files contained in SVN directories
-            if (sourceFile.absolutePath.indexOf(".svn") != -1) return;
+                def targetFile = new File(targetDir.absolutePath +
+                    sourceFile.absolutePath.substring(sourceDir.absolutePath.size()))
 
-            def targetFile = new File(targetDir.absolutePath +
-                sourceFile.absolutePath.substring(sourceDir.absolutePath.size()))
-
-            if (targetFile.exists()) {
-                ant.sequential {
+                if (targetFile.exists()) {
                     // create backup of target file
                     ant.move(file: targetFile.absolutePath,
                              tofile: targetFile.absolutePath + ".bak",
                              overwrite: "true")
-                    // replace it with a copy of source file
-                    ant.copy(file: sourceFile.absolutePath,
-                             tofile: targetFile.absolutePath,
-                             overwrite: "true")
                 }
+                // overwrite file
+                ant.copy(file: sourceFile.absolutePath,
+                         tofile: targetFile.absolutePath,
+                         overwrite: "true")
             }
         }
 
+        // apply default configuration
+        println("Applying default configuration");
+        applyConfigClosure(defaultConfigFilesDir, tempSourceCodeDir);
+
+        // apply specific configuration
+        if (configFilesDir != null) {
+            println("Applying specific configuration from " + configFilesDir.absolutePath);
+            applyConfigClosure(configFilesDir, tempSourceCodeDir);
+        }
+
         println("compile"); // -------------------------------------------------
-        Helper.exec(targetDir.absolutePath, "ant rebuild", ["CLASSPATH" : ""] );
+        Helper.exec(tempSourceCodeDir.absolutePath, "ant rebuild", ["CLASSPATH" : ""] );
 
         println("generate domain data"); // ------------------------------------
         if (generateDomainData) {
@@ -169,10 +173,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             DeleteDB.main(argv as String[]);
 
             // start a clean server --------------------------------------------
-            Helper.exec(targetDir.absolutePath, "ant start-server!", ["CLASSPATH" : ""]);
+            Helper.exec(tempSourceCodeDir.absolutePath, "ant start-server!", ["CLASSPATH" : ""]);
 
             // deploy flight web service ---------------------------------------
-            Helper.exec(targetDir.absolutePath, "ant deploy-flight", ["CLASSPATH" : ""]);
+            Helper.exec(tempSourceCodeDir.absolutePath, "ant deploy-flight", ["CLASSPATH" : ""]);
 
             println("Executing sample " + (i+1) + " to " + outputFile.getCanonicalPath());
 
@@ -183,7 +187,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             VirtualUser.main(argv as String[]);
 
             // stop server -----------------------------------------------------
-            Helper.exec(targetDir.absolutePath, "ant stop-server", ["CLASSPATH" : ""])
+            Helper.exec(tempSourceCodeDir.absolutePath, "ant stop-server", ["CLASSPATH" : ""])
 
             // retrieve CATALINA_HOME path from environment variables
             def env = System.getenv();
@@ -208,9 +212,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 Perf4JAggregateContiguousEntries.main(argv as String[]);
             } else {
                 println("copy performance log");
-                ant.sequential {
-                    ant.copy(file: sourcePerfLogFile as String, tofile: targetPerfLogFile as String)
-                }
+                ant.copy(file: sourcePerfLogFile as String, tofile: targetPerfLogFile as String)
             }
 
             // save functional log data ----------------------------------------
@@ -231,18 +233,14 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 def targetLogFileName = String.format(config.perf.flight.run.outputLogFileNameFormat, i+1);
                 def targetLogFile = new File(outputDir, targetLogFileName);
 
-                ant.sequential {
-                    ant.copy(file: sourceLogFile as String, tofile: targetLogFile as String)
-                }
+                ant.copy(file: sourceLogFile as String, tofile: targetLogFile as String)
             }
 
         } // for each sample
 
         // delete temporary source code directory
         if (!options.keeptemps) {
-            ant.sequential {
-                ant.delete(dir: tempSourceCodeDir, deleteonexit: "true")
-            }
+            ant.delete(dir: tempSourceCodeDir, deleteonexit: "true")
         }
 
     } else {

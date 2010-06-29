@@ -12,7 +12,7 @@
     <!--             -->
     <!--  LISTENERS  -->
     <!--             -->
-
+    
     <!-- JAX-WS listener -->
     <listener>
         <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
@@ -23,7 +23,31 @@
         <listener-class>step.framework.web.ContextListener</listener-class>
     </listener>
 
+    <!-- Performance monitoring listeners -->
+    <listener>
+        <listener-class>step.framework.perf.monitor.PerfContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>step.framework.perf.monitor.PerfSessionListener</listener-class>
+    </listener>
 
+
+    <!--           -->
+    <!--  FILTERS  -->
+    <!--           -->
+
+    <!-- Performance monitoring filter -->
+    <filter>
+        <filter-name>PerfFilter</filter-name>
+        <filter-class>step.framework.perf.monitor.PerfFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>PerfFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    
     <!--            -->
     <!--  SERVLETS  -->
     <!--            -->

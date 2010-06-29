@@ -92,9 +92,12 @@ public class Perf4JRequestRecords extends ByYourCommand {
         ICsvMapWriter writer = new CsvMapWriter(new FileWriter(oFile), CsvPreference.STANDARD_PREFERENCE);
 
         // write headers
-        def headerList = CSVHelper.getRequestRecordHeaderList();
+        final def headerList = CSVHelper.getRequestRecordHeaderList();
         final String[] headerArray = headerList as String[];
         writer.writeHeader(headerArray);
+
+        final def numericHeaderList = CSVHelper.getRequestRecordNumericHeaderList();
+        final String[] numericHeaderArray = numericHeaderList as String[];
 
 
         //
@@ -103,12 +106,16 @@ public class Perf4JRequestRecords extends ByYourCommand {
 
         // init map with all entries empty
         def totalMap = [ : ];
-        for (int i = 0; i < headerArray.length; i++) {
-            totalMap[headerArray[i]] = "";
+        headerList.each { key ->
+            totalMap[key] = "";
+        }
+        numericHeaderList.each{ key ->
+            totalMap[key] = 0L;
         }
 
         def iStream = new FileInputStream(iFile);
-        iStream.eachLine { line ->
+        iStream.eachLine { line, number ->
+            assert number > 0
 
             //
             //  Extract current line data
@@ -127,14 +134,27 @@ public class Perf4JRequestRecords extends ByYourCommand {
             if(tag ==~ "filter") {
                 // process start of new request (implicit end of previous request)
 
-                // dump previous request data
                 totalMap["filter_time"] = time;
+
+                // warn about bad time data quality
+                def consistent = true;
+                if (totalMap["filter_time"] < totalMap["soap_time"] ||
+                    totalMap["soap_time"] < totalMap["wsi_time"] ||
+                    totalMap["wsi_time"] < totalMap["si_time"] ||
+                    totalMap["si_time"] < totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"]) {
+                    println "Warning: Record ending in line " + number + " has inconsistent times.";
+                }
+
+                // dump previous request data
                 writer.write(totalMap, headerArray);
 
                 // reset map
                 totalMap = [ : ];
-                for (int i = 0; i < headerArray.length; i++) {
-                    totalMap[headerArray[i]] = "";
+                headerList.each { key ->
+                    totalMap[key] = "";
+                }
+                numericHeaderList.each{ key ->
+                    totalMap[key] = 0L;
                 }
 
             } else {
@@ -219,3 +239,4 @@ public class Perf4JRequestRecords extends ByYourCommand {
     }
 
 }
+
