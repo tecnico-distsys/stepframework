@@ -12,9 +12,8 @@ set boxwidth 0.75 relative
 
 # decoration
 set grid
-set title "Timeslices"
-set xlabel "Performance log pre-processing"
-set ylabel "Request processing time (ms)"
+unset title
+set ylabel "Average request processing time (ms)"
 set key outside right
 
 # plot
