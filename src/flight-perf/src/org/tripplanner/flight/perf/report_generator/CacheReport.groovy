@@ -6,8 +6,8 @@ import org.supercsv.prefs.*;
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.*;
 
-def reportId = "LogLevel"
-def purpose = "compare impact of different log level settings"
+def reportId = "Cache"
+def purpose = "compare Hibernate cache configurations"
 
 println "Generating " + reportId + " report"
 println "to " + purpose
@@ -43,10 +43,7 @@ assert tempDir.exists()
 // collect data ----------------------------------------------------------------
 
 def loadId = "medium"
-
-def configIdList = ["off", "fatal", "error", "warn", "info", "debug", "trace"];
-configIdList = configIdList.collect { "loglevel" + it }
-
+def configIdList = ["", "ehcachereadonly", "ehcachereadwrite"];
 def filterId = ""
 
 // create map of stats files
@@ -70,22 +67,32 @@ def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
 // header
-o.println("# 1-type 2-mean 3-error");
+o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
+
+def configDescMap = [ "" : "Cache disabled",
+                      "ehcachereadonly" : "Read-only cache",
+                      "ehcachereadwrite" : "Read-write cache" ]
+configDescMap.each { key, value ->
+    configDescMap[key] = "\"" + configDescMap[key] + "\"";
+}
 
 configIdList.each { configId ->
 
     CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[configId]), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
-
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert (statsMap)
 
-    o.printf("%s %s %s%n",
-        configId.substring("loglevel".length()),
+    o.printf("%s %s %s %s %s %s %s%n",
+        configDescMap[configId],
         statsMap["filter_time-mean"],
-        statsMap["filter_time-mean-error-95pctconf"]);
+        statsMap["soap_time-mean"],
+        statsMap["wsi_time-mean"],
+        statsMap["si_time-mean"],
+        statsMap["hibernate_read_time-mean"],
+        statsMap["hibernate_write_time-mean"]);
 }
 o.close();
 

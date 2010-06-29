@@ -2,7 +2,7 @@
 reset
 
 # name
-name = "XMLSize"
+name = "RequestType"
 
 # set style
 set style data histogram
@@ -12,12 +12,13 @@ set boxwidth 0.75 relative
 
 # decoration
 set grid
-set xlabel "Average total XML logical length (characters)"
+unset title
 set ylabel "Average request processing time (ms)"
 set key outside right
 
 # plot
 plot name . ".dat" using ($6):xtic(1) title "Hibernate Reads", '' using ($7) title "Hibernate Writes", '' using ($5-($6+$7)) title "Service", '' u ($3-$5) t "SOAP", '' u ($2-$3) t "Web"
+# plot for[i=1:4] 'timeslices.dat' using i
 
 # configure output
 set terminal png size 1024,768
