@@ -16,8 +16,11 @@ set xlabel "Average total XML logical length (characters)"
 set ylabel "Average request processing time (ms)"
 set key outside right
 
+# define function to convert negative numbers to zero (elapsed time cannot be negative)
+zeronegative( a ) = ( a < 0 ) ? 0 : a
+
 # plot
-plot name . ".dat" using ($6):xtic(1) title "Hibernate Reads", '' using ($7) title "Hibernate Writes", '' using ($5-($6+$7)) title "Service", '' u ($3-$5) t "SOAP", '' u ($2-$3) t "Web"
+plot name . ".dat" using ($6):xtic(1) title "Hibernate Reads", '' using ($7) title "Hibernate Writes", '' using (zeronegative($5-($6+$7))) title "Service", '' u (zeronegative($3-$5)) t "SOAP", '' u (zeronegative($2-$3)) t "Web"
 
 # configure output
 set terminal png size 1024,768

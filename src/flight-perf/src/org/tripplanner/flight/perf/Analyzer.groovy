@@ -68,8 +68,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
     // check if execution is necessary
     if (options.force ||
-        !outputDir.exists() ||
-        outputDir.listFiles().size() == 0) {
+        !outputDir.exists()) {
 
         if (!outputDir.exists())
             outputDir.mkdir();

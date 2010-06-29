@@ -183,6 +183,7 @@ public class CSVSampleStatistics extends ByYourCommand {
             resultMap[key + "-upperQ"] = upperQuartile;
         }
 
+        // output data
         if (format != null && format ==~ "(?i)te?xt") {
             // text format
 
