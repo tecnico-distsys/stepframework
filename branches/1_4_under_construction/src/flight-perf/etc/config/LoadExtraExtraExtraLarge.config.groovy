@@ -7,9 +7,9 @@ perf {
     flight {
         load {
             instance {
-                id = "xlarge"
+                id = "xxxlarge"
                 numberSessions = 50
-                maxGroup = 5000
+                maxGroup = 20000
                 numberSamples = 30
                 randomSeedList = [
                                       11511486, 

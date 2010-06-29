@@ -32,6 +32,10 @@ def config = Helper.parseConfig("etc/config/Config.groovy");
 assert (config.perf.flight) : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
+assert config.perf.flight.databasePropertiesFile.exists()
+def dbProperties = new Properties();
+dbProperties.load(new FileInputStream(config.perf.flight.databasePropertiesFile));
+
 def instanceDir = config.perf.flight.run.instanceDir;
 def instanceFileNamePattern = ~config.perf.flight.run.instanceFileNameRegex;
 
@@ -72,8 +76,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     def runId = loadId + "_" + configId;
 
     def loadOutputDir = new File(loadOutputBaseDir, loadId);
-    assert (loadOutputDir.exists() && loadOutputDir.isDirectory()): "Load not found"
-    assert (loadOutputDir.listFiles().size() >= SAMPLES): "Not enough load samples"
+    assert (loadOutputDir.exists() && loadOutputDir.isDirectory()): "Load " + loadId + " not found"
+    assert (loadOutputDir.listFiles().size() >= SAMPLES): "Not enough load " + loadId + " samples"
 
     def defaultConfigFilesDir = new File(configFilesBaseDir, config.perf.flight.run.defaultConfigId);
     assert (defaultConfigFilesDir.exists() && defaultConfigFilesDir.isDirectory()): "Default configuration files not found"
@@ -145,6 +149,13 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         if (configFilesDir != null) {
             println("Applying specific configuration from " + configFilesDir.absolutePath);
             applyConfigClosure(configFilesDir, tempSourceCodeDir);
+        }
+
+        // replace database URL
+        ant.replace(dir: tempSourceCodeDir,
+                    token: "jdbc:mysql://localhost:3306/flight",
+                    value: dbProperties[url]) {
+            ant.include(name: "**/flight-ws/**/hibernate.cfg.xml")
         }
 
         println("compile"); // -------------------------------------------------
