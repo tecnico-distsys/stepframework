@@ -82,10 +82,7 @@ class Helper {
         ant.sequential {
             ant.exec(executable: "cmd",
                      dir: dir as String,
-                     resultproperty: "exec-return-code",
-                     outputproperty:"exec-out",
-                     errorproperty: "exec-err",
-                     failonerror: "false") {
+                     resultproperty: "exec-return-code") {
                 arg(value: "/c")
                 arg(line: command as String)
                 // set environment variables
@@ -99,13 +96,6 @@ class Helper {
 
         def returnCode = ant.project.properties["exec-return-code"]
         assert ((returnCode as Integer) == 0) : "Return code was not zero"
-
-        if (command ==~ "(?i)ant.*") {
-            def stdOut = ant.project.properties["exec-out"]
-            def stdErr = ant.project.properties["exec-err"]
-            assert !(stdOut ==~ "(?s-i).*BUILD FAILED.*")
-            assert !(stdErr ==~ "(?s-i).*BUILD FAILED.*")
-        }
     }
 
     /** Assert that current operating systems belongs to the specified family */

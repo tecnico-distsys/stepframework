@@ -15,9 +15,8 @@ set logscale y
 
 # decoration
 set grid
-#set title "Timeslices"
 set xlabel "Logging level"
-set ylabel "Request processing time (ms)"
+set ylabel "Average request processing time (ms)"
 set key outside right
 unset key
 
