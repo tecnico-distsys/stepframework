@@ -6,8 +6,8 @@ import org.supercsv.prefs.*;
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.*;
 
-def reportId = "Agg"
-def purpose = "compare non-aggregated to aggregated performance log data"
+def reportId = "LogLevel"
+def purpose = "compare impact of different log level settings"
 
 println "Generating " + reportId + " report"
 println "to " + purpose
@@ -43,7 +43,10 @@ assert tempDir.exists()
 // collect data ----------------------------------------------------------------
 
 def loadId = "medium"
-def configIdList = ["noagg", ""];
+
+def configIdList = ["off", "fatal", "error", "warn", "info", "debug", "trace"];
+configIdList = configIdList.collect { "loglevel" + it }
+
 def filterId = ""
 
 // create map of stats files
@@ -67,25 +70,22 @@ def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
 // header
-o.println("# type web soap wsi si hibernate_r hibernate_w");
+o.println("# type mean error");
 
 configIdList.each { configId ->
 
     CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[configId]), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
+
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert (statsMap)
 
-    o.printf("%s %s %s %s %s %s %s%n",
-        (configId ==~ ".*noagg" ? "\"Raw records\"" : "\"Aggregated records\""),
+    o.printf("%s %s %s%n",
+        configId.substring("loglevel".length()),
         statsMap["filter_time-mean"],
-        statsMap["soap_time-mean"],
-        statsMap["wsi_time-mean"],
-        statsMap["si_time-mean"],
-        statsMap["hibernate_read_time-mean"],
-        statsMap["hibernate_write_time-mean"]);
+        statsMap["filter_time-mean-error-95pctconf"]);
 }
 o.close();
 
