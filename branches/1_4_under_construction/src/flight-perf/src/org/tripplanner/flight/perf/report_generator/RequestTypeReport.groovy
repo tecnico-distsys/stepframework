@@ -6,8 +6,8 @@ import org.supercsv.prefs.*;
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.*;
 
-def reportId = "LogLevel"
-def purpose = "compare impact of different log level settings"
+def reportId = "RequestType"
+def purpose = "compare different types of requests"
 
 println "Generating " + reportId + " report"
 println "to " + purpose
@@ -39,19 +39,19 @@ tempDir.delete();
 tempDir.mkdir();
 assert tempDir.exists()
 
+// -----------------------------------------------------------------------------
 
 // collect data ----------------------------------------------------------------
 
-def loadId = "medium"
+def loadId = "medium";
 
-def configIdList = ["off", "fatal", "error", "warn", "info", "debug", "trace"];
-configIdList = configIdList.collect { "loglevel" + it }
+def configId = ""
 
-def filterId = ""
+def filterIdList = [ "searches", "reservations", "faults", "" ];
 
 // create map of stats files
 def statsFileMap = [ : ];
-configIdList.each { configId ->
+filterIdList.each { filterId ->
     def dirName = loadId + "_" + configId + "_" + filterId;
     def dir = new File(statsBaseDir, dirName);
     assert (dir.exists() && dir.isDirectory())
@@ -59,7 +59,7 @@ configIdList.each { configId ->
     def file = new File(dir, config.perf.flight.stats.overallFileName);
     assert (file.exists())
 
-    statsFileMap[configId] = file;
+    statsFileMap[filterId] = file;
 }
 
 // create data file
@@ -70,22 +70,25 @@ def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
 // header
-o.println("# 1-type 2-mean 3-error");
+o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
-configIdList.each { configId ->
+filterIdList.each { filterId ->
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[configId]), CsvPreference.STANDARD_PREFERENCE);
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[filterId]), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
-
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert (statsMap)
 
-    o.printf("%s %s %s%n",
-        configId.substring("loglevel".length()),
+    o.printf("%s %s %s %s %s %s %s%n",
+        (filterId.length() == 0 ? "combined" : filterId),
         statsMap["filter_time-mean"],
-        statsMap["filter_time-mean-error-95pctconf"]);
+        statsMap["soap_time-mean"],
+        statsMap["wsi_time-mean"],
+        statsMap["si_time-mean"],
+        statsMap["hibernate_read_time-mean"],
+        statsMap["hibernate_write_time-mean"]);
 }
 o.close();
 

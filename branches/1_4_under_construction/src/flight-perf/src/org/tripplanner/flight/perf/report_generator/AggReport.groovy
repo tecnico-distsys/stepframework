@@ -67,7 +67,7 @@ def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
 // header
-o.println("# type web soap wsi si hibernate_r hibernate_w");
+o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
 configIdList.each { configId ->
 

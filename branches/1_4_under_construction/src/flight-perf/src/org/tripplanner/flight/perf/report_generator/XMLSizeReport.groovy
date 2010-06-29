@@ -6,8 +6,8 @@ import org.supercsv.prefs.*;
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.*;
 
-def reportId = "LogLevel"
-def purpose = "compare impact of different log level settings"
+def reportId = "XMLSize"
+def purpose = "compare different SOAP message sizes"
 
 println "Generating " + reportId + " report"
 println "to " + purpose
@@ -39,19 +39,19 @@ tempDir.delete();
 tempDir.mkdir();
 assert tempDir.exists()
 
+// -----------------------------------------------------------------------------
 
 // collect data ----------------------------------------------------------------
 
-def loadId = "medium"
+def loadIdList = ["small", "medium", "large", "xlarge"];
 
-def configIdList = ["off", "fatal", "error", "warn", "info", "debug", "trace"];
-configIdList = configIdList.collect { "loglevel" + it }
+def configId = ""
 
 def filterId = ""
 
 // create map of stats files
 def statsFileMap = [ : ];
-configIdList.each { configId ->
+loadIdList.each { loadId ->
     def dirName = loadId + "_" + configId + "_" + filterId;
     def dir = new File(statsBaseDir, dirName);
     assert (dir.exists() && dir.isDirectory())
@@ -59,7 +59,7 @@ configIdList.each { configId ->
     def file = new File(dir, config.perf.flight.stats.overallFileName);
     assert (file.exists())
 
-    statsFileMap[configId] = file;
+    statsFileMap[loadId] = file;
 }
 
 // create data file
@@ -70,22 +70,30 @@ def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
 // header
-o.println("# 1-type 2-mean 3-error");
+o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
-configIdList.each { configId ->
+loadIdList.each { loadId ->
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[configId]), CsvPreference.STANDARD_PREFERENCE);
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[loadId]), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
-
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert (statsMap)
 
-    o.printf("%s %s %s%n",
-        configId.substring("loglevel".length()),
+    // compute total XML logical length
+    def reqLL = statsMap["soap_request_logical_length-mean"] as Double;
+    def respLL = statsMap["soap_response_logical_length-mean"] as Double;
+    def ll = (reqLL + respLL) as Long;
+
+    o.printf("%s %s %s %s %s %s %s%n",
+        ll as String,
         statsMap["filter_time-mean"],
-        statsMap["filter_time-mean-error-95pctconf"]);
+        statsMap["soap_time-mean"],
+        statsMap["wsi_time-mean"],
+        statsMap["si_time-mean"],
+        statsMap["hibernate_read_time-mean"],
+        statsMap["hibernate_write_time-mean"]);
 }
 o.close();
 
@@ -94,9 +102,18 @@ o.close();
 
 def ant = new AntBuilder();
 
+// additional plot
+def plotFile2 = new File(plotDir, reportId + "Zoom.gp")
+assert (plotFile2.exists())
+
 ant.copy(todir: tempDir.absolutePath, file: plotFile)
+ant.copy(todir: tempDir.absolutePath, file: plotFile2)
 
 def command = "gnuplot " + plotFile.name;
+println "Invoking " + command
+Helper.exec(tempDir, command)
+
+command = "gnuplot " + plotFile2.name;
 println "Invoking " + command
 Helper.exec(tempDir, command)
 
