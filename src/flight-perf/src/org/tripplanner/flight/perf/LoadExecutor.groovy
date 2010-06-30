@@ -32,10 +32,6 @@ def config = Helper.parseConfig("etc/config/Config.groovy");
 assert (config.perf.flight) : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
-assert config.perf.flight.databasePropertiesFile.exists()
-def dbProperties = new Properties();
-dbProperties.load(new FileInputStream(config.perf.flight.databasePropertiesFile));
-
 def instanceDir = config.perf.flight.run.instanceDir;
 def instanceFileNamePattern = ~config.perf.flight.run.instanceFileNameRegex;
 
@@ -149,13 +145,6 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         if (configFilesDir != null) {
             println("Applying specific configuration from " + configFilesDir.absolutePath);
             applyConfigClosure(configFilesDir, tempSourceCodeDir);
-        }
-
-        // replace database URL
-        ant.replace(dir: tempSourceCodeDir,
-                    token: "jdbc:mysql://localhost:3306/flight",
-                    value: dbProperties[url]) {
-            ant.include(name: "**/flight-ws/**/hibernate.cfg.xml")
         }
 
         println("compile"); // -------------------------------------------------

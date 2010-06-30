@@ -107,6 +107,7 @@ public class LoadFlights extends DBCommand {
     @Override protected void dbRun() {
 
         err.println("Running " + this.class.simpleName);
+        err.println("Database URL: " + this.url);
         err.printf("Generate %d flights (max group size %d), max cost %d, profit %.2f",
             nr, maxGroup, maxCost, profit);
         if(seed != null) err.printf(", random seed %d", seed);

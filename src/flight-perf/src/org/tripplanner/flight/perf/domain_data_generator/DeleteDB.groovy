@@ -42,7 +42,7 @@ public class DeleteDB extends DBCommand {
     @Override protected void dbRun() {
 
         err.println("Running " + this.class.simpleName);
-        err.printf("url %s", settings["url"]);
+        err.println("Database URL: " + this.url);
         err.println();
 
         // delete all tables taking dependencies into account

@@ -22,6 +22,7 @@ public class LoadFlightManager extends DBCommand {
     @Override protected void dbRun() {
 
         err.println("Running " + this.class.simpleName);
+        err.println("Database URL: " + this.url);
 
         // id is auto incremented
         def objVersion = 0;

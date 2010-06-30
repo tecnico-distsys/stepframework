@@ -74,6 +74,7 @@ public class LoadAirports extends DBCommand {
     @Override protected void dbRun() {
 
         err.println("Running " + this.class.simpleName);
+        err.println("Database URL: " + this.url);
         err.printf("data file %s, max cost %d", dataFile, maxCost);
         if(seed != null) err.printf(", random seed %d", seed);
         err.println();
