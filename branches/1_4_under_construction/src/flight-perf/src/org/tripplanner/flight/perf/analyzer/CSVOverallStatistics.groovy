@@ -159,7 +159,7 @@ public class CSVOverallStatistics extends ByYourCommand {
             final def c_MAP = [ 90:1.64 , 95:1.96, 99:2.58 ];
 
             double n = sampleNr;
-            double sqrt_n = Math.sqrt(sampleNr);
+            double sqrt_n = Math.sqrt(n);
             double std_over_sqrt_n = std / sqrt_n;
 
             c_MAP.keySet().each{ ckey ->

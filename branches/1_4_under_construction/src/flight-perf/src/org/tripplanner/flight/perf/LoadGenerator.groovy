@@ -66,7 +66,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         // regenerate domain data
         if (generateDomainData) {
-            argv = [ ];
+            argv = [  ];
             DomainDataGenerator.main(argv as String[]);
             generateDomainData = false;
         }
@@ -91,9 +91,9 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                     "--maxthinktime", loadConfig.maxThinkTime as String,
                     "--maxgroup", loadConfig.maxGroup as String,
                     "--errorprobability", loadConfig.errorProbability as String,
-                    "-p", config.perf.flight.databasePropertiesFile as String,
-                    "--names", config.perf.flight.domain.namesFile as String,
-                    "--surnames", config.perf.flight.domain.surnamesFile as String ]
+                    "-p", config.perf.flight.databasePropertiesFile.absolutePath,
+                    "--names", config.perf.flight.domain.namesFile.absolutePath,
+                    "--surnames", config.perf.flight.domain.surnamesFile.absolutePath ]
             WorkloadGenerator.main(argv as String[]);
         }
 
