@@ -5,7 +5,8 @@ import java.io.*;
 import java.util.*;
 
 /**
- *  Server program to estimate bandwidth.
+ *  Server program to help client estimate upload bandwidth.
+ *  Accepts connections and reads integers uploaded by client.
  */
 
 
@@ -13,7 +14,7 @@ import java.util.*;
 
 def cli = new CliBuilder(usage: "BandwidthServer")
 cli.h(longOpt: "help", required: false, args: 0, "Print this message")
-cli.p(longOpt: "port", required: true, args: 1, "Port")
+cli._(longOpt: "port", required: true, args: 1, "Server port")
 
 def options = cli.parse(args)
 if (!options) return;
@@ -32,7 +33,7 @@ assert port > 0
 ServerSocket serverSocket = new ServerSocket(port);
 printf "%s Accepting connections at port: %d%n", new Date(), port
 
-byte[] buf = new byte[1024*1024];
+byte[] buf = new byte[100*1024];
 printf "Buffer size: %d B%n", buf.length
 
 // -----------------------------------------------------------------------------
