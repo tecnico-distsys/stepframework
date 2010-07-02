@@ -58,9 +58,14 @@ perf {
             perfLogFileName = "flight-ws_perfLog.txt"
 
             outputBaseDir = "../../../flight-perf-work/run"
+
+            outputSysInfoFileName = "sysinfo.txt"
+
             outputFileNameFormat = "run-%d.out"
+
             outputLogFileNameFormat = "log-%d.txt"
             outputLogSizeFileNameFormat = "logsize-%d.txt"
+
             outputPerfLogFileNameFormat = "perfLog-%d.txt"
         }
 
@@ -72,7 +77,6 @@ perf {
             outputBaseDir = "../../../flight-perf-work/stats"
 
             requestsFileNameFormat = "requests-%d.csv"
-            filteredRequestsFileNameFormat = "requests-%d-filtered.csv"
 
             samplesFileName = "samples-stats.csv"
             samplesTextFileName = "samples-stats.txt"

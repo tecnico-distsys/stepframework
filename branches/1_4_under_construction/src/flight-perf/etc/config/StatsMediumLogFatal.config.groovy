@@ -10,6 +10,7 @@ perf {
                 runId = "medium_loglevelfatal"
                 filterId = ""
                 numberSamples = 30
+                adjustHibernateTimes = true
             }
         }
     }

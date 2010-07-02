@@ -10,6 +10,7 @@ perf {
                 runId = "medium_loglevelinfo"
                 filterId = ""
                 numberSamples = 30
+                adjustHibernateTimes = true
             }
         }
     }

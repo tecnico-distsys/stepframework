@@ -10,6 +10,7 @@ perf {
                 runId = "medium_"
                 filterId = ""
                 numberSamples = 30
+                adjustHibernateTimes = true
             }
         }
     }

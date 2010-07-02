@@ -42,6 +42,9 @@ def runOutputBaseDir = config.perf.flight.run.outputBaseDir;
 
 def argv;
 
+def ant = new AntBuilder();
+
+
 // iterate all stats instances
 instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
@@ -53,16 +56,16 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert (SAMPLES >= 1)
 
     def runId = statsConfig.runId;
-    assert(runId ==~ "[A-Za-z0-9_]+") : "Invalid run identifier"
+    assert(runId ==~ "[A-Za-z0-9_]+") : "Invalid run identifier " + runId
 
     def filterId = statsConfig.filterId;
-    assert(filterId ==~ "[A-Za-z0-9]*") : "Invalid filter identifier"
+    assert(filterId ==~ "[A-Za-z0-9]*") : "Invalid filter identifier " + filterId
 
     def statsId = runId + "_" + filterId;
 
     def runOutputDir = new File(runOutputBaseDir, runId);
-    assert (runOutputDir.exists() && runOutputDir.isDirectory()): "Run not found"
-    assert (runOutputDir.listFiles().size() >= SAMPLES): "Not enough run samples"
+    assert (runOutputDir.exists() && runOutputDir.isDirectory()): "Run " + runId + " not found"
+    assert (runOutputDir.listFiles().size() >= SAMPLES): "Not enough run " + runId + " samples"
 
     def outputDir = new File(outputBaseDir, statsId);
 
@@ -79,57 +82,76 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         println("generate request records"); // --------------------------------
         for (int i=0; i < SAMPLES; i++) {
+
+            // generate request records ----------------------------------------
+
+            // check if filter closure exists
             def perfLogFileName = String.format(config.perf.flight.run.outputPerfLogFileNameFormat, i+1);
             def perfLogFile = new File(runOutputDir, perfLogFileName);
 
             def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
             def requestsFile = new File(outputDir, requestsFileName);
 
-            argv = ["-i", perfLogFile as String,
-                    "-o", requestsFile as String]
+            argv = ["-i", perfLogFile.absolutePath,
+                    "-o", requestsFile.absolutePath]
             Perf4JRequestRecords.main(argv as String[]);
-
-
-            // filter --------------------------------------------------------------
-            def filteredRequestsFileName = String.format(config.perf.flight.stats.filteredRequestsFileNameFormat, i+1);
-            def filteredRequestsFile = new File(outputDir, filteredRequestsFileName);
-
-            // read headers
-            CsvListReader csvLR = new CsvListReader(new FileReader(requestsFile), CsvPreference.STANDARD_PREFERENCE);
-            def csvHeaders = csvLR.read();
-            csvLR.close();
-
-            // write headers
-            CsvListWriter csvLW = new CsvListWriter(new FileWriter(filteredRequestsFile), CsvPreference.STANDARD_PREFERENCE);
-            csvLW.write(csvHeaders);
-            csvLW.close();
-
-            // read records
-            CsvMapReader csvMR = new CsvMapReader(new FileReader(requestsFile), CsvPreference.STANDARD_PREFERENCE);
-            CsvMapWriter csvMW = new CsvMapWriter(new FileWriter(filteredRequestsFile, true), CsvPreference.STANDARD_PREFERENCE);
-
-            def csvHeadersArray = csvHeaders as String[];
-            // ignore 1st line (headers)
-            csvMR.read(csvHeadersArray);
-
-            // define filter closure
-            def filterClosure = statsConfig.filterClosure;
-            if (!filterClosure) filterClosure = { return true; }
-
-            def record;
-            // read and write record
-            while ((record = csvMR.read(csvHeadersArray)) != null) {
-                if (filterClosure(record)) {
-                    csvMW.write(record, csvHeadersArray);
-                }
-            }
-            // close files
-            csvMR.close();
-            csvMW.close();
             // -----------------------------------------------------------------
+
+            // filter ----------------------------------------------------------
+            def filterClosure = statsConfig.filterClosure;
+            if (filterClosure) {
+                def unfilteredRequestsFile = new File(requestsFile.absolutePath + ".unfiltered");
+                ant.move(file: requestsFile.absolutePath,
+                         tofile: unfilteredRequestsFile.absolutePath)
+
+                // read headers
+                CsvListReader csvLR = new CsvListReader(new FileReader(unfilteredRequestsFile), CsvPreference.STANDARD_PREFERENCE);
+                def csvHeaders = csvLR.read();
+                csvLR.close();
+
+                // write headers
+                CsvListWriter csvLW = new CsvListWriter(new FileWriter(requestsFile), CsvPreference.STANDARD_PREFERENCE);
+                csvLW.write(csvHeaders);
+                csvLW.close();
+
+                // read records
+                CsvMapReader csvMR = new CsvMapReader(new FileReader(unfilteredRequestsFile), CsvPreference.STANDARD_PREFERENCE);
+                CsvMapWriter csvMW = new CsvMapWriter(new FileWriter(requestsFile, true), CsvPreference.STANDARD_PREFERENCE);
+
+                def csvHeadersArray = csvHeaders as String[];
+                // ignore 1st line (headers)
+                csvMR.read(csvHeadersArray);
+
+                def record;
+                // read and write record
+                while ((record = csvMR.read(csvHeadersArray)) != null) {
+                    if (filterClosure(record)) {
+                        csvMW.write(record, csvHeadersArray);
+                    }
+                }
+                // close files
+                csvMR.close();
+                csvMW.close();
+            }
+            // -----------------------------------------------------------------
+
+            // adjust hibernate times ------------------------------------------
+            if (statsConfig.adjustHibernateTimes) {
+                def unadjustedRequestsFile = new File(requestsFile.absolutePath + ".unadjusted");
+
+                ant.move(file: requestsFile.absolutePath,
+                         tofile: unadjustedRequestsFile.absolutePath)
+
+                argv = ["-i", unadjustedRequestsFile.absolutePath,
+                        "-o", requestsFile.absolutePath]
+                CSVAdjustHibernateRecords.main(argv as String[]);
+            }
+            // -----------------------------------------------------------------
+
         }
 
         println("compute sample statistics"); // -------------------------------
+
         def sampleStatsFileName = config.perf.flight.stats.samplesFileName;
         def sampleStatsFile = new File(outputDir, sampleStatsFileName);
 
@@ -137,22 +159,23 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         def sampleStatsTextFile = new File(outputDir, sampleStatsTextFileName);
 
         for (int i=0; i < SAMPLES; i++) {
-            def filteredRequestsFileName = String.format(config.perf.flight.stats.filteredRequestsFileNameFormat, i+1);
-            def filteredRequestsFile = new File(outputDir, filteredRequestsFileName);
+            def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
+            def requestsFile = new File(outputDir, requestsFileName);
 
-            argv = ["-i", filteredRequestsFile as String,
-                    "-o", sampleStatsFile as String,
+            argv = ["-i", requestsFile.absolutePath,
+                    "-o", sampleStatsFile.absolutePath,
                     "-n", i+1 as String,
                     "--append", (i == 0 ? "false" : "true")];
             CSVSampleStatistics.main(argv as String[]);
 
-            argv = ["-i", filteredRequestsFile as String,
-                    "-o", sampleStatsTextFile as String,
+            argv = ["-i", requestsFile.absolutePath,
+                    "-o", sampleStatsTextFile.absolutePath,
                     "-n", i+1 as String,
                     "--append", (i == 0 ? "false" : "true"),
                     "--format", "text"];
             CSVSampleStatistics.main(argv as String[]);
         }
+        // ---------------------------------------------------------------------
 
         println("compute overall statistics"); // ------------------------------
         def overallStatsFileName = config.perf.flight.stats.overallFileName;
@@ -169,6 +192,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 "-o", overallStatsTextFile as String,
                 "--format", "text"];
         CSVOverallStatistics.main(argv as String[]);
+        // ---------------------------------------------------------------------
 
     } else {
         println("Skipping statistics " + statsId);
