@@ -10,6 +10,7 @@ perf {
                 runId = "test_"
                 filterId = ""
                 numberSamples = 2
+                adjustHibernateTimes = true
             }
         }
     }

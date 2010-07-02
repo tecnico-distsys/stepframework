@@ -7,12 +7,9 @@ perf {
     flight {
         stats {
             instance {
-                runId = "test_"
-                filterId = "faults"
-                numberSamples = 2
-                filterClosure = { record ->
-                    return (record["soap_name"] ==~ ".*Fault");
-                }
+                runId = "LANmedium_ehcachereadwrite"
+                filterId = ""
+                numberSamples = 30
                 adjustHibernateTimes = true
             }
         }

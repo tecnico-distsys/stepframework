@@ -10,6 +10,7 @@ perf {
                 runId = "test_noagg"
                 filterId = ""
                 numberSamples = 2
+                adjustHibernateTimes = false
             }
         }
     }

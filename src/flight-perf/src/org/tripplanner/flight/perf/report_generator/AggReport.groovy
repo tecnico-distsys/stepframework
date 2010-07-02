@@ -42,21 +42,18 @@ assert tempDir.exists()
 
 // collect data ----------------------------------------------------------------
 
-def loadId = "medium"
-def configIdList = ["noagg", ""];
-def filterId = ""
+def dirNameList = [ "medium_noagg_", "medium__nohibernateadjust", "medium__",  ]
 
 // create map of stats files
 def statsFileMap = [ : ];
-configIdList.each { configId ->
-    def dirName = loadId + "_" + configId + "_" + filterId;
+dirNameList.each { dirName ->
     def dir = new File(statsBaseDir, dirName);
     assert (dir.exists() && dir.isDirectory())
 
     def file = new File(dir, config.perf.flight.stats.overallFileName);
     assert (file.exists())
 
-    statsFileMap[configId] = file;
+    statsFileMap[dirName] = file;
 }
 
 // create data file
@@ -69,9 +66,22 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 // header
 o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
-configIdList.each { configId ->
+def descMap = [
+                "medium_noagg_" : "Raw records",
+                "medium__nohibernateadjust" : "Aggregated records",
+                "medium__" : "Hibernate adjusted"
+              ];
+descMap.each { key, value ->
+    descMap[key] = "\"" + descMap[key] + "\"";
+}
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[configId]), CsvPreference.STANDARD_PREFERENCE);
+
+dirNameList.each { dirName ->
+
+    def dir = new File(statsBaseDir, dirName);
+    def file = new File(dir, config.perf.flight.stats.overallFileName);
+
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
     // read data
@@ -79,7 +89,7 @@ configIdList.each { configId ->
     assert (statsMap)
 
     o.printf("%s %s %s %s %s %s %s%n",
-        (configId ==~ ".*noagg" ? "\"Raw records\"" : "\"Aggregated records\""),
+        descMap[dirName],
         statsMap["filter_time-mean"],
         statsMap["soap_time-mean"],
         statsMap["wsi_time-mean"],

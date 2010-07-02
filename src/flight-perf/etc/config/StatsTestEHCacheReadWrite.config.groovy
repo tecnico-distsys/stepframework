@@ -10,6 +10,7 @@ perf {
                 runId = "test_ehcachereadwrite"
                 filterId = ""
                 numberSamples = 2
+                adjustHibernateTimes = true
             }
         }
     }

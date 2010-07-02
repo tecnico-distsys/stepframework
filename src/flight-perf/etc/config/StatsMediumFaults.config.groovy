@@ -13,6 +13,7 @@ perf {
                 filterClosure = { record ->
                     return (record["soap_name"] ==~ ".*Fault");
                 }
+                adjustHibernateTimes = true
             }
         }
     }

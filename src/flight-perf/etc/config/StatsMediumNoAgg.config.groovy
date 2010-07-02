@@ -10,6 +10,7 @@ perf {
                 runId = "medium_noagg"
                 filterId = ""
                 numberSamples = 30
+                adjustHibernateTimes = false
             }
         }
     }

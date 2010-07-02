@@ -13,6 +13,7 @@ perf {
                 filterClosure = { record ->
                     return (record["soap_name"] ==~ "create(Single|Multiple)Reservation(s)?");
                 }
+                adjustHibernateTimes = true
             }
         }
     }

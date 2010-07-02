@@ -10,6 +10,7 @@ perf {
                 runId = "test_ehcachereadonly"
                 filterId = ""
                 numberSamples = 2
+                adjustHibernateTimes = true
             }
         }
     }

@@ -10,6 +10,7 @@ perf {
                 runId = "test_loglevelinfo"
                 filterId = ""
                 numberSamples = 2
+                adjustHibernateTimes = true
             }
         }
     }

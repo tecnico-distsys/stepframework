@@ -13,6 +13,7 @@ set boxwidth 0.75 relative
 # decoration
 set grid
 unset title
+set xtic rotate by -45 scale 0
 set ylabel "Average request processing time (ms)"
 set key outside right
 

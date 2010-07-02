@@ -8,12 +8,13 @@ perf {
         stats {
             instance {
                 runId = "test_"
-                filterId = "faults"
-                numberSamples = 2
+                filterId = "nohibernateadjust"
                 filterClosure = { record ->
-                    return (record["soap_name"] ==~ ".*Fault");
+                    // no actual filtering; just to provide a filter label
+                    return true;
                 }
-                adjustHibernateTimes = true
+                numberSamples = 2
+                adjustHibernateTimes = false
             }
         }
     }

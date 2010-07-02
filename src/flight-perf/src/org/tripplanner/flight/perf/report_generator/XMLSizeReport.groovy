@@ -43,7 +43,7 @@ assert tempDir.exists()
 
 // collect data ----------------------------------------------------------------
 
-def loadIdList = ["small", "medium", "large", "xlarge"];
+def loadIdList = ["small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"];
 
 def configId = ""
 

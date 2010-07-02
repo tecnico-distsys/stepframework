@@ -2,6 +2,9 @@ package org.tripplanner.flight.perf.analyzer;
 
 import org.apache.commons.cli.*;
 
+import org.apache.commons.math.stat.*;
+import org.apache.commons.math.stat.descriptive.*;
+
 import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
@@ -113,6 +116,9 @@ public class Perf4JRequestRecords extends ByYourCommand {
             totalMap[key] = 0L;
         }
 
+        // SummaryStatistics instance
+        SummaryStatistics stats = new SummaryStatistics();
+
         def iStream = new FileInputStream(iFile);
         iStream.eachLine { line, number ->
             assert number > 0
@@ -136,12 +142,18 @@ public class Perf4JRequestRecords extends ByYourCommand {
 
                 totalMap["filter_time"] = time;
 
+                if (!totalMap["hibernate_read_time"])
+                    totalMap["hibernate_read_time"] = 0;
+                if (!totalMap["hibernate_write_time"])
+                    totalMap["hibernate_write_time"] = 0;
+                def totalHibernate = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
+                assert (totalHibernate >= 0)
+
                 // warn about bad time data quality
-                def consistent = true;
                 if (totalMap["filter_time"] < totalMap["soap_time"] ||
                     totalMap["soap_time"] < totalMap["wsi_time"] ||
                     totalMap["wsi_time"] < totalMap["si_time"] ||
-                    totalMap["si_time"] < totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"]) {
+                    totalMap["si_time"] < totalHibernate) {
                     println "Warning: Record ending in line " + number + " has inconsistent times.";
                 }
 
@@ -239,4 +251,3 @@ public class Perf4JRequestRecords extends ByYourCommand {
     }
 
 }
-
