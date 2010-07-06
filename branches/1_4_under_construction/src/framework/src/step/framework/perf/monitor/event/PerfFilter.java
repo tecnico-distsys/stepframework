@@ -1,4 +1,4 @@
-package step.framework.perf.monitor;
+package step.framework.perf.monitor.event;
 
 import java.io.*;
 
@@ -9,7 +9,7 @@ import org.apache.commons.logging.*;
 
 import org.perf4j.*;
 
-import step.framework.perf.monitor.*;
+import step.framework.perf.monitor.layer.*;
 
 
 /**
@@ -21,10 +21,6 @@ import step.framework.perf.monitor.*;
  *  <br />
  */
 public class PerfFilter implements Filter {
-
-    /** Logging */
-    private static Log log = LogFactory.getLog(PerfFilter.class);
-
 
     //
     //  Filter
@@ -46,25 +42,18 @@ public class PerfFilter implements Filter {
         ServletResponse response,
         FilterChain chain) throws IOException, ServletException {
 
-        log.trace("doFilter");
-        if(log.isTraceEnabled()) {
-            if (request instanceof HttpServletRequest) {
-                String uri = ((HttpServletRequest)request).getRequestURI();
-                log.trace(String.format("Request URI %s", uri));
-            }
-        }
-
-        log.trace("BEFORE request");
-        StopWatchHelper.getThreadStopWatch("filter").start("filter");
+        // BEFORE request
+        PerfEventMonitor monitor = MonitorHelper.get();
+        monitor.init();
+        monitor.event("enter-filter");
 
         // invoke the next processor in the chain
         // (can be another filter or the web resource)
         chain.doFilter(request, response);
 
-        log.trace("AFTER request");
-        StopWatchHelper.getThreadStopWatch("filter").stop("filter");
-        StopWatchHelper.deleteAllThreadStopWatches();
-
+        // AFTER request
+        monitor.event("exit-filter");
+        monitor.dump(MonitorHelper.getDumpFile());
     }
 
 }

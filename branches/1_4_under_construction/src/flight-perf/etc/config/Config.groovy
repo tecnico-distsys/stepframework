@@ -55,7 +55,9 @@ perf {
 
             endpoint = "http://localhost:8080/flight-ws/endpoint"
             logFileName = "flight-ws_log.txt"
-            perfLogFileName = "flight-ws_perfLog.txt"
+            perf4JLogFileName = "flight-ws_perfLog.txt"
+            perfEventLogFileNameRegex = "PerfEventLog-thr([0-9]+).txt"
+            perfLayerLogFileNameRegex = "PerfLayerLog-thr([0-9]+).txt"
 
             outputBaseDir = "../../../flight-perf-work/run"
 
@@ -66,7 +68,9 @@ perf {
             outputLogFileNameFormat = "log-%d.txt"
             outputLogSizeFileNameFormat = "logsize-%d.txt"
 
-            outputPerfLogFileNameFormat = "perfLog-%d.txt"
+            outputPerf4JLogFileNameFormat = "perf4JLog-%d.txt"
+            outputPerfEventLogFileNameFormat = "perfEventLog-%d.txt"
+            outputPerfLayerLogFileNameFormat = "perfLayerLog-%d.txt"
         }
 
 //      ------------------------------------------------------------------------

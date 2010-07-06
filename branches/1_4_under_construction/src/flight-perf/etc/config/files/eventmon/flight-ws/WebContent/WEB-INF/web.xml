@@ -23,7 +23,6 @@
         <listener-class>step.framework.web.ContextListener</listener-class>
     </listener>
 
-
     <!--           -->
     <!--  FILTERS  -->
     <!--           -->
@@ -31,7 +30,7 @@
     <!-- Performance monitoring filter -->
     <filter>
         <filter-name>PerfFilter</filter-name>
-        <filter-class>step.framework.perf.monitor.perf4j.PerfFilter</filter-class>
+        <filter-class>step.framework.perf.monitor.event.PerfFilter</filter-class>
     </filter>
 
     <filter-mapping>
