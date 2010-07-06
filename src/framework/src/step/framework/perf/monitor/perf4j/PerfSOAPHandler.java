@@ -1,4 +1,4 @@
-package step.framework.perf.monitor;
+package step.framework.perf.monitor.perf4j;
 
 import java.io.*;
 import java.util.*;
@@ -12,7 +12,6 @@ import org.apache.commons.logging.*;
 
 import org.perf4j.*;
 
-import step.framework.perf.monitor.*;
 import step.framework.ws.SOAPUtil;
 import step.framework.ws.XMLUtil;
 
