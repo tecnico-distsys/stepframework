@@ -7,11 +7,13 @@ perf {
     flight {
         run {
             instance {
-                loadId = "test"
-                configId = "noagg"
-                numberSamples = 2
-                aggregatePerfLog = false
-                saveLog = true
+                loadId = "medium"
+                configId = "eventmon"
+                numberSamples = 30
+
+                saveLog = false
+
+                perfLogFormat = "eventmon"
             }
         }
     }

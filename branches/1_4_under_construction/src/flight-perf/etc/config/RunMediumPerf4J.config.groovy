@@ -7,16 +7,16 @@ perf {
     flight {
         run {
             instance {
-                loadId = "test"
-                configId = "logleveltrace"
-                numberSamples = 1
+                loadId = "medium"
+                configId = "perf4j"
+                numberSamples = 30
 
-                saveLog = true
+                saveLog = false
 
                 perfLogFormat = "perf4j"
                 perf4j {
                     aggregateContiguousEntries = true
-                }                
+                }
             }
         }
     }

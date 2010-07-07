@@ -10,8 +10,13 @@ perf {
                 loadId = "xxlarge"
                 configId = ""
                 numberSamples = 30
-                aggregatePerfLog = true
+
                 saveLog = false
+
+                perfLogFormat = "perf4j"
+                perf4j {
+                    aggregateContiguousEntries = true
+                }
             }
         }
     }

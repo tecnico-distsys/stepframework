@@ -42,7 +42,13 @@ assert tempDir.exists()
 
 // collect data ----------------------------------------------------------------
 
-def dirNameList = [ "medium_noagg_", "medium__nohibernateadjust", "medium__",  ]
+def dirNameList = [ 
+                    "medium_noagg_",
+                    "medium__nohibernateadjust",
+                    "medium__",
+                    "medium_layermon_",
+                    "medium_eventmon_"
+                  ]
 
 // create map of stats files
 def statsFileMap = [ : ];
@@ -67,9 +73,11 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
 def descMap = [
-                "medium_noagg_" : "Raw records",
-                "medium__nohibernateadjust" : "Aggregated records",
-                "medium__" : "Hibernate adjusted"
+                (dirNameList[0]) : "Raw records",
+                (dirNameList[1]) : "Aggregated records",
+                (dirNameList[2]) : "Hibernate adjusted",
+                (dirNameList[3]) : "Layer monitor",
+                (dirNameList[4]) : "Event monitor"
               ];
 descMap.each { key, value ->
     descMap[key] = "\"" + descMap[key] + "\"";

@@ -75,7 +75,7 @@ public class PerfLayerMonitorImpl implements PerfLayerMonitor {
             w.write(record.toString());
             w.write(EOL);
         }
-        // empty line ends record
+        // empty line separates records
         w.write(EOL);
     }
 

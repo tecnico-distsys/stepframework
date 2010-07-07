@@ -10,8 +10,13 @@ perf {
                 loadId = "medium"
                 configId = "ehcachereadonly"
                 numberSamples = 30
-                aggregatePerfLog = true
+
                 saveLog = false
+
+                perfLogFormat = "perf4j"
+                perf4j {
+                    aggregateContiguousEntries = true
+                }                
             }
         }
     }

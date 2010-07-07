@@ -60,6 +60,9 @@ public class CommandHelper {
     static def ERROR_PROB_OPT = "ep";
     static def ERROR_PROB_LOPT = "errorprobability";
 
+    static def REGEX_OPT = "regex";
+    static def REGEX_LOPT = "regularexpression";
+
 
     //
     //  Create options
@@ -175,6 +178,14 @@ public class CommandHelper {
         mgOption.setArgName("decimal number");
         mgOption.setArgs(1);
         return mgOption;
+    }
+
+    static def buildRegexOption() {
+        Option regexOption = new Option(REGEX_OPT, REGEX_LOPT,
+            /* hasArg */ true, "Regular expression");
+        regexOption.setArgName("regular expression");
+        regexOption.setArgs(1);
+        return regexOption;
     }
 
 
