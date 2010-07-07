@@ -64,24 +64,24 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert (SAMPLES >= 1)
 
     def loadId = runConfig.loadId;
-    assert(loadId ==~ "[A-Za-z0-9]+") : "Invalid load identifier"
+    assert(loadId ==~ "[A-Za-z0-9]+")
 
     def configId = runConfig.configId;
-    assert(configId ==~ "[A-Za-z0-9]*") : "Invalid config identifier"
+    assert(configId ==~ "[A-Za-z0-9]*")
 
     def runId = loadId + "_" + configId;
 
     def loadOutputDir = new File(loadOutputBaseDir, loadId);
-    assert (loadOutputDir.exists() && loadOutputDir.isDirectory()): "Load " + loadId + " not found"
-    assert (loadOutputDir.listFiles().size() >= SAMPLES): "Not enough load " + loadId + " samples"
+    assert (loadOutputDir.exists() && loadOutputDir.isDirectory())
+    assert (loadOutputDir.listFiles().size() >= SAMPLES)
 
     def defaultConfigFilesDir = new File(configFilesBaseDir, config.perf.flight.run.defaultConfigId);
-    assert (defaultConfigFilesDir.exists() && defaultConfigFilesDir.isDirectory()): "Default configuration files not found"
+    assert (defaultConfigFilesDir.exists() && defaultConfigFilesDir.isDirectory())
 
     def configFilesDir = null;
     if (configId) {
         configFilesDir = new File(configFilesBaseDir, configId);
-        assert (configFilesDir.exists() && configFilesDir.isDirectory()): "Specific configuration files not found"
+        assert (configFilesDir.exists() && configFilesDir.isDirectory())
     }
 
     def outputDir = new File(outputBaseDir, runId);
@@ -111,7 +111,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         }
 
         // create temporary directory
-        def tempSourceCodeDir = File.createTempFile("stepsource", "");
+        def tempSourceCodeDir = File.createTempFile("step_" + runId, "");
         tempSourceCodeDir.delete();
         tempSourceCodeDir.mkdir();
 
@@ -208,25 +208,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             assert (catalinaHomePath)
             def catalinaHomeDir = new File(catalinaHomePath);
             def catalinaLogsDir = new File(catalinaHomeDir, "logs");
-            assert (catalinaLogsDir.exists() && catalinaLogsDir.isDirectory())
-
-            // aggregate or copy performance log -------------------------------
-            def sourcePerfLogFileName = config.perf.flight.run.perfLogFileName;
-            def sourcePerfLogFile = new File(catalinaLogsDir, sourcePerfLogFileName);
-            assert (sourcePerfLogFile.exists())
-
-            def targetPerfLogFileName = String.format(config.perf.flight.run.outputPerfLogFileNameFormat, i+1);
-            def targetPerfLogFile = new File(outputDir, targetPerfLogFileName);
-
-            if (runConfig.aggregatePerfLog) {
-                println("aggregate performance log");
-                argv = ["-i", sourcePerfLogFile.absolutePath,
-                        "-o", targetPerfLogFile.absolutePath]
-                Perf4JAggregateContiguousEntries.main(argv as String[]);
-            } else {
-                println("copy performance log");
-                ant.copy(file: sourcePerfLogFile.absolutePath, tofile: targetPerfLogFile.absolutePath)
-            }
+            def catalinaTempDir = new File(catalinaHomeDir, "temp");
 
             // save functional log data ----------------------------------------
             def sourceLogFileName = config.perf.flight.run.logFileName;
@@ -247,6 +229,63 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 def targetLogFile = new File(outputDir, targetLogFileName);
 
                 ant.copy(file: sourceLogFile.absolutePath, tofile: targetLogFile.absolutePath)
+            }
+
+            // save performance log data ---------------------------------------
+            
+            def format = runConfig.perfLogFormat;
+            
+            switch (format) {
+                case "perf4j":
+                    // aggregate or copy performance log -----------------------
+                    def perf4JLogFile = new File(catalinaLogsDir, config.perf.flight.run.perf4JLogFileName);
+                    assert perf4JLogFile.exists()
+        
+                    def outputPerf4JLogFileName = String.format(config.perf.flight.run.outputPerf4JLogFileNameFormat, i+1);
+                    def outputPerf4JLogFile = new File(outputDir, outputPerf4JLogFileName);
+        
+                    if (runConfig.perf4j.aggregateContiguousEntries) {
+                        println("aggregate performance log");
+                        argv = ["-i", perf4JLogFile.absolutePath,
+                                "-o", outputPerf4JLogFile.absolutePath]
+                        Perf4JAggregateContiguousEntries.main(argv as String[]);
+                    } else {
+                        println("copy performance log");
+                        ant.move(file: perf4JLogFile.absolutePath, tofile: outputPerf4JLogFile.absolutePath)
+                    }
+                    break;
+                case "eventmon":
+                    def eventMonLogDir = catalinaTempDir;
+                    def eventMonLogFileNamePattern = ~config.perf.flight.run.eventMonLogFileNameRegex;
+
+                    def outputEventMonLogFileName = String.format(config.perf.flight.run.outputEventMonLogFileNameFormat, i+1);
+                    def outputEventMonLogFile = new File(outputDir, outputEventMonLogFileName);
+
+                    println("merge thread files into single log");
+                    eventMonLogDir.eachFileMatch(eventMonLogFileNamePattern) { eventMonFile ->
+                        argv = ["-i", eventMonFile.absolutePath,
+                                "-o", outputEventMonLogFile.absolutePath,
+                                "-regex", config.perf.flight.run.eventMonLogFileNameRegex as String ]
+                        MonAppendLog.main(argv as String[]);
+                    }
+                    break;
+                case "layermon":
+                    def layerMonLogDir = catalinaTempDir;
+                    def layerMonLogFileNamePattern = ~config.perf.flight.run.layerMonLogFileNameRegex;
+
+                    def outputLayerMonLogFileName = String.format(config.perf.flight.run.outputLayerMonLogFileNameFormat, i+1);
+                    def outputLayerMonLogFile = new File(outputDir, outputLayerMonLogFileName);
+
+                    println("merge thread files into single log");
+                    layerMonLogDir.eachFileMatch(layerMonLogFileNamePattern) { layerMonFile ->
+                        argv = ["-i", layerMonFile.absolutePath,
+                                "-o", outputLayerMonLogFile.absolutePath,
+                                "-regex", config.perf.flight.run.layerMonLogFileNameRegex as String ]
+                        MonAppendLog.main(argv as String[]);
+                    }
+                    break;
+                default:
+                    assert false : "Unsupported performance log format " + format
             }
 
         } // for each sample

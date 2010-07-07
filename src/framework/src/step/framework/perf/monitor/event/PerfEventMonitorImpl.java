@@ -69,6 +69,8 @@ public class PerfEventMonitorImpl implements PerfEventMonitor {
             w.write(record.toString());
             w.write(EOL);
         }
+        // empty line separates records
+        w.write(EOL);
     }
 
     public void event(Object tag) {

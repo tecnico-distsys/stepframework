@@ -10,8 +10,10 @@ perf {
                 loadId = "test"
                 configId = "layermon"
                 numberSamples = 2
-                aggregatePerfLog = false
+
                 saveLog = true
+
+                perfLogFormat = "layermon"
             }
         }
     }

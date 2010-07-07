@@ -9,8 +9,6 @@ import org.tripplanner.flight.perf.analyzer.*;
 
 /**
  *  Analyze test runs
- *
- *  @author Miguel Pardal
  */
 
  // command line options --------------------------------------------------------
@@ -56,16 +54,16 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     assert (SAMPLES >= 1)
 
     def runId = statsConfig.runId;
-    assert(runId ==~ "[A-Za-z0-9_]+") : "Invalid run identifier " + runId
+    assert (runId ==~ "[A-Za-z0-9_]+")
 
     def filterId = statsConfig.filterId;
-    assert(filterId ==~ "[A-Za-z0-9]*") : "Invalid filter identifier " + filterId
+    assert (filterId ==~ "[A-Za-z0-9]*")
 
     def statsId = runId + "_" + filterId;
 
     def runOutputDir = new File(runOutputBaseDir, runId);
-    assert (runOutputDir.exists() && runOutputDir.isDirectory()): "Run " + runId + " not found"
-    assert (runOutputDir.listFiles().size() >= SAMPLES): "Not enough run " + runId + " samples"
+    assert (runOutputDir.exists() && runOutputDir.isDirectory())
+    assert (runOutputDir.listFiles().size() >= SAMPLES)
 
     def outputDir = new File(outputBaseDir, statsId);
 
@@ -85,16 +83,33 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
             // generate request records ----------------------------------------
 
-            // check if filter closure exists
-            def perfLogFileName = String.format(config.perf.flight.run.outputPerfLogFileNameFormat, i+1);
-            def perfLogFile = new File(runOutputDir, perfLogFileName);
+            def perf4JLogFileName = String.format(config.perf.flight.run.outputPerf4JLogFileNameFormat, i+1);
+            def perf4JLogFile = new File(runOutputDir, perf4JLogFileName);
+
+            def eventMonLogFileName = String.format(config.perf.flight.run.outputEventMonLogFileNameFormat, i+1);
+            def eventMonLogFile = new File(runOutputDir, eventMonLogFileName);
+
+            def layerMonLogFileName = String.format(config.perf.flight.run.outputLayerMonLogFileNameFormat, i+1);
+            def layerMonLogFile = new File(runOutputDir, layerMonLogFileName);
 
             def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
             def requestsFile = new File(outputDir, requestsFileName);
 
-            argv = ["-i", perfLogFile.absolutePath,
-                    "-o", requestsFile.absolutePath]
-            Perf4JRequestRecords.main(argv as String[]);
+            if (perf4JLogFile.exists()) {
+                argv = ["-i", perf4JLogFile.absolutePath,
+                        "-o", requestsFile.absolutePath]
+                Perf4JRequestRecords.main(argv as String[]);
+            } else if(eventMonLogFile.exists()) {
+                argv = ["-i", eventMonLogFile.absolutePath,
+                        "-o", requestsFile.absolutePath]
+                EventMonRequestRecords.main(argv as String[]);
+            } else if(layerMonLogFile.exists()) {
+                argv = ["-i", layerMonLogFile.absolutePath,
+                        "-o", requestsFile.absolutePath]
+                LayerMonRequestRecords.main(argv as String[]);
+            } else {
+                assert false : "Did not recognize any performance log files in " + runOutputDir.absolutePath;   
+            }
             // -----------------------------------------------------------------
 
             // filter ----------------------------------------------------------

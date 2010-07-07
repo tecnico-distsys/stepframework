@@ -54,10 +54,12 @@ perf {
             defaultConfigId = "default"
 
             endpoint = "http://localhost:8080/flight-ws/endpoint"
+
             logFileName = "flight-ws_log.txt"
+
             perf4JLogFileName = "flight-ws_perfLog.txt"
-            perfEventLogFileNameRegex = "PerfEventLog-thr([0-9]+).txt"
-            perfLayerLogFileNameRegex = "PerfLayerLog-thr([0-9]+).txt"
+            eventMonLogFileNameRegex = "PerfEvent-thr([0-9]+)\\.log"
+            layerMonLogFileNameRegex = "PerfLayer-thr([0-9]+)\\.log"
 
             outputBaseDir = "../../../flight-perf-work/run"
 
@@ -66,11 +68,11 @@ perf {
             outputFileNameFormat = "run-%d.out"
 
             outputLogFileNameFormat = "log-%d.txt"
-            outputLogSizeFileNameFormat = "logsize-%d.txt"
+            outputLogSizeFileNameFormat = "log-%d-size.txt"
 
-            outputPerf4JLogFileNameFormat = "perf4JLog-%d.txt"
-            outputPerfEventLogFileNameFormat = "perfEventLog-%d.txt"
-            outputPerfLayerLogFileNameFormat = "perfLayerLog-%d.txt"
+            outputPerf4JLogFileNameFormat = "Perf4JLog-%d.txt"
+            outputEventMonLogFileNameFormat = "EventLog-%d.txt"
+            outputLayerMonLogFileNameFormat = "LayerLog-%d.txt"
         }
 
 //      ------------------------------------------------------------------------

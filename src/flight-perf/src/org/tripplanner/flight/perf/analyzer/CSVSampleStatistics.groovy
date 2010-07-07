@@ -111,7 +111,11 @@ public class CSVSampleStatistics extends ByYourCommand {
 
     @Override protected void cmdRun() {
 
-        err.println("Running " + this.class.simpleName);
+        err.print("Running " + this.class.simpleName);
+        if (format == null)
+            err.println ""
+        else
+            err.println(", output format " + format);
 
         CsvMapReader csvMR =
             new CsvMapReader(new FileReader(iFile), CsvPreference.STANDARD_PREFERENCE);

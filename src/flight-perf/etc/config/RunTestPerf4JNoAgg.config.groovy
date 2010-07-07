@@ -8,15 +8,15 @@ perf {
         run {
             instance {
                 loadId = "test"
-                configId = "logleveltrace"
-                numberSamples = 1
+                configId = "perf4jnoagg"
+                numberSamples = 2
 
                 saveLog = true
 
                 perfLogFormat = "perf4j"
                 perf4j {
-                    aggregateContiguousEntries = true
-                }                
+                    aggregateContiguousEntries = false
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ perf {
     flight {
         stats {
             instance {
-                runId = "test_perf4jnoagg"
+                runId = "test_layermon"
                 filterId = ""
                 numberSamples = 2
                 adjustHibernateTimes = false

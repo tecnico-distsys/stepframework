@@ -116,9 +116,6 @@ public class Perf4JRequestRecords extends ByYourCommand {
             totalMap[key] = 0L;
         }
 
-        // SummaryStatistics instance
-        SummaryStatistics stats = new SummaryStatistics();
-
         def iStream = new FileInputStream(iFile);
         iStream.eachLine { line, number ->
             assert number > 0
@@ -128,7 +125,7 @@ public class Perf4JRequestRecords extends ByYourCommand {
             //
             def lineMatcher = ( line =~ Perf4JHelper.PERF_LOG_LINE_REGEX );
             def lineMatcherResult = lineMatcher.matches();
-            assert(lineMatcher.matches());
+            assert lineMatcherResult
 
             final def start = Long.parseLong(lineMatcher.group(1));
             final def time = Long.parseLong(lineMatcher.group(2));

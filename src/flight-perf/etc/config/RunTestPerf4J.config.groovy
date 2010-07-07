@@ -8,10 +8,15 @@ perf {
         run {
             instance {
                 loadId = "test"
-                configId = "eventmon"
+                configId = "perf4j"
                 numberSamples = 2
-                aggregatePerfLog = false
+
                 saveLog = true
+
+                perfLogFormat = "perf4j"
+                perf4j {
+                    aggregateContiguousEntries = true
+                }
             }
         }
     }

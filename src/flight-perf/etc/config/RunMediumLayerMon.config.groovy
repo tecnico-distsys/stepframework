@@ -8,15 +8,12 @@ perf {
         run {
             instance {
                 loadId = "medium"
-                configId = "logleveltrace"
+                configId = "layermon"
                 numberSamples = 30
-                
+
                 saveLog = false
 
-                perfLogFormat = "perf4j"
-                perf4j {
-                    aggregateContiguousEntries = true
-                }                
+                perfLogFormat = "layermon"
             }
         }
     }
