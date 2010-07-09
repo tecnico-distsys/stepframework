@@ -38,10 +38,6 @@ def runOutputBaseDir = config.perf.flight.run.outputBaseDir;
 
 // -----------------------------------------------------------------------------
 
-def argv;
-
-def ant = new AntBuilder();
-
 
 // iterate all stats instances
 instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
@@ -78,11 +74,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         println("Processing statistics " + statsId);
         println("Output directory: " + outputDir.canonicalPath);
 
-        println("generate request records"); // --------------------------------
-        for (int i=0; i < SAMPLES; i++) {
-
-            // generate request records ----------------------------------------
-
+        // generate request records --------------------------------------------
+        def genRequestRecordsClosure = { i ->
             def perf4JLogFileName = String.format(config.perf.flight.run.outputPerf4JLogFileNameFormat, i+1);
             def perf4JLogFile = new File(runOutputDir, perf4JLogFileName);
 
@@ -96,26 +89,39 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             def requestsFile = new File(outputDir, requestsFileName);
 
             if (perf4JLogFile.exists()) {
-                argv = ["-i", perf4JLogFile.absolutePath,
-                        "-o", requestsFile.absolutePath]
+                def argv = ["-i", perf4JLogFile.absolutePath,
+                            "-o", requestsFile.absolutePath]
                 Perf4JRequestRecords.main(argv as String[]);
             } else if(eventMonLogFile.exists()) {
-                argv = ["-i", eventMonLogFile.absolutePath,
-                        "-o", requestsFile.absolutePath]
+                def argv = ["-i", eventMonLogFile.absolutePath,
+                            "-o", requestsFile.absolutePath]
                 EventMonRequestRecords.main(argv as String[]);
             } else if(layerMonLogFile.exists()) {
-                argv = ["-i", layerMonLogFile.absolutePath,
-                        "-o", requestsFile.absolutePath]
+                def argv = ["-i", layerMonLogFile.absolutePath,
+                            "-o", requestsFile.absolutePath]
                 LayerMonRequestRecords.main(argv as String[]);
             } else {
-                assert false : "Did not recognize any performance log files in " + runOutputDir.absolutePath;   
+                assert false : "Did not recognize any performance log files in " + runOutputDir.absolutePath;
             }
-            // -----------------------------------------------------------------
+        }
+        println("Generate request records");
+        // create a closure to process each sample
+        def genRequestRecordsClosureArray = Helper.indexCurryClosureArray(genRequestRecordsClosure, SAMPLES);
+        // execute closures in parallel
+        Helper.multicoreExecute(genRequestRecordsClosureArray);
+        // ---------------------------------------------------------------------
 
-            // filter ----------------------------------------------------------
-            def filterClosure = statsConfig.filterClosure;
-            if (filterClosure) {
+
+        // filter records ------------------------------------------------------
+        def filterClosure = statsConfig.filterClosure;
+        if (filterClosure) {
+
+            def filterRecordsClosure = { i ->
+                def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
+                def requestsFile = new File(outputDir, requestsFileName);
+
                 def unfilteredRequestsFile = new File(requestsFile.absolutePath + ".unfiltered");
+                def ant = new AntBuilder();
                 ant.move(file: requestsFile.absolutePath,
                          tofile: unfilteredRequestsFile.absolutePath)
 
@@ -148,35 +154,51 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 csvMR.close();
                 csvMW.close();
             }
-            // -----------------------------------------------------------------
 
-            // adjust hibernate times ------------------------------------------
-            if (statsConfig.adjustHibernateTimes) {
+            println("Filter request records");
+            // create a closure to process each sample
+            def filterRecordsClosureArray = Helper.indexCurryClosureArray(filterRecordsClosure, SAMPLES);
+            // execute closures in parallel
+            Helper.multicoreExecute(filterRecordsClosureArray);
+        }
+        // ---------------------------------------------------------------------
+
+        // adjust hibernate times ----------------------------------------------
+        if (statsConfig.adjustHibernateTimes) {
+
+            def adjustHibernateTimesClosure = { i ->
                 def unadjustedRequestsFile = new File(requestsFile.absolutePath + ".unadjusted");
 
+                def ant = new AntBuilder();
                 ant.move(file: requestsFile.absolutePath,
                          tofile: unadjustedRequestsFile.absolutePath)
 
-                argv = ["-i", unadjustedRequestsFile.absolutePath,
-                        "-o", requestsFile.absolutePath]
+                def argv = ["-i", unadjustedRequestsFile.absolutePath,
+                            "-o", requestsFile.absolutePath]
                 CSVAdjustHibernateRecords.main(argv as String[]);
             }
-            // -----------------------------------------------------------------
 
+            println("Adjust Hibernate times");
+            // create a closure to process each sample
+            def adjustHibernateTimesClosureArray = Helper.indexCurryClosureArray(adjustHibernateTimesClosure, SAMPLES);
+            // execute closures in parallel
+            Helper.multicoreExecute(adjustHibernateTimesClosureArray);
         }
+        // ---------------------------------------------------------------------
 
-        println("compute sample statistics"); // -------------------------------
 
+        // Compute sample statistics -------------------------------------------
         def sampleStatsFileName = config.perf.flight.stats.samplesFileName;
         def sampleStatsFile = new File(outputDir, sampleStatsFileName);
 
         def sampleStatsTextFileName = config.perf.flight.stats.samplesTextFileName;
         def sampleStatsTextFile = new File(outputDir, sampleStatsTextFileName);
 
-        for (int i=0; i < SAMPLES; i++) {
+        def sampleStatsClosure = { i ->
             def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
             def requestsFile = new File(outputDir, requestsFileName);
 
+            def argv;
             argv = ["-i", requestsFile.absolutePath,
                     "-o", sampleStatsFile.absolutePath,
                     "-n", i+1 as String,
@@ -190,12 +212,22 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                     "--format", "text"];
             CSVSampleStatistics.main(argv as String[]);
         }
+
+        println("Compute sample statistics");
+        // create a closure to process each sample
+        def sampleStatsClosureArray = Helper.indexCurryClosureArray(sampleStatsClosure, SAMPLES);
+        // execute closures in parallel
+        Helper.multicoreExecute(sampleStatsClosureArray);
         // ---------------------------------------------------------------------
 
-        println("compute overall statistics"); // ------------------------------
+
+        // compute overall statistics ------------------------------------------
+        println("Compute overall statistics");
+
         def overallStatsFileName = config.perf.flight.stats.overallFileName;
         def overallStatsFile = new File(outputDir, overallStatsFileName);
 
+        def argv;
         argv = ["-i", sampleStatsFile as String,
                 "-o", overallStatsFile as String]
         CSVOverallStatistics.main(argv as String[]);

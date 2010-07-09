@@ -1,5 +1,8 @@
 package step.groovy;
 
+import java.util.concurrent.*;
+
+
 /**
  *  STEP Framework Groovy helper<br />
  *  <br />
@@ -177,6 +180,83 @@ class Helper {
                 }
             }
         }
+    }
+
+
+    //
+    //  Parallel ---------------------------------------------------------------
+    //
+
+    /**
+     *  Use a thread pool of the size of the number of processor cores
+     *  to execute an array of closures.
+     *  Waits for all closures to complete  and asserts that no exceptions occurred.
+     *
+     *  The goal is to make the most of the available processing power.
+     *  Closures must not operate on shared data.
+     */
+    static def multicoreExecute(Closure... closureArray) {
+        def threadPoolSize = Runtime.getRuntime().availableProcessors();
+        return parallelExecute(threadPoolSize, closureArray);
+    }
+
+    /**
+     *  Use a thread pool to execute an array of closures.
+     *  The thread pool size is specified by the first argument.
+     *  Waits for all closures to complete  and asserts that no exceptions occurred.
+     *
+     *  Closures must not operate on shared data.
+     */
+    static def parallelExecute(int threadPoolSize, Closure... closureArray) {
+        assert threadPoolSize >= 1
+        assert closureArray.length >= 1
+
+        // create thread pool
+        def executorService = Executors.newFixedThreadPool(threadPoolSize);
+
+        def futureList = [ ]
+        for (int i=0; i < closureArray.length; i++) {
+            // submit task
+            futureList.add(executorService.submit(closureArray[i]));
+        }
+
+        // close service
+        executorService.shutdown();
+
+        // await future results
+        def exceptionMap = [ : ]
+        for (int i=0; i < closureArray.length; i++) {
+            try {
+                futureList.get(i).get();
+            } catch(ExecutionException ee) {
+                // collect exception
+                exceptionMap.put(i, ee.getCause());
+            }
+        }
+        // assert no exceptions occurred before proceeding
+        assert exceptionMap.isEmpty()
+    }
+
+    /**
+     *  Create an array of closures by
+     *  currying the argument closure with the array index
+     *
+     *  result.length == arraySize
+     *  result[i] = closure.curry(i)
+     *
+     */
+    static def indexCurryClosureArray(Closure closure, int arraySize) {
+        assert arraySize > 0
+
+        Closure[] closureArray = new Closure[arraySize];
+
+        for (int i=0; i < arraySize; i++) {
+            // a closure curry() creates a new closure with resolved parameters
+            // in this case, the array index i
+            closureArray[i] = closure.curry(i);
+        }
+
+        return closureArray;
     }
 
 }
