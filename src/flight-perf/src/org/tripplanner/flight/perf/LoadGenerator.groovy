@@ -1,7 +1,5 @@
 package org.tripplanner.flight.perf;
 
-import java.util.concurrent.*;
-
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.load_generator.*;
 
@@ -17,7 +15,6 @@ def cli = new CliBuilder(usage: "LoadGenerator")
 cli.h(longOpt: "help", required: false, args: 0, "Print this message")
 cli._(longOpt: "force", required: false, args: 0, "Force load generation")
 cli._(longOpt: "nodomaingen", required: false, args: 0, "Prevent domain data generation")
-cli._(longOpt: "poolsize", required: false, args: 1, "Thread pool size for parallel tasks")
 
 def options = cli.parse(args)
 assert (options)
@@ -38,14 +35,6 @@ def instanceFileNamePattern = ~config.perf.flight.load.instanceFileNameRegex;
 def outputBaseDir = config.perf.flight.load.outputBaseDir;
 
 // -----------------------------------------------------------------------------
-
-// define thread pool size
-final def poolSize;
-if (options.poolsize)
-    poolSize = options.poolsize as Integer;
-else
-    poolSize = Runtime.getRuntime().availableProcessors();
-assert poolSize > 0
 
 def generateDomainData = true;
 if (options.nodomaingen) generateDomainData = false;
@@ -108,30 +97,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                         ]
             WorkloadGenerator.main(argv as String[]);
         }
-
-        // create thread pool
-        def executorService = Executors.newFixedThreadPool(poolSize);
-        def futureList = [ ]
-        for (int i=0; i < SAMPLES; i++) {
-            // submit task
-            futureList.add(executorService.submit(genLoadClosure.curry(i)));
-                    // curry() creates a new closure with resolved parameters
-        }
-        assert futureList.size() == SAMPLES
-        // close service
-        executorService.shutdown();
-        // await future results
-        def exceptionMap = [ : ]
-        for (int i=0; i < SAMPLES; i++) {
-            try {
-                futureList.get(i).get();
-            } catch(ExecutionException ee) {
-                // collect exception
-                exceptionMap.put(i, ee.getCause());
-            }
-        }
-        // assert no exceptions occurred before proceeding
-        assert exceptionMap.isEmpty()
+        // create a closure to process each sample
+        def genLoadClosureArray = Helper.indexCurryClosureArray(genLoadClosure, SAMPLES);
+        // execute closures in parallel
+        Helper.multicoreExecute(genLoadClosureArray);
 
     } else {
         println("Skipping " + file.name);
