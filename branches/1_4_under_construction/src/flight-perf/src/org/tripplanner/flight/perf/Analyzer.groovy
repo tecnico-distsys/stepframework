@@ -14,6 +14,7 @@ import org.tripplanner.flight.perf.analyzer.*;
  // command line options --------------------------------------------------------
 def cli = new CliBuilder(usage: "Analyzer")
 cli.h(longOpt: "help", required: false, args: 0, "Print this message")
+cli.cfg(longOpt: "config", required: false, args: 1, "Specify master configuration file")
 cli._(longOpt: "force", required: false, args: 0, "Force analysis")
 
 def options = cli.parse(args)
@@ -25,7 +26,10 @@ if (options.help) {
 }
 
 // load initial configuration --------------------------------------------------
-def config = Helper.parseConfig("etc/config/Config.groovy");
+def configPath = "etc/config/Config.groovy";
+if (options.cfg) configPath = options.cfg;
+
+def config = Helper.parseConfig(configPath);
 assert (config.perf.flight) : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
@@ -89,17 +93,26 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             def requestsFile = new File(outputDir, requestsFileName);
 
             if (perf4JLogFile.exists()) {
-                def argv = ["-i", perf4JLogFile.absolutePath,
-                            "-o", requestsFile.absolutePath]
-                Perf4JRequestRecords.main(argv as String[]);
+                Perf4JRequestRecords.main(
+                    [
+                    "-i", perf4JLogFile.absolutePath,
+                    "-o", requestsFile.absolutePath
+                    ] as String[]
+                );
             } else if(eventMonLogFile.exists()) {
-                def argv = ["-i", eventMonLogFile.absolutePath,
-                            "-o", requestsFile.absolutePath]
-                EventMonRequestRecords.main(argv as String[]);
+                EventMonRequestRecords.main(
+                    [
+                    "-i", eventMonLogFile.absolutePath,
+                    "-o", requestsFile.absolutePath
+                    ] as String[]
+                );
             } else if(layerMonLogFile.exists()) {
-                def argv = ["-i", layerMonLogFile.absolutePath,
-                            "-o", requestsFile.absolutePath]
-                LayerMonRequestRecords.main(argv as String[]);
+                LayerMonRequestRecords.main(
+                    [
+                    "-i", layerMonLogFile.absolutePath,
+                    "-o", requestsFile.absolutePath
+                    ] as String[]
+                );
             } else {
                 assert false : "Did not recognize any performance log files in " + runOutputDir.absolutePath;
             }
@@ -173,9 +186,12 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 ant.move(file: requestsFile.absolutePath,
                          tofile: unadjustedRequestsFile.absolutePath)
 
-                def argv = ["-i", unadjustedRequestsFile.absolutePath,
-                            "-o", requestsFile.absolutePath]
-                CSVAdjustHibernateRecords.main(argv as String[]);
+                CSVAdjustHibernateRecords.main(
+                    [
+                    "-i", unadjustedRequestsFile.absolutePath,
+                    "-o", requestsFile.absolutePath
+                    ] as String[]
+                );
             }
 
             println("Adjust Hibernate times");
@@ -198,19 +214,24 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
             def requestsFile = new File(outputDir, requestsFileName);
 
-            def argv;
-            argv = ["-i", requestsFile.absolutePath,
-                    "-o", sampleStatsFile.absolutePath,
-                    "-n", i+1 as String,
-                    "--append", (i == 0 ? "false" : "true")];
-            CSVSampleStatistics.main(argv as String[]);
+            CSVSampleStatistics.main(
+                [
+                "-i", requestsFile.absolutePath,
+                "-o", sampleStatsFile.absolutePath,
+                "-n", i+1 as String,
+                "--append", (i == 0 ? "false" : "true")
+                ] as String[]
+            );
 
-            argv = ["-i", requestsFile.absolutePath,
-                    "-o", sampleStatsTextFile.absolutePath,
-                    "-n", i+1 as String,
-                    "--append", (i == 0 ? "false" : "true"),
-                    "--format", "text"];
-            CSVSampleStatistics.main(argv as String[]);
+            CSVSampleStatistics.main(
+                [
+                "-i", requestsFile.absolutePath,
+                "-o", sampleStatsTextFile.absolutePath,
+                "-n", i+1 as String,
+                "--append", (i == 0 ? "false" : "true"),
+                "--format", "text"
+                ] as String[]
+            );
         }
 
         println("Compute sample statistics");
@@ -227,18 +248,23 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         def overallStatsFileName = config.perf.flight.stats.overallFileName;
         def overallStatsFile = new File(outputDir, overallStatsFileName);
 
-        def argv;
-        argv = ["-i", sampleStatsFile as String,
-                "-o", overallStatsFile as String]
-        CSVOverallStatistics.main(argv as String[]);
+        CSVOverallStatistics.main(
+            [
+            "-i", sampleStatsFile as String,
+            "-o", overallStatsFile as String
+            ] as String[]
+        );
 
         def overallStatsTextFileName = config.perf.flight.stats.overallTextFileName;
         def overallStatsTextFile = new File(outputDir, overallStatsTextFileName);
 
-        argv = ["-i", sampleStatsFile as String,
-                "-o", overallStatsTextFile as String,
-                "--format", "text"];
-        CSVOverallStatistics.main(argv as String[]);
+        CSVOverallStatistics.main(
+            [
+            "-i", sampleStatsFile as String,
+            "-o", overallStatsTextFile as String,
+            "--format", "text"
+            ] as String[]
+        );
         // ---------------------------------------------------------------------
 
     } else {

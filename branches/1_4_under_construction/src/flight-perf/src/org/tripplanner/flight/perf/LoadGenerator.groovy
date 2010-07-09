@@ -13,6 +13,7 @@ import org.tripplanner.flight.perf.load_generator.*;
 // command line options --------------------------------------------------------
 def cli = new CliBuilder(usage: "LoadGenerator")
 cli.h(longOpt: "help", required: false, args: 0, "Print this message")
+cli.cfg(longOpt: "config", required: false, args: 1, "Specify master configuration file")
 cli._(longOpt: "force", required: false, args: 0, "Force load generation")
 cli._(longOpt: "nodomaingen", required: false, args: 0, "Prevent domain data generation")
 
@@ -25,7 +26,10 @@ if (options.help) {
 }
 
 // load initial configuration --------------------------------------------------
-def config = Helper.parseConfig("etc/config/Config.groovy");
+def configPath = "etc/config/Config.groovy";
+if (options.cfg) configPath = options.cfg;
+
+def config = Helper.parseConfig(configPath);
 assert (config.perf.flight) : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
@@ -64,8 +68,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         // regenerate domain data
         if (generateDomainData) {
-            def argv = [  ];
-            DomainDataGenerator.main(argv as String[]);
+            DomainDataGenerator.main([ ] as String[]);
             generateDomainData = false;
         }
 
@@ -84,7 +87,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             println("Generating sample " + (i+1) + " to " + outputFile.getCanonicalPath());
 
             // generate workload
-            def argv = [
+            WorkloadGenerator.main(
+                [
                 "-s", SEED_LIST[i] as String,
                 "-n", loadConfig.numberSessions as String,
                 "-o", outputFile as String,
@@ -94,8 +98,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 "-p", config.perf.flight.databasePropertiesFile.absolutePath,
                 "--names", config.perf.flight.domain.namesFile.absolutePath,
                 "--surnames", config.perf.flight.domain.surnamesFile.absolutePath
-                        ]
-            WorkloadGenerator.main(argv as String[]);
+                ] as String[]
+            );
         }
         // create a closure to process each sample
         def genLoadClosureArray = Helper.indexCurryClosureArray(genLoadClosure, SAMPLES);
