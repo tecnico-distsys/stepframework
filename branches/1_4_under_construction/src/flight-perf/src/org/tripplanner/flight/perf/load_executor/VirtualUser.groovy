@@ -35,10 +35,11 @@ public class VirtualUser extends ByYourCommand {
             // load environment properties
             def env = System.getenv();
             // load libraries
+            /*
             Helper.addJarDirToClassLoader(env["STEP_HOME"] + "/lib");
             Helper.addFileToClassLoader("../framework/dist/stepframework.jar");
             Helper.addFileToClassLoader("../flight-ws-cli/dist/flight-ws-cli.jar");
-
+*/
             // clear flag
             setupFlag = false;
         }
@@ -111,11 +112,11 @@ public class VirtualUser extends ByYourCommand {
         err.println();
 
         // create Web Service stub
-        def service = Class.forName("org.tripplanner.flight.wsdl.FlightService").newInstance();
+        def service = new org.tripplanner.flight.wsdl.FlightService();
         def port = service.getFlightPort();
 
         // set endpoint address
-        def StubUtil = Class.forName("step.framework.ws.StubUtil");
+        def StubUtil = new step.framework.ws.StubUtil();
         StubUtil.setPortEndpointAddress(port, endpoint);
 
         //

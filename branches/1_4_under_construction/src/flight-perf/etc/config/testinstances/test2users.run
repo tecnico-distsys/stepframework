@@ -8,11 +8,11 @@ perf {
         run {
             instance {
                 loadId = "test"
-                configId = ""
+                configId = "2users"
                 applyConfigList = [ "layermon" ]
 
-                numberSamples = 2
-                numberUsers = 1
+                numberSamples = 4
+                numberUsers = 2
 
                 saveLog = true
 

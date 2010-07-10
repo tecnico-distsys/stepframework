@@ -38,7 +38,7 @@ perf {
 
 //      ------------------------------------------------------------------------
         load {
-            instanceDir = "etc/config"
+            instanceDir = "etc/config/testinstances"
             instanceFileNameRegex = "(.*?).load"
 
             outputBaseDir = "../../../flight-perf-testdata/load"
@@ -47,7 +47,7 @@ perf {
 
 //      ------------------------------------------------------------------------
         run {
-            instanceDir = "etc/config"
+            instanceDir = "etc/config/testinstances"
             instanceFileNameRegex = "(.*?).run"
 
             configFilesBaseDir = "etc/config/files"
@@ -62,9 +62,11 @@ perf {
 
             outputBaseDir = "../../../flight-perf-testdata/run"
 
-            outputSysInfoFileName = "sysinfo.txt"
+            outputSysInfoFileName = "_sys-info.txt"
 
-            outputFileNameFormat = "run-%d.out"
+            outputRunInfoFileName = "_run-info.txt"
+
+            outputFileNameFormat = "run-%d-output.txt"
 
             outputLogFileNameFormat = "log-%d.txt"
             outputLogSizeFileNameFormat = "log-%d-size.txt"
@@ -76,7 +78,7 @@ perf {
 
 //      ------------------------------------------------------------------------
         stats {
-            instanceDir = "etc/config"
+            instanceDir = "etc/config/testinstances"
             instanceFileNameRegex = "(.*?).stats"
 
             outputBaseDir = "../../../flight-perf-testdata/stats"

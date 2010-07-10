@@ -10,8 +10,11 @@ perf {
                 id = "test"
                 numberSessions = 12
                 maxGroup = 10
-                numberSamples = 2
-                randomSeedList = [ 1755, -746289129 ]
+                numberSamples = 32
+                randomSeedList = [ 1755, -746289129, 874634, -972, 983498729, 213, -123908, 37876,
+                                   28, 11, 1, 20, 10, 90, 40, 22,
+                                   9, 7, 98327893, 223, 2332, -33, 8378432, 11,
+                                   -29384, -222, 928783483, 22259, -22111, 85745, 232, -7611 ]
                 maxThinkTime = 0
                 errorProbability = 0.20
             }
