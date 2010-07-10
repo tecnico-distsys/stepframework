@@ -43,6 +43,10 @@ def runOutputBaseDir = config.perf.flight.run.outputBaseDir;
 // -----------------------------------------------------------------------------
 
 
+println("Looking for stats instances in " + instanceDir.canonicalPath);
+println("(files matching (" + instanceFileNamePattern + ")");
+println("");
+
 // iterate all stats instances
 instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 

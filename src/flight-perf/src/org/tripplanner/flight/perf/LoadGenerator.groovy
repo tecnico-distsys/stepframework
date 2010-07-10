@@ -43,6 +43,10 @@ def outputBaseDir = config.perf.flight.load.outputBaseDir;
 def generateDomainData = true;
 if (options.nodomaingen) generateDomainData = false;
 
+println("Looking for load instances in " + instanceDir.canonicalPath);
+println("(files matching (" + instanceFileNamePattern + ")");
+println("");
+
 // iterate all load instances
 instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
@@ -68,7 +72,11 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         // regenerate domain data
         if (generateDomainData) {
-            DomainDataGenerator.main([ ] as String[]);
+            DomainDataGenerator.main(
+                [
+                "-cfg", configPath
+                ] as String[]
+            );
             generateDomainData = false;
         }
 

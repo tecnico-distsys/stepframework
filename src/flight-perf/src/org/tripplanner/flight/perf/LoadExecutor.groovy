@@ -55,6 +55,10 @@ def generateDomainData = true;
 
 if (options.nodomaingen) generateDomainData = false;
 
+println("Looking for run instances in " + instanceDir.canonicalPath);
+println("(files matching (" + instanceFileNamePattern + ")");
+println("");
+
 // iterate all run instances
 instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
@@ -74,17 +78,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     def runId = loadId + "_" + configId;
 
     def loadOutputDir = new File(loadOutputBaseDir, loadId);
-    assert (loadOutputDir.exists() && loadOutputDir.isDirectory())
-    assert (loadOutputDir.listFiles().size() >= SAMPLES)
-
-    def defaultConfigFilesDir = new File(configFilesBaseDir, config.perf.flight.run.defaultConfigId);
-    assert (defaultConfigFilesDir.exists() && defaultConfigFilesDir.isDirectory())
-
-    def configFilesDir = null;
-    if (configId) {
-        configFilesDir = new File(configFilesBaseDir, configId);
-        assert (configFilesDir.exists() && configFilesDir.isDirectory())
-    }
+    assert loadOutputDir.exists() && loadOutputDir.isDirectory()
+    assert loadOutputDir.listFiles().size() >= SAMPLES
 
     def outputDir = new File(outputBaseDir, runId);
 
@@ -94,7 +89,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         if (!outputDir.exists())
             outputDir.mkdir();
-        assert (outputDir.exists() && outputDir.isDirectory())
+        assert outputDir.exists() && outputDir.isDirectory()
 
         println("Processing run " + runId);
         println("Output directory: " + outputDir.canonicalPath);
@@ -111,6 +106,15 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         System.getProperties().each { key, value ->
             sysInfoPrintStream.printf("%s = %s%n", key, value);
         }
+
+        // output run information
+        def runInfoFile = new File(outputDir, config.perf.flight.run.outputRunInfoFileName);
+        def runInfoPrintStream = new PrintStream(new FileOutputStream(runInfoFile));
+
+        runInfoPrintStream.printf("Load identifier '%s'%n", loadId);
+        runInfoPrintStream.printf("Config identifier '%s'%n", configId);
+        runInfoPrintStream.printf("%ntoString: %s%n", runConfig.toString());
+
 
         // create temporary directory
         def tempSourceCodeDir = File.createTempFile("step_" + runId, "");
@@ -152,27 +156,35 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             }
         }
 
-        // apply default configuration
-        println("Applying default configuration");
-        applyConfigClosure(defaultConfigFilesDir, tempSourceCodeDir);
+        // apply configuration files
+        def configFilesDirNameList = runConfig.applyConfigList;
+        assert configFilesDirNameList
+        configFilesDirNameList.each { configFilesDirName ->
 
-        // apply specific configuration
-        if (configFilesDir != null) {
-            println("Applying specific configuration from " + configFilesDir.absolutePath);
+            def configFilesDir = new File(configFilesBaseDir, configFilesDirName);
+            assert configFilesDir.exists() && configFilesDir.isDirectory()
+
+            println("Applying " + configFilesDirName + " configuration files");
             applyConfigClosure(configFilesDir, tempSourceCodeDir);
         }
+
 
         println("compile"); // -------------------------------------------------
         Helper.exec(tempSourceCodeDir.absolutePath, "ant rebuild", ["CLASSPATH" : ""] );
 
         println("generate domain data"); // ------------------------------------
         if (generateDomainData) {
-            DomainDataGenerator.main([ ] as String[]);
+            DomainDataGenerator.main(
+                [
+                "-cfg", configPath
+                ] as String[]
+            );
             generateDomainData = false;
         }
 
-        // for each sample -----------------------------------------------------
-        for (int i=0; i < SAMPLES; i++) {
+
+        // println("generate domain data"); // ------------------------------------
+        def virtualUserClosure = { i ->
             // file containing requests to send
             def loadFileName = String.format(config.perf.flight.load.outputFileNameFormat, i+1);
             def loadFile = new File(loadOutputDir, loadFileName);
@@ -180,6 +192,40 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             // file where standard output will be saved
             def outputFileName = String.format(config.perf.flight.run.outputFileNameFormat, i+1);
             def outputFile = new File(outputDir, outputFileName);
+
+            // execute workload ------------------------------------------------
+            VirtualUser.main(
+                [
+                "-i", loadFile.absolutePath,
+                "-o", outputFile.absolutePath,
+                "--endpoint", config.perf.flight.run.endpoint as String
+                ] as String[]
+            );
+        }
+
+        // force web service class loading now to and avoid race condition at ClassLoader later
+        def service = new org.tripplanner.flight.wsdl.FlightService();
+        def port = service.getFlightPort();
+        def StubUtil = new step.framework.ws.StubUtil();
+
+
+        // define number of simultaneous users
+        final def USERS;
+        if (runConfig.numberUsers)
+            USERS = runConfig.numberUsers as Integer;
+        else
+            USERS = 1;  // default value
+
+        assert USERS >= 1
+        assert USERS <= SAMPLES
+
+
+        // loop samples --------------------------------------------------------
+        int processedSamples = 0;
+        int runCount = 0;
+        while (processedSamples < SAMPLES) {
+            processedSamples += USERS;
+            runCount++;
 
             // delete data generated by requests -------------------------------
             DeleteDB.main(
@@ -195,16 +241,16 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             // deploy flight web service ---------------------------------------
             Helper.exec(tempSourceCodeDir.absolutePath, "ant deploy-flight", ["CLASSPATH" : ""]);
 
-            println("Executing sample " + (i+1) + " to " + outputFile.getCanonicalPath());
 
-            // execute workload ------------------------------------------------
-            VirtualUser.main(
-                [
-                "-i", loadFile.absolutePath,
-                "-o", outputFile.absolutePath,
-                "--endpoint", config.perf.flight.run.endpoint as String
-                ] as String[]
-            );
+            // -----------------------------------------------------------------
+            // create a closure for each user
+            Closure[] closureArray = new Closure[USERS];
+            for (int i=0; i < USERS; i++) {
+                closureArray[i] = virtualUserClosure.curry(processedSamples - USERS + i);
+            }
+            // execute closures in parallel
+            Helper.parallelExecute(USERS, closureArray);
+            // -----------------------------------------------------------------
 
             // stop server -----------------------------------------------------
             Helper.exec(tempSourceCodeDir.absolutePath, "ant stop-server", ["CLASSPATH" : ""])
@@ -212,7 +258,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             // retrieve CATALINA_HOME path from environment variables
             def env = System.getenv();
             def catalinaHomePath = env["CATALINA_HOME"];
-            assert (catalinaHomePath)
+            assert catalinaHomePath
             def catalinaHomeDir = new File(catalinaHomePath);
             def catalinaLogsDir = new File(catalinaHomeDir, "logs");
             def catalinaTempDir = new File(catalinaHomeDir, "temp");
@@ -220,9 +266,9 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             // save functional log data ----------------------------------------
             def sourceLogFileName = config.perf.flight.run.logFileName;
             def sourceLogFile = new File(catalinaLogsDir, sourceLogFileName);
-            assert (sourceLogFile.exists())
+            assert sourceLogFile.exists()
 
-            def targetLogSizeFileName = String.format(config.perf.flight.run.outputLogSizeFileNameFormat, i+1);
+            def targetLogSizeFileName = String.format(config.perf.flight.run.outputLogSizeFileNameFormat, runCount);
             def targetLogSizeFile = new File(outputDir, targetLogSizeFileName);
 
             // save size in file
@@ -232,7 +278,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
             // save log contents
             if (runConfig.saveLog) {
-                def targetLogFileName = String.format(config.perf.flight.run.outputLogFileNameFormat, i+1);
+                def targetLogFileName = String.format(config.perf.flight.run.outputLogFileNameFormat, runCount);
                 def targetLogFile = new File(outputDir, targetLogFileName);
 
                 ant.copy(file: sourceLogFile.absolutePath, tofile: targetLogFile.absolutePath)
@@ -248,11 +294,11 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                     def perf4JLogFile = new File(catalinaLogsDir, config.perf.flight.run.perf4JLogFileName);
                     assert perf4JLogFile.exists()
 
-                    def outputPerf4JLogFileName = String.format(config.perf.flight.run.outputPerf4JLogFileNameFormat, i+1);
+                    def outputPerf4JLogFileName = String.format(config.perf.flight.run.outputPerf4JLogFileNameFormat, runCount);
                     def outputPerf4JLogFile = new File(outputDir, outputPerf4JLogFileName);
 
                     if (runConfig.perf4j.aggregateContiguousEntries) {
-                        println("aggregate performance log");
+                        println("Aggregate performance log");
                         Perf4JAggregateContiguousEntries.main(
                             [
                             "-i", perf4JLogFile.absolutePath,
@@ -260,7 +306,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                             ] as String[]
                         );
                     } else {
-                        println("copy performance log");
+                        println("Copy performance log");
                         ant.move(file: perf4JLogFile.absolutePath, tofile: outputPerf4JLogFile.absolutePath)
                     }
                     break;
@@ -268,16 +314,16 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                     def eventMonLogDir = catalinaTempDir;
                     def eventMonLogFileNamePattern = ~config.perf.flight.run.eventMonLogFileNameRegex;
 
-                    def outputEventMonLogFileName = String.format(config.perf.flight.run.outputEventMonLogFileNameFormat, i+1);
+                    def outputEventMonLogFileName = String.format(config.perf.flight.run.outputEventMonLogFileNameFormat, runCount);
                     def outputEventMonLogFile = new File(outputDir, outputEventMonLogFileName);
 
-                    println("merge thread files into single log");
+                    println("Merge thread files into single log");
                     eventMonLogDir.eachFileMatch(eventMonLogFileNamePattern) { eventMonFile ->
                         MonAppendLog.main(
                             [
                             "-i", eventMonFile.absolutePath,
                             "-o", outputEventMonLogFile.absolutePath,
-                            "-regex", config.perf.flight.run.eventMonLogFileNameRegex as String 
+                            "-regex", config.perf.flight.run.eventMonLogFileNameRegex as String
                             ] as String[]
                         );
                     }
@@ -286,10 +332,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                     def layerMonLogDir = catalinaTempDir;
                     def layerMonLogFileNamePattern = ~config.perf.flight.run.layerMonLogFileNameRegex;
 
-                    def outputLayerMonLogFileName = String.format(config.perf.flight.run.outputLayerMonLogFileNameFormat, i+1);
+                    def outputLayerMonLogFileName = String.format(config.perf.flight.run.outputLayerMonLogFileNameFormat, runCount);
                     def outputLayerMonLogFile = new File(outputDir, outputLayerMonLogFileName);
 
-                    println("merge thread files into single log");
+                    println("Merge thread files into single log");
                     layerMonLogDir.eachFileMatch(layerMonLogFileNamePattern) { layerMonFile ->
                         MonAppendLog.main(
                             [
