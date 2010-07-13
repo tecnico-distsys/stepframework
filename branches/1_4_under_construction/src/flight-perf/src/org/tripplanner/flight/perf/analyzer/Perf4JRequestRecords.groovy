@@ -9,7 +9,7 @@ import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**

@@ -9,7 +9,7 @@ import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**
@@ -149,7 +149,7 @@ public class EventMonRequestRecords extends ByYourCommand {
                 numericHeaderList.each{ key ->
                     totalMap[key] = 0L;
                 }
-                
+
             } else {
                 // process record item
 
@@ -159,7 +159,7 @@ public class EventMonRequestRecords extends ByYourCommand {
                 def lineMatcher = ( line =~ EventMonHelper.PERF_LOG_LINE_REGEX );
                 def lineMatcherResult = lineMatcher.matches();
                 assert lineMatcherResult
-    
+
                 final def thread = lineMatcher.group(1);
                 final def tag = lineMatcher.group(2);
                 final def time = lineMatcher.group(3);
@@ -213,7 +213,7 @@ public class EventMonRequestRecords extends ByYourCommand {
                         if (enterFlag)
                             totalMap["si_name"] = context["className"];
                         break;
-                        
+
                     case "soap":
                         tagToUse += "_time";
 
@@ -230,7 +230,7 @@ public class EventMonRequestRecords extends ByYourCommand {
                             if ("null".equals(fault))
                                 fault = null;
                             totalMap["soap_name"] += (fault == null ? "" : "." + fault);
-    
+
                             totalMap["soap_response_logical_length"] = context["responseLogicalLength"];
                             totalMap["soap_response_max_depth"] = context["responseMaxDepth"];
                             totalMap["soap_response_node_count"] = context["responseNodeCount"];
@@ -244,11 +244,11 @@ public class EventMonRequestRecords extends ByYourCommand {
 
                 // make sure tag to use was initialized
                 assert tagToUse
-                
+
                 // add value to total
                 def total = totalMap[tagToUse];
                 if (!total) total = 0;
-                
+
                 // delta = exitTime - enterTime
                 if (enterFlag)
                     total -= time;
@@ -257,10 +257,10 @@ public class EventMonRequestRecords extends ByYourCommand {
 
                 totalMap[tagToUse] = total;
             }
-            
+
             // make sure no map keys were mistyped
-            assert(totalMap.size() == headerArray.length);    
-           
+            assert(totalMap.size() == headerArray.length);
+
         }
 
         // close file

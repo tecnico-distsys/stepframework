@@ -4,18 +4,35 @@ import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 import step.groovy.Helper;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 def reportId = "Cache"
 def purpose = "compare Hibernate cache configurations"
 
-println "Generating " + reportId + " report"
-println "to " + purpose
+// command line options --------------------------------------------------------
+def cli = new CliBuilder(usage: "CacheReport")
+cli.h(longOpt: "help", required: false, args: 0, "Print this message")
+cli.cfg(longOpt: "config", required: false, args: 1, "Specify master configuration file")
+
+def options = cli.parse(args)
+assert (options)
+
+if (options.help) {
+    cli.usage();
+    return;
+}
 
 // load initial configuration --------------------------------------------------
-def config = Helper.parseConfig("etc/config/Config.groovy");
+def configPath = "etc/config/Config.groovy";
+if (options.cfg) configPath = options.cfg;
+
+def config = Helper.parseConfig(configPath);
 assert (config.perf.flight) : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
+
+// main ------------------------------------------------------------------------
+println "Generating " + reportId + " report"
+println "to " + purpose
 
 // stats base dir
 def statsBaseDir = config.perf.flight.stats.outputBaseDir;

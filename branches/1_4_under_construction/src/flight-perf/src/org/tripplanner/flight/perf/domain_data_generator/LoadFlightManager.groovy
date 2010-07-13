@@ -1,7 +1,7 @@
 package org.tripplanner.flight.perf.domain_data_generator;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 /**
  *  Database command to the single flight manager

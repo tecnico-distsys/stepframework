@@ -1,0 +1,29 @@
+/**
+ *  Flight Performance run instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        run {
+            instance {
+                id = "MonPerf4J"
+
+                loadId = "test"
+
+                configId = "perf4j"
+                configToApplyList = [ "perf4j" ]
+
+                numberSamples = 2
+                numberUsersPerSample = 1
+
+                saveLog = true
+
+                perfLogFormat = "perf4j"
+                perf4j {
+                    aggregateContiguousEntries = true
+                }
+            }
+        }
+    }
+}

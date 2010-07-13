@@ -9,7 +9,7 @@ import org.apache.commons.math.stat.*;
 import org.apache.commons.math.stat.descriptive.*;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**

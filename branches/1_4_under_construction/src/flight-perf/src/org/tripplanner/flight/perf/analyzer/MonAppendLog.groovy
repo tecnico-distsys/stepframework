@@ -9,7 +9,7 @@ import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**
@@ -37,7 +37,7 @@ public class MonAppendLog extends ByYourCommand {
     //
     File iFile;
     File oFile;
-    
+
     String regex;
 
 

@@ -1,7 +1,7 @@
 package org.tripplanner.flight.perf.analyzer;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**
