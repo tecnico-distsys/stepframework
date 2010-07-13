@@ -2,7 +2,7 @@ package org.tripplanner.flight.perf.domain_data_generator;
 
 import org.apache.commons.cli.*;
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**

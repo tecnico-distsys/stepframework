@@ -4,7 +4,8 @@ import org.apache.commons.cli.*;
 import groovy.sql.Sql;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import step.groovy.perf.load_generator.RandomNameGenerator;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**
@@ -193,7 +194,7 @@ public class WorkloadGenerator extends DBCommand {
         err.println();
 
         // name generator
-        NameGenerator nameGenerator = new NameGenerator(namesFile.path, surnamesFile.path, random);
+        RandomNameGenerator nameGenerator = new RandomNameGenerator(namesFile.path, surnamesFile.path, random);
 
         // operation identifier string
         def operation;

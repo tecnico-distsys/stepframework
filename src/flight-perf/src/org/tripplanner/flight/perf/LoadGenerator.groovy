@@ -6,8 +6,6 @@ import org.tripplanner.flight.perf.load_generator.*;
 
 /**
  *  Generate test workloads
- *
- *  @author Miguel Pardal
  */
 
 // command line options --------------------------------------------------------
@@ -29,95 +27,91 @@ if (options.help) {
 def configPath = "etc/config/Config.groovy";
 if (options.cfg) configPath = options.cfg;
 
-def config = Helper.parseConfig(configPath);
+final def config = Helper.parseConfig(configPath);
 assert (config.perf.flight) : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
-def instanceDir = config.perf.flight.load.instanceDir;
-def instanceFileNamePattern = ~config.perf.flight.load.instanceFileNameRegex;
+// main ------------------------------------------------------------------------
+println "**********************"
+println "*** LOAD GENERATOR ***"
+println "**********************"
 
-def outputBaseDir = config.perf.flight.load.outputBaseDir;
-
-// -----------------------------------------------------------------------------
+final def outputBaseDir = config.perf.flight.load.outputBaseDir;
 
 def generateDomainData = true;
 if (options.nodomaingen) generateDomainData = false;
 
-println("Looking for load instances in " + instanceDir.canonicalPath);
-println("(files matching (" + instanceFileNamePattern + ")");
-println("");
-
 // iterate all load instances
+final def instanceDir = config.perf.flight.load.instanceDir;
+final def instanceFileNamePattern = ~config.perf.flight.load.instanceFileNameRegex;
+println("Looking for load instances in " + instanceDir.canonicalPath);
 instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
     def loadConfig = Helper.parseConfig(file.path);
     loadConfig = loadConfig.perf.flight.load.instance;
-    assert (loadConfig) : "Expecting flight load instance configuration file"
+    assert loadConfig : "Expecting flight load instance configuration file"
 
-    def loadId = loadConfig.id;
-    assert(loadId ==~ "[A-Za-z0-9]+") : "Invalid load identifier"
+    final def loadId = loadConfig.id;
 
     def outputDir = new File(outputBaseDir, loadId);
 
-    // check if generation is necessary
-    if (options.force ||
-        !outputDir.exists()) {
-
-        if (!outputDir.exists())
-            outputDir.mkdir();
-        assert (outputDir.exists() && outputDir.isDirectory())
-
-        println("Processing load instance defined by " + file.name);
-        println("Output directory: " + outputDir.canonicalPath);
-
-        // regenerate domain data
-        if (generateDomainData) {
-            DomainDataGenerator.main(
-                [
-                "-cfg", configPath
-                ] as String[]
-            );
-            generateDomainData = false;
-        }
-
-        final def SAMPLES = loadConfig.numberSamples;
-        assert (SAMPLES >= 1)
-
-        final def SEED_LIST = loadConfig.randomSeedList;
-        assert (SEED_LIST instanceof java.util.List)
-        assert (SEED_LIST.size() >= SAMPLES) : "Not enough seeds for desired number of samples"
-
-        // closures implement Runnable and as such can be used by java.util.concurrent.Executors
-        def genLoadClosure = { i ->
-            def outputFileName = String.format(config.perf.flight.load.outputFileNameFormat, i+1);
-            def outputFile = new File(outputDir, outputFileName);
-
-            println("Generating sample " + (i+1) + " to " + outputFile.getCanonicalPath());
-
-            // generate workload
-            WorkloadGenerator.main(
-                [
-                "-s", SEED_LIST[i] as String,
-                "-n", loadConfig.numberSessions as String,
-                "-o", outputFile as String,
-                "--maxthinktime", loadConfig.maxThinkTime as String,
-                "--maxgroup", loadConfig.maxGroup as String,
-                "--errorprobability", loadConfig.errorProbability as String,
-                "-p", config.perf.flight.databasePropertiesFile.absolutePath,
-                "--names", config.perf.flight.domain.namesFile.absolutePath,
-                "--surnames", config.perf.flight.domain.surnamesFile.absolutePath
-                ] as String[]
-            );
-        }
-        // create a closure to process each sample
-        def genLoadClosureArray = Helper.indexCurryClosureArray(genLoadClosure, SAMPLES);
-        // execute closures in parallel
-        Helper.multicoreExecute(genLoadClosureArray);
-
-    } else {
-        println("Skipping " + file.name);
+    // skip generation if possible
+    if (!options.force && outputDir.exists()) {
+        println("Skipping load '" + loadId + "' defined by file " + file.name);
+        return;
     }
 
-}
+    // generate load samples ---------------------------------------------------
+    if (!outputDir.exists()) outputDir.mkdir();
+    assert outputDir.exists() && outputDir.isDirectory()
 
-// -----------------------------------------------------------------------------
+    println("Processing load '" + loadId + "' defined by file " + file.name);
+    println("Output directory: " + outputDir.canonicalPath);
+
+    // regenerate domain data
+    if (generateDomainData) {
+        DomainDataGenerator.main(
+            [
+            "-cfg", configPath
+            ] as String[]
+        );
+        generateDomainData = false;
+    }
+
+    final def samples = loadConfig.numberSamples;
+    assert samples >= 1
+
+    final def seedList = loadConfig.randomSeedList;
+    assert seedList instanceof java.util.List
+    assert seedList.size() >= samples
+
+    // define closure to process sample i
+    def genLoadClosure = { i ->
+        def outputFileName = String.format(config.perf.flight.load.outputFileNameFormat, i+1);
+        def outputFile = new File(outputDir, outputFileName);
+
+        println("Generating sample " + (i+1) + " to " + outputFile.getCanonicalPath());
+
+        // generate workload
+        WorkloadGenerator.main(
+            [
+            "-s", seedList[i] as String,
+            "-n", loadConfig.numberSessions as String,
+            "-o", outputFile as String,
+            "--maxthinktime", loadConfig.maxThinkTime as String,
+            "--maxgroup", loadConfig.maxGroup as String,
+            "--errorprobability", loadConfig.errorProbability as String,
+            "-p", config.perf.flight.databasePropertiesFile.absolutePath,
+            "--names", config.perf.flight.domain.namesFile.absolutePath,
+            "--surnames", config.perf.flight.domain.surnamesFile.absolutePath
+            ] as String[]
+        );
+    }
+
+    // create one closure for each sample to process
+    // closures implement Runnable and as such can be used by java.util.concurrent.Executors
+    def genLoadClosureArray = Helper.indexCurryClosureArray(genLoadClosure, samples);
+    // execute closures in parallel
+    Helper.multicoreExecute(genLoadClosureArray);
+
+}

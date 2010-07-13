@@ -7,12 +7,15 @@ perf {
     flight {
         run {
             instance {
+                id = "test"
+
                 loadId = "test"
+
                 configId = ""
-                applyConfigList = [ "layermon" ]
+                configToApplyList = [ "layermon" ]
 
                 numberSamples = 2
-                numberUsers = 1
+                numberUsersPerSample = 1
 
                 saveLog = true
 

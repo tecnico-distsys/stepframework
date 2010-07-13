@@ -22,15 +22,15 @@ class Helper {
 
     /** Add a class location URL to the current class loader */
     static def addURLToClassLoader(url) {
-        assert(url != null);
+        assert url != null
         cLoader.addURL(url);
     }
 
     /** Add a file to the current class loader */
     static def addFileToClassLoader(filePath) {
-        assert(filePath != null);
+        assert filePath != null
         def file = new File(filePath);
-        assert(file.exists());
+        assert file.exists()
         def url = file.toURI().toURL();
         addURLToClassLoader(url);
     }
@@ -42,10 +42,10 @@ class Helper {
 
     /** Add all the JAR files in the directory to the class loader, one by one */
     static def addJarDirToClassLoader(jarDirPath) {
-        assert(jarDirPath != null);
+        assert jarDirPath != null
         def jarDir = new File(jarDirPath);
-        assert(jarDir.exists());
-        assert(jarDir.isDirectory());
+        assert jarDir.exists()
+        assert jarDir.isDirectory()
 
         jarDir.eachFile() { file ->
             if(file.name.endsWith("jar")) {
@@ -71,7 +71,7 @@ class Helper {
 
     /** Execute command on specified directory setting specified environment variables */
     static def exec(dir, command, envVars) {
-        assert (command)
+        assert command
 
         def ant = new AntBuilder()
         // disable output adornments i.e. enter emacs mode - thanks to Christoph Metzendorf
@@ -126,7 +126,7 @@ class Helper {
 
     /** Build a ConfigObject merging the contents of all provided configuration files */
     static def parseConfig(... filePathArray) {
-        assert (filePathArray.length >= 1)
+        assert filePathArray.length >= 1
 
         // build file list
         def fileList = [ ];
@@ -166,13 +166,13 @@ class Helper {
                 def matcher = (key =~ configStringToFileRegex);
                 if (matcher.matches()) {
                     if (!(value instanceof File)) {
-                        assert(value instanceof String)
+                        assert value instanceof String
                         // create File from String value
                         config[key] = new File(value);
                     }
                     if (validate) {
                         def file = config[key];
-                        assert(file.exists())
+                        assert file.exists()
                         if ("dir".equalsIgnoreCase(matcher.group(1))) {
                             assert(file.isDirectory())
                         }

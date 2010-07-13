@@ -4,7 +4,7 @@ import org.apache.commons.cli.*;
 
 import step.groovy.command.*;
 import step.groovy.Helper;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**

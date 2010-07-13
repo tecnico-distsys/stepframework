@@ -7,10 +7,12 @@ perf {
     flight {
         stats {
             instance {
-                runId = "test_"
+                id = "test"
+
+                runId = "test"
                 filterId = ""
+
                 numberSamples = 2
-                adjustHibernateTimes = true
             }
         }
     }

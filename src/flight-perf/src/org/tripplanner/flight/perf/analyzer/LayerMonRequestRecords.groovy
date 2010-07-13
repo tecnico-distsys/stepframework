@@ -9,7 +9,7 @@ import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 import step.groovy.command.*;
-import org.tripplanner.flight.perf.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**
@@ -149,7 +149,7 @@ public class LayerMonRequestRecords extends ByYourCommand {
                 numericHeaderList.each{ key ->
                     totalMap[key] = 0L;
                 }
-                
+
             } else {
                 // process record item
 
@@ -159,7 +159,7 @@ public class LayerMonRequestRecords extends ByYourCommand {
                 def lineMatcher = ( line =~ LayerMonHelper.PERF_LOG_LINE_REGEX );
                 def lineMatcherResult = lineMatcher.matches();
                 assert lineMatcherResult
-    
+
                 final def thread = lineMatcher.group(1);
                 final def tag = lineMatcher.group(2);
                 final def accTime = lineMatcher.group(3);
@@ -211,7 +211,7 @@ public class LayerMonRequestRecords extends ByYourCommand {
                         tagToUse += "_time";
                         totalMap["si_name"] = context["className"];
                         break;
-                        
+
                     case "soap":
                         tagToUse += "_time";
 
@@ -238,18 +238,18 @@ public class LayerMonRequestRecords extends ByYourCommand {
 
                 // make sure tag to use was initialized
                 assert tagToUse
-                
+
                 // add value to total
                 def total = totalMap[tagToUse];
                 if (!total) total = 0;
-                
+
                 total += accTime;
                 totalMap[tagToUse] = total;
             }
-            
+
             // make sure no map keys were mistyped
-            assert(totalMap.size() == headerArray.length);    
-           
+            assert(totalMap.size() == headerArray.length);
+
         }
 
         // close file
