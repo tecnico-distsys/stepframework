@@ -16,19 +16,19 @@ perf {
             surnamesFile = this.perf.flight.domain.dataDir + "/surnames.txt"
 
             airports {
-                randomSeed = -8354
+                randomSeed = 6534
                 file = this.perf.flight.domain.dataDir + "/airports.csv"
                 maxCost = 150000
             }
 
             airplanes {
-                randomSeed = 926783
+                randomSeed = 673
                 file = this.perf.flight.domain.dataDir + "/fleet-BA.csv"
                 maxCost = 100000
             }
 
             flights {
-                randomSeed = 8845868
+                randomSeed = 888
                 maxCost = 1500
                 profit = 0.20
                 number = 564
