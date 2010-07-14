@@ -59,24 +59,27 @@ assert tempDir.exists()
 
 // collect data ----------------------------------------------------------------
 
-def loadId = "medium"
-
-def configIdList = ["off", "fatal", "error", "warn", "info", "debug", "trace"];
-configIdList = configIdList.collect { "loglevel" + it }
-
-def filterId = ""
+def dirNameList = [
+    "LogOff",
+    "LogFatal",
+    "LogError",
+    "LogWarn",
+    "LogInfo",
+    "LogDebug",
+    "LogTrace"
+]
 
 // create map of stats files
 def statsFileMap = [ : ];
-configIdList.each { configId ->
-    def dirName = loadId + "_" + configId + "_" + filterId;
+dirNameList.each { dirName ->
     def dir = new File(statsBaseDir, dirName);
-    assert (dir.exists() && dir.isDirectory())
-
-    def file = new File(dir, config.perf.flight.stats.overallFileName);
-    assert (file.exists())
-
-    statsFileMap[configId] = file;
+    if (!dir.exists()) {
+        println "WARNING: " + dirName + " not found."
+    } else {
+        def file = new File(dir, config.perf.flight.stats.overallFileName);
+        assert file.exists()
+        statsFileMap[dirName] = file;
+    }
 }
 
 // create data file
@@ -89,9 +92,24 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 // header
 o.println("# 1-type 2-mean 3-error");
 
-configIdList.each { configId ->
+def descMap = [
+    (dirNameList[0]) : "off",
+    (dirNameList[1]) : "fatal",
+    (dirNameList[2]) : "error",
+    (dirNameList[3]) : "warn",
+    (dirNameList[4]) : "info",
+    (dirNameList[5]) : "debug",
+    (dirNameList[6]) : "trace"
+];
+descMap.each { key, value ->
+    descMap[key] = "\"" + descMap[key] + "\"";
+}
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[configId]), CsvPreference.STANDARD_PREFERENCE);
+dirNameList.each { dirName ->
+    def file = statsFileMap[dirName];
+    if (!file) return;
+
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
 
@@ -100,7 +118,7 @@ configIdList.each { configId ->
     assert (statsMap)
 
     o.printf("%s %s %s%n",
-        configId.substring("loglevel".length()),
+        descMap[dirName],
         statsMap["filter_time-mean"],
         statsMap["filter_time-mean-error-95pctconf"]);
 }

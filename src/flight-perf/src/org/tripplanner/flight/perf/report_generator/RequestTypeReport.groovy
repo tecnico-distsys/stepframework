@@ -56,25 +56,27 @@ tempDir.delete();
 tempDir.mkdir();
 assert tempDir.exists()
 
+
 // collect data ----------------------------------------------------------------
 
-def loadId = "medium";
-
-def configId = ""
-
-def filterIdList = [ "searches", "reservations", "faults", "" ];
+def dirNameList = [
+    "FilterSearches",
+    "FilterReservations",
+    "FilterFaults",
+    "FilterOff"
+]
 
 // create map of stats files
 def statsFileMap = [ : ];
-filterIdList.each { filterId ->
-    def dirName = loadId + "_" + configId + "_" + filterId;
+dirNameList.each { dirName ->
     def dir = new File(statsBaseDir, dirName);
-    assert (dir.exists() && dir.isDirectory())
-
-    def file = new File(dir, config.perf.flight.stats.overallFileName);
-    assert (file.exists())
-
-    statsFileMap[filterId] = file;
+    if (!dir.exists()) {
+        println "WARNING: " + dirName + " not found."
+    } else {
+        def file = new File(dir, config.perf.flight.stats.overallFileName);
+        assert file.exists()
+        statsFileMap[dirName] = file;
+    }
 }
 
 // create data file
@@ -87,17 +89,29 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 // header
 o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
-filterIdList.each { filterId ->
+def descMap = [
+    (dirNameList[0]) : "searches",
+    (dirNameList[1]) : "reservations",
+    (dirNameList[2]) : "faults",
+    (dirNameList[3]) : "combined"
+];
+descMap.each { key, value ->
+    descMap[key] = "\"" + descMap[key] + "\"";
+}
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[filterId]), CsvPreference.STANDARD_PREFERENCE);
+dirNameList.each { dirName ->
+    def file = statsFileMap[dirName];
+    if (!file) return;
+
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
-    assert (statsMap)
+    assert statsMap
 
     o.printf("%s %s %s %s %s %s %s%n",
-        (filterId.length() == 0 ? "combined" : filterId),
+        descMap[dirName],
         statsMap["filter_time-mean"],
         statsMap["soap_time-mean"],
         statsMap["wsi_time-mean"],

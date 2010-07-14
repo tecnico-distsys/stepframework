@@ -59,26 +59,28 @@ assert tempDir.exists()
 
 // collect data ----------------------------------------------------------------
 
-def loadIdList = [ "LOCALmedium", "LANmedium", "WLANmedium",  ]
-def configIdList = [ "", "ehcachereadonly", "ehcachereadwrite" ];
-def filterIdList = [ "" ];
+def dirNameList = [
+    "CacheOff",
+    "CacheRO",
+    "CacheRW",
+    "LANCacheOff",
+    "LANCacheRO",
+    "LANCacheRW",
+    "WLANCacheOff",
+    "WLANCacheRO",
+    "WLANCacheRW"
+]
 
 // create map of stats files
 def statsFileMap = [ : ];
-
-loadIdList.each { loadId ->
-    configIdList.each { configId ->
-        filterIdList.each { filterId ->
-
-            def dirName = loadId + "_" + configId + "_" + filterId;
-            def dir = new File(statsBaseDir, dirName);
-            assert (dir.exists() && dir.isDirectory())
-
-            def file = new File(dir, config.perf.flight.stats.overallFileName);
-            assert (file.exists())
-
-            statsFileMap[dirName] = file;
-        }
+dirNameList.each { dirName ->
+    def dir = new File(statsBaseDir, dirName);
+    if (!dir.exists()) {
+        println "WARNING: " + dirName + " not found."
+    } else {
+        def file = new File(dir, config.perf.flight.stats.overallFileName);
+        assert file.exists()
+        statsFileMap[dirName] = file;
     }
 }
 
@@ -92,50 +94,45 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 // header
 o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
-def configDescMap = [
-                      "LOCALmedium__" : "Local DB",
-                      "LOCALmedium_ehcachereadonly_" : "w/ r-only cache",
-                      "LOCALmedium_ehcachereadwrite_" : "w/ r-w cache",
+def descMap = [
+    "CacheOff" : "Local DB",
+    "CacheRO" : "w/ r-only cache",
+    "CacheRW" : "w/ r-w cache",
 
-                      "LANmedium__" : "100 Mbit LAN DB",
-                      "LANmedium_ehcachereadonly_" : "w/ r-only cache",
-                      "LANmedium_ehcachereadwrite_" : "w/ r-w cache",
+    "LANCacheOff" : "100 Mbit LAN DB",
+    "LANCacheRO" : "w/ r-only cache",
+    "LANCacheRW" : "w/ r-w cache",
 
-                      "WLANmedium__" : "8 Mbit LAN DB",
-                      "WLANmedium_ehcachereadonly_" : "w/ r-only cache",
-                      "WLANmedium_ehcachereadwrite_" : "w/ r-w cache"
-                    ];
-configDescMap.each { key, value ->
-    configDescMap[key] = "\"" + configDescMap[key] + "\"";
+    "WLANCacheOff" : "8 Mbit LAN DB",
+    "WLANCacheRO" : "w/ r-only cache",
+    "WLANCacheRW" : "w/ r-w cache"
+]
+descMap.each { key, value ->
+    assert key in dirNameList
+    descMap[key] = "\"" + descMap[key] + "\"";
 }
 
-loadIdList.each { loadId ->
-    configIdList.each { configId ->
-        filterIdList.each { filterId ->
+dirNameList.each { dirName ->
+    def file = statsFileMap[dirName];
+    if (!file) return;
 
-            def dirName = loadId + "_" + configId + "_" + filterId;
-            def file = statsFileMap[dirName];
-            assert (file)
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
+    // ignore headers in 1st line
+    csvMR.read(overallStatisticsHeaderArray);
+    // read data
+    def statsMap = csvMR.read(overallStatisticsHeaderArray);
+    assert statsMap
 
-            CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
-            // ignore headers in 1st line
-            csvMR.read(overallStatisticsHeaderArray);
-            // read data
-            def statsMap = csvMR.read(overallStatisticsHeaderArray);
-            assert (statsMap)
+    assert descMap[dirName]
 
-            assert (configDescMap[dirName])
-
-            o.printf("%s %s %s %s %s %s %s%n",
-                configDescMap[dirName],
-                statsMap["filter_time-mean"],
-                statsMap["soap_time-mean"],
-                statsMap["wsi_time-mean"],
-                statsMap["si_time-mean"],
-                statsMap["hibernate_read_time-mean"],
-                statsMap["hibernate_write_time-mean"]);
-        }
-    }
+    o.printf("%s %s %s %s %s %s %s%n",
+        descMap[dirName],
+        statsMap["filter_time-mean"],
+        statsMap["soap_time-mean"],
+        statsMap["wsi_time-mean"],
+        statsMap["si_time-mean"],
+        statsMap["hibernate_read_time-mean"],
+        statsMap["hibernate_write_time-mean"]);
 }
 o.close();
 

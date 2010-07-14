@@ -56,30 +56,34 @@ tempDir.delete();
 tempDir.mkdir();
 assert tempDir.exists()
 
-// -----------------------------------------------------------------------------
 
 // collect data ----------------------------------------------------------------
 
-def loadIdList = ["small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"];
-
-def configId = ""
-
-def filterId = ""
+def dirNameList = [
+    "SizeTest", // for testing only
+    "SizeSmall",
+    "SizeMedium",
+    "SizeLarge",
+    "SizeXLarge",
+    "SizeXXLarge"
+]
 
 // create map of stats files
 def statsFileMap = [ : ];
-loadIdList.each { loadId ->
-    def dirName = loadId + "_" + configId + "_" + filterId;
+dirNameList.each { dirName ->
     def dir = new File(statsBaseDir, dirName);
-    assert (dir.exists() && dir.isDirectory())
-
-    def file = new File(dir, config.perf.flight.stats.overallFileName);
-    assert (file.exists())
-
-    statsFileMap[loadId] = file;
+    if (!dir.exists()) {
+        println "WARNING: " + dirName + " not found."
+    } else {
+        def file = new File(dir, config.perf.flight.stats.overallFileName);
+        assert file.exists()
+        statsFileMap[dirName] = file;
+    }
 }
 
-// create data file
+
+// create data file ------------------------------------------------------------
+
 def dataFile = new File(tempDir, reportId + ".dat");
 def o = new PrintStream(dataFile);
 
@@ -89,9 +93,11 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 // header
 o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
-loadIdList.each { loadId ->
+dirNameList.each { dirName ->
+    def file = statsFileMap[dirName];
+    if (!file) return;
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(statsFileMap[loadId]), CsvPreference.STANDARD_PREFERENCE);
+    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
     csvMR.read(overallStatisticsHeaderArray);
     // read data
