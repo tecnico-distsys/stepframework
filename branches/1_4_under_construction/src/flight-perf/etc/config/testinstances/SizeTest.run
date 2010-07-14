@@ -12,12 +12,15 @@ perf {
                 loadId = "SizeTest"
 
                 configId = ""
-                configToApplyList = [ "layermon" ]
+                configToApplyList = [ "layermon", "extension-trace" ]
 
                 numberSamples = 2
                 numberUsersPerSample = 1
 
                 saveLog = true
+                saveLogSize = true
+                saveSOAPLog = true
+                saveSOAPLogSize = true
 
                 perfLogFormat = "layermon"
             }

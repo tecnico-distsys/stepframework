@@ -6,6 +6,7 @@
 perf {
     flight {
         sourceCodeDir = ".."
+        appName = "flight-ws"
         databasePropertiesFile = "etc/config/db.properties"
 
 //      ------------------------------------------------------------------------
@@ -54,9 +55,9 @@ perf {
 
             endpoint = "http://localhost:8080/flight-ws/endpoint"
 
-            logFileName = "flight-ws_log.txt"
-
-            perf4JLogFileName = "flight-ws_perfLog.txt"
+            logFileName = this.perf.flight.appName + "_log.txt"
+            soapLogFileName = this.perf.flight.appName + "_soapLog.txt"
+            perf4JLogFileName = this.perf.flight.appName + "_perfLog.txt"
             eventMonLogFileNameRegex = "PerfEvent-thr([0-9]+)\\.log"
             layerMonLogFileNameRegex = "PerfLayer-thr([0-9]+)\\.log"
 
@@ -70,6 +71,9 @@ perf {
 
             outputLogFileNameFormat = "log-%d.txt"
             outputLogSizeFileNameFormat = "log-%d-size.txt"
+
+            outputSOAPLogFileNameFormat = "soapLog-%d.txt"
+            outputSOAPLogSizeFileNameFormat = "soapLog-%d-size.txt"
 
             outputPerf4JLogFileNameFormat = "Perf4JLog-%d.txt"
             outputEventMonLogFileNameFormat = "EventLog-%d.txt"

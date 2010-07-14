@@ -18,7 +18,7 @@ perf {
                 numberUsersPerSample = 8
                 // will consume 80 load samples
 
-                saveLog = true
+                saveLogSize = true
 
                 perfLogFormat = "layermon"
             }
