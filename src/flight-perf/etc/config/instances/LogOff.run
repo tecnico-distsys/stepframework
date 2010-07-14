@@ -17,7 +17,7 @@ perf {
                 numberSamples = 10
                 numberUsersPerSample = 1
 
-                saveLog = false
+                saveLogSize = true
 
                 perfLogFormat = "perf4j"
                 perf4j {

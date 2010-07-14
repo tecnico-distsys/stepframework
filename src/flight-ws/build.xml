@@ -100,10 +100,7 @@
             <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
         </copy>
         <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
-            <!-- set log file to server temporary directory -->
-            <!--replacefilter token="@example-token@" value="${example-property}" /-->
-            <replacefilter token="logFile.txt" value="${tomcat.dir./}/logs/${ant.project.name}_log.txt" />
-            <replacefilter token="perfLogFile.txt" value="${tomcat.dir./}/logs/${ant.project.name}_perfLog.txt" />
+            <replacefilter token="@example-token@" value="${example-property}" />
         </replace>
     </target>
 

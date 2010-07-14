@@ -43,6 +43,14 @@ final def configFilesBaseDir = config.perf.flight.run.configFilesBaseDir;
 final def outputBaseDir = config.perf.flight.run.outputBaseDir;
 final def loadOutputBaseDir = config.perf.flight.load.outputBaseDir;
 
+// retrieve CATALINA_HOME path from environment variables
+def env = System.getenv();
+def catalinaHomePath = env["CATALINA_HOME"];
+assert catalinaHomePath
+def catalinaHomeDir = new File(catalinaHomePath);
+def catalinaLogsDir = new File(catalinaHomeDir, "logs");
+def catalinaTempDir = new File(catalinaHomeDir, "temp");
+
 def ant = new AntBuilder();
 
 def compileApplication = true;
@@ -118,9 +126,9 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     tempSourceCodeDir.mkdir();
 
     // copy source code
-    println("Copying source code to temporary location " + tempSourceCodeDir.absolutePath);
-    ant.copy(todir: tempSourceCodeDir.absolutePath) {
-        ant.fileset(dir: config.perf.flight.sourceCodeDir.absolutePath) {
+    println("Copying source code to temporary location " + tempSourceCodeDir.canonicalPath);
+    ant.copy(todir: tempSourceCodeDir.canonicalPath) {
+        ant.fileset(dir: config.perf.flight.sourceCodeDir.canonicalPath) {
             ant.exclude(name: "**/build/**/*")
             ant.exclude(name: "**/dist/**/*")
             ant.exclude(name: "flight-perf/**/*")
@@ -134,20 +142,20 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             // ignore directories
             if (sourceFile.isDirectory()) return;
             // ignore files contained in SVN directories
-            if (sourceFile.absolutePath.indexOf(".svn") != -1) return;
+            if (sourceFile.canonicalPath.indexOf(".svn") != -1) return;
 
-            def targetFile = new File(targetDir.absolutePath +
-                sourceFile.absolutePath.substring(sourceDir.absolutePath.size()))
+            def targetFile = new File(targetDir.canonicalPath +
+                sourceFile.canonicalPath.substring(sourceDir.canonicalPath.size()))
 
             if (targetFile.exists()) {
                 // create backup of target file
-                ant.move(file: targetFile.absolutePath,
-                         tofile: targetFile.absolutePath + ".bak",
+                ant.move(file: targetFile.canonicalPath,
+                         tofile: targetFile.canonicalPath + ".bak",
                          overwrite: "true")
             }
             // overwrite file
-            ant.copy(file: sourceFile.absolutePath,
-                     tofile: targetFile.absolutePath,
+            ant.copy(file: sourceFile.canonicalPath,
+                     tofile: targetFile.canonicalPath,
                      overwrite: "true")
         }
     }
@@ -164,11 +172,34 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         applyConfigClosure(configFilesDir, tempSourceCodeDir);
     }
 
+    // localize log files
+    final def appName = config.perf.flight.appName;
+    assert appName
+    def catalinaLogsDirFwdSlashes = catalinaLogsDir.canonicalPath.replace('\\', '/');
 
-    println("compile"); // -------------------------------------------------
-    Helper.exec(tempSourceCodeDir.absolutePath, "ant rebuild", ["CLASSPATH" : ""] );
+    println("Localizing " + appName + " log files to " + catalinaLogsDirFwdSlashes);
 
-    println("generate domain data"); // ------------------------------------
+    def logFilePath = catalinaLogsDirFwdSlashes + "/" + appName + "_log.txt";
+    def perfLogFilePath = catalinaLogsDirFwdSlashes + "/" + appName + "_perfLog.txt";
+    def soapLogFilePath = catalinaLogsDirFwdSlashes + "/" + appName + "_soapLog.txt";
+
+    def replaceIncludes = "**/" + appName + "/**/*.properties,**/" + appName + "/**/*.xml";
+
+    ant.replace(dir: tempSourceCodeDir.canonicalPath,
+                includes: replaceIncludes,
+                excludes: "",
+                summary: "true") {
+        ant.replacefilter(token: "logFile.txt", value: logFilePath)
+        ant.replacefilter(token: "perfLogFile.txt", value: perfLogFilePath)
+        ant.replacefilter(token: "soapLogFile.txt", value: soapLogFilePath)
+    }
+
+
+    println("compile"); // -----------------------------------------------------
+    Helper.exec(tempSourceCodeDir.canonicalPath, "ant rebuild", ["CLASSPATH" : ""] );
+
+
+    println("generate domain data"); // ----------------------------------------
     if (generateDomainData) {
         DomainDataGenerator.main(
             [
@@ -179,7 +210,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     }
 
 
-    // println("generate domain data"); // ------------------------------------
+    // define closure to execute virtual user code for a given input sample
     def virtualUserClosure = { i ->
         // file containing requests to send
         def loadFileName = String.format(config.perf.flight.load.outputFileNameFormat, i+1);
@@ -189,11 +220,11 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         def outputFileName = String.format(config.perf.flight.run.outputFileNameFormat, i+1);
         def outputFile = new File(outputDir, outputFileName);
 
-        // execute workload ------------------------------------------------
+        // execute workload ----------------------------------------------------
         VirtualUser.main(
             [
-            "-i", loadFile.absolutePath,
-            "-o", outputFile.absolutePath,
+            "-i", loadFile.canonicalPath,
+            "-o", outputFile.canonicalPath,
             "--endpoint", config.perf.flight.run.endpoint as String
             ] as String[]
         );
@@ -205,27 +236,27 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     def StubUtil = new step.framework.ws.StubUtil();
 
 
-    // loop samples --------------------------------------------------------
+    // loop samples ------------------------------------------------------------
     int usedInputSamples = 0;
     int producedOutputSamples = 0;
     while (producedOutputSamples < samples) {
 
-        // delete data generated by requests -------------------------------
+        // delete data generated by requests -----------------------------------
         DeleteDB.main(
             [
-            "-p", config.perf.flight.databasePropertiesFile.absolutePath,
+            "-p", config.perf.flight.databasePropertiesFile.canonicalPath,
             "--quick", "true"
             ] as String[]
         );
 
-        // start a clean server --------------------------------------------
-        Helper.exec(tempSourceCodeDir.absolutePath, "ant start-server!", ["CLASSPATH" : ""]);
+        // start a clean server ------------------------------------------------
+        Helper.exec(tempSourceCodeDir.canonicalPath, "ant start-server!", ["CLASSPATH" : ""]);
 
-        // deploy flight web service ---------------------------------------
-        Helper.exec(tempSourceCodeDir.absolutePath, "ant deploy-flight", ["CLASSPATH" : ""]);
+        // deploy flight web service -------------------------------------------
+        Helper.exec(tempSourceCodeDir.canonicalPath, "ant deploy-flight", ["CLASSPATH" : ""]);
 
 
-        // -----------------------------------------------------------------
+        // ---------------------------------------------------------------------
         // create a closure for each user to consume an input sample
         Closure[] closureArray = new Closure[users];
         for (int i=0; i < users; i++) {
@@ -233,49 +264,70 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         }
         // execute closures in parallel
         Helper.parallelExecute(users, closureArray);
-        // -----------------------------------------------------------------
+        // ---------------------------------------------------------------------
 
         producedOutputSamples++;
-        
-        // stop server -----------------------------------------------------
-        Helper.exec(tempSourceCodeDir.absolutePath, "ant stop-server", ["CLASSPATH" : ""])
 
-        // retrieve CATALINA_HOME path from environment variables
-        def env = System.getenv();
-        def catalinaHomePath = env["CATALINA_HOME"];
-        assert catalinaHomePath
-        def catalinaHomeDir = new File(catalinaHomePath);
-        def catalinaLogsDir = new File(catalinaHomeDir, "logs");
-        def catalinaTempDir = new File(catalinaHomeDir, "temp");
+        // stop server ---------------------------------------------------------
+        Helper.exec(tempSourceCodeDir.canonicalPath, "ant stop-server", ["CLASSPATH" : ""])
 
-        // save functional log data ----------------------------------------
-        def sourceLogFileName = config.perf.flight.run.logFileName;
-        def sourceLogFile = new File(catalinaLogsDir, sourceLogFileName);
-        assert sourceLogFile.exists()
+        // save functional log data --------------------------------------------
+        if (runConfig.saveLog || runConfig.saveLogSize) {
+            def sourceLogFileName = config.perf.flight.run.logFileName;
+            def sourceLogFile = new File(catalinaLogsDir, sourceLogFileName);
+            assert sourceLogFile.exists()
 
-        def targetLogSizeFileName = String.format(config.perf.flight.run.outputLogSizeFileNameFormat, producedOutputSamples);
-        def targetLogSizeFile = new File(outputDir, targetLogSizeFileName);
+            // save log size
+            if (runConfig.saveLogSize) {
+                def targetLogSizeFileName = String.format(config.perf.flight.run.outputLogSizeFileNameFormat, producedOutputSamples);
+                def targetLogSizeFile = new File(outputDir, targetLogSizeFileName);
 
-        // save size in file
-        def targetLogSizeFileWriter = new FileWriter(targetLogSizeFile);
-        targetLogSizeFileWriter.write(sourceLogFile.length() as String);
-        targetLogSizeFileWriter.close();
+                // save size in file
+                def targetLogSizeFileWriter = new FileWriter(targetLogSizeFile);
+                targetLogSizeFileWriter.write(sourceLogFile.length() as String);
+                targetLogSizeFileWriter.close();
+            }
 
-        // save log contents
-        if (runConfig.saveLog) {
-            def targetLogFileName = String.format(config.perf.flight.run.outputLogFileNameFormat, producedOutputSamples);
-            def targetLogFile = new File(outputDir, targetLogFileName);
+            // save log contents
+            if (runConfig.saveLog) {
+                def targetLogFileName = String.format(config.perf.flight.run.outputLogFileNameFormat, producedOutputSamples);
+                def targetLogFile = new File(outputDir, targetLogFileName);
 
-            ant.copy(file: sourceLogFile.absolutePath, tofile: targetLogFile.absolutePath)
+                ant.copy(file: sourceLogFile.canonicalPath, tofile: targetLogFile.canonicalPath)
+            }
         }
 
-        // save performance log data ---------------------------------------
+        // save SOAP log data --------------------------------------------------
+        if (runConfig.saveSOAPLog || runConfig.saveSOAPLogSize) {
+            def sourceSOAPLogFileName = config.perf.flight.run.soapLogFileName;
+            def sourceSOAPLogFile = new File(catalinaLogsDir, sourceSOAPLogFileName);
+            assert sourceSOAPLogFile.exists()
 
+            // save SOAP log size
+            if (runConfig.saveSOAPLogSize) {
+                def targetSOAPLogSizeFileName = String.format(config.perf.flight.run.outputSOAPLogSizeFileNameFormat, producedOutputSamples);
+                def targetSOAPLogSizeFile = new File(outputDir, targetSOAPLogSizeFileName);
+
+                // save size in file
+                def targetSOAPLogSizeFileWriter = new FileWriter(targetSOAPLogSizeFile);
+                targetSOAPLogSizeFileWriter.write(sourceSOAPLogFile.length() as String);
+                targetSOAPLogSizeFileWriter.close();
+            }
+
+            // save SOAPlog contents
+            if (runConfig.saveSOAPLog) {
+                def targetSOAPLogFileName = String.format(config.perf.flight.run.outputSOAPLogFileNameFormat, producedOutputSamples);
+                def targetSOAPLogFile = new File(outputDir, targetSOAPLogFileName);
+
+                ant.copy(file: sourceSOAPLogFile.canonicalPath, tofile: targetSOAPLogFile.canonicalPath)
+            }
+        }
+
+        // save performance log data -------------------------------------------
         def format = runConfig.perfLogFormat;
-
         switch (format) {
             case "perf4j":
-                // aggregate or copy performance log -----------------------
+                // aggregate or copy performance log ---------------------------
                 def perf4JLogFile = new File(catalinaLogsDir, config.perf.flight.run.perf4JLogFileName);
                 assert perf4JLogFile.exists()
 
@@ -286,13 +338,13 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                     println("Aggregate performance log");
                     Perf4JAggregateContiguousEntries.main(
                         [
-                        "-i", perf4JLogFile.absolutePath,
-                        "-o", outputPerf4JLogFile.absolutePath
+                        "-i", perf4JLogFile.canonicalPath,
+                        "-o", outputPerf4JLogFile.canonicalPath
                         ] as String[]
                     );
                 } else {
                     println("Copy performance log");
-                    ant.move(file: perf4JLogFile.absolutePath, tofile: outputPerf4JLogFile.absolutePath)
+                    ant.move(file: perf4JLogFile.canonicalPath, tofile: outputPerf4JLogFile.canonicalPath)
                 }
                 break;
             case "eventmon":
@@ -306,8 +358,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 eventMonLogDir.eachFileMatch(eventMonLogFileNamePattern) { eventMonFile ->
                     MonAppendLog.main(
                         [
-                        "-i", eventMonFile.absolutePath,
-                        "-o", outputEventMonLogFile.absolutePath,
+                        "-i", eventMonFile.canonicalPath,
+                        "-o", outputEventMonLogFile.canonicalPath,
                         "-regex", config.perf.flight.run.eventMonLogFileNameRegex as String
                         ] as String[]
                     );
@@ -324,8 +376,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
                 layerMonLogDir.eachFileMatch(layerMonLogFileNamePattern) { layerMonFile ->
                     MonAppendLog.main(
                         [
-                        "-i", layerMonFile.absolutePath,
-                        "-o", outputLayerMonLogFile.absolutePath,
+                        "-i", layerMonFile.canonicalPath,
+                        "-o", outputLayerMonLogFile.canonicalPath,
                         "-regex", config.perf.flight.run.layerMonLogFileNameRegex as String
                         ] as String[]
                     );
