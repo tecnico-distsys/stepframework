@@ -60,23 +60,24 @@ assert tempDir.exists()
 // collect data ----------------------------------------------------------------
 
 def dirNameList = [
-                    "MonPerf4JNoAgg",
-                    "MonPerf4J",
-                    "MonPerf4JHibernateAdjust",
-                    "MonEvent",
-                    "MonLayer"
-                  ]
+    "MonPerf4JNoAgg",
+    "MonPerf4J",
+    "MonPerf4JHibernateAdjust",
+    "MonEvent",
+    "MonLayer"
+]
 
 // create map of stats files
 def statsFileMap = [ : ];
 dirNameList.each { dirName ->
     def dir = new File(statsBaseDir, dirName);
-    assert dir.exists() && dir.isDirectory()
-
-    def file = new File(dir, config.perf.flight.stats.overallFileName);
-    assert file.exists()
-
-    statsFileMap[dirName] = file;
+    if (!dir.exists()) {
+        println "WARNING: " + dirName + " not found."
+    } else {
+        def file = new File(dir, config.perf.flight.stats.overallFileName);
+        assert file.exists()
+        statsFileMap[dirName] = file;
+    }
 }
 
 // create data file
@@ -90,21 +91,20 @@ def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
 
 def descMap = [
-                (dirNameList[0]) : "Perf4J raw records",
-                (dirNameList[1]) : "Perf4J aggregated records",
-                (dirNameList[2]) : "Perf4J Hibernate adjusted",
-                (dirNameList[3]) : "Event monitor",
-                (dirNameList[4]) : "Layer monitor"
-              ];
+    (dirNameList[0]) : "Perf4J raw records",
+    (dirNameList[1]) : "Perf4J aggregated records",
+    (dirNameList[2]) : "Perf4J Hibernate adjusted",
+    (dirNameList[3]) : "Event monitor",
+    (dirNameList[4]) : "Layer monitor"
+];
 descMap.each { key, value ->
     descMap[key] = "\"" + descMap[key] + "\"";
 }
 
 
 dirNameList.each { dirName ->
-
-    def dir = new File(statsBaseDir, dirName);
-    def file = new File(dir, config.perf.flight.stats.overallFileName);
+    def file = statsFileMap[dirName];
+    if (!file) return;
 
     CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
     // ignore headers in 1st line
