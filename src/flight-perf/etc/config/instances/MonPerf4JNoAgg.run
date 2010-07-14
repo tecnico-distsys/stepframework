@@ -1,0 +1,29 @@
+/**
+ *  Flight Performance run instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        run {
+            instance {
+                id = "MonPerf4JNoAgg"
+
+                loadId = "SizeMedium"
+
+                configId = "perf4jnoagg"
+                configToApplyList = [ "perf4j" ]
+
+                numberSamples = 30
+                numberUsersPerSample = 1
+
+                saveLog = false
+
+                perfLogFormat = "perf4j"
+                perf4j {
+                    aggregateContiguousEntries = false
+                }
+            }
+        }
+    }
+}
