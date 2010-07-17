@@ -212,7 +212,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     def sampleStatsTextFileName = config.perf.flight.stats.samplesTextFileName;
     def sampleStatsTextFile = new File(outputDir, sampleStatsTextFileName);
 
-    def sampleStatsClosure = { i ->
+    // loop sample files one at a time, because results are appended to same file
+    println("Compute sample statistics");
+    for (int i = 0; i < samples; i++) {
+
         def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
         def requestsFile = new File(outputDir, requestsFileName);
 
@@ -235,12 +238,6 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             ] as String[]
         );
     }
-
-    println("Compute sample statistics");
-    // create a closure to process each sample
-    def sampleStatsClosureArray = Helper.indexCurryClosureArray(sampleStatsClosure, samples);
-    // execute closures in parallel
-    Helper.multicoreExecute(sampleStatsClosureArray);
     // ---------------------------------------------------------------------
 
 
