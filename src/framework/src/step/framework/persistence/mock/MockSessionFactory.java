@@ -29,7 +29,7 @@ public class MockSessionFactory implements SessionFactory {
 
     public static synchronized MockSessionFactory getInstance() {
         if (instance == null) {
-            return new MockSessionFactory();
+            instance = new MockSessionFactory();
         }
         return instance;
     }
