@@ -29,6 +29,12 @@ public class PersistenceUtil {
     /** Persistence factory system property value for Mock persistence */
     public static final String PERSISTENCE_FACTORY_MOCK = "mock";
 
+    /** Persistence factory system property value for Perf monitoring of persistence */
+    public static final String PERSISTENCE_FACTORY_PERF_EVENT = "PerfMonEvent";
+
+    /** Persistence factory system property value for Perf monitoring of persistence */
+    public static final String PERSISTENCE_FACTORY_PERF_LAYER = "PerfMonLayer";
+
     /** Session factory instance holder */
     private static final SessionFactory sessionFactory;
 
@@ -41,11 +47,17 @@ public class PersistenceUtil {
             Properties props = System.getProperties();
             String factory = props.getProperty(PERSISTENCE_FACTORY_PROPERTY_NAME);
 
-            if (factory != null && factory.trim().equals(PERSISTENCE_FACTORY_MOCK)) {
+            if (factory != null && factory.trim().equalsIgnoreCase(PERSISTENCE_FACTORY_MOCK)) {
                 log.info("Setting up mock persistence...");
                 sessionFactory = MockSessionFactory.getInstance();
+            } else if (factory != null && factory.trim().equalsIgnoreCase(PERSISTENCE_FACTORY_PERF_EVENT)) {
+                log.info("Setting up persistence with performance monitoring for each event...");
+                sessionFactory = step.framework.perf.monitor.event.PerfHibernateSessionFactory.getInstance();
+            } else if (factory != null && factory.trim().equalsIgnoreCase(PERSISTENCE_FACTORY_PERF_LAYER)) {
+                log.info("Setting up persistence with performance monitoring for each layer...");
+                sessionFactory = step.framework.perf.monitor.layer.PerfHibernateSessionFactory.getInstance();
             } else {
-                // By default (and when the property doesn't have the "mock" value) we use the Hibernate SessionFactory
+                // By default (and when the property does not have another value) we use the Hibernate SessionFactory
 
                 // Create the SessionFactory from hibernate.cfg.xml
                 log.info("Setting up hibernate persistence...");
