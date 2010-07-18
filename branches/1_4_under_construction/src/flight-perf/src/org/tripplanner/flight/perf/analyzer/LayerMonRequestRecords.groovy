@@ -248,7 +248,7 @@ public class LayerMonRequestRecords extends ByYourCommand {
             }
 
             // make sure no map keys were mistyped
-            assert(totalMap.size() == headerArray.length);
+            assert totalMap.size() == headerArray.length
 
         }
 
