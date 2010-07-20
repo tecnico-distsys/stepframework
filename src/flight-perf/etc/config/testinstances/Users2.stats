@@ -14,6 +14,7 @@ perf {
                 filterId = ""
 
                 numberSamples = 2
+                numberUsersPerSample = 2
             }
         }
     }

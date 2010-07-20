@@ -94,6 +94,12 @@ perf {
 
             overallFileName = "stats.csv"
             overallTextFileName = "stats.txt"
+
+            virtualUserOutputSamplesFileName = "VUOut-samples-stats.csv"
+            virtualUserOutputSamplesTextFileName = "VUOut-samples-stats.txt"
+
+            virtualUserOutputOverallFileName = "VUOut-stats.csv"
+            virtualUserOutputOverallTextFileName = "VUOut-stats.txt"
         }
 
 //      ------------------------------------------------------------------------

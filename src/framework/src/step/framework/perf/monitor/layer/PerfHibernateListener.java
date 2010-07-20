@@ -31,67 +31,67 @@ public class PerfHibernateListener
     //
 
     public boolean onPreInsert(PreInsertEvent event) {
-        MonitorHelper.get().enter("hibernate.insert");
+        MonitorHelper.get().enter("hibernate");
         // do not veto operation
         return false;
     }
 
     public void onPreLoad(PreLoadEvent event) {
-        MonitorHelper.get().enter("hibernate.load");
+        MonitorHelper.get().enter("hibernate");
     }
 
     public boolean onPreUpdate(PreUpdateEvent event) {
-        MonitorHelper.get().enter("hibernate.update");
+        MonitorHelper.get().enter("hibernate");
         // do not veto operation
         return false;
     }
 
     public boolean onPreDelete(PreDeleteEvent event) {
-        MonitorHelper.get().enter("hibernate.delete");
+        MonitorHelper.get().enter("hibernate");
         // do not veto operation
         return false;
     }
 
     public void onPreRecreateCollection(PreCollectionRecreateEvent event) {
-        MonitorHelper.get().enter("hibernate.collection-recreate");
+        MonitorHelper.get().enter("hibernate");
     }
 
 	public void onPreUpdateCollection(PreCollectionUpdateEvent event) {
-        MonitorHelper.get().enter("hibernate.collection-update");
+        MonitorHelper.get().enter("hibernate");
     }
 
 	public void onPreRemoveCollection(PreCollectionRemoveEvent event) {
-        MonitorHelper.get().enter("hibernate.collection-remove");
+        MonitorHelper.get().enter("hibernate");
     }
 
 
     public void onPostInsert(PostInsertEvent event) {
-        MonitorHelper.get().exit("hibernate.insert");
+        MonitorHelper.get().exit("hibernate");
     }
 
     public void onPostLoad(PostLoadEvent event) {
-        MonitorHelper.get().exit("hibernate.load");
+        MonitorHelper.get().exit("hibernate");
     }
 
     public void onPostUpdate(PostUpdateEvent event) {
-        MonitorHelper.get().exit("hibernate.update");
+        MonitorHelper.get().exit("hibernate");
     }
 
     public void onPostDelete(PostDeleteEvent event) {
-        MonitorHelper.get().exit("hibernate.delete");
+        MonitorHelper.get().exit("hibernate");
     }
 
 
 	public void onPostRecreateCollection(PostCollectionRecreateEvent event) {
-        MonitorHelper.get().exit("hibernate.collection-recreate");
+        MonitorHelper.get().exit("hibernate");
     }
 
 	public void onPostUpdateCollection(PostCollectionUpdateEvent event) {
-        MonitorHelper.get().exit("hibernate.collection-update");
+        MonitorHelper.get().exit("hibernate");
     }
 
 	public void onPostRemoveCollection(PostCollectionRemoveEvent event) {
-        MonitorHelper.get().exit("hibernate.collection-remove");
+        MonitorHelper.get().exit("hibernate");
     }
 
 }
