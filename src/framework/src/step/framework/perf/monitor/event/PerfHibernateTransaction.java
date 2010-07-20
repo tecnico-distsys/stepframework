@@ -16,6 +16,7 @@ public class PerfHibernateTransaction implements Transaction {
     }
 
     /* org.hibernate.Transaction methods */
+
     public void begin() {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Transaction.begin");

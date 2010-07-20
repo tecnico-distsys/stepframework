@@ -209,6 +209,7 @@ public class PerfHibernateSessionFactory implements SessionFactory {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.SessionFactory.getFilterDefinition");
         try {
+            // TODO wrap filter definition?
             return wrappedSessionFactory.getFilterDefinition(filterName);
         } finally {
             monitor.event("exit-hibernate.SessionFactory.getFilterDefinition");
@@ -313,7 +314,6 @@ public class PerfHibernateSessionFactory implements SessionFactory {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.SessionFactory.getReference");
         try {
-            // TODO return wrapped object ?
             return wrappedSessionFactory.getReference();
         } finally {
             monitor.event("exit-hibernate.SessionFactory.getReference");

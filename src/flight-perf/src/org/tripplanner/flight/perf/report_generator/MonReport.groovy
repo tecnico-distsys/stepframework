@@ -64,7 +64,9 @@ def dirNameList = [
     "MonPerf4J",
     "MonPerf4JHibernateAdjust",
     "MonEvent",
-    "MonLayer"
+    "MonEventHWrap",
+    "MonLayer",
+    "MonLayerHWrap"
 ]
 
 // create map of stats files
@@ -95,7 +97,9 @@ def descMap = [
     (dirNameList[1]) : "Perf4J aggregated records",
     (dirNameList[2]) : "Perf4J Hibernate adjusted",
     (dirNameList[3]) : "Event monitor",
-    (dirNameList[4]) : "Layer monitor"
+    (dirNameList[4]) : "Event monitor with Hibernate wrapping",
+    (dirNameList[5]) : "Layer monitor",
+    (dirNameList[6]) : "Layer monitor with Hibernate wrapping"
 ];
 descMap.each { key, value ->
     descMap[key] = "\"" + descMap[key] + "\"";
