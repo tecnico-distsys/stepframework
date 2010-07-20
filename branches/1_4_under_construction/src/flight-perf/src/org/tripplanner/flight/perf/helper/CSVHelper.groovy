@@ -62,4 +62,31 @@ class CSVHelper {
         return headerList;
     }
 
+    static def getVirtualUserOutputSampleCountsHeaderList() {
+        def headerList = [
+            "request-searchFlights",
+            "request-createSingleReservation",
+            "request-createMultipleReservations",
+            "exception-FlightFault_Exception",
+            "exception-ServiceUnavailable_Exception"
+        ];
+
+        return headerList;
+    }
+
+    static def getVirtualUserOutputOverallCountsHeaderList() {
+        def virtualUserOutputSampleCountsHeaderList = getVirtualUserOutputSampleCountsHeaderList();
+        def headerList = [ ];
+
+        virtualUserOutputSampleCountsHeaderList.each { header ->
+            headerList.add(header + "-mean");
+            headerList.add(header + "-mean-error-90pctconf");
+            headerList.add(header + "-mean-error-95pctconf");
+            headerList.add(header + "-mean-error-99pctconf");
+            headerList.add(header + "-stdDev");
+        }
+
+        return headerList;
+    }
+
 }

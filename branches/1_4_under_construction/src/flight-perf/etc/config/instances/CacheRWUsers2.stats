@@ -7,9 +7,9 @@ perf {
     flight {
         stats {
             instance {
-                id = "Users2"
+                id = "CacheRWUsers2"
 
-                runId = "Users2"
+                runId = "CacheRWUsers2"
 
                 filterId = ""
 

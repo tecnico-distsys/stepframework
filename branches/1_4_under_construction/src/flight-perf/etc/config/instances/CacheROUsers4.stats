@@ -7,14 +7,14 @@ perf {
     flight {
         stats {
             instance {
-                id = "Users2"
+                id = "CacheROUsers4"
 
-                runId = "Users2"
+                runId = "CacheROUsers4"
 
                 filterId = ""
 
                 numberSamples = 10
-                numberUsersPerSample = 2
+                numberUsersPerSample = 4
             }
         }
     }

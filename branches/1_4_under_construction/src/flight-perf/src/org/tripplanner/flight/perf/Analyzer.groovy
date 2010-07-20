@@ -1,10 +1,14 @@
 package org.tripplanner.flight.perf;
 
+import org.apache.commons.math.stat.*;
+import org.apache.commons.math.stat.descriptive.*;
+
 import org.supercsv.io.*;
 import org.supercsv.prefs.*;
 
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.analyzer.*;
+import org.tripplanner.flight.perf.helper.*;
 
 
 /**
@@ -95,26 +99,26 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         if (perf4JLogFile.exists()) {
             Perf4JRequestRecords.main(
                 [
-                "-i", perf4JLogFile.absolutePath,
-                "-o", requestsFile.absolutePath
+                "-i", perf4JLogFile.canonicalPath,
+                "-o", requestsFile.canonicalPath
                 ] as String[]
             );
         } else if(eventMonLogFile.exists()) {
             EventMonRequestRecords.main(
                 [
-                "-i", eventMonLogFile.absolutePath,
-                "-o", requestsFile.absolutePath
+                "-i", eventMonLogFile.canonicalPath,
+                "-o", requestsFile.canonicalPath
                 ] as String[]
             );
         } else if(layerMonLogFile.exists()) {
             LayerMonRequestRecords.main(
                 [
-                "-i", layerMonLogFile.absolutePath,
-                "-o", requestsFile.absolutePath
+                "-i", layerMonLogFile.canonicalPath,
+                "-o", requestsFile.canonicalPath
                 ] as String[]
             );
         } else {
-            assert false : "Did not recognize any performance log files in " + runOutputDir.absolutePath;
+            assert false : "Did not recognize any performance log files in " + runOutputDir.canonicalPath;
         }
     }
     println("Generate request records");
@@ -122,10 +126,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
     def genRequestRecordsClosureArray = Helper.indexCurryClosureArray(genRequestRecordsClosure, samples);
     // execute closures in parallel
     Helper.multicoreExecute(genRequestRecordsClosureArray);
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
 
-    // filter records ------------------------------------------------------
+    // filter records ----------------------------------------------------------
     def filterClosure = statsConfig.filterClosure;
     if (filterClosure) {
 
@@ -134,10 +138,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
             def requestsFileName = String.format(config.perf.flight.stats.requestsFileNameFormat, i+1);
             def requestsFile = new File(outputDir, requestsFileName);
 
-            def unfilteredRequestsFile = new File(requestsFile.absolutePath + ".unfiltered");
+            def unfilteredRequestsFile = new File(requestsFile.canonicalPath + ".unfiltered");
             def ant = new AntBuilder();
-            ant.move(file: requestsFile.absolutePath,
-                     tofile: unfilteredRequestsFile.absolutePath)
+            ant.move(file: requestsFile.canonicalPath,
+                     tofile: unfilteredRequestsFile.canonicalPath)
 
             // read headers
             CsvListReader csvLR = new CsvListReader(new FileReader(unfilteredRequestsFile), CsvPreference.STANDARD_PREFERENCE);
@@ -175,23 +179,23 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         // execute closures in parallel
         Helper.multicoreExecute(filterRecordsClosureArray);
     }
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-    // adjust hibernate times ----------------------------------------------
+    // adjust hibernate times --------------------------------------------------
     if (statsConfig.adjustHibernateTimes) {
 
         // define closure to process sample i
         def adjustHibernateTimesClosure = { i ->
-            def unadjustedRequestsFile = new File(requestsFile.absolutePath + ".unadjusted");
+            def unadjustedRequestsFile = new File(requestsFile.canonicalPath + ".unadjusted");
 
             def ant = new AntBuilder();
-            ant.move(file: requestsFile.absolutePath,
-                     tofile: unadjustedRequestsFile.absolutePath)
+            ant.move(file: requestsFile.canonicalPath,
+                     tofile: unadjustedRequestsFile.canonicalPath)
 
             CSVAdjustHibernateRecords.main(
                 [
-                "-i", unadjustedRequestsFile.absolutePath,
-                "-o", requestsFile.absolutePath
+                "-i", unadjustedRequestsFile.canonicalPath,
+                "-o", requestsFile.canonicalPath
                 ] as String[]
             );
         }
@@ -202,10 +206,10 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
         // execute closures in parallel
         Helper.multicoreExecute(adjustHibernateTimesClosureArray);
     }
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
 
-    // Compute sample statistics -------------------------------------------
+    // Compute sample statistics -----------------------------------------------
     def sampleStatsFileName = config.perf.flight.stats.samplesFileName;
     def sampleStatsFile = new File(outputDir, sampleStatsFileName);
 
@@ -221,8 +225,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         CSVSampleStatistics.main(
             [
-            "-i", requestsFile.absolutePath,
-            "-o", sampleStatsFile.absolutePath,
+            "-i", requestsFile.canonicalPath,
+            "-o", sampleStatsFile.canonicalPath,
             "-n", i+1 as String,
             "--append", (i == 0 ? "false" : "true")
             ] as String[]
@@ -230,18 +234,18 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
         CSVSampleStatistics.main(
             [
-            "-i", requestsFile.absolutePath,
-            "-o", sampleStatsTextFile.absolutePath,
+            "-i", requestsFile.canonicalPath,
+            "-o", sampleStatsTextFile.canonicalPath,
             "-n", i+1 as String,
             "--append", (i == 0 ? "false" : "true"),
             "--format", "text"
             ] as String[]
         );
     }
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
 
-    // compute overall statistics ------------------------------------------
+    // compute overall statistics ----------------------------------------------
     println("Compute overall statistics");
 
     def overallStatsFileName = config.perf.flight.stats.overallFileName;
@@ -249,8 +253,8 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
     CSVOverallStatistics.main(
         [
-        "-i", sampleStatsFile as String,
-        "-o", overallStatsFile as String
+        "-i", sampleStatsFile.canonicalPath,
+        "-o", overallStatsFile.canonicalPath
         ] as String[]
     );
 
@@ -259,11 +263,50 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
     CSVOverallStatistics.main(
         [
-        "-i", sampleStatsFile as String,
-        "-o", overallStatsTextFile as String,
+        "-i", sampleStatsFile.canonicalPath,
+        "-o", overallStatsTextFile.canonicalPath,
         "--format", "text"
         ] as String[]
     );
-    // ---------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+
+    // count virtual user outputs for additional statistics --------------------
+    println("Compute virtual user output statistics");
+
+    def virtualUserOutputSamplesFileName = config.perf.flight.stats.virtualUserOutputSamplesFileName;
+    def virtualUserOutputSamplesFile = new File(outputDir, virtualUserOutputSamplesFileName);
+
+    def virtualUserOutputSamplesTextFileName = config.perf.flight.stats.virtualUserOutputSamplesTextFileName;
+    def virtualUserOutputSamplesTextFile = new File(outputDir, virtualUserOutputSamplesTextFileName);
+
+
+    def virtualUserOutputOverallFileName = config.perf.flight.stats.virtualUserOutputOverallFileName;
+    def virtualUserOutputOverallFile = new File(outputDir, virtualUserOutputOverallFileName);
+
+    def virtualUserOutputOverallTextFileName = config.perf.flight.stats.virtualUserOutputOverallTextFileName;
+    def virtualUserOutputOverallTextFile = new File(outputDir, virtualUserOutputOverallTextFileName);
+
+
+    def runOutputFileNameFormat = config.perf.flight.run.outputFileNameFormat;
+
+    def runNumberSamples = statsConfig.numberSamples;
+    def runNumberUsersPerSample = statsConfig.numberUsersPerSample;
+    if (!runNumberUsersPerSample) runNumberUsersPerSample = 1;  // default value
+
+    VirtualUserOutputStats.main(
+        [
+        "-sCSV", virtualUserOutputSamplesFile.canonicalPath,
+        "-sTXT", virtualUserOutputSamplesTextFile.canonicalPath,
+        "-oCSV", virtualUserOutputOverallFile.canonicalPath,
+        "-oTXT", virtualUserOutputOverallTextFile.canonicalPath,
+        "--rundir", runOutputDir.canonicalPath,
+        "--format", runOutputFileNameFormat,
+        "--number", runNumberSamples as String,
+        "--users", runNumberUsersPerSample as String
+        ] as String[]
+    );
+
+    // -------------------------------------------------------------------------
 
 }
