@@ -23,11 +23,6 @@
         <listener-class>step.framework.web.ContextListener</listener-class>
     </listener>
 
-    <!-- STEP Framework Performance Event Monitor listener -->
-    <listener>
-        <listener-class>step.framework.perf.monitor.event.PerfContextListener</listener-class>
-    </listener>
-
 
     <!--           -->
     <!--  FILTERS  -->

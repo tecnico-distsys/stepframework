@@ -114,7 +114,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createCriteria");
         try {
-            // TODO wrap criteria?
+            // TODO wrap criteria
             return wrappedSession.createCriteria(persistentClass);
         } finally {
             monitor.event("exit-hibernate.Session.createCriteria");
@@ -125,7 +125,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createCriteria");
         try {
-            // TODO wrap criteria?
+            // TODO wrap criteria
             return wrappedSession.createCriteria(persistentClass, alias);
         } finally {
             monitor.event("exit-hibernate.Session.createCriteria");
@@ -135,7 +135,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createCriteria");
         try {
-            // TODO wrap criteria?
+            // TODO wrap criteria
             return wrappedSession.createCriteria(entityName);
         } finally {
             monitor.event("exit-hibernate.Session.createCriteria");
@@ -145,7 +145,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createCriteria");
         try {
-            // TODO wrap criteria?
+            // TODO wrap criteria
             return wrappedSession.createCriteria(entityName, alias);
         } finally {
             monitor.event("exit-hibernate.Session.createCriteria");
@@ -156,7 +156,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createFilter");
         try {
-            // TODO wrap query?
+            // TODO wrap query
             return wrappedSession.createFilter(collection, queryString);
         } finally {
             monitor.event("exit-hibernate.Session.createFilter");
@@ -167,7 +167,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createQuery");
         try {
-            // TODO wrap query?
+            // TODO wrap query
             return wrappedSession.createQuery(queryString);
         } finally {
             monitor.event("exit-hibernate.Session.createQuery");
@@ -178,7 +178,7 @@ public class PerfHibernateSession implements org.hibernate.classic.Session {
         PerfEventMonitor monitor = MonitorHelper.get();
         monitor.event("enter-hibernate.Session.createSQLQuery");
         try {
-            // TODO wrap query?
+            // TODO wrap query
             return wrappedSession.createSQLQuery(queryString);
         } finally {
             monitor.event("exit-hibernate.Session.createSQLQuery");
