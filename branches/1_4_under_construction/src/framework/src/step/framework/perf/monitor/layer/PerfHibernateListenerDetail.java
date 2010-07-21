@@ -19,7 +19,7 @@ import org.hibernate.type.*;
  *  the hibernate-configuration file.<br />
  *  <br />
  */
-public class PerfHibernateListener
+public class PerfHibernateListenerDetail
     implements PreInsertEventListener, PreLoadEventListener, PreUpdateEventListener, PreDeleteEventListener,
         PreCollectionRecreateEventListener, PreCollectionUpdateEventListener, PreCollectionRemoveEventListener,
         PostInsertEventListener, PostLoadEventListener, PostUpdateEventListener, PostDeleteEventListener,
@@ -32,80 +32,80 @@ public class PerfHibernateListener
 
     public boolean onPreInsert(PreInsertEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.insert");
         // do not veto operation
         return false;
     }
 
     public void onPreLoad(PreLoadEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.load");
     }
 
     public boolean onPreUpdate(PreUpdateEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.update");
         // do not veto operation
         return false;
     }
 
     public boolean onPreDelete(PreDeleteEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.delete");
         // do not veto operation
         return false;
     }
 
     public void onPreRecreateCollection(PreCollectionRecreateEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.collection-recreate");
     }
 
 	public void onPreUpdateCollection(PreCollectionUpdateEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.collection-update");
     }
 
 	public void onPreRemoveCollection(PreCollectionRemoveEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.enter("hibernate");
+        monitor.enter("hibernate.collection-remove");
     }
 
 
     public void onPostInsert(PostInsertEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.insert");
     }
 
     public void onPostLoad(PostLoadEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.load");
     }
 
     public void onPostUpdate(PostUpdateEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.update");
     }
 
     public void onPostDelete(PostDeleteEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.delete");
     }
 
 
 	public void onPostRecreateCollection(PostCollectionRecreateEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.collection-recreate");
     }
 
 	public void onPostUpdateCollection(PostCollectionUpdateEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.collection-update");
     }
 
 	public void onPostRemoveCollection(PostCollectionRemoveEvent event) {
         PerfLayerMonitor monitor = MonitorHelper.get();
-        monitor.exit("hibernate");
+        monitor.exit("hibernate.collection-remove");
     }
 
 }

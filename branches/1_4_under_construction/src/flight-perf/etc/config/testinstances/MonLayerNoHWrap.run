@@ -7,19 +7,19 @@ perf {
     flight {
         run {
             instance {
-                id = "MonEventHWrap"
+                id = "MonLayerNoHWrap"
 
                 loadId = "SizeTest"
 
-                configId = "eventmon_hwrap"
-                configToApplyList = [ "eventmon", "eventmon_hwrap" ]
+                configId = "layermon_nohwrap"
+                configToApplyList = [ "layermon", "layermon_nohwrap" ]
 
                 numberSamples = 2
                 numberUsersPerSample = 1
 
                 saveLog = true
 
-                perfLogFormat = "eventmon"
+                perfLogFormat = "layermon"
             }
         }
     }

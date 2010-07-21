@@ -47,7 +47,7 @@ public class Perf4JAggregateContiguousEntries extends IOCommand {
             //
             def lineMatcher = ( line =~ Perf4JHelper.PERF_LOG_LINE_REGEX );
             def lineMatchResult = lineMatcher.matches();
-            assert(lineMatchResult);
+            assert lineMatchResult
 
             def start = Long.parseLong(lineMatcher.group(1));
             def time = Long.parseLong(lineMatcher.group(2));

@@ -64,9 +64,8 @@ def dirNameList = [
     "MonPerf4J",
     "MonPerf4JHibernateAdjust",
     "MonEvent",
-    "MonEventHWrap",
-    "MonLayer",
-    "MonLayerHWrap"
+    "MonLayerNoHWrap",
+    "MonLayer"
 ]
 
 // create map of stats files
@@ -89,22 +88,35 @@ def o = new PrintStream(dataFile);
 def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
-// header
-o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
+// print data file header
+o.printf("# 1-desc");
+final def dataHeaderList = [
+    "filter_time-mean",
+    "soap_time-mean",
+    "wsi_time-mean",
+    "si_time-mean",
+    "hibernate_time-mean",
+    "hibernate_read_time-mean",
+    "hibernate_write_time-mean"
+];
+for (int i = 0; i < dataHeaderList.size(); i++) {
+    o.printf(" %d-%s", i+2, dataHeaderList.get(i));
+}
+o.printf("%n");
 
+
+// print data file records
 def descMap = [
-    (dirNameList[0]) : "Perf4J raw records",
-    (dirNameList[1]) : "Perf4J aggregated records",
-    (dirNameList[2]) : "Perf4J Hibernate adjusted",
-    (dirNameList[3]) : "Event monitor",
-    (dirNameList[4]) : "Event monitor with Hibernate wrapping",
-    (dirNameList[5]) : "Layer monitor",
-    (dirNameList[6]) : "Layer monitor with Hibernate wrapping"
+    "MonPerf4JNoAgg"           : "Perf4J raw records",
+    "MonPerf4J"                : "Perf4J aggregated records",
+    "MonPerf4JHibernateAdjust" : "Perf4J Hibernate adjusted",
+    "MonEvent"                 : "Event monitor",
+    "MonLayerNoHWrap"          : "Layer monitor without Hibernate wrapping",
+    "MonLayer"                 : "Layer monitor with Hibernate wrapping"
 ];
 descMap.each { key, value ->
     descMap[key] = "\"" + descMap[key] + "\"";
 }
-
 
 dirNameList.each { dirName ->
     def file = statsFileMap[dirName];
@@ -117,14 +129,12 @@ dirNameList.each { dirName ->
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert (statsMap)
 
-    o.printf("%s %s %s %s %s %s %s%n",
-        descMap[dirName],
-        statsMap["filter_time-mean"],
-        statsMap["soap_time-mean"],
-        statsMap["wsi_time-mean"],
-        statsMap["si_time-mean"],
-        statsMap["hibernate_read_time-mean"],
-        statsMap["hibernate_write_time-mean"]);
+    o.printf("%s", descMap[dirName]);
+    dataHeaderList.each { dataHeader ->
+        o.printf(" %s", statsMap[dataHeader]);
+    }
+    o.printf("%n");
+
 }
 o.close();
 

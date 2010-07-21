@@ -7,16 +7,16 @@ perf {
     flight {
         run {
             instance {
-                id = "CacheROUsers8"
+                id = "CacheROUsers2"
 
-                loadId = "SizeMedium"
+                loadId = "SizeTest"
 
                 configId = "ehcachereadonly"
                 configToApplyList = [ "layermon", "layermon_ehcachereadonly" ]
 
-                numberSamples = 10
-                numberUsersPerSample = 8
-                // will consume 80 load samples
+                numberSamples = 2
+                numberUsersPerSample = 2
+                // will consume 4 load samples
 
                 saveLogSize = true
 

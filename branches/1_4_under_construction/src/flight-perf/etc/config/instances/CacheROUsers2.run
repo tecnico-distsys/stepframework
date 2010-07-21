@@ -11,7 +11,7 @@ perf {
 
                 loadId = "SizeMedium"
 
-                configId = ""
+                configId = "ehcachereadonly"
                 configToApplyList = [ "layermon", "layermon_ehcachereadonly" ]
 
                 numberSamples = 10

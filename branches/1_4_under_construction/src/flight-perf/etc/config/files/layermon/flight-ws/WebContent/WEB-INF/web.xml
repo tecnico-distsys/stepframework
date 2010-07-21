@@ -23,6 +23,11 @@
         <listener-class>step.framework.web.ContextListener</listener-class>
     </listener>
 
+    <!-- STEP Framework Performance Layer Monitor listener to activate property to wrap hibernate objects -->
+    <listener>
+        <listener-class>step.framework.perf.monitor.layer.PerfContextListener</listener-class>
+    </listener>
+
 
     <!--           -->
     <!--  FILTERS  -->

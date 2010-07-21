@@ -139,18 +139,16 @@ public class Perf4JRequestRecords extends ByYourCommand {
 
                 totalMap["filter_time"] = time;
 
-                if (!totalMap["hibernate_read_time"])
-                    totalMap["hibernate_read_time"] = 0;
-                if (!totalMap["hibernate_write_time"])
-                    totalMap["hibernate_write_time"] = 0;
-                def totalHibernate = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
-                assert (totalHibernate >= 0)
+                // when using the Perf4J monitor all hibernate time data is captured as read or write time
+                // and total time is computed by summing them both
+                totalMap["hibernate_time"] = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
+                assert totalMap["hibernate_time"] >= 0
 
                 // warn about bad time data quality
                 if (totalMap["filter_time"] < totalMap["soap_time"] ||
                     totalMap["soap_time"] < totalMap["wsi_time"] ||
                     totalMap["wsi_time"] < totalMap["si_time"] ||
-                    totalMap["si_time"] < totalHibernate) {
+                    totalMap["si_time"] < totalMap["hibernate_time"]) {
                     println "Warning: Record ending in line " + number + " has inconsistent times.";
                 }
 
@@ -170,7 +168,7 @@ public class Perf4JRequestRecords extends ByYourCommand {
                 // process request slice
 
                 // match tag
-                def tagMatcher = ( tag =~ "([A-Za-z\\-_]+)\\.?(.*)" );
+                def tagMatcher = ( tag =~ "([A-Za-z\\-_]+)(?:\\.(.*))?" );
                 def tagMatchResult = tagMatcher.matches();
                 assert(tagMatchResult);
 

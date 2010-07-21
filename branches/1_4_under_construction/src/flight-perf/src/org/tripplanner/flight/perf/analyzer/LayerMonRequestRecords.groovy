@@ -123,18 +123,23 @@ public class LayerMonRequestRecords extends ByYourCommand {
             if (line.length() == 0) {
                 // record separator
 
-                if (!totalMap["hibernate_read_time"])
-                    totalMap["hibernate_read_time"] = 0L;
-                if (!totalMap["hibernate_write_time"])
-                    totalMap["hibernate_write_time"] = 0L;
-                def totalHibernate = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
-                assert totalHibernate >= 0L
+                // when using the Layer monitor with Hibernate object wrapping
+                // hibernate total time data is captured independently of read and write times
+
+                // fallback: if hibernate time was not filled,
+                // use the sum of read with write time, but issue warning message
+
+                if (!(totalMap["hibernate_time"])) {
+                    println "Warning: Using hibernate read and write time to compute total hibernate time!";
+                    totalMap["hibernate_time"] = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
+                }
+
 
                 // warn about bad time data quality
                 if (totalMap["filter_time"] < totalMap["soap_time"] ||
                     totalMap["soap_time"] < totalMap["wsi_time"] ||
                     totalMap["wsi_time"] < totalMap["si_time"] ||
-                    totalMap["si_time"] < totalHibernate) {
+                    totalMap["si_time"] < totalMap["hibernate_time"]) {
                     println "Warning: Record ending in line " + number + " has inconsistent times.";
                 }
 
@@ -186,7 +191,7 @@ public class LayerMonRequestRecords extends ByYourCommand {
                 //
                 //  match tag
                 //
-                def tagMatcher = ( tag =~ "([A-Za-z\\-_]+)\\.?(.*)" );
+                def tagMatcher = ( tag =~ "([A-Za-z\\-_]+)(?:\\.(.*))?" );
                 def tagMatchResult = tagMatcher.matches();
                 assert tagMatchResult
 
@@ -194,16 +199,33 @@ public class LayerMonRequestRecords extends ByYourCommand {
                 final def subTag = tagMatcher.group(2);
 
                 def tagToUse = mainTag;
+                def ignoreFlag = false;
 
                 // handle special cases
                 switch (mainTag) {
                     case "hibernate":
-                        if ("load".equals(subTag)) {
-                            // read
-                            tagToUse += "_read_time";
+                        if (subTag == null || "".equals(subTag)) {
+                            tagToUse += "_time";
                         } else {
-                            // write
-                            tagToUse += "_write_time";
+                            switch (subTag) {
+                                case "load":
+                                case "collection-recreate":
+                                    // read
+                                    tagToUse += "_read_time";
+                                    break;
+                                case "insert":
+                                case "update":
+                                case "delete":
+                                case "collection-update":
+                                case "collection-remove":
+                                    // write
+                                    tagToUse += "_write_time";
+                                    break;
+                                default:
+                                    // ignore other subtags
+                                    ignoreFlag = true;
+                                    break;
+                            }
                         }
                         break;
 
@@ -234,17 +256,20 @@ public class LayerMonRequestRecords extends ByYourCommand {
                     default:
                         // general case
                         tagToUse += "_time";
+                        break;
                 }
 
-                // make sure tag to use was initialized
-                assert tagToUse
+                if (!ignoreFlag) {
+                    // make sure tag to use was initialized
+                    assert tagToUse
 
-                // add value to total
-                def total = totalMap[tagToUse];
-                if (!total) total = 0;
+                    // add value to total
+                    def total = totalMap[tagToUse];
+                    if (!total) total = 0;
 
-                total += accTime;
-                totalMap[tagToUse] = total;
+                    total += accTime;
+                    totalMap[tagToUse] = total;
+                }
             }
 
             // make sure no map keys were mistyped
