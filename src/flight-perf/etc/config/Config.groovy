@@ -17,22 +17,22 @@ perf {
             surnamesFile = this.perf.flight.domain.dataDir + "/surnames.txt"
 
             airports {
-                randomSeed = -8354
+                randomSeed = 2454
                 file = this.perf.flight.domain.dataDir + "/airports.csv"
                 maxCost = 150000
             }
 
             airplanes {
-                randomSeed = 926783
+                randomSeed = 7326483268
                 file = this.perf.flight.domain.dataDir + "/fleet-BA.csv"
                 maxCost = 100000
             }
 
             flights {
-                randomSeed = 8845868
+                randomSeed = 841222
                 maxCost = 1500
                 profit = 0.20
-                number = 5640
+                number = 2820
                 maxGroup = 100
             }
         }
@@ -95,11 +95,11 @@ perf {
             overallFileName = "stats.csv"
             overallTextFileName = "stats.txt"
 
-            virtualUserOutputSamplesFileName = "VUOut-samples-stats.csv"
-            virtualUserOutputSamplesTextFileName = "VUOut-samples-stats.txt"
+            virtualUserOutputSamplesFileName = "VirtualUserOutput-samples-stats.csv"
+            virtualUserOutputSamplesTextFileName = "VirtualUserOutput-samples-stats.txt"
 
-            virtualUserOutputOverallFileName = "VUOut-stats.csv"
-            virtualUserOutputOverallTextFileName = "VUOut-stats.txt"
+            virtualUserOutputOverallFileName = "VirtualUserOutput-stats.csv"
+            virtualUserOutputOverallTextFileName = "VirtualUserOutput-stats.txt"
         }
 
 //      ------------------------------------------------------------------------

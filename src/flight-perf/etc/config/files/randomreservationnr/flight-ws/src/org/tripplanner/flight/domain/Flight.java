@@ -194,7 +194,10 @@ public class Flight extends FlightDomainObject {
 
     /** Create new reservation for this flight */
 	protected FlightReservation createReservation(Passenger passenger) {
-		String code = this.number + "-" + ++this.lastReservationId;
+		//String code = this.number + "-" + ++this.lastReservationId;
+		int randomInt = new Random().nextInt();
+		if (randomInt < 0) randomInt = -randomInt;
+		String code = this.number + "-" + randomInt;
 
 		FlightReservation reservation =
 		    new FlightReservation(code, passenger, this).init();
