@@ -7,17 +7,18 @@ perf {
     flight {
         run {
             instance {
-                id = "MonLayerHWrap"
+                id = "CacheROUsers4"
 
                 loadId = "SizeTest"
 
-                configId = "layermon_hwrap"
-                configToApplyList = [ "layermon", "layermon_hwrap" ]
+                configId = "ehcachereadonly"
+                configToApplyList = [ "layermon", "layermon_ehcachereadonly" ]
 
                 numberSamples = 2
-                numberUsersPerSample = 1
+                numberUsersPerSample = 4
+                // will consume 8 load samples
 
-                saveLog = true
+                saveLogSize = true
 
                 perfLogFormat = "layermon"
             }

@@ -111,11 +111,11 @@ public class CSVAdjustHibernateRecords extends ByYourCommand {
             recordNr++;
 
             def totalHibernate = (record["hibernate_read_time"] as Long) + (record["hibernate_write_time"] as Long);
-            assert (totalHibernate >= 0)
+            assert totalHibernate >= 0
 
             if ((record["si_time"] as Long) < totalHibernate) {
                 def difference = totalHibernate - (record["si_time"] as Long);
-                assert (difference > 0)
+                assert difference > 0
 
                 // reduction rate = 1.0 - (value after / value before)
                 double reductionRate = 1.0 - ((totalHibernate - difference) / (totalHibernate));
@@ -151,7 +151,7 @@ public class CSVAdjustHibernateRecords extends ByYourCommand {
             recordNr++;
 
             def totalHibernate = (record["hibernate_read_time"] as Long) + (record["hibernate_write_time"] as Long);
-            assert (totalHibernate >= 0)
+            assert totalHibernate >= 0
 
             if (totalHibernate == 0)
                 continue;
@@ -181,6 +181,9 @@ public class CSVAdjustHibernateRecords extends ByYourCommand {
                     if ((record["hibernate_write_time"] as Long) < 0L) record["hibernate_write_time"] = (0L as String);
                 }
             }
+
+            // readjust total hibernate time
+            record["hibernate_time"] = (record["hibernate_time"] as Long) - ((record["hibernate_read_time"] as Long) + (record["hibernate_write_time"] as Long));
 
             // write adjusted record
             csvMW.write(record, recordsHeaderArray);

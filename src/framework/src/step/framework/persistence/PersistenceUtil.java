@@ -30,9 +30,6 @@ public class PersistenceUtil {
     public static final String PERSISTENCE_FACTORY_MOCK = "mock";
 
     /** Persistence factory system property value for Perf monitoring of persistence */
-    public static final String PERSISTENCE_FACTORY_PERF_EVENT = "PerfMonEvent";
-
-    /** Persistence factory system property value for Perf monitoring of persistence */
     public static final String PERSISTENCE_FACTORY_PERF_LAYER = "PerfMonLayer";
 
     /** Session factory instance holder */
@@ -50,9 +47,6 @@ public class PersistenceUtil {
             if (factory != null && factory.trim().equalsIgnoreCase(PERSISTENCE_FACTORY_MOCK)) {
                 log.info("Setting up mock persistence...");
                 sessionFactory = MockSessionFactory.getInstance();
-            } else if (factory != null && factory.trim().equalsIgnoreCase(PERSISTENCE_FACTORY_PERF_EVENT)) {
-                log.info("Setting up persistence with performance monitoring for each event...");
-                sessionFactory = step.framework.perf.monitor.event.PerfHibernateSessionFactory.getInstance();
             } else if (factory != null && factory.trim().equalsIgnoreCase(PERSISTENCE_FACTORY_PERF_LAYER)) {
                 log.info("Setting up persistence with performance monitoring for each layer...");
                 sessionFactory = step.framework.perf.monitor.layer.PerfHibernateSessionFactory.getInstance();

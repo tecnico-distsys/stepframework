@@ -14,7 +14,7 @@ class CSVHelper {
                           "soap_response_logical_length", "soap_response_node_count", "soap_response_max_depth",
                           "wsi_time",
                           "si_time", "si_name",
-                          "hibernate_read_time", "hibernate_write_time"];
+                          "hibernate_time", "hibernate_read_time", "hibernate_write_time"];
         return headerList;
     }
 

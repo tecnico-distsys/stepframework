@@ -123,18 +123,16 @@ public class EventMonRequestRecords extends ByYourCommand {
             if (line.length() == 0) {
                 // record separator
 
-                if (!totalMap["hibernate_read_time"])
-                    totalMap["hibernate_read_time"] = 0L;
-                if (!totalMap["hibernate_write_time"])
-                    totalMap["hibernate_write_time"] = 0L;
-                def totalHibernate = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
-                assert totalHibernate >= 0L
+                // when using the Event monitor all hibernate time data is captured as read or write time
+                // and total time is computed by summing them both
+                totalMap["hibernate_time"] = totalMap["hibernate_read_time"] + totalMap["hibernate_write_time"];
+                assert totalMap["hibernate_time"] >= 0
 
                 // warn about bad time data quality
                 if (totalMap["filter_time"] < totalMap["soap_time"] ||
                     totalMap["soap_time"] < totalMap["wsi_time"] ||
                     totalMap["wsi_time"] < totalMap["si_time"] ||
-                    totalMap["si_time"] < totalHibernate) {
+                    totalMap["si_time"] < totalMap["hibernate_time"]) {
                     println "Warning: Record ending in line " + number + " has inconsistent times.";
                 }
 
@@ -186,7 +184,7 @@ public class EventMonRequestRecords extends ByYourCommand {
                 //
                 //  match tag
                 //
-                def tagMatcher = ( tag =~ "((?:enter)|(?:exit))-([A-Za-z\\-_]+)\\.?(.*)" );
+                def tagMatcher = ( tag =~ "((?:enter)|(?:exit))-([A-Za-z\\-_]+)(?:\\.(.*))?" );
                 def tagMatchResult = tagMatcher.matches();
                 assert tagMatchResult
 

@@ -7,9 +7,9 @@ perf {
     flight {
         stats {
             instance {
-                id = "MonEventHWrap"
+                id = "MonLayerNoHWrap"
 
-                runId = "MonEventHWrap"
+                runId = "MonLayerNoHWrap"
 
                 filterId = ""
 

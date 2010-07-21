@@ -86,8 +86,21 @@ def o = new PrintStream(dataFile);
 def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
-// header
-o.println("# 1-type 2-web 3-soap 4-wsi 5-si 6-hibernate_r 7-hibernate_w");
+// print data file header
+o.printf("# 1-desc");
+final def dataHeaderList = [
+    "filter_time-mean",
+    "soap_time-mean",
+    "wsi_time-mean",
+    "si_time-mean",
+    "hibernate_time-mean",
+    "hibernate_read_time-mean",
+    "hibernate_write_time-mean"
+];
+for (int i = 0; i < dataHeaderList.size(); i++) {
+    o.printf(" %d-%s", i+2, dataHeaderList.get(i));
+}
+o.printf("%n");
 
 def descMap = [
     (dirNameList[0]) : "searches",
@@ -110,14 +123,12 @@ dirNameList.each { dirName ->
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert statsMap
 
-    o.printf("%s %s %s %s %s %s %s%n",
-        descMap[dirName],
-        statsMap["filter_time-mean"],
-        statsMap["soap_time-mean"],
-        statsMap["wsi_time-mean"],
-        statsMap["si_time-mean"],
-        statsMap["hibernate_read_time-mean"],
-        statsMap["hibernate_write_time-mean"]);
+    o.printf("%s", descMap[dirName]);
+    dataHeaderList.each { dataHeader ->
+        o.printf(" %s", statsMap[dataHeader]);
+    }
+    o.printf("%n");
+
 }
 o.close();
 

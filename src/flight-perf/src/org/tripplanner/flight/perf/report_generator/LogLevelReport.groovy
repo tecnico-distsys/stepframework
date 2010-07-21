@@ -89,8 +89,17 @@ def o = new PrintStream(dataFile);
 def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
 def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
 
-// header
-o.println("# 1-type 2-mean 3-error");
+// print data file header
+o.printf("# 1-desc");
+final def dataHeaderList = [
+    "filter_time-mean",
+    "filter_time-mean-error-95pctconf"
+];
+for (int i = 0; i < dataHeaderList.size(); i++) {
+    o.printf(" %d-%s", i+2, dataHeaderList.get(i));
+}
+o.printf("%n");
+
 
 def descMap = [
     (dirNameList[0]) : "off",
@@ -117,10 +126,12 @@ dirNameList.each { dirName ->
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
     assert (statsMap)
 
-    o.printf("%s %s %s%n",
-        descMap[dirName],
-        statsMap["filter_time-mean"],
-        statsMap["filter_time-mean-error-95pctconf"]);
+    o.printf("%s", descMap[dirName]);
+    dataHeaderList.each { dataHeader ->
+        o.printf(" %s", statsMap[dataHeader]);
+    }
+    o.printf("%n");
+
 }
 o.close();
 
