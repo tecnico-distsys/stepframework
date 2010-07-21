@@ -78,7 +78,7 @@ public class WorkloadGenerator extends DBCommand {
 
         Option mttOption = new Option("Mtt", "maxthinktime",
             /* hasArg */ true, "Maximum think time between requests");
-        mttOption.setArgName("seconds");
+        mttOption.setArgName("milliseconds");
         mttOption.setArgs(1);
         options.addOption(mttOption);
 
@@ -141,7 +141,7 @@ public class WorkloadGenerator extends DBCommand {
         }
 
         if (maxThinkTime == null) {
-            maxThinkTime = CommandHelper.initInteger(settings["maxthinktime"], null);  // in seconds
+            maxThinkTime = CommandHelper.initInteger(settings["maxthinktime"], null);  // in milliseconds
             if (maxThinkTime == null) {
                 err.println("Maximum think time is missing!");
                 return false;
@@ -188,7 +188,7 @@ public class WorkloadGenerator extends DBCommand {
         WorkloadGenerator.setup();
 
         err.println("Running " + this.class.simpleName);
-        err.printf("output %d request sessions to %s, name data files %s %s, max group %d, max think time %d, error probability %.3f",
+        err.printf("output %d request sessions to %s, name data files %s %s, max group %d, max think time %d ms, error probability %.3f",
             number, outputFile, namesFile, surnamesFile, maxGroup, maxThinkTime, errorProbability);
         if(seed != null) err.printf(", random seed %d", seed);
         err.println();
@@ -323,7 +323,7 @@ public class WorkloadGenerator extends DBCommand {
             // think time will be zero, no need to randomize
             oos.writeObject(0);
         } else {
-            oos.writeObject(random.nextInt(maxThinkTime * 1000));
+            oos.writeObject(random.nextInt(maxThinkTime));
         }
     }
 

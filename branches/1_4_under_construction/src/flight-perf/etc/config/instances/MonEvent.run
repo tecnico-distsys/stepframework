@@ -14,7 +14,7 @@ perf {
                 configId = "eventmon"
                 configToApplyList = [ "eventmon" ]
 
-                numberSamples = 30
+                numberSamples = 6 // was 30
                 numberUsersPerSample = 1
 
                 saveLogSize = true

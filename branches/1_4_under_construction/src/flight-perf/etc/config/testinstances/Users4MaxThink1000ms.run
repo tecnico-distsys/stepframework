@@ -7,17 +7,18 @@ perf {
     flight {
         run {
             instance {
-                id = "SizeXLarge"
+                id = "Users4MaxThink1000ms"
 
-                loadId = "SizeXLarge"
+                loadId = "MaxThink1000ms"
 
                 configId = ""
                 configToApplyList = [ "layermon" ]
 
-                numberSamples = 6 // was 30
-                numberUsersPerSample = 1
+                numberSamples = 2
+                numberUsersPerSample = 4
+                // will consume 2 * 4 = 8 load samples
 
-                saveLogSize = true
+                saveLog = true
 
                 perfLogFormat = "layermon"
             }
