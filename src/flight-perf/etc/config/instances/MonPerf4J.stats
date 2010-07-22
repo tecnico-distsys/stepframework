@@ -13,7 +13,7 @@ perf {
 
                 filterId = ""
 
-                numberSamples = 30
+                numberSamples = 6 // was 30
                 adjustHibernate = false
             }
         }

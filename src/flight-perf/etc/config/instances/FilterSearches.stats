@@ -16,7 +16,7 @@ perf {
                     return (record["soap_name"] ==~ "searchFlights");
                 }
 
-                numberSamples = 30
+                numberSamples = 6 // was 30
             }
         }
     }

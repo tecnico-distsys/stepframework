@@ -12,7 +12,7 @@ perf {
                 runId = "SizeLarge"
                 filterId = ""
 
-                numberSamples = 30
+                numberSamples = 6 // was 30
             }
         }
     }

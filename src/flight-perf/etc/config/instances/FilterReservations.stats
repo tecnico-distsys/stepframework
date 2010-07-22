@@ -16,7 +16,7 @@ perf {
                     return (record["soap_name"] ==~ "create(Single|Multiple)Reservation(s)?");
                 }
 
-                numberSamples = 30
+                numberSamples = 6 // was 30
             }
         }
     }
