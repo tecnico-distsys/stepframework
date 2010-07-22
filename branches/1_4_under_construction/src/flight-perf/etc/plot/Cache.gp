@@ -21,8 +21,7 @@ set key outside right
 zeronegative( a ) = ( a < 0 ) ? 0 : a
 
 # plot
-plot name . ".dat" using ($6):xtic(1) title "Hibernate Reads", '' using ($7) title "Hibernate Writes", '' using (zeronegative($5-($6+$7))) title "Service", '' u (zeronegative($3-$5)) t "SOAP", '' u (zeronegative($2-$3)) t "Web"
-# plot for[i=1:4] 'timeslices.dat' using i
+plot name . ".dat" using ($7):xtic(1) title "Hibernate Reads", '' using ($8) title "Hibernate Writes", '' using (zeronegative($6-($7+$8))) title "Hibernate Engine", '' using (zeronegative($5-$6)) title "Service", '' u (zeronegative($3-$5)) t "SOAP", '' u (zeronegative($2-$3)) t "Web"
 
 # configure output
 set terminal png size 1024,768

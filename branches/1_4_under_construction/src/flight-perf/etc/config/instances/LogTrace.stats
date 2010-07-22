@@ -13,7 +13,7 @@ perf {
 
                 filterId = ""
 
-                numberSamples = 10
+                numberSamples = 3 // was 10
             }
         }
     }
