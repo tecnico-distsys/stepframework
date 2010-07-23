@@ -6,11 +6,11 @@ import org.supercsv.prefs.*;
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.helper.*;
 
-def reportId = "RequestType"
-def purpose = "compare different types of requests"
+def reportId = "Breakdown"
+def purpose = "compare request response time breakdown"
 
 // command line options --------------------------------------------------------
-def cli = new CliBuilder(usage: "RequestTypeReport")
+def cli = new CliBuilder(usage: "BreakdownReport")
 cli.h(longOpt: "help", required: false, args: 0, "Print this message")
 cli.cfg(longOpt: "config", required: false, args: 1, "Specify master configuration file")
 
@@ -27,7 +27,7 @@ def configPath = "etc/config/Config.groovy";
 if (options.cfg) configPath = options.cfg;
 
 def config = Helper.parseConfig(configPath);
-assert (config.perf.flight) : "Expecting flight performance configuration file"
+assert config.perf.flight : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
 // main ------------------------------------------------------------------------
@@ -36,19 +36,19 @@ println "to " + purpose
 
 // stats base dir
 def statsBaseDir = config.perf.flight.stats.outputBaseDir;
-assert (statsBaseDir.exists() && statsBaseDir.isDirectory())
+assert statsBaseDir.exists() && statsBaseDir.isDirectory()
 
 // plot files dir
 def plotDir = config.perf.flight.report.plotDir;
-assert (plotDir.exists() && plotDir.isDirectory())
+assert plotDir.exists() && plotDir.isDirectory()
 
 def plotFile = new File(plotDir, reportId + ".gp")
-assert (plotFile.exists())
+assert plotFile.exists()
 
 // report output dir
 def outputDir = config.perf.flight.report.outputDir;
 if (!outputDir.exists()) outputDir.mkDir();
-assert (outputDir.exists() && outputDir.isDirectory())
+assert outputDir.exists() && outputDir.isDirectory()
 
 // temporary directory
 def tempDir = File.createTempFile("report", "");
@@ -60,10 +60,7 @@ assert tempDir.exists()
 // collect data ----------------------------------------------------------------
 
 def dirNameList = [
-    "FilterOff",
-    "FilterSearches",
-    "FilterReservations",
-    "FilterFaults",
+    "MonLayer"
 ]
 
 // create map of stats files
@@ -102,11 +99,10 @@ for (int i = 0; i < dataHeaderList.size(); i++) {
 }
 o.printf("%n");
 
+
+// print data file records
 def descMap = [
-    "FilterOff" : "all",
-    "FilterSearches" : "searches",
-    "FilterReservations" : "reservations",
-    "FilterFaults" : "faults",
+    "MonLayer" : ""
 ];
 descMap.each { key, value ->
     descMap[key] = "\"" + descMap[key] + "\"";
@@ -121,7 +117,7 @@ dirNameList.each { dirName ->
     csvMR.read(overallStatisticsHeaderArray);
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
-    assert statsMap
+    assert (statsMap)
 
     o.printf("%s", descMap[dirName]);
     dataHeaderList.each { dataHeader ->

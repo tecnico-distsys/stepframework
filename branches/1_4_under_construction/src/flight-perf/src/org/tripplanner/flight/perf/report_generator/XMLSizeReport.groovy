@@ -40,15 +40,15 @@ assert (statsBaseDir.exists() && statsBaseDir.isDirectory())
 
 // plot files dir
 def plotDir = config.perf.flight.report.plotDir;
-assert (plotDir.exists() && plotDir.isDirectory())
+assert plotDir.exists() && plotDir.isDirectory()
 
 def plotFile = new File(plotDir, reportId + ".gp")
-assert (plotFile.exists())
+assert plotFile.exists()
 
 // report output dir
 def outputDir = config.perf.flight.report.outputDir;
 if (!outputDir.exists()) outputDir.mkDir();
-assert (outputDir.exists() && outputDir.isDirectory())
+assert outputDir.exists() && outputDir.isDirectory()
 
 // temporary directory
 def tempDir = File.createTempFile("report", "");
@@ -115,7 +115,7 @@ dirNameList.each { dirName ->
     csvMR.read(overallStatisticsHeaderArray);
     // read data
     def statsMap = csvMR.read(overallStatisticsHeaderArray);
-    assert (statsMap)
+    assert statsMap
 
     // compute total XML logical length
     def reqLL = statsMap["soap_request_logical_length-mean"] as Double;
@@ -134,33 +134,13 @@ o.close();
 
 // invoke gnuplot --------------------------------------------------------------
 
-def ant = new AntBuilder();
+ReportHelper.execGnuplot(reportId, tempDir, plotFile, outputDir, /* delete temp dir */ false);
 
-// additional plot
-def plotFile2 = new File(plotDir, reportId + "Zoom.gp")
-assert (plotFile2.exists())
+def zoomPlotFile = new File(plotDir, reportId + "Zoom.gp")
+assert zoomPlotFile.exists()
 
-ant.copy(todir: tempDir.absolutePath, file: plotFile)
-ant.copy(todir: tempDir.absolutePath, file: plotFile2)
+ReportHelper.execGnuplot(reportId, tempDir, zoomPlotFile, outputDir);
 
-def command = "gnuplot " + plotFile.name;
-println "Invoking " + command
-Helper.exec(tempDir, command)
-
-command = "gnuplot " + plotFile2.name;
-println "Invoking " + command
-Helper.exec(tempDir, command)
-
-ant.copy(todir: outputDir.absolutePath, overwrite: "true") {
-    ant.fileset(dir: tempDir.absolutePath) {
-        ant.include(name: "*.dat")
-        ant.include(name: "*.png")
-        ant.include(name: "*.tex")
-        ant.include(name: "*.pdf")
-    }
-}
-
-ant.delete(dir: tempDir)
 
 // -----------------------------------------------------------------------------
 println "Report " + reportId + " done!"

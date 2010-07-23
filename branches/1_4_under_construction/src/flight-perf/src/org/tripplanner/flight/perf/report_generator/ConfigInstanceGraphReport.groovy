@@ -1,6 +1,8 @@
 package org.tripplanner.flight.perf.report_generator;
 
 import step.groovy.Helper;
+import org.tripplanner.flight.perf.helper.*;
+
 
 def reportId = "ConfigInstanceGraph"
 def purpose = "produce a load, run, and stats configuration instances graph"
@@ -126,24 +128,8 @@ out.close();
 
 // invoke graphviz -------------------------------------------------------------
 
-def ant = new AntBuilder();
+ReportHelper.execGraphvizDot(reportId, tempDir, dotFile, outputDir);
 
-def formatList = [ "png", "pdf" ]
-formatList.each { format ->
-    def command = "dot -T" + format + " " + dotFile.name + " -o " + reportId + "." + format;
-    println "Invoking " + command
-    Helper.exec(tempDir, command)
-}
-
-ant.copy(todir: outputDir.absolutePath, overwrite: "true") {
-    ant.fileset(dir: tempDir.absolutePath) {
-        ant.include(name: "*.gv")
-        ant.include(name: "*.png")
-        ant.include(name: "*.pdf")
-    }
-}
-
-ant.delete(dir: tempDir)
 
 // -----------------------------------------------------------------------------
 println "Report " + reportId + " done!"
