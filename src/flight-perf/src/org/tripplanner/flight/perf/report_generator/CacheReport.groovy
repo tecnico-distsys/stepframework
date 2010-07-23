@@ -151,24 +151,8 @@ o.close();
 
 // invoke gnuplot --------------------------------------------------------------
 
-def ant = new AntBuilder();
+ReportHelper.execGnuplot(reportId, tempDir, plotFile, outputDir);
 
-ant.copy(todir: tempDir.absolutePath, file: plotFile)
-
-def command = "gnuplot " + plotFile.name;
-println "Invoking " + command
-Helper.exec(tempDir, command)
-
-ant.copy(todir: outputDir.absolutePath, overwrite: "true") {
-    ant.fileset(dir: tempDir.absolutePath) {
-        ant.include(name: "*.dat")
-        ant.include(name: "*.png")
-        ant.include(name: "*.tex")
-        ant.include(name: "*.pdf")
-    }
-}
-
-ant.delete(dir: tempDir)
 
 // -----------------------------------------------------------------------------
 println "Report " + reportId + " done!"
