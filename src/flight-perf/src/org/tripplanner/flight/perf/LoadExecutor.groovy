@@ -121,9 +121,7 @@ instanceDir.eachFileMatch(instanceFileNamePattern) { file ->
 
 
     // create temporary directory
-    def tempSourceCodeDir = File.createTempFile("step_" + runId, "");
-    tempSourceCodeDir.delete();
-    tempSourceCodeDir.mkdir();
+    def tempSourceCodeDir = Helper.createTempDir("step_" + runId, "");
 
     // copy source code
     println("Copying source code to temporary location " + tempSourceCodeDir.canonicalPath);

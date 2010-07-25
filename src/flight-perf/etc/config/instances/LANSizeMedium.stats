@@ -7,13 +7,12 @@ perf {
     flight {
         stats {
             instance {
-                id = "WLANCacheRO"
+                id = "LANSizeMedium"
 
-                runId = "WLANCacheRO"
-
+                runId = "LANSizeMedium"
                 filterId = ""
 
-                numberSamples = 3
+                numberSamples = 6 // was 30
             }
         }
     }

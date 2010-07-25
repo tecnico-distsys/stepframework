@@ -1,6 +1,9 @@
 # clear previous settings
 reset
 
+# name
+name = "XMLSizeZoom"
+
 # set style
 set style line 1 lc rgb 'grey20'
 set style line 2 lc rgb 'grey30'
@@ -21,23 +24,24 @@ set xlabel "Average total XML logical length (characters)"
 set ylabel "Average request processing time (ms)"
 set key outside right
 
-# plot
-plot "XMLSize.dat" using ($3-$5):xtic(1) title "SOAP", '' u ($2-$3) t "Web"
+# plot -------------------------------------------------------------------------
+plot "XMLSize.dat" using ($3):xtic(1) title "Web Service", '' u 2 t "Web"
+
 
 # text output
-set table "XMLSizeZoom.table"
+set table name . ".gptable"
 replot
 unset table
 
 # configure output
 set terminal png size 1024,768
-set output "XMLSizeZoom.png"
+set output name . ".png"
 replot
 
 set terminal latex
-set output "XMLSizeZoom.tex"
+set output name . ".tex"
 replot
 
 set terminal pdf
-set output "XMLSizeZoom.pdf"
+set output name . ".pdf"
 replot

@@ -2,8 +2,12 @@
 SETLOCAL
 CALL env.bat set
 
+IF "%1"=="" (
+    ECHO Calling all report generators...
+)
+
 IF NOT "%1"=="" (
-    ECHO Generating just the %1 report...
+    ECHO Calling %1 report generator...
     SET JUST_ONE_PLEASE=true
     GOTO %1
 )

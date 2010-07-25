@@ -38,10 +38,7 @@ if (!outputDir.exists()) outputDir.mkDir();
 assert outputDir.exists() && outputDir.isDirectory()
 
 // temporary directory
-def tempDir = File.createTempFile("report", "");
-tempDir.delete();
-tempDir.mkdir();
-assert tempDir.exists()
+def tempDir = Helper.createTempDir("report", "");
 
 
 // collect data from instance files --------------------------------------------
@@ -134,4 +131,3 @@ ReportHelper.execGraphvizDot(reportId, tempDir, dotFile, outputDir);
 // -----------------------------------------------------------------------------
 println "Report " + reportId + " done!"
 println ""
-

@@ -2,7 +2,7 @@
 reset
 
 # name
-name = "Cache"
+name="Cache"
 
 # set style
 set style line 1 lc rgb 'grey20'
@@ -16,23 +16,22 @@ set style increment user
 set style data histogram
 set style histogram rowstacked
 set style fill pattern 1 border -1
+#set style fill solid
 set boxwidth 0.75 relative
 
 # decoration
 set grid
 unset title
-# set xtic rotate by -30 scale 0
+set xtic rotate by -30 scale 0
 set ylabel "Average request processing time (ms)"
 set key outside right
 
-# define function to convert negative numbers to zero (elapsed time cannot be negative)
-zeronegative( a ) = ( a < 0 ) ? 0 : a
+# plot -------------------------------------------------------------------------
+plot name . ".dat" using ($7):xtic(1) title "Hibernate Reads", "" using 6 title "Hibernate Writes", "" using 5 title "Hibernate Engine", "" using 4 title "Service", "" u 3 t "Web Service", "" u 2 t "Web"
 
-# plot
-plot name . ".dat" using ($7):xtic(1) title "Hibernate Reads", '' using ($8) title "Hibernate Writes", '' using (zeronegative($6-($7+$8))) title "Hibernate Engine", '' using (zeronegative($5-$6)) title "Service", '' u (zeronegative($3-$5)) t "Web Service", '' u (zeronegative($2-$3)) t "Web"
 
 # text output
-set table name . ".table"
+set table name . ".gptable"
 replot
 unset table
 

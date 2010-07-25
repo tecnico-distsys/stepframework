@@ -121,6 +121,40 @@ class Helper {
 
 
     //
+    //  File System ------------------------------------------------------------
+    //
+
+    /** Create a temporary directory */
+    static def createTempDir(prefix, suffix) {
+        def tempFile = File.createTempFile(prefix, suffix);
+        tempFile.delete();
+        def tempDir = tempFile;
+        tempDir.mkdir();
+        assert tempDir.exists()
+        return tempDir;
+    }
+
+
+    //
+    //  Collections ------------------------------------------------------------
+    //
+
+    /** Surround map values with quotes */
+    static def quoteMapValues(map) {
+        map.each { key, value ->
+            map[key] = "'" + value + "'";
+        }
+    }
+
+    /** Surround map values with double quotes */
+    static def doublequoteMapValues(map) {
+        map.each { key, value ->
+            map[key] = "\"" + value + "\"";
+        }
+    }
+
+
+    //
     //  Config -----------------------------------------------------------------
     //
 

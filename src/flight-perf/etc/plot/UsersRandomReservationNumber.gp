@@ -2,7 +2,7 @@
 reset
 
 # name
-name="Mon"
+name = "UsersRandomReservationNumber"
 
 # set style
 set style line 1 lc rgb 'grey20'
@@ -22,7 +22,8 @@ set boxwidth 0.75 relative
 # decoration
 set grid
 unset title
-set xtic rotate by -30 scale 0
+# set xtic rotate by -30 scale 0
+set xlabel "Number of concurrent users"
 set ylabel "Average request processing time (ms)"
 set key outside right
 
