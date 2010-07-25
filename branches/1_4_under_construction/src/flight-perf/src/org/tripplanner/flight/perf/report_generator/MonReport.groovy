@@ -1,10 +1,8 @@
 package org.tripplanner.flight.perf.report_generator;
 
-import org.supercsv.io.*;
-import org.supercsv.prefs.*;
-
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.helper.*;
+
 
 def reportId = "Mon"
 def purpose = "compare different monitors and data processing techniques"
@@ -30,6 +28,7 @@ def config = Helper.parseConfig(configPath);
 assert config.perf.flight : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
 
+
 // main ------------------------------------------------------------------------
 println "Generating " + reportId + " report"
 println "to " + purpose
@@ -51,102 +50,96 @@ if (!outputDir.exists()) outputDir.mkDir();
 assert outputDir.exists() && outputDir.isDirectory()
 
 // temporary directory
-def tempDir = File.createTempFile("report", "");
-tempDir.delete();
-tempDir.mkdir();
-assert tempDir.exists()
+def tempDir = Helper.createTempDir("report" + reportId, "");
 
 
-// collect data ----------------------------------------------------------------
+// --- metadata ---
 
 def dirNameList = [
     "MonPerf4JNoAgg",
     "MonPerf4J",
-    "MonPerf4JHibernateAdjust",
+//    "MonPerf4JHibernateAdjust",
     "MonEvent",
     "MonLayerNoHWrap",
     "MonLayer"
 ]
 
-// create map of stats files
-def statsFileMap = [ : ];
-dirNameList.each { dirName ->
-    def dir = new File(statsBaseDir, dirName);
-    if (!dir.exists()) {
-        println "WARNING: " + dirName + " not found."
-    } else {
-        def file = new File(dir, config.perf.flight.stats.overallFileName);
-        assert file.exists()
-        statsFileMap[dirName] = file;
-    }
-}
+def descMap = [
+    "MonPerf4JNoAgg"           : "Perf4J raw",
+    "MonPerf4J"                : "Perf4J agg",
+//    "MonPerf4JHibernateAdjust" : "Perf4J Hadj",
+    "MonEvent"                 : "Event",
+    "MonLayerNoHWrap"          : "Layer -Hwrap",
+    "MonLayer"                 : "Layer"
+];
+Helper.doublequoteMapValues(descMap);
+
+def dataHeaderList = ReportHelper.getDataHeaderList();
+
+
+// data output -----------------------------------------------------------------
 
 // create data file
 def dataFile = new File(tempDir, reportId + ".dat");
 def o = new PrintStream(dataFile);
 
-def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
-def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
+// create table file
+def tableFile = new File(tempDir, reportId + ".textable");
+def oTable = new PrintStream(tableFile);
 
 // print data file header
-o.printf("# 1-desc");
-final def dataHeaderList = [
-    "filter_time-mean",
-    "soap_time-mean",
-    "wsi_time-mean",
-    "si_time-mean",
-    "hibernate_time-mean",
-    "hibernate_read_time-mean",
-    "hibernate_write_time-mean"
-];
+o.printf("# 1_desc");
 for (int i = 0; i < dataHeaderList.size(); i++) {
-    o.printf(" %d-%s", i+2, dataHeaderList.get(i));
+    o.printf(" %d_%s", i+2, dataHeaderList.get(i));
 }
 o.printf("%n");
 
+// print table file header
+oTable.printf("%% desc");
+dataHeaderList.each { dataHeader ->
+    oTable.printf(" %s", dataHeader);
+}
+oTable.printf("%n");
 
 // print data file records
-/*
-def descMap = [
-    "MonPerf4JNoAgg"           : "Perf4J raw records",
-    "MonPerf4J"                : "Perf4J aggregated records",
-    "MonPerf4JHibernateAdjust" : "Perf4J Hibernate adjusted",
-    "MonEvent"                 : "Event monitor",
-    "MonLayerNoHWrap"          : "Layer monitor without Hibernate wrapping",
-    "MonLayer"                 : "Layer monitor with Hibernate wrapping"
-];
-*/
-def descMap = [
-    "MonPerf4JNoAgg"           : "Perf4J raw",
-    "MonPerf4J"                : "Perf4J agg",
-    "MonPerf4JHibernateAdjust" : "Perf4J Hadj",
-    "MonEvent"                 : "Event",
-    "MonLayerNoHWrap"          : "Layer -Hwrap",
-    "MonLayer"                 : "Layer"
-];
-descMap.each { key, value ->
-    descMap[key] = "\"" + descMap[key] + "\"";
-}
-
 dirNameList.each { dirName ->
-    def file = statsFileMap[dirName];
-    if (!file) return;
+    def dir = new File(statsBaseDir, dirName);
+    def file = new File(dir, config.perf.flight.stats.overallFileName);
+    if (!dir.exists())
+        println "WARNING: " + dirName + " not found."
+    if (!file.exists())
+        return;
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
-    // ignore headers in 1st line
-    csvMR.read(overallStatisticsHeaderArray);
-    // read data
-    def statsMap = csvMR.read(overallStatisticsHeaderArray);
-    assert (statsMap)
+    // read overall stats from file
+    def statsMap = ReportHelper.readOverallStatsCSV(file);
 
+    // convert to time slices
+    def slicesMap = ReportHelper.computeTimeSlices(statsMap)
+
+    // write slice values to data file
     o.printf("%s", descMap[dirName]);
     dataHeaderList.each { dataHeader ->
-        o.printf(" %s", statsMap[dataHeader]);
+        o.printf(" %s", slicesMap[dataHeader]);
     }
     o.printf("%n");
 
+    // compute total for percentages
+    def total = 0.0;
+    slicesMap.each{ k, v ->
+        total += v;
+    }
+
+    // write rows to table file
+    oTable.printf("%s", descMap[dirName]);
+    dataHeaderList.each { dataHeader ->
+        // fixed locale to force "." as decimal separator
+        oTable.print(String.format(Locale.US, " & %.2f (%.2f%%)", 
+            slicesMap[dataHeader], slicesMap[dataHeader] / total * 100));
+    }
+    oTable.printf("\\\\%n\\hline%n");
 }
 o.close();
+oTable.close();
 
 
 // invoke gnuplot --------------------------------------------------------------

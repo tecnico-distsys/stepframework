@@ -68,6 +68,7 @@ class CSVHelper {
             "request-createSingleReservation",
             "request-createMultipleReservations",
             "exception-FlightFault_Exception",
+            "exception-SOAPFaultException",
             "exception-ServiceUnavailable_Exception"
         ];
 

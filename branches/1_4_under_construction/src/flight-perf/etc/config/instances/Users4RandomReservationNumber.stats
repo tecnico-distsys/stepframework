@@ -7,14 +7,14 @@ perf {
     flight {
         stats {
             instance {
-                id = "WLANCacheOff"
+                id = "Users4RandomReservationNumber"
 
-                runId = "WLANSizeMedium"
+                runId = "Users4RandomReservationNumber"
 
                 filterId = ""
 
-                numberSamples = 30
-                adjustHibernate = false
+                numberSamples = 3 // was 10
+                numberUsersPerSample = 4
             }
         }
     }

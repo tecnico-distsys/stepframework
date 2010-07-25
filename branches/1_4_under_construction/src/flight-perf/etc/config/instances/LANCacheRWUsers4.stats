@@ -7,14 +7,14 @@ perf {
     flight {
         stats {
             instance {
-                id = "LANCacheOff"
+                id = "LANCacheRWUsers4"
 
-                runId = "LANSizeMedium"
+                runId = "LANCacheRWUsers4"
 
                 filterId = ""
 
-                numberSamples = 30
-                adjustHibernate = false
+                numberSamples = 3 // was 10
+                numberUsersPerSample = 4
             }
         }
     }

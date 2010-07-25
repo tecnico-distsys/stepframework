@@ -1,10 +1,8 @@
 package org.tripplanner.flight.perf.report_generator;
 
-import org.supercsv.io.*;
-import org.supercsv.prefs.*;
-
 import step.groovy.Helper;
 import org.tripplanner.flight.perf.helper.*;
+
 
 def reportId = "XMLSize"
 def purpose = "compare different SOAP message sizes"
@@ -27,8 +25,9 @@ def configPath = "etc/config/Config.groovy";
 if (options.cfg) configPath = options.cfg;
 
 def config = Helper.parseConfig(configPath);
-assert (config.perf.flight) : "Expecting flight performance configuration file"
+assert config.perf.flight : "Expecting flight performance configuration file"
 Helper.configStringToFile(config);
+
 
 // main ------------------------------------------------------------------------
 println "Generating " + reportId + " report"
@@ -36,7 +35,7 @@ println "to " + purpose
 
 // stats base dir
 def statsBaseDir = config.perf.flight.stats.outputBaseDir;
-assert (statsBaseDir.exists() && statsBaseDir.isDirectory())
+assert statsBaseDir.exists() && statsBaseDir.isDirectory()
 
 // plot files dir
 def plotDir = config.perf.flight.report.plotDir;
@@ -51,13 +50,10 @@ if (!outputDir.exists()) outputDir.mkDir();
 assert outputDir.exists() && outputDir.isDirectory()
 
 // temporary directory
-def tempDir = File.createTempFile("report", "");
-tempDir.delete();
-tempDir.mkdir();
-assert tempDir.exists()
+def tempDir = Helper.createTempDir("report" + reportId, "");
 
 
-// collect data ----------------------------------------------------------------
+// --- metadata ---
 
 def dirNameList = [
     "SizeTest", // for testing only
@@ -68,69 +64,112 @@ def dirNameList = [
     "SizeXXLarge"
 ]
 
-// create map of stats files
-def statsFileMap = [ : ];
-dirNameList.each { dirName ->
-    def dir = new File(statsBaseDir, dirName);
-    if (!dir.exists()) {
-        println "WARNING: " + dirName + " not found."
-    } else {
-        def file = new File(dir, config.perf.flight.stats.overallFileName);
-        assert file.exists()
-        statsFileMap[dirName] = file;
-    }
-}
+def descMap = [ ];  // not used
+Helper.doublequoteMapValues(descMap);
+
+def dataHeaderList = ReportHelper.getDataHeaderList();
 
 
-// create data file ------------------------------------------------------------
+// data output -----------------------------------------------------------------
 
+// create data files
 def dataFile = new File(tempDir, reportId + ".dat");
 def o = new PrintStream(dataFile);
 
-def overallStatisticsHeaderList = CSVHelper.getOverallStatisticsHeaderList();
-def overallStatisticsHeaderArray = overallStatisticsHeaderList as String[];
+def dataFile2 = new File(tempDir, reportId + "Errors.dat");
+def o2 = new PrintStream(dataFile2);
 
-// print data file header
-o.printf("# 1-desc");
-final def dataHeaderList = [
-    "filter_time-mean",
-    "soap_time-mean",
-    "wsi_time-mean",
-    "si_time-mean",
-    "hibernate_time-mean",
-    "hibernate_read_time-mean",
-    "hibernate_write_time-mean"
-];
+// create table file
+def tableFile = new File(tempDir, reportId + ".textable");
+def oTable = new PrintStream(tableFile);
+
+// print data files header
+o.printf("# 1_desc");
 for (int i = 0; i < dataHeaderList.size(); i++) {
-    o.printf(" %d-%s", i+2, dataHeaderList.get(i));
+    o.printf(" %d_%s", i+2, dataHeaderList.get(i));
 }
 o.printf("%n");
 
-dirNameList.each { dirName ->
-    def file = statsFileMap[dirName];
-    if (!file) return;
+o2.printf("# 1_desc 2_requests 3_apperr 4_syserr");
+o2.printf("%n");
 
-    CsvMapReader csvMR = new CsvMapReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE);
-    // ignore headers in 1st line
-    csvMR.read(overallStatisticsHeaderArray);
-    // read data
-    def statsMap = csvMR.read(overallStatisticsHeaderArray);
-    assert statsMap
+// print table file header
+oTable.printf("%% desc");
+dataHeaderList.each { dataHeader ->
+    oTable.printf(" %s", dataHeader);
+}
+oTable.printf("%n");
+
+// print data file records
+dirNameList.each { dirName ->
+    def dir = new File(statsBaseDir, dirName);
+    def file = new File(dir, config.perf.flight.stats.overallFileName);
+    def file2 = new File(dir, config.perf.flight.stats.virtualUserOutputOverallFileName);
+    if (!dir.exists())
+        println "WARNING: " + dirName + " not found."
+    if (!file.exists() || !file2.exists())
+        return;
+
+    // read stats from files
+    def statsMap = [ : ]
+    ReportHelper.readOverallStatsCSV(file).each { k, v ->
+        statsMap[k] = v;
+    }
+    ReportHelper.readVirtualUserOverallStatsCSV(file2).each { k, v ->
+        statsMap[k] = v;
+    }
 
     // compute total XML logical length
     def reqLL = statsMap["soap_request_logical_length-mean"] as Double;
     def respLL = statsMap["soap_response_logical_length-mean"] as Double;
     def ll = (reqLL + respLL) as Long;
 
+    // convert to time slices
+    def slicesMap = ReportHelper.computeTimeSlices(statsMap)
+
+    // write slice values to data file
     o.printf("%s", ll as String);
     dataHeaderList.each { dataHeader ->
-        o.printf(" %s", statsMap[dataHeader]);
+        o.printf(" %s", slicesMap[dataHeader]);
     }
     o.printf("%n");
 
+    // compute total for percentages
+    def total = 0.0;
+    slicesMap.each{ k, v ->
+        total += v;
+    }
+
+    // write rows to table file
+    oTable.printf("%s", ll as String);
+    dataHeaderList.each { dataHeader ->
+        // fixed locale to force "." as decimal separator
+        oTable.print(String.format(Locale.US, " & %.2f (%.2f%%)", 
+            slicesMap[dataHeader], slicesMap[dataHeader] / total * 100));
+    }
+    oTable.printf("\\\\%n\\hline%n");
+    
+    
+    // compute request totals
+    def requests = 0.0;
+    def sysErr = 0.0;
+    def appErr = 0.0;
+    statsMap.each { k, v ->
+        if (k ==~ "request-(.*)-mean") {
+            requests += (v as Double);
+        } else if (k.equals("exception-ServiceUnavailable_Exception-mean") || k.equals("exception-SOAPFaultException-mean")) {
+            sysErr += (v as Double);
+        } else if (k ==~ "exception-(.*)-mean") {
+            appErr += (v as Double);
+        }
+    }
+    o2.printf("%s %s %s %s%n", 
+        ll as String, requests as String, appErr as String, sysErr as String);
+    
 }
 o.close();
-
+o2.close();
+oTable.close();
 
 // invoke gnuplot --------------------------------------------------------------
 
@@ -138,8 +177,11 @@ ReportHelper.execGnuplot(reportId, tempDir, plotFile, outputDir, /* delete temp 
 
 def zoomPlotFile = new File(plotDir, reportId + "Zoom.gp")
 assert zoomPlotFile.exists()
+ReportHelper.execGnuplot(reportId, tempDir, zoomPlotFile, outputDir,  /* delete temp dir */ false);
 
-ReportHelper.execGnuplot(reportId, tempDir, zoomPlotFile, outputDir);
+def errorsPlotFile = new File(plotDir, reportId + "Errors.gp")
+assert errorsPlotFile.exists()
+ReportHelper.execGnuplot(reportId, tempDir, errorsPlotFile, outputDir);
 
 
 // -----------------------------------------------------------------------------

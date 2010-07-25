@@ -2,7 +2,7 @@
 reset
 
 # name
-name = "LogLevel"
+name="LogLevel"
 
 # set style
 set style line 1 lc rgb 'grey20'
@@ -15,6 +15,7 @@ set style increment user
 
 set style data histogram
 set style fill pattern 1 border -1
+#set style fill solid
 set boxwidth 0.75 relative
 
 set logscale y
@@ -26,11 +27,12 @@ set ylabel "Average request processing time (ms)"
 set key outside right
 unset key
 
-# plot
+# plot -------------------------------------------------------------------------
 plot name . ".dat" using ($2):xtic(1)
 
+
 # text output
-set table name . ".table"
+set table name . ".gptable"
 replot
 unset table
 
