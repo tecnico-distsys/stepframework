@@ -1,0 +1,13 @@
+[2010-07-17 21:25:38,461]TRACE     0[http-8080-1](Handler.java:39) - getHeaders()
+[2010-07-17 21:25:38,696] INFO   235[http-8080-1](ContextListener.java:29) - Framework initializing...
+[2010-07-17 21:25:38,696]DEBUG   235[http-8080-1](ContextListener.java:31) - Disable JAX-WS option to capture stack trace in SOAP fault messages
+[2010-07-17 21:25:38,710] INFO   249[http-8080-1](ContextListener.java:37) - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[2010-07-17 21:25:39,220] INFO   759[http-8080-1](ContextListener.java:29) - Framework initializing...
+[2010-07-17 21:25:39,221]DEBUG   760[http-8080-1](ContextListener.java:31) - Disable JAX-WS option to capture stack trace in SOAP fault messages
+[2010-07-17 21:25:39,224] INFO   763[http-8080-1](ContextListener.java:37) - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[2010-07-17 21:25:39,370] INFO   909[http-8080-1](Log.java:176) - Class implementing/extending ActionBeanContext found in web.xml: hello.web.HelloContext
+[2010-07-17 21:25:39,372] INFO   911[http-8080-1](Log.java:176) - DefaultActionBeanContextFactory will use ActionBeanContext subclass hello.web.HelloContext
+[2010-07-17 21:25:39,390] INFO   929[http-8080-1](Log.java:176) - No locale list specified, defaulting to single locale: en_US
+[2010-07-17 21:25:39,401] INFO   940[http-8080-1](Log.java:176) - Class implementing/extending ExceptionHandler found in web.xml: net.sourceforge.stripes.exception.DelegatingExceptionHandler
+[2010-07-17 21:25:39,413] INFO   952[http-8080-1](Log.java:176) - Using net.sourceforge.stripes.controller.multipart.CosMultipartWrapper as MultipartWrapper implementation.
+[2010-07-17 21:25:39,423] INFO   962[http-8080-1](Log.java:176) - Stripes Initialization Complete. Version: 1.5.3, Build: 1221

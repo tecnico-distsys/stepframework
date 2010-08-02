@@ -9,6 +9,8 @@ import net.sourceforge.stripes.action.Resolution;
 
 import hello.ws.client.service.SayHelloService;
 
+import step.framework.extensions.ExtensionRepository;
+import step.framework.jarloader.JarLoader;
 
 public class SayHelloAction extends HelloAction {
 
@@ -57,6 +59,17 @@ public class SayHelloAction extends HelloAction {
         try {
             log.trace("Starting main");
             log.trace(args);
+
+	    try
+	    {
+		log.trace("Installing extensions");
+		JarLoader.loadOneTime(ExtensionRepository.LOADER_PATH);
+		log.trace("Extensions JarLoader loaded folder \"" + ExtensionRepository.LOADER_PATH + "\"");
+	    }
+	    catch(Exception e)
+	    {
+		log.trace("Extensions JarLoader failed to load folder \"" + ExtensionRepository.LOADER_PATH + "\"", e);
+	    }
 
             SayHelloAction action = new SayHelloAction();
             action.setName(args[0]);

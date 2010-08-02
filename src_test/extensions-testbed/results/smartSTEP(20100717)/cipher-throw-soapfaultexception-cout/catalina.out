@@ -1,0 +1,121 @@
+Jul 17, 2010 9:25:21 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: /usr/lib/jvm/java-6-openjdk/jre/lib/i386/server:/usr/lib/jvm/java-6-openjdk/jre/lib/i386:/usr/lib/jvm/java-6-openjdk/jre/../lib/i386:/usr/java/packages/lib/i386:/usr/lib/jni:/lib:/usr/lib
+Jul 17, 2010 9:25:22 PM org.apache.coyote.http11.Http11Protocol init
+INFO: Initializing Coyote HTTP/1.1 on http-8080
+Jul 17, 2010 9:25:22 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 629 ms
+Jul 17, 2010 9:25:22 PM org.apache.catalina.core.StandardService start
+INFO: Starting service Catalina
+Jul 17, 2010 9:25:22 PM org.apache.catalina.core.StandardEngine start
+INFO: Starting Servlet Engine: Apache Tomcat/6.0.14
+Jul 17, 2010 9:25:23 PM org.apache.coyote.http11.Http11Protocol start
+INFO: Starting Coyote HTTP/1.1 on http-8080
+Jul 17, 2010 9:25:23 PM org.apache.jk.common.ChannelSocket init
+INFO: JK: ajp13 listening on /0.0.0.0:8009
+Jul 17, 2010 9:25:23 PM org.apache.jk.server.JkMain start
+INFO: Jk running ID=0 time=0/122  config=null
+Jul 17, 2010 9:25:23 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 1540 ms
+Jul 17, 2010 9:25:37 PM org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive hello-ws.war
+Jul 17, 2010 9:25:37 PM com.sun.xml.ws.transport.http.servlet.WSServletContextListener contextInitialized
+INFO: WSSERVLET12: JAX-WS context listener initializing
+21:25:38,461 http-8080-1 TRACE extensions.Handler:39 - getHeaders()
+Jul 17, 2010 9:25:38 PM com.sun.xml.ws.transport.http.servlet.WSServletDelegate <init>
+INFO: WSSERVLET14: JAX-WS servlet initializing
+21:25:38,696 http-8080-1 INFO  web.ContextListener:29 - Framework initializing...
+21:25:38,696 http-8080-1 DEBUG web.ContextListener:31 - Disable JAX-WS option to capture stack trace in SOAP fault messages
+Using folder "/home/johnyk/tomcat/extensions" for extension JarLoader.
+[DEBUG] Started JarLoader on folder "/home/johnyk/tomcat/extensions"
+21:25:38,710 http-8080-1 INFO  web.ContextListener:37 - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[DEBUG] Found new Jar: extension-trace.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-trace.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.trace.TraceExtensionInstaller".
+[DEBUG] Installing Jar: extension-trace.jar
+[PROPERTIES] loading local properties
+Using custom output (file): "/home/johnyk/tomcat/temp/soap-trace-server.log"
+[DEBUG] Registering Jar: extension-trace.jar
+[DEBUG] Jar "extension-trace.jar" successfully installed.
+[DEBUG] Found new Jar: extension-hello.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-hello.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.hello.HelloExtensionInstaller".
+[DEBUG] Installing Jar: extension-hello.jar
+null (initializing extension)
+[DEBUG] Registering Jar: extension-hello.jar
+[DEBUG] Jar "extension-hello.jar" successfully installed.
+[DEBUG] Found new Jar: extension-errors.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-errors.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.errors.ErrorsExtensionInstaller".
+[DEBUG] Installing Jar: extension-errors.jar
+[PROPERTIES] loading local properties
+[DEBUG] Registering Jar: extension-errors.jar
+[DEBUG] Jar "extension-errors.jar" successfully installed.
+[DEBUG] Found new Jar: extension-id.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-id.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.id.IDExtensionInstaller".
+[DEBUG] Installing Jar: extension-id.jar
+[DEBUG] Registering Jar: extension-id.jar
+[DEBUG] Jar "extension-id.jar" successfully installed.
+[DEBUG] Found new Jar: extension-cipher.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-cipher.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.cipher.CipherExtensionInstaller".
+[DEBUG] Installing Jar: extension-cipher.jar
+[DEBUG] Registering Jar: extension-cipher.jar
+[DEBUG] Jar "extension-cipher.jar" successfully installed.
+Jul 17, 2010 9:25:38 PM org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive helloclient-web.war
+21:25:39,220 http-8080-1 INFO  web.ContextListener:29 - Framework initializing...
+21:25:39,221 http-8080-1 DEBUG web.ContextListener:31 - Disable JAX-WS option to capture stack trace in SOAP fault messages
+Using folder "/home/johnyk/tomcat/extensions" for extension JarLoader.
+[DEBUG] Started JarLoader on folder "/home/johnyk/tomcat/extensions"
+[DEBUG] Found new Jar: extension-trace.jar
+21:25:39,224 http-8080-1 INFO  web.ContextListener:37 - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[DEBUG] Creating a new ClassLoader for Jar: extension-trace.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.trace.TraceExtensionInstaller".
+[DEBUG] Installing Jar: extension-trace.jar
+[PROPERTIES] loading local properties
+Using custom output (file): "/home/johnyk/tomcat/temp/soap-trace-client.log"
+[DEBUG] Registering Jar: extension-trace.jar
+[DEBUG] Jar "extension-trace.jar" successfully installed.
+[DEBUG] Found new Jar: extension-hello.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-hello.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.hello.HelloExtensionInstaller".
+[DEBUG] Installing Jar: extension-hello.jar
+null (initializing extension)
+[DEBUG] Registering Jar: extension-hello.jar
+[DEBUG] Jar "extension-hello.jar" successfully installed.
+[DEBUG] Found new Jar: extension-errors.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-errors.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.errors.ErrorsExtensionInstaller".
+[DEBUG] Installing Jar: extension-errors.jar
+[PROPERTIES] loading local properties
+[DEBUG] Registering Jar: extension-errors.jar
+[DEBUG] Jar "extension-errors.jar" successfully installed.
+[DEBUG] Found new Jar: extension-id.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-id.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.id.IDExtensionInstaller".
+[DEBUG] Installing Jar: extension-id.jar
+[DEBUG] Registering Jar: extension-id.jar
+[DEBUG] Jar "extension-id.jar" successfully installed.
+[DEBUG] Found new Jar: extension-cipher.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-cipher.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.cipher.CipherExtensionInstaller".
+[DEBUG] Installing Jar: extension-cipher.jar
+[DEBUG] Registering Jar: extension-cipher.jar
+[DEBUG] Jar "extension-cipher.jar" successfully installed.
+21:25:39,370 http-8080-1 INFO  config.BootstrapPropertyResolver:176 - Class implementing/extending ActionBeanContext found in web.xml: hello.web.HelloContext
+21:25:39,372 http-8080-1 INFO  controller.DefaultActionBeanContextFactory:176 - DefaultActionBeanContextFactory will use ActionBeanContext subclass hello.web.HelloContext
+21:25:39,390 http-8080-1 INFO  localization.DefaultLocalePicker:176 - No locale list specified, defaulting to single locale: en_US
+21:25:39,401 http-8080-1 INFO  config.BootstrapPropertyResolver:176 - Class implementing/extending ExceptionHandler found in web.xml: net.sourceforge.stripes.exception.DelegatingExceptionHandler
+21:25:39,413 http-8080-1 INFO  multipart.DefaultMultipartWrapperFactory:176 - Using net.sourceforge.stripes.controller.multipart.CosMultipartWrapper as MultipartWrapper implementation.
+21:25:39,423 http-8080-1 INFO  controller.StripesFilter:176 - Stripes Initialization Complete. Version: 1.5.3, Build: 1221

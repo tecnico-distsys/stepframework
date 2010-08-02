@@ -1,0 +1,51 @@
+[2010-07-17 21:35:26,875]TRACE     0[http-8080-1](Handler.java:39) - getHeaders()
+[2010-07-17 21:35:27,006] INFO   131[http-8080-1](ContextListener.java:29) - Framework initializing...
+[2010-07-17 21:35:27,007]DEBUG   132[http-8080-1](ContextListener.java:31) - Disable JAX-WS option to capture stack trace in SOAP fault messages
+[2010-07-17 21:35:27,014] INFO   139[http-8080-1](ContextListener.java:37) - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[2010-07-17 21:35:27,549] INFO   674[http-8080-1](ContextListener.java:29) - Framework initializing...
+[2010-07-17 21:35:27,550]DEBUG   675[http-8080-1](ContextListener.java:31) - Disable JAX-WS option to capture stack trace in SOAP fault messages
+[2010-07-17 21:35:27,560] INFO   685[http-8080-1](ContextListener.java:37) - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[2010-07-17 21:35:27,731] INFO   856[http-8080-1](Log.java:176) - Class implementing/extending ActionBeanContext found in web.xml: hello.web.HelloContext
+[2010-07-17 21:35:27,732] INFO   857[http-8080-1](Log.java:176) - DefaultActionBeanContextFactory will use ActionBeanContext subclass hello.web.HelloContext
+[2010-07-17 21:35:27,749] INFO   874[http-8080-1](Log.java:176) - No locale list specified, defaulting to single locale: en_US
+[2010-07-17 21:35:27,758] INFO   883[http-8080-1](Log.java:176) - Class implementing/extending ExceptionHandler found in web.xml: net.sourceforge.stripes.exception.DelegatingExceptionHandler
+[2010-07-17 21:35:27,771] INFO   896[http-8080-1](Log.java:176) - Using net.sourceforge.stripes.controller.multipart.CosMultipartWrapper as MultipartWrapper implementation.
+[2010-07-17 21:35:27,780] INFO   905[http-8080-1](Log.java:176) - Stripes Initialization Complete. Version: 1.5.3, Build: 1221
+[2010-07-17 21:35:32,177]TRACE  5302[http-8080-2](Handler.java:46) - handleMessage()
+[2010-07-17 21:35:32,188]DEBUG  5313[http-8080-2](Config.java:39) - Config constructor invoked
+[2010-07-17 21:35:32,188]DEBUG  5313[http-8080-2](Config.java:166) - Configuration has not been loaded yet. Try to load default properties file.
+[2010-07-17 21:35:32,189] INFO  5314[http-8080-2](Config.java:94) - Loading configuration properties from resource path /config.properties
+[2010-07-17 21:35:32,191]TRACE  5316[http-8080-2](Config.java:123) - Configuration properties:
+[2010-07-17 21:35:32,192]TRACE  5317[http-8080-2](Config.java:126) - extensions.factory properties
+[2010-07-17 21:35:32,192]TRACE  5317[http-8080-2](Config.java:126) - hello.ws.ThrowServiceError false
+[2010-07-17 21:35:32,197]TRACE  5322[http-8080-2](PropertiesPipeFactory.java:166) - entering loadConfig
+[2010-07-17 21:35:32,198]TRACE  5323[http-8080-2](PropertiesPipeFactory.java:167) - /extensions.properties
+[2010-07-17 21:35:32,199]TRACE  5324[http-8080-2](PropertiesPipeFactory.java:191) - properties file changed since last update
+[2010-07-17 21:35:32,200]TRACE  5325[http-8080-2](PropertiesPipeFactory.java:192) - reloading configuration
+[2010-07-17 21:35:32,200]TRACE  5325[http-8080-2](PropertiesPipeFactory.java:200) - extensions config properties (key: 'value')
+[2010-07-17 21:35:32,201]TRACE  5326[http-8080-2](PropertiesPipeFactory.java:204) - extensions.intercept.service[]: ''
+[2010-07-17 21:35:32,201]TRACE  5326[http-8080-2](PropertiesPipeFactory.java:204) - extensions.intercept.web-service[]: 'trace,errors,cipher,trace'
+[2010-07-17 21:35:32,201]TRACE  5326[http-8080-2](PropertiesPipeFactory.java:208) - load intercept configs
+[2010-07-17 21:35:32,202]TRACE  5327[http-8080-2](PropertiesPipeFactory.java:255) - ignoring empty extensions.intercept.service[]
+[2010-07-17 21:35:32,203]TRACE  5328[http-8080-2](PropertiesPipeFactory.java:213) - Intercept configuration trees:
+[2010-07-17 21:35:32,203]TRACE  5328[http-8080-2](PropertiesPipeFactory.java:214) - Configuration tree Service interception
+root [ConfigNode: config=null, #childNodes=0]
+
+[2010-07-17 21:35:32,204]TRACE  5329[http-8080-2](PropertiesPipeFactory.java:215) - Configuration tree Web Service interception
+root [ConfigNode: config=[trace, errors, cipher, trace], #childNodes=0]
+
+[2010-07-17 21:35:32,204]TRACE  5329[http-8080-2](PropertiesPipeFactory.java:228) - finally exiting loadConfig
+[2010-07-17 21:35:32,205]TRACE  5330[http-8080-2](PropertiesPipeFactory.java:423) - SOAP message names follow
+[2010-07-17 21:35:32,205]TRACE  5330[http-8080-2](PropertiesPipeFactory.java:424) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-07-17 21:35:32,206]TRACE  5331[http-8080-2](PropertiesPipeFactory.java:425) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-07-17 21:35:32,206]TRACE  5331[http-8080-2](PropertiesPipeFactory.java:453) - Web Service config path source items
+[2010-07-17 21:35:32,206]TRACE  5331[http-8080-2](PropertiesPipeFactory.java:454) - namespace: 'urn:hello:wsdl'
+[2010-07-17 21:35:32,207]TRACE  5332[http-8080-2](PropertiesPipeFactory.java:455) - service: 'HelloService'
+[2010-07-17 21:35:32,207]TRACE  5332[http-8080-2](PropertiesPipeFactory.java:456) - port: 'HelloPort'
+[2010-07-17 21:35:32,208]TRACE  5333[http-8080-2](PropertiesPipeFactory.java:365) - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+[2010-07-17 21:35:32,208]TRACE  5333[http-8080-2](PropertiesPipeFactory.java:369) - Using configuration tree: Web Service interception
+[2010-07-17 21:35:32,211]TRACE  5336[http-8080-2](WebServiceInterceptorPipe.java:53) - Executing inbound server side pipe
+[2010-07-17 21:35:32,212]TRACE  5337[http-8080-2](WebServiceInterceptorPipe.java:110) - Executing inbound trace
+[2010-07-17 21:35:32,270]TRACE  5395[http-8080-2](WebServiceInterceptorPipe.java:110) - Executing inbound cipher
+[2010-07-17 21:35:32,331]TRACE  5456[http-8080-2](WebServiceInterceptorPipe.java:110) - Executing inbound errors
+[2010-07-17 21:35:32,336]TRACE  5461[http-8080-2](Handler.java:60) - close()

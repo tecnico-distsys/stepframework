@@ -1,0 +1,41 @@
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdUGvWiD7jxMmN74yQMevu63RXr9qix6xOm2P34OVfpOdbGas9hRYmaHFy
+q/Y8ot3kkxAD4yycgRydghVXhGgaIt/5xxShxCDkzHX34iH8Kmzbr16lbIlPiw==</message>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdjqWswTMclSpKwqp2qq8ox0hakn7ihe/xKA1q90QFXiGK/7IRvBT6hFX4
+b1FS6IXdaidFP3R52Vk6F5RqiDu9rLCgd1Z/c9dUCRujcokcG9IgQ5zPG6/zawNAPIthSTxMoNCR
+ST2bQdC8VfhByrfBUUVHTPghDGh5uEYEHYBjtT15Kuf3VPcUqp9dcHyUaobVmA0ufl9z8Lqoy/3C
+wNrwVyhjeUxs8OuMqnQp0LuclzUqfhK30FK9TeNv3OU6MlVksLoMQz29BHkwFZH0pjCg/WZHU+Ph
+n5H3JSbYJtBGNTaWydl+AgKOLILC4YKDo5O+XEB/YHfRC1MUehatbufPcQ==</message>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <S:Fault>
+      <faultcode xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">SOAP-ENV:Server</faultcode>
+      <faultstring>ErrorsWebServiceInterceptor generated exception in method interceptMessage-server-outbound</faultstring>
+    </S:Fault>
+  </S:Body>
+</S:Envelope>

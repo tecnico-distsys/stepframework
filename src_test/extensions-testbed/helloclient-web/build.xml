@@ -54,14 +54,6 @@
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>
-
-        <!-- extension libraries -->
-        <fileset dir="${root.rel-dir}/extensions/dist">
-            <include name="*.jar" />
-        </fileset>
-        <fileset dir="${rootextra.rel-dir}/more-extensions/dist">
-            <include name="*.jar" />
-        </fileset>
     </path>
 
 
@@ -137,13 +129,6 @@
                         prefix="WEB-INF/lib" />
             <!-- hello libraries -->
             <zipfileset dir="../hello-ws/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <!-- extension libs -->
-            <zipfileset dir="${root.rel-dir}/extensions/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />
-            <zipfileset dir="${rootextra.rel-dir}/more-extensions/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
         </jar>

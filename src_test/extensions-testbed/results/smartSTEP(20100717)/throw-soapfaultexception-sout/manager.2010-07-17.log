@@ -1,0 +1,12 @@
+Jul 17, 2010 8:31:26 PM org.apache.catalina.core.ApplicationContext log
+INFO: Manager: init: Associated with Deployer 'Catalina:type=Deployer,host=localhost'
+Jul 17, 2010 8:31:26 PM org.apache.catalina.core.ApplicationContext log
+INFO: Manager: init: Global resources are available
+Jul 17, 2010 8:31:26 PM org.apache.catalina.core.ApplicationContext log
+INFO: Manager: deploy: Deploying web application at '/hello-ws'
+Jul 17, 2010 8:31:26 PM org.apache.catalina.core.ApplicationContext log
+INFO: Manager: Uploading WAR file to /home/johnyk/tomcat/webapps/hello-ws.war
+Jul 17, 2010 8:31:28 PM org.apache.catalina.core.ApplicationContext log
+INFO: Manager: deploy: Deploying web application at '/helloclient-web'
+Jul 17, 2010 8:31:28 PM org.apache.catalina.core.ApplicationContext log
+INFO: Manager: Uploading WAR file to /home/johnyk/tomcat/webapps/helloclient-web.war
