@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="extensions" basedir="." default="build">
+
+    <description>Extensions super-build file. Customize as required.</description>
+
+    <!-- Cipher -->
+    <target name="build-cipher" description="Build cipher">
+        <ant inheritAll="false" dir="cipher" target="build" />
+    </target>
+
+    <target name="clean-cipher" description="Clean cipher extension">
+        <ant inheritAll="false" dir="cipher" target="clean" />
+    </target>
+
+    <target name="rebuild-cipher" depends="clean-cipher,build-cipher" />
+
+    <target name="install-cipher" description="Install cipher extension">
+        <ant inheritAll="false" dir="cipher" target="install" />
+    </target>
+    
+    <!-- Errors -->
+    <target name="build-errors" description="Build errors">
+        <ant inheritAll="false" dir="errors" target="build" />
+    </target>
+
+    <target name="clean-errors" description="Clean errors extension">
+        <ant inheritAll="false" dir="errors" target="clean" />
+    </target>
+
+    <target name="rebuild-errors" depends="clean-errors,build-errors" />
+
+    <target name="install-errors" description="Install errors extension">
+        <ant inheritAll="false" dir="errors" target="install" />
+    </target>
+    
+    <!-- Hello -->
+    <target name="build-hello" description="Build hello">
+        <ant inheritAll="false" dir="hello" target="build" />
+    </target>
+
+    <target name="clean-hello" description="Clean hello extension">
+        <ant inheritAll="false" dir="hello" target="clean" />
+    </target>
+
+    <target name="rebuild-hello" depends="clean-hello,build-hello" />
+
+    <target name="install-hello" description="Install hello extension">
+        <ant inheritAll="false" dir="hello" target="install" />
+    </target>
+    
+    <!-- ID -->
+    <target name="build-id" description="Build id">
+        <ant inheritAll="false" dir="id" target="build" />
+    </target>
+
+    <target name="clean-id" description="Clean id extension">
+        <ant inheritAll="false" dir="id" target="clean" />
+    </target>
+
+    <target name="rebuild-id" depends="clean-id,build-id" />
+
+    <target name="install-id" description="Install id extension">
+        <ant inheritAll="false" dir="id" target="install" />
+    </target>
+    
+    <!-- Trace -->
+    <target name="build-trace" description="Build trace extension">
+        <ant inheritAll="false" dir="trace" target="build" />
+    </target>
+
+    <target name="clean-trace" description="Clean trace extension">
+        <ant inheritAll="false" dir="trace" target="clean" />
+    </target>
+
+    <target name="rebuild-trace" depends="clean-trace,build-trace" />
+
+    <target name="install-trace" description="Install trace extension">
+        <ant inheritAll="false" dir="trace" target="install" />
+    </target>
+    
+    <!-- All -->
+    <target name="build" depends="build-cipher,build-errors,build-hello,build-id,build-trace" />
+    
+    <target name="clean" depends="clean-cipher,clean-errors,clean-hello,clean-id,clean-trace" />
+    
+    <target name="rebuild" depends="rebuild-cipher,rebuild-errors,rebuild-hello,rebuild-id,rebuild-trace" />
+    
+    <target name="install" depends="install-cipher,install-errors,install-hello,install-id,install-trace" />
+
+</project>
