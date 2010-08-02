@@ -4,10 +4,37 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class JarLoader {
+public class JarLoader extends TimerTask {
+	
+	private static final int TIMER_DELAY = 0;
+	private static final int TIMER_PERIOD = 5000;
+	
+	//*********************************************************************+
+	//singleton
 	
 	public static Map<File, JarLoader> instances;
+	
+	public static void loadOneTime(String path) throws JarException
+	{
+		try
+		{
+			File folder = new File(path);
+			JarLoader loader = new JarLoader(folder);
+			loader.run();
+			System.out.println("[DEBUG] JarLoader loaded folder \"" + folder.getCanonicalPath() + "\"");
+		}
+		catch(JarException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new JarException(e);
+		}
+	}
 	
 	public static void load(String path) throws JarException
 	{
@@ -22,9 +49,9 @@ public class JarLoader {
 			{
 				instance = new JarLoader(folder);
 				instances.put(folder, instance);
+				instance.start();
+				System.out.println("[DEBUG] Started JarLoader on folder \"" + folder.getCanonicalPath() + "\"");
 			}
-			System.out.println("[DEBUG] Updating JarLoader on folder \"" + folder.getCanonicalPath() + "\"");
-			instance.update();
 		}
 		catch(JarException e)
 		{
@@ -51,8 +78,13 @@ public class JarLoader {
 		this.jars = new HashMap<File, Jar>();
 	}
 	
-	@SuppressWarnings("finally")
-	private final void update()
+	public void start()
+	{
+		Timer timer = new Timer();
+		timer.schedule(this, TIMER_DELAY, TIMER_PERIOD);
+	}
+	
+	public void run()
 	{
 		File[] files = folder.listFiles();
 		if(files == null)
@@ -60,7 +92,7 @@ public class JarLoader {
 		
 		for(int i=0; i<files.length; i++)
 		{
-			if(!files[i].getName().endsWith(".jar") && !files[i].getName().endsWith(".JAR"))
+			if(!files[i].getName().toLowerCase().endsWith(".jar"))
 				continue;
 			
 			Jar jar = jars.get(files[i]);

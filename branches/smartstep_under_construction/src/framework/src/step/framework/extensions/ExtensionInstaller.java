@@ -1,18 +1,39 @@
 package step.framework.extensions;
 
+import javax.xml.namespace.QName;
+
 import step.framework.jarloader.JarInstaller;
 
 public abstract class ExtensionInstaller extends JarInstaller {
 	
 	protected abstract String getExtensionID();
+	protected abstract QName[] getWSPNamespaces();
+	protected abstract Class<? extends ExtensionListener> getExtensionListenerClass();
 	protected abstract Class<? extends ServiceInterceptor> getServiceInterceptorClass();
 	protected abstract Class<? extends WebServiceInterceptor> getWebServiceInterceptorClass();
 	
-	public	final void install() throws ExtensionException
+	public final void install() throws ExtensionException
 	{
 		try
 		{
-			Extension ext = new Extension(getExtensionID());
+			String id = getExtensionID();
+			
+			if(id == null)
+				throw new ExtensionException("Extension ID can't be null.");
+			
+			id = id.trim();
+			if(id.length() == 0)
+				throw new ExtensionException("Extension ID can't be empty.");
+			
+			Extension ext = new Extension(getExtensionID(), getWSPNamespaces(), getProperties());
+			
+			Class<? extends ExtensionListener> extListClass = getExtensionListenerClass();
+			if(extListClass != null)
+			{
+				ExtensionListener extList = extListClass.getConstructor().newInstance();
+				extList.setExtension(ext);
+				ext.setExtensionListener(extList);
+			}
 			
 			Class<? extends ServiceInterceptor> svcIntClass = getServiceInterceptorClass();
 			if(svcIntClass != null)
@@ -31,6 +52,11 @@ public abstract class ExtensionInstaller extends JarInstaller {
 			}
 
 			ExtensionRepository.getInstance().install(ext);
+			ext.init();
+		}
+		catch(ExtensionException e)
+		{
+			throw e;
 		}
 		catch(Exception e)
 		{

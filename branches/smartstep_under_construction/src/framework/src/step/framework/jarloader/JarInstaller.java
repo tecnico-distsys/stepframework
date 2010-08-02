@@ -21,11 +21,6 @@ public abstract class JarInstaller {
 		return properties;
 	}
 	
-	public String getProperty(String name)
-	{
-		return properties.getProperty(name);
-	}
-	
 	protected abstract void install() throws Exception;
 	
 }

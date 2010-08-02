@@ -33,12 +33,12 @@ public class ContextListener implements ServletContextListener {
         
         try
         {
-        	JarLoader.load(ExtensionRepository.DEFAULT_PATH);
-            log.info("Extensions JarLoader initialized on path \"" + ExtensionRepository.DEFAULT_PATH + "\"");
+        	JarLoader.load(ExtensionRepository.LOADER_PATH);
+            log.info("Extensions JarLoader initialized on path \"" + ExtensionRepository.LOADER_PATH + "\"");
         }
         catch(JarException e)
         {
-            log.info("Extensions JarLoader failed to initialize on path \"" + ExtensionRepository.DEFAULT_PATH + "\"", e);
+            log.info("Extensions JarLoader failed to initialize on path \"" + ExtensionRepository.LOADER_PATH + "\"", e);
         }
     }
 

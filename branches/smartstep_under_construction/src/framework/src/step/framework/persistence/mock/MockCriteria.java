@@ -51,7 +51,6 @@ public class MockCriteria implements Criteria {
     public Criteria setResultTransformer(ResultTransformer resultTransformer) { throw new UnsupportedOperationException(); }
     public Criteria setTimeout(int timeout) { throw new UnsupportedOperationException(); }
 
-    @SuppressWarnings("unchecked")
     public Object uniqueResult() {
         return session.getObject(clazz);
     }

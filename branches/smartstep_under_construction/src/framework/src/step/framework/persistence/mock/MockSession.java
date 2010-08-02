@@ -120,11 +120,9 @@ public class MockSession implements Session {
     public Connection close() { throw new UnsupportedOperationException(); }
     @Deprecated public Connection connection() { throw new UnsupportedOperationException(); }
     public boolean contains(Object object) { throw new UnsupportedOperationException(); }
-    @SuppressWarnings("unchecked")
 	public Criteria createCriteria(Class persistentClass) {
         return new MockCriteria(this, persistentClass);
     }
-    @SuppressWarnings("unchecked")
 	public Criteria createCriteria(Class persistentClass, String alias) { throw new UnsupportedOperationException(); }
     public Criteria createCriteria(String entityName) { throw new UnsupportedOperationException(); }
     public Criteria createCriteria(String entityName, String alias) { throw new UnsupportedOperationException(); }
