@@ -2,8 +2,9 @@ package step.framework.service;
 
 import step.framework.domain.DomainException;
 import step.framework.exception.ServiceException;
-import step.framework.extensions.PipeFactory;
-import step.framework.extensions.ServiceInterceptorPipe;
+import step.framework.extensions.ExtensionException;
+import step.framework.extensions.pipe.PipeFactory;
+import step.framework.extensions.pipe.ServiceInterceptorPipe;
 
 /**
  *  This is the Framework's base service.<br />
@@ -56,8 +57,8 @@ public abstract class Service<R> {
         boolean txCommited = false;
 
         try {
-            tx = txManager.newTransaction();
             ServiceInterceptorPipe pipe = PipeFactory.getServiceInterceptorPipe(this);
+            tx = txManager.newTransaction();
             tx.begin();
             before(pipe);
             returnValue = action();
@@ -65,7 +66,9 @@ public abstract class Service<R> {
             tx.commit();
             txCommited = true;
             return returnValue;
-        } finally {
+        } catch (ExtensionException e) {
+			throw new RuntimeException(e);
+		} finally {
             if (!txCommited && tx != null) { tx.rollback(); }
         }
 
@@ -80,11 +83,11 @@ public abstract class Service<R> {
     //
 
     protected final void before(ServiceInterceptorPipe pipe) throws DomainException, ServiceException {
-        pipe.executeBefore();
+        pipe.executeBefore(this);
     }
 
     protected final void after(ServiceInterceptorPipe pipe) throws DomainException, ServiceException {
-        pipe.executeAfter();
+        pipe.executeAfter(this);
     }
 
 }
