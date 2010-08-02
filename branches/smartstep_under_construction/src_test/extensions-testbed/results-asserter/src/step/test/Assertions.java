@@ -58,7 +58,7 @@ public class Assertions {
 
     public static void assertClientSOAPFaultExceptionFailedToDecipher(AssertContext ctx) throws Exception {
         log.info(getMethodName());
-        String regex = "(?i).*Action message.*SOAPFaultException.*failed to decipher.*";
+        String regex = "(?i).*Action message.*SOAPFaultException.*plain text message.*";
         int lineNr = TextFileUtil.lineOfPattern(ctx.get("clientLog"), regex);
         if(lineNr == -1)
             throw new AssertException("Expression " + regex + " should have matched a line in client log");

@@ -42,13 +42,6 @@
         <fileset dir="${env.STEP_HOME}/lib">
             <include name="*.jar" />
         </fileset>
-        <!-- extensions -->
-        <fileset dir="${root.rel-dir}/extensions/dist">
-            <include name="*.jar" />
-        </fileset>
-        <fileset dir="${rootextra.rel-dir}/more-extensions/dist">
-            <include name="*.jar" />
-        </fileset>
     </path>
 
 

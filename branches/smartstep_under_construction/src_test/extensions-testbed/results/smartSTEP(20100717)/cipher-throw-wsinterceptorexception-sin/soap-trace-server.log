@@ -1,0 +1,21 @@
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdUGvWiD7jxMmN74yQMevu63RXr9qix6xOm2P34OVfpOdbGas9hRYmaHFy
+q/Y8ot3kkxAD4yycgRydghVXhGgaIt/5xxShxCDkzHX34iH8Kmzbr16lbIlPiw==</message>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdjqWswTMclSpKwqp2qq8oxwP3vStnVk7FWqgxpPNurPMEqfMCYIPI11gD
+EhHkzZ7/hclN8TVnfh1BQKdkrBoJxGDJmhkIxxhWMI1E5vC27aTxwfvtVTh/dCeCbnbAZ2VsmuT2
+j4hN5dPeonQOp7dkiapU0E7minmjXWc8DkuRC+omXaGOkftLLdMiO7vfnGMx3/nHFKHEIOTMdffi
+IfwqbNuvXqVsiU+L</message>
+  </S:Body>
+</S:Envelope>

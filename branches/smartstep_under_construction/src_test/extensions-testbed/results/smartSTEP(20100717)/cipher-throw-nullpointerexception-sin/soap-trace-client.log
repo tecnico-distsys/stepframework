@@ -1,0 +1,40 @@
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdUGvWiD7jxMmN74yQMevu63RXr9qix6xOm2P34OVfpOdbGas9hRYmaHFy
+q/Y8ot3kkxAD4yycgRydghVXhGgaIt/5xxShxCDkzHX34iH8Kmzbr16lbIlPiw==</message>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <S:Fault xmlns:ns3="http://www.w3.org/2003/05/soap-envelope">
+      <faultcode>S:Server</faultcode>
+      <faultstring>Test Exception generated in method interceptMessage-server-inbound</faultstring>
+    </S:Fault>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <S:Fault>
+      <faultcode>S:Client</faultcode>
+      <faultstring>step.framework.extensions.InterceptorException: Can't decipher a plain text message.</faultstring>
+    </S:Fault>
+  </S:Body>
+</S:Envelope>

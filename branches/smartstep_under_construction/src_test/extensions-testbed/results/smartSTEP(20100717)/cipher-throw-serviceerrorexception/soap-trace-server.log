@@ -1,0 +1,47 @@
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdUGvWiD7jxMmN74yQMevu63RXr9qix6xOm2P34OVfpOdbGas9hRYmaHFy
+q/Y8ot3kkxAD4yycgRydghVXhGgaIt/5xxShxCDkzHX34iH8Kmzbr16lbIlPiw==</message>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:Fault xmlns:ns2="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns3="http://www.w3.org/2003/05/soap-envelope">
+      <faultcode>ns2:Server</faultcode>
+      <faultstring>Name is missing (forced by hello.ws.ThrowServiceError property for testing)</faultstring>
+      <detail>
+        <serviceError:serviceError xmlns="urn:hello:wsdl" xmlns:serviceError="urn:hello:wsdl"/>
+      </detail>
+    </ns2:Fault>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <message>yAMjog8rwOn94C4jdlpCd62//vWBsc/7ax95BeAkHDoP0SavbqFX5dwqx4z/1pL6k36KlFF5f2lY
+iSEJKV/v+3tdwON2uyvdecTUbzriQlsEcLqJW9OXiW8ePn4XPtYEmGXm5C1z2cpDCEZj8z8zKp76
+kJppvK4c4pnRmG3uFXouDhqfQEki2fyZc68tMaN3PaY3Gbr68hWEDWthWOJx2IxJHy9R4bbHLs/3
+ei7A4r7l9+acaEvAm/cPHzFgIsj/BKnzAmCDyNcxuPDfyYeVvU94QtBJWYbOri+RM8iBaMh1uS0+
+8orCTVMjEyoPFJllZFw/SbXVFjiHFTG+Bl36Yv4vwD3fd02ue1VLZ0YvZ2MrDbD9Jm6q8GqHTRIT
+WuOWlr7HBnDE7KquZlVSDBekHSIT/zoee0hW7umckqkVDQ7ZzKn5Oy3Q1Cnb3eNhIW2fj/b5Q2mr
+o5YY/uFVqRavDWQkqzfcKTy40spXL8NVr4owuv1ZRhDGuQx676LdYHawx8mIkLpg1nhqh00SE1rj
+ls1ipM0Z1bjzdRbQvuufbEXGkM7BrLte9lN3XszlmvJi7yN2W+sIinJx3xZsaKNfRTMtHStMiXNb
+jLhxxDs8JLc=</message>
+  </S:Body>
+</S:Envelope>

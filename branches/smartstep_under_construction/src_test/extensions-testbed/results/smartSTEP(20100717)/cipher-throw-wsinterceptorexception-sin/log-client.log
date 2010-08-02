@@ -1,0 +1,85 @@
+[2010-07-17 21:24:19,607]TRACE     0[main](SayHelloAction.java:60) - Starting main
+[2010-07-17 21:24:19,614]TRACE     7[main](SayHelloAction.java:61) - [Ljava.lang.String;@1ee4648
+[2010-07-17 21:24:19,614]TRACE     7[main](SayHelloAction.java:65) - Installing extensions
+[2010-07-17 21:24:19,677]TRACE    70[main](SayHelloAction.java:67) - Extensions JarLoader loaded folder "/home/johnyk/tomcat/extensions"
+[2010-07-17 21:24:19,678]TRACE    71[main](SayHelloAction.java:77) - Invoking sayHello()
+[2010-07-17 21:24:19,691]DEBUG    84[main](Config.java:39) - Config constructor invoked
+[2010-07-17 21:24:19,692]DEBUG    85[main](Config.java:166) - Configuration has not been loaded yet. Try to load default properties file.
+[2010-07-17 21:24:19,693] INFO    86[main](Config.java:94) - Loading configuration properties from resource path /config.properties
+[2010-07-17 21:24:19,696]TRACE    89[main](Config.java:123) - Configuration properties:
+[2010-07-17 21:24:19,697]TRACE    90[main](Config.java:126) - extensions.factory properties
+[2010-07-17 21:24:19,702]TRACE    95[main](Config.java:126) - hello.ws.EndpointAddress http://localhost:8080/hello-ws/endpoint
+[2010-07-17 21:24:19,717]TRACE   110[main](PropertiesPipeFactory.java:166) - entering loadConfig
+[2010-07-17 21:24:19,718]TRACE   111[main](PropertiesPipeFactory.java:167) - /extensions.properties
+[2010-07-17 21:24:19,719]TRACE   112[main](PropertiesPipeFactory.java:191) - properties file changed since last update
+[2010-07-17 21:24:19,720]TRACE   113[main](PropertiesPipeFactory.java:192) - reloading configuration
+[2010-07-17 21:24:19,721]TRACE   114[main](PropertiesPipeFactory.java:200) - extensions config properties (key: 'value')
+[2010-07-17 21:24:19,721]TRACE   114[main](PropertiesPipeFactory.java:204) - extensions.intercept.service[]: ''
+[2010-07-17 21:24:19,722]TRACE   115[main](PropertiesPipeFactory.java:204) - extensions.intercept.web-service[]: 'trace,cipher,errors,trace'
+[2010-07-17 21:24:19,723]TRACE   116[main](PropertiesPipeFactory.java:208) - load intercept configs
+[2010-07-17 21:24:19,723]TRACE   116[main](PropertiesPipeFactory.java:255) - ignoring empty extensions.intercept.service[]
+[2010-07-17 21:24:19,725]TRACE   118[main](PropertiesPipeFactory.java:213) - Intercept configuration trees:
+[2010-07-17 21:24:19,727]TRACE   120[main](PropertiesPipeFactory.java:214) - Configuration tree Service interception
+root [ConfigNode: config=null, #childNodes=0]
+
+[2010-07-17 21:24:19,728]TRACE   121[main](PropertiesPipeFactory.java:215) - Configuration tree Web Service interception
+root [ConfigNode: config=[trace, cipher, errors, trace], #childNodes=0]
+
+[2010-07-17 21:24:19,729]TRACE   122[main](PropertiesPipeFactory.java:228) - finally exiting loadConfig
+[2010-07-17 21:24:19,730]TRACE   123[main](PropertiesPipeFactory.java:331) - service instance full class name: hello.ws.client.service.SayHelloService
+[2010-07-17 21:24:19,731]TRACE   124[main](PropertiesPipeFactory.java:335) - Using configuration tree: Service interception
+[2010-07-17 21:24:19,731]TRACE   124[main](PropertiesPipeFactory.java:346) - no service interception configuration found; ignoring service execution
+[2010-07-17 21:24:19,734]TRACE   127[main](SayHelloService.java:32) - Starting SayHelloService action
+[2010-07-17 21:24:19,735]DEBUG   128[main](SayHelloService.java:34) - create Web Service stub
+[2010-07-17 21:24:20,505]TRACE   898[main](Handler.java:39) - getHeaders()
+[2010-07-17 21:24:20,505]TRACE   898[main](Handler.java:39) - getHeaders()
+[2010-07-17 21:24:20,682]DEBUG  1075[main](SayHelloService.java:37) - Invoke web service. Parameter = friend
+[2010-07-17 21:24:20,768]TRACE  1161[main](Handler.java:46) - handleMessage()
+[2010-07-17 21:24:20,769]TRACE  1162[main](PropertiesPipeFactory.java:166) - entering loadConfig
+[2010-07-17 21:24:20,770]TRACE  1163[main](PropertiesPipeFactory.java:167) - /extensions.properties
+[2010-07-17 21:24:20,771]TRACE  1164[main](PropertiesPipeFactory.java:186) - properties file didn't change since last load attempt
+[2010-07-17 21:24:20,771]TRACE  1164[main](PropertiesPipeFactory.java:228) - finally exiting loadConfig
+[2010-07-17 21:24:20,772]TRACE  1165[main](PropertiesPipeFactory.java:423) - SOAP message names follow
+[2010-07-17 21:24:20,772]TRACE  1165[main](PropertiesPipeFactory.java:424) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-07-17 21:24:20,773]TRACE  1166[main](PropertiesPipeFactory.java:425) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-07-17 21:24:20,773]TRACE  1166[main](PropertiesPipeFactory.java:453) - Web Service config path source items
+[2010-07-17 21:24:20,774]TRACE  1167[main](PropertiesPipeFactory.java:454) - namespace: 'urn:hello:wsdl'
+[2010-07-17 21:24:20,774]TRACE  1167[main](PropertiesPipeFactory.java:455) - service: 'HelloService'
+[2010-07-17 21:24:20,775]TRACE  1168[main](PropertiesPipeFactory.java:456) - port: 'HelloPort'
+[2010-07-17 21:24:20,775]TRACE  1168[main](PropertiesPipeFactory.java:365) - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+[2010-07-17 21:24:20,776]TRACE  1169[main](PropertiesPipeFactory.java:369) - Using configuration tree: Web Service interception
+[2010-07-17 21:24:20,778]TRACE  1171[main](WebServiceInterceptorPipe.java:35) - Executing outbound client side pipe
+[2010-07-17 21:24:20,779]TRACE  1172[main](WebServiceInterceptorPipe.java:72) - Executing outbound trace
+[2010-07-17 21:24:20,880]TRACE  1273[main](WebServiceInterceptorPipe.java:72) - Executing outbound cipher
+[2010-07-17 21:24:20,964]TRACE  1357[main](WebServiceInterceptorPipe.java:72) - Executing outbound errors
+[2010-07-17 21:24:20,965]TRACE  1358[main](WebServiceInterceptorPipe.java:72) - Executing outbound trace
+[2010-07-17 21:24:20,967]TRACE  1360[main](WebServiceInterceptorPipe.java:39) - Pipe result: OK
+[2010-07-17 21:24:21,312]TRACE  1705[main](Handler.java:46) - handleMessage()
+[2010-07-17 21:24:21,313]TRACE  1706[main](PropertiesPipeFactory.java:166) - entering loadConfig
+[2010-07-17 21:24:21,314]TRACE  1707[main](PropertiesPipeFactory.java:167) - /extensions.properties
+[2010-07-17 21:24:21,315]TRACE  1708[main](PropertiesPipeFactory.java:186) - properties file didn't change since last load attempt
+[2010-07-17 21:24:21,316]TRACE  1709[main](PropertiesPipeFactory.java:228) - finally exiting loadConfig
+[2010-07-17 21:24:21,316]TRACE  1709[main](PropertiesPipeFactory.java:423) - SOAP message names follow
+[2010-07-17 21:24:21,317]TRACE  1710[main](PropertiesPipeFactory.java:424) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-07-17 21:24:21,318]TRACE  1711[main](PropertiesPipeFactory.java:425) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-07-17 21:24:21,318]TRACE  1711[main](PropertiesPipeFactory.java:453) - Web Service config path source items
+[2010-07-17 21:24:21,319]TRACE  1712[main](PropertiesPipeFactory.java:454) - namespace: 'urn:hello:wsdl'
+[2010-07-17 21:24:21,320]TRACE  1713[main](PropertiesPipeFactory.java:455) - service: 'HelloService'
+[2010-07-17 21:24:21,321]TRACE  1714[main](PropertiesPipeFactory.java:456) - port: 'HelloPort'
+[2010-07-17 21:24:21,321]TRACE  1714[main](PropertiesPipeFactory.java:365) - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+[2010-07-17 21:24:21,322]TRACE  1715[main](PropertiesPipeFactory.java:369) - Using configuration tree: Web Service interception
+[2010-07-17 21:24:21,322]TRACE  1715[main](WebServiceInterceptorPipe.java:53) - Executing inbound client side pipe
+[2010-07-17 21:24:21,323]TRACE  1716[main](WebServiceInterceptorPipe.java:110) - Executing inbound trace
+[2010-07-17 21:24:21,336]TRACE  1729[main](WebServiceInterceptorPipe.java:110) - Executing inbound errors
+[2010-07-17 21:24:21,337]TRACE  1730[main](WebServiceInterceptorPipe.java:110) - Executing inbound cipher
+[2010-07-17 21:24:21,341]TRACE  1734[main](WebServiceInterceptorPipe.java:110) - Executing inbound trace
+[2010-07-17 21:24:21,379]TRACE  1772[main](WebServiceInterceptorPipe.java:57) - Pipe result: OK
+[2010-07-17 21:24:21,380]TRACE  1773[main](Handler.java:60) - close()
+[2010-07-17 21:24:21,451]TRACE  1844[main](SayHelloService.java:58) - Caught class javax.xml.ws.soap.SOAPFaultException
+[2010-07-17 21:24:21,452]ERROR  1845[main](SayHelloService.java:60) - javax.xml.ws.soap.SOAPFaultException: Test Exception generated in method interceptMessage-server-inbound
+[2010-07-17 21:24:21,452]TRACE  1845[main](SayHelloService.java:61) - Throw RemoteServiceException with nested exception
+[2010-07-17 21:24:21,454]TRACE  1847[main](SayHelloService.java:65) - Finally exiting SayHelloService action
+[2010-07-17 21:24:21,454]TRACE  1847[main](SayHelloAction.java:48) - sayHello caught exception
+[2010-07-17 21:24:21,455]ERROR  1848[main](SayHelloAction.java:49) - step.framework.exception.RemoteServiceException: javax.xml.ws.soap.SOAPFaultException: Test Exception generated in method interceptMessage-server-inbound
+[2010-07-17 21:24:21,462]TRACE  1855[main](SayHelloAction.java:80) - Action message: javax.xml.ws.soap.SOAPFaultException: Test Exception generated in method interceptMessage-server-inbound
+[2010-07-17 21:24:21,463]TRACE  1856[main](SayHelloAction.java:88) - Finally exiting main

@@ -1,0 +1,189 @@
+Jul 17, 2010 9:20:44 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: /usr/lib/jvm/java-6-openjdk/jre/lib/i386/server:/usr/lib/jvm/java-6-openjdk/jre/lib/i386:/usr/lib/jvm/java-6-openjdk/jre/../lib/i386:/usr/java/packages/lib/i386:/usr/lib/jni:/lib:/usr/lib
+Jul 17, 2010 9:20:44 PM org.apache.coyote.http11.Http11Protocol init
+INFO: Initializing Coyote HTTP/1.1 on http-8080
+Jul 17, 2010 9:20:44 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 725 ms
+Jul 17, 2010 9:20:44 PM org.apache.catalina.core.StandardService start
+INFO: Starting service Catalina
+Jul 17, 2010 9:20:44 PM org.apache.catalina.core.StandardEngine start
+INFO: Starting Servlet Engine: Apache Tomcat/6.0.14
+Jul 17, 2010 9:20:45 PM org.apache.coyote.http11.Http11Protocol start
+INFO: Starting Coyote HTTP/1.1 on http-8080
+Jul 17, 2010 9:20:45 PM org.apache.jk.common.ChannelSocket init
+INFO: JK: ajp13 listening on /0.0.0.0:8009
+Jul 17, 2010 9:20:46 PM org.apache.jk.server.JkMain start
+INFO: Jk running ID=0 time=0/146  config=null
+Jul 17, 2010 9:20:46 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 1743 ms
+Jul 17, 2010 9:21:03 PM org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive hello-ws.war
+Jul 17, 2010 9:21:03 PM com.sun.xml.ws.transport.http.servlet.WSServletContextListener contextInitialized
+INFO: WSSERVLET12: JAX-WS context listener initializing
+21:21:04,501 http-8080-1 TRACE extensions.Handler:39 - getHeaders()
+Jul 17, 2010 9:21:04 PM com.sun.xml.ws.transport.http.servlet.WSServletDelegate <init>
+INFO: WSSERVLET14: JAX-WS servlet initializing
+21:21:04,623 http-8080-1 INFO  web.ContextListener:29 - Framework initializing...
+21:21:04,624 http-8080-1 DEBUG web.ContextListener:31 - Disable JAX-WS option to capture stack trace in SOAP fault messages
+Using folder "/home/johnyk/tomcat/extensions" for extension JarLoader.
+[DEBUG] Started JarLoader on folder "/home/johnyk/tomcat/extensions"
+21:21:04,630 http-8080-1 INFO  web.ContextListener:37 - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[DEBUG] Found new Jar: extension-trace.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-trace.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.trace.TraceExtensionInstaller".
+[DEBUG] Installing Jar: extension-trace.jar
+[PROPERTIES] loading local properties
+Using custom output (file): "/home/johnyk/tomcat/temp/soap-trace-server.log"
+[DEBUG] Registering Jar: extension-trace.jar
+[DEBUG] Jar "extension-trace.jar" successfully installed.
+[DEBUG] Found new Jar: extension-hello.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-hello.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.hello.HelloExtensionInstaller".
+[DEBUG] Installing Jar: extension-hello.jar
+null (initializing extension)
+[DEBUG] Registering Jar: extension-hello.jar
+[DEBUG] Jar "extension-hello.jar" successfully installed.
+[DEBUG] Found new Jar: extension-errors.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-errors.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.errors.ErrorsExtensionInstaller".
+[DEBUG] Installing Jar: extension-errors.jar
+[PROPERTIES] loading local properties
+[DEBUG] Registering Jar: extension-errors.jar
+[DEBUG] Jar "extension-errors.jar" successfully installed.
+[DEBUG] Found new Jar: extension-id.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-id.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.id.IDExtensionInstaller".
+[DEBUG] Installing Jar: extension-id.jar
+[DEBUG] Registering Jar: extension-id.jar
+[DEBUG] Jar "extension-id.jar" successfully installed.
+[DEBUG] Found new Jar: extension-cipher.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-cipher.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.cipher.CipherExtensionInstaller".
+[DEBUG] Installing Jar: extension-cipher.jar
+[DEBUG] Registering Jar: extension-cipher.jar
+[DEBUG] Jar "extension-cipher.jar" successfully installed.
+Jul 17, 2010 9:21:04 PM org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive helloclient-web.war
+21:21:05,179 http-8080-1 INFO  web.ContextListener:29 - Framework initializing...
+21:21:05,180 http-8080-1 DEBUG web.ContextListener:31 - Disable JAX-WS option to capture stack trace in SOAP fault messages
+Using folder "/home/johnyk/tomcat/extensions" for extension JarLoader.
+[DEBUG] Started JarLoader on folder "/home/johnyk/tomcat/extensions"
+21:21:05,183 http-8080-1 INFO  web.ContextListener:37 - Extensions JarLoader initialized on path "/home/johnyk/tomcat/extensions"
+[DEBUG] Found new Jar: extension-trace.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-trace.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.trace.TraceExtensionInstaller".
+[DEBUG] Installing Jar: extension-trace.jar
+[PROPERTIES] loading local properties
+Using custom output (file): "/home/johnyk/tomcat/temp/soap-trace-client.log"
+[DEBUG] Registering Jar: extension-trace.jar
+[DEBUG] Jar "extension-trace.jar" successfully installed.
+[DEBUG] Found new Jar: extension-hello.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-hello.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.hello.HelloExtensionInstaller".
+[DEBUG] Installing Jar: extension-hello.jar
+null (initializing extension)
+[DEBUG] Registering Jar: extension-hello.jar
+[DEBUG] Jar "extension-hello.jar" successfully installed.
+[DEBUG] Found new Jar: extension-errors.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-errors.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.errors.ErrorsExtensionInstaller".
+[DEBUG] Installing Jar: extension-errors.jar
+[PROPERTIES] loading local properties
+[DEBUG] Registering Jar: extension-errors.jar
+[DEBUG] Jar "extension-errors.jar" successfully installed.
+[DEBUG] Found new Jar: extension-id.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-id.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.id.IDExtensionInstaller".
+[DEBUG] Installing Jar: extension-id.jar
+[DEBUG] Registering Jar: extension-id.jar
+[DEBUG] Jar "extension-id.jar" successfully installed.
+[DEBUG] Found new Jar: extension-cipher.jar
+[DEBUG] Creating a new ClassLoader for Jar: extension-cipher.jar
+[DEBUG] Loading properties from "installer.properties".
+[DEBUG] Loading installer "step.extension.cipher.CipherExtensionInstaller".
+[DEBUG] Installing Jar: extension-cipher.jar
+[DEBUG] Registering Jar: extension-cipher.jar
+[DEBUG] Jar "extension-cipher.jar" successfully installed.
+21:21:05,398 http-8080-1 INFO  config.BootstrapPropertyResolver:176 - Class implementing/extending ActionBeanContext found in web.xml: hello.web.HelloContext
+21:21:05,398 http-8080-1 INFO  controller.DefaultActionBeanContextFactory:176 - DefaultActionBeanContextFactory will use ActionBeanContext subclass hello.web.HelloContext
+21:21:05,413 http-8080-1 INFO  localization.DefaultLocalePicker:176 - No locale list specified, defaulting to single locale: en_US
+21:21:05,422 http-8080-1 INFO  config.BootstrapPropertyResolver:176 - Class implementing/extending ExceptionHandler found in web.xml: net.sourceforge.stripes.exception.DelegatingExceptionHandler
+21:21:05,433 http-8080-1 INFO  multipart.DefaultMultipartWrapperFactory:176 - Using net.sourceforge.stripes.controller.multipart.CosMultipartWrapper as MultipartWrapper implementation.
+21:21:05,443 http-8080-1 INFO  controller.StripesFilter:176 - Stripes Initialization Complete. Version: 1.5.3, Build: 1221
+21:21:09,282 http-8080-2 TRACE extensions.Handler:46 - handleMessage()
+[DEBUG] Loading pipe configuration
+21:21:09,294 http-8080-2 DEBUG config.Config:39 - Config constructor invoked
+21:21:09,294 http-8080-2 DEBUG config.Config:166 - Configuration has not been loaded yet. Try to load default properties file.
+21:21:09,295 http-8080-2 INFO  config.Config:94 - Loading configuration properties from resource path /config.properties
+21:21:09,297 http-8080-2 TRACE config.Config:123 - Configuration properties:
+21:21:09,298 http-8080-2 TRACE config.Config:126 - extensions.factory properties
+21:21:09,298 http-8080-2 TRACE config.Config:126 - hello.ws.ThrowServiceError false
+[DEBUG] Using step.framework.extensions.PropertiesPipeFactory
+21:21:09,303 http-8080-2 TRACE extensions.PropertiesPipeFactory:166 - entering loadConfig
+21:21:09,304 http-8080-2 TRACE extensions.PropertiesPipeFactory:167 - /extensions.properties
+21:21:09,305 http-8080-2 TRACE extensions.PropertiesPipeFactory:191 - properties file changed since last update
+21:21:09,305 http-8080-2 TRACE extensions.PropertiesPipeFactory:192 - reloading configuration
+21:21:09,306 http-8080-2 TRACE extensions.PropertiesPipeFactory:200 - extensions config properties (key: 'value')
+21:21:09,306 http-8080-2 TRACE extensions.PropertiesPipeFactory:204 - extensions.intercept.service[]: ''
+21:21:09,307 http-8080-2 TRACE extensions.PropertiesPipeFactory:204 - extensions.intercept.web-service[]: 'trace,errors,cipher,trace'
+21:21:09,307 http-8080-2 TRACE extensions.PropertiesPipeFactory:208 - load intercept configs
+21:21:09,308 http-8080-2 TRACE extensions.PropertiesPipeFactory:255 - ignoring empty extensions.intercept.service[]
+21:21:09,308 http-8080-2 TRACE extensions.PropertiesPipeFactory:213 - Intercept configuration trees:
+21:21:09,309 http-8080-2 TRACE extensions.PropertiesPipeFactory:214 - Configuration tree Service interception
+root [ConfigNode: config=null, #childNodes=0]
+
+21:21:09,309 http-8080-2 TRACE extensions.PropertiesPipeFactory:215 - Configuration tree Web Service interception
+root [ConfigNode: config=[trace, errors, cipher, trace], #childNodes=0]
+
+21:21:09,310 http-8080-2 TRACE extensions.PropertiesPipeFactory:228 - finally exiting loadConfig
+21:21:09,310 http-8080-2 TRACE extensions.PropertiesPipeFactory:423 - SOAP message names follow
+21:21:09,311 http-8080-2 TRACE extensions.PropertiesPipeFactory:424 - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+21:21:09,311 http-8080-2 TRACE extensions.PropertiesPipeFactory:425 - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+21:21:09,312 http-8080-2 TRACE extensions.PropertiesPipeFactory:453 - Web Service config path source items
+21:21:09,312 http-8080-2 TRACE extensions.PropertiesPipeFactory:454 - namespace: 'urn:hello:wsdl'
+21:21:09,313 http-8080-2 TRACE extensions.PropertiesPipeFactory:455 - service: 'HelloService'
+21:21:09,313 http-8080-2 TRACE extensions.PropertiesPipeFactory:456 - port: 'HelloPort'
+21:21:09,314 http-8080-2 TRACE extensions.PropertiesPipeFactory:365 - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+21:21:09,314 http-8080-2 TRACE extensions.PropertiesPipeFactory:369 - Using configuration tree: Web Service interception
+21:21:09,317 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:53 - Executing inbound server side pipe
+21:21:09,318 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:110 - Executing inbound trace
+21:21:09,378 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:110 - Executing inbound cipher
+21:21:09,428 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:110 - Executing inbound errors
+no web service interceptor error when specified (property web-service-interceptor.error-when); skipping
+21:21:09,430 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:110 - Executing inbound trace
+21:21:09,449 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:57 - Pipe result: OK
+21:21:09,480 http-8080-2 TRACE ws.HelloWebServiceImpl:24 - Starting sayHello on server
+21:21:09,482 http-8080-2 TRACE ws.HelloWebServiceImpl:25 - name = friend
+21:21:09,482 http-8080-2 TRACE ws.HelloWebServiceImpl:35 - returnValue = Hello friend
+21:21:09,483 http-8080-2 TRACE ws.HelloWebServiceImpl:45 - Finally exiting sayHello on server
+21:21:09,495 http-8080-2 TRACE extensions.Handler:46 - handleMessage()
+21:21:09,496 http-8080-2 TRACE extensions.PropertiesPipeFactory:166 - entering loadConfig
+21:21:09,496 http-8080-2 TRACE extensions.PropertiesPipeFactory:167 - /extensions.properties
+21:21:09,497 http-8080-2 TRACE extensions.PropertiesPipeFactory:186 - properties file didn't change since last load attempt
+21:21:09,497 http-8080-2 TRACE extensions.PropertiesPipeFactory:228 - finally exiting loadConfig
+21:21:09,498 http-8080-2 TRACE extensions.PropertiesPipeFactory:423 - SOAP message names follow
+21:21:09,498 http-8080-2 TRACE extensions.PropertiesPipeFactory:424 - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+21:21:09,499 http-8080-2 TRACE extensions.PropertiesPipeFactory:425 - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+21:21:09,511 http-8080-2 TRACE extensions.PropertiesPipeFactory:453 - Web Service config path source items
+21:21:09,512 http-8080-2 TRACE extensions.PropertiesPipeFactory:454 - namespace: 'urn:hello:wsdl'
+21:21:09,512 http-8080-2 TRACE extensions.PropertiesPipeFactory:455 - service: 'HelloService'
+21:21:09,513 http-8080-2 TRACE extensions.PropertiesPipeFactory:456 - port: 'HelloPort'
+21:21:09,514 http-8080-2 TRACE extensions.PropertiesPipeFactory:365 - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+21:21:09,517 http-8080-2 TRACE extensions.PropertiesPipeFactory:369 - Using configuration tree: Web Service interception
+21:21:09,517 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:35 - Executing outbound server side pipe
+21:21:09,518 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:72 - Executing outbound trace
+21:21:09,542 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:72 - Executing outbound errors
+no web service interceptor error when specified (property web-service-interceptor.error-when); skipping
+21:21:09,543 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:72 - Executing outbound cipher
+21:21:09,547 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:72 - Executing outbound trace
+21:21:09,548 http-8080-2 TRACE extensions.WebServiceInterceptorPipe:39 - Pipe result: OK
+21:21:09,549 http-8080-2 TRACE extensions.Handler:60 - close()
