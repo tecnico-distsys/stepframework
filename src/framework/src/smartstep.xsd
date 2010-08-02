@@ -1,0 +1,55 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://stepframework.sourceforge.net/smartstep"
+           targetNamespace="http://stepframework.sourceforge.net/smartstep"
+           elementFormDefault="qualified">
+
+    <!-- WSDL -->
+
+    <xs:simpleType name="WSDLMethod">
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="HTTP"/>
+        <xs:enumeration value="WSMEX"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="WSDLDefinition">
+      <xs:attribute name="location" type="xs:string" use="required" />
+      <xs:attribute name="method" type="tns:WSDLMethod" use="required" />
+    </xs:complexType>
+
+    <!-- Sections -->
+
+    <xs:complexType name="ServiceSection">
+      <xs:sequence>
+        <xs:any namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
+      <xs:attribute name="class" type="xs:string" use="required" />
+    </xs:complexType>
+  
+    <xs:complexType name="WSClientSection">
+      <xs:sequence>
+        <xs:element name="wsdl" type="tns:WSDLDefinition" minOccurs="1" maxOccurs="1" />
+        <xs:any namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
+      <xs:attribute name="endpoint" type="xs:string" use="required" />
+    </xs:complexType>
+  
+    <xs:complexType name="WSSection">
+      <xs:sequence>
+        <xs:element name="wsdl" type="tns:WSDLDefinition" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+      <xs:attribute name="endpoint" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <!-- SmartSTEP -->
+  
+    <xs:complexType name="SmartSTEPConfig">
+      <xs:sequence>
+        <xs:element name="service" type="tns:ServiceSection" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="wsclient" type="tns:WSClientSection" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="ws" type="tns:WSSection" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+    <xs:element name="smartstep" type="tns:SmartSTEPConfig" />
+  
+</xs:schema>

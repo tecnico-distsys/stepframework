@@ -21,6 +21,9 @@
     <property name="dist.rel-dir" value="dist"/>
     <property name="doc.rel-dir" value="${dist.rel-dir}/javadoc" />
 
+    <!-- properties with jaxb definitions -->
+    <property name="package.config.xsd" value="step.framework.extensions.pipe.policy.config"/>
+    <property name="folder.src.config.xsd" value="${src.rel-dir}/step/framework/extensions/pipe/policy/config"/>
 
     <!-- project classpath -->
 
@@ -53,6 +56,15 @@
 
 
     <!-- compile -->
+	
+    <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+        <classpath refid="project.classpath" />
+    </taskdef>
+    <target name="xjc">
+        <xjc schema="${src.rel-dir}/smartstep.xsd" destdir="${src.rel-dir}" package="${package.config.xsd}" removeOldOutput="yes">
+            <produces dir="${folder.src.config.xsd}" />
+		</xjc>
+    </target>
 
     <target name="prepare-resources" depends="init">
     <!-- description="Prepare application resource files" -->
@@ -64,7 +76,7 @@
         </replace>
     </target>
 
-    <target name="compile" depends="prepare-resources">
+    <target name="compile" depends="prepare-resources,xjc">
     <!-- description="Compile source code" -->
         <javac
             srcdir="${src.rel-dir}"
