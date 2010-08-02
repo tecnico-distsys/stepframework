@@ -41,6 +41,10 @@
 
     <target name="rebuild-extensions" depends="clean-extensions,build-extensions" />
 
+    <target name="install-extensions"
+        description="Install extensions">
+        <ant inheritAll="false" dir="extensions" target="install" />
+    </target>
 
     <!-- Flight -->
     <target name="build-flight"

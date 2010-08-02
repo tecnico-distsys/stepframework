@@ -219,10 +219,6 @@
             <zipfileset dir="../flight-ws/dist"
                         includes="*.jar"
                         prefix="WEB-INF/lib" />
-            <!-- ../flight-ws-cli/dist/*.jar - see unjar comment above -->
-            <!--<zipfileset dir="../extensions/dist"
-                        includes="*.jar"
-                        prefix="WEB-INF/lib" />-->
         </jar>
 
     </target>

@@ -1,0 +1,12 @@
+<smartstep xmlns="http://stepframework.sourceforge.net/smartstep"
+           xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+           xmlns:ssp="http://stepframework.sourceforge.net/smartstep/policy">
+  <service class="org.tripplanner.flight.service.FlightBaseService">
+    <wsp:Policy>
+      <ssp:Trace/>
+    </wsp:Policy>
+  </service>
+  <ws endpoint="http://localhost:8080/flight-ws/endpoint">
+    <wsdl location="http://localhost:8080/flight-ws/endpoint?wsdl" method="HTTP"/> <!-- method one of: FILE, HTTP, MEX -->
+  </ws>
+</smartstep>

@@ -1,0 +1,42 @@
+<smartstep xmlns="http://stepframework.sourceforge.net/smartstep"
+           xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+           xmlns:ssp="http://stepframework.sourceforge.net/smartstep/policy">
+  <service class="org.tripplanner.mediator.service.MediatorService">
+    <wsp:Policy>
+      <ssp:Trace/>
+    </wsp:Policy>
+  </service>
+  <service class="org.tripplanner.mediator.service.MediatorWorkflowService">
+    <wsp:Policy>
+      <ssp:Trace/>
+    </wsp:Policy>
+  </service>
+  <service class="org.tripplanner.flight.ws.client.service.CreateFlightReservationService">
+    <wsp:Policy>
+      <ssp:Trace/>
+    </wsp:Policy>
+  </service>
+  <wsclient endpoint="http://localhost:8080/flight-ws/endpoint">
+    <wsdl location="http://localhost:8080/flight-ws/endpoint?wsdl" method="HTTP"/> <!-- method one of: FILE, HTTP, MEX -->
+    <wsp:Policy>
+      <!-- demo1 -->
+      <!--<wsp:ExactlyOne>
+        <wsp:All>
+          <ssp:Cipher/>
+          <ssp:Trace/>
+        </wsp:All>
+        <wsp:All>
+          <ssp:Identification/>
+          <ssp:Trace/>
+        </wsp:All>
+      </wsp:ExactlyOne>-->
+      <!-- demo2 && demo3 -->
+      <wsp:ExactlyOne>
+        <wsp:All>
+          <ssp:Identification/>
+          <ssp:Trace/>
+        </wsp:All>
+      </wsp:ExactlyOne>
+    </wsp:Policy>
+  </wsclient>
+</smartstep>

@@ -105,38 +105,43 @@
 
     <service name="FlightService">
 		<!-- demo1 - part1 -->
-		<wsp:Policy>
+		<!--<wsp:Policy>
 			<wsp:ExactlyOne>
 			  <wsp:All>
-				<ssp:Cipher extension="cipher"/>
+				<ssp:Cipher/>
+				<ssp:Trace/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
-		</wsp:Policy>
+		</wsp:Policy>-->
 		<!-- demo1 - part2 -->
 		<!--<wsp:Policy>
 			<wsp:ExactlyOne>
 			  <wsp:All>
-				<ssp:Identification extension="id"/>
+				<ssp:Identification/>
+				<ssp:Trace/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>-->
 		<!-- demo2 -->
-		<!--<wsp:Policy>
+		<wsp:Policy>
 			<wsp:ExactlyOne>
 			  <wsp:All>
-				<ssp:Cipher extension="cipher"/>
+				<ssp:Cipher/>
+				<ssp:Trace/>
 			  </wsp:All>
 			  <wsp:All>
-				<ssp:Identification extension="id"/>
+				<ssp:Identification/>
+				<ssp:Trace/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
-		</wsp:Policy>-->
+		</wsp:Policy>
 		<!-- demo3 -->
 		<!--<wsp:Policy>
 			<wsp:ExactlyOne>
 			  <wsp:All>
-				<ssp:Cipher extension="cipher"/>
-				<ssp:Identification extension="id"/>
+				<ssp:Cipher/>
+				<ssp:Identification/>
+				<ssp:Trace/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>-->
