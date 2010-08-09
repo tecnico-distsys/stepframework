@@ -23,18 +23,22 @@
       <!--<wsp:ExactlyOne>
         <wsp:All>
           <ssp:Cipher/>
-          <ssp:Trace/>
+          <ssp:Trace ssp:Local="true"/>
         </wsp:All>
         <wsp:All>
           <ssp:Identification/>
-          <ssp:Trace/>
+          <ssp:Trace ssp:Local="true"/>
         </wsp:All>
       </wsp:ExactlyOne>-->
       <!-- demo2 && demo3 -->
       <wsp:ExactlyOne>
         <wsp:All>
+          <ssp:Hello/>
+        </wsp:All>
+        <wsp:All>
           <ssp:Identification/>
-          <ssp:Trace/>
+          <ssp:Cipher wsp:Optional="true"/>
+          <ssp:Trace ssp:Local="true"/>
         </wsp:All>
       </wsp:ExactlyOne>
     </wsp:Policy>
