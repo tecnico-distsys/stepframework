@@ -49,12 +49,12 @@ public class ExtensionRepository {
 	//extension repository implementation
 	
 	private Map<String, Extension> extensions;
-	private Map<QName, List<Extension>> wspMapping;
+	private Map<QName, Extension> wspMapping;
 	
 	private ExtensionRepository()
 	{
 		this.extensions = new HashMap<String, Extension>();
-		this.wspMapping = new HashMap<QName, List<Extension>>();
+		this.wspMapping = new HashMap<QName, Extension>();
 	}
 	
 	public List<Extension> getExtensions()
@@ -62,13 +62,9 @@ public class ExtensionRepository {
 		return new LinkedList<Extension>(extensions.values());
 	}
 	
-	public List<Extension> getExtensions(QName wspNamespace)
+	public Extension getExtension(QName wspNamespace)
 	{
-		List<Extension> exts = wspMapping.get(wspNamespace);
-		if(exts == null)
-			exts = new LinkedList<Extension>();
-		
-		return exts;
+		return wspMapping.get(wspNamespace);
 	}
 	
 	public Extension getExtension(String id)
@@ -86,19 +82,7 @@ public class ExtensionRepository {
 		for(int i=0; i < wspNss.length; i++)
 		{
 			if(wspNss[i] != null)
-				addWSPMapping(wspNss[i], ext);
+				wspMapping.put(wspNss[i], ext);
 		}
-	}
-	
-	private void addWSPMapping(QName ns, Extension ext)
-	{
-		List<Extension> exts = wspMapping.get(ns);
-		if(exts == null)
-		{
-			exts = new LinkedList<Extension>();
-			wspMapping.put(ns, exts);
-		}
-		
-		exts.add(ext);
 	}
 }

@@ -109,7 +109,7 @@
 			<wsp:ExactlyOne>
 			  <wsp:All>
 				<ssp:Cipher/>
-				<ssp:Trace/>
+				<ssp:Trace ssp:Local="true"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>-->
@@ -118,7 +118,7 @@
 			<wsp:ExactlyOne>
 			  <wsp:All>
 				<ssp:Identification/>
-				<ssp:Trace/>
+				<ssp:Trace ssp:Local="true"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>-->
@@ -126,12 +126,15 @@
 		<wsp:Policy>
 			<wsp:ExactlyOne>
 			  <wsp:All>
+				<ssp:Hello/>
+			  </wsp:All>
+			  <wsp:All>
 				<ssp:Cipher/>
-				<ssp:Trace/>
+				<ssp:Trace ssp:Local="true"/>
 			  </wsp:All>
 			  <wsp:All>
 				<ssp:Identification/>
-				<ssp:Trace/>
+				<ssp:Trace ssp:Local="true"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>
@@ -141,7 +144,7 @@
 			  <wsp:All>
 				<ssp:Cipher/>
 				<ssp:Identification/>
-				<ssp:Trace/>
+				<ssp:Trace ssp:Local="true"/>
 			  </wsp:All>
 			</wsp:ExactlyOne>
 		</wsp:Policy>-->

@@ -3,10 +3,14 @@ package step.framework.policy;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
 import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
+import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
+
+import step.framework.extensions.pipe.policy.PolicyPipeFactory;
 
 public class PolicyIntersector {
 
@@ -64,21 +68,24 @@ public class PolicyIntersector {
 		
 		for(int i=0; i<alt1.size(); i++)
 		{
-			if(!hasCompatibleAssertion(alt1.get(i), alt2))
+			if(!hasCompatibleAssertion(alt1.get(i), alt2, true))
 				return false;
 		}
 
 		for(int i=0; i<alt2.size(); i++)
 		{
-			if(!hasCompatibleAssertion(alt2.get(i), alt1))
+			if(!hasCompatibleAssertion(alt2.get(i), alt1, false))
 				return false;
 		}		
 		
 		return true;
 	}
 	
-	private static boolean hasCompatibleAssertion(Assertion assertion, List<Assertion> alt)
+	private static boolean hasCompatibleAssertion(Assertion assertion, List<Assertion> alt, boolean local)
 	{
+		if(local && isLocal(assertion))
+			return true;
+		
 		for(int i=0; i<alt.size(); i++)
 		{
 			if(isCompatible(assertion, alt.get(i)))
@@ -90,7 +97,14 @@ public class PolicyIntersector {
 	
 	private static boolean isCompatible(Assertion assertion1, Assertion assertion2)
 	{
-		//TODO: consider nested policies
 		return assertion1.getName().equals(assertion2.getName());
+	}
+	
+	private static boolean isLocal(Assertion assertion)
+	{
+		OMElement element = ((XmlPrimtiveAssertion) assertion).getValue();
+		String local = element.getAttributeValue(PolicyPipeFactory.QN_LOCAL_ASSERTION);
+		
+		return Boolean.parseBoolean(local);
 	}
 }

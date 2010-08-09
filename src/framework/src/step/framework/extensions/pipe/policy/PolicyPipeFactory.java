@@ -16,10 +16,14 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.neethi.All;
 import org.apache.neethi.Assertion;
+import org.apache.neethi.ExactlyOne;
 import org.apache.neethi.Policy;
+import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,6 +32,7 @@ import com.sun.xml.ws.developer.JAXWSProperties;
 
 import step.framework.extensions.Extension;
 import step.framework.extensions.ExtensionException;
+import step.framework.extensions.ExtensionRepository;
 import step.framework.extensions.ServiceInterceptor;
 import step.framework.extensions.WebServiceInterceptor;
 import step.framework.extensions.pipe.PipeFactory;
@@ -54,6 +59,7 @@ public class PolicyPipeFactory extends PipeFactory {
 
 	public static final String NSSMARTSTEP = "http://stepframework.sourceforge.net/smartstep/policy";
 	public static final QName QN_POLICY_HEADER = new QName(NSSMARTSTEP, "PolicyHeader");
+	public static final QName QN_LOCAL_ASSERTION = new QName(NSSMARTSTEP, "Local");
 	
 	private static final String JAXB_CONTEXT = "step.framework.extensions.pipe.policy.config";
 	private static final String SMARTSTEP_FILE = "/smartstep.xml";
@@ -93,9 +99,11 @@ public class PolicyPipeFactory extends PipeFactory {
 			if(policy == null)
 			{
 				log.trace("Service policy is null");
-				throw new ExtensionException("No policy to apply");
+				throw new ExtensionException("Failed to load policy");
 			}
 
+			log.trace("Normalizing policy");
+			policy = (Policy) policy.normalize(true);
 			log.trace("Choosing alternative from policy");
 			List<Assertion> alternative = getAlternative(policy);
 			log.trace("Loading extensions");
@@ -160,12 +168,20 @@ public class PolicyPipeFactory extends PipeFactory {
 				Policy localPolicy = PolicyUtil.getPolicy((Element) section.getAny());
 				log.trace("Loading policy from WSDL");
 				Policy serverPolicy = getPolicyFromWSDL(section.getWsdl());
+				serverPolicy = removeLocalAssertions(serverPolicy);
 				
 				log.trace("Calculating effective policy");
 				policy = PolicyUtil.intersect(localPolicy, serverPolicy);
 				
-				if(policy != null && hasAlternatives(serverPolicy))
+				if(!policy.getAlternatives().hasNext())
+				{
+					log.trace("Effective policy is empty");
+					throw new ExtensionException("The policies are incompatible");
+				}
+				else if(hasAlternatives(serverPolicy))
+				{
 					addPolicyHeader = true;
+				}
 			}
 			else
 			{
@@ -182,7 +198,7 @@ public class PolicyPipeFactory extends PipeFactory {
 				}
 				
 				log.trace("Loading policy from WSDL");
-				Policy localPolicy = getPolicyFromWSDL(section.getWsdl());				
+				Policy localPolicy = getPolicyFromWSDL(section.getWsdl());
 				if(hasAlternatives(localPolicy))
 				{
 					log.trace("Local policy has multiple alternatives");
@@ -190,32 +206,22 @@ public class PolicyPipeFactory extends PipeFactory {
 					log.trace("Loading policy from SOAPHeader");
 					Policy headerPolicy = getPolicyFromSOAPHeader(smc);
 
-					if(!compatible(localPolicy, headerPolicy))
+					log.trace("Checking validity of SOAPHeader policy");
+					policy = PolicyUtil.intersect(localPolicy, headerPolicy);
+
+					if(!policy.getAlternatives().hasNext())
 					{
 						log.trace("SOAPHeader policy is incompatible with server policy");
 						throw new ExtensionException("Policy specified by the client is incompatible with server policy");
 					}
-					else
-					{
-						log.trace("SOAPHeader policy is compatible with server policy");
-					}
-
-					log.trace("Using SOAPHeader policy as effective policy");
-					policy = headerPolicy;
 				}
 				else
 				{
 					log.trace("Local policy has less than two alternatives");
 
 					log.trace("Using local policy as effective policy");
-					policy = localPolicy;
+					policy = (Policy) localPolicy.normalize(true);
 				}
-			}
-			
-			if(policy == null)
-			{
-				log.trace("Effective policy is null");
-				throw new ExtensionException("No effective policy to apply");
 			}
 
 			log.trace("Choosing alternative from effective policy");
@@ -231,8 +237,9 @@ public class PolicyPipeFactory extends PipeFactory {
 			
 			if(addPolicyHeader)
 			{
-				log.trace("Adding policy header");				
-				addPolicyHeader(smc, pipePolicy);
+				log.trace("Adding policy header");
+				Policy headerPolicy = removeLocalAssertions(pipePolicy);			
+				addPolicyHeader(smc, headerPolicy);
 			}			
 
 			log.trace("Returning pipe");
@@ -398,6 +405,37 @@ public class PolicyPipeFactory extends PipeFactory {
 	
 	//********************************************************
 	// Aux - utils
+	
+	@SuppressWarnings("unchecked")
+	private Policy removeLocalAssertions(Policy policy)
+	{
+		Policy clean = new Policy();
+		ExactlyOne one = new ExactlyOne();
+		
+		Iterator<List<Assertion>> it = policy.getAlternatives();
+		while(it.hasNext())
+		{
+			All all = new All();
+			List<Assertion> assertions = it.next();
+			
+			for(int i=0; i<assertions.size(); i++)
+			{
+				Assertion current = assertions.get(i);
+				OMElement element = ((XmlPrimtiveAssertion) current).getValue();
+				String local = element.getAttributeValue(QN_LOCAL_ASSERTION);
+				
+				if(!Boolean.parseBoolean(local))
+				{
+					all.addPolicyComponent(current);
+				}
+			}
+			
+			one.addPolicyComponent(all);
+		}
+		
+		clean.addPolicyComponent(one);		
+		return clean;
+	}
 		
 	private void addPolicyHeader(SOAPMessageContext smc, Policy policy) throws ExtensionException
 	{
@@ -422,13 +460,6 @@ public class PolicyPipeFactory extends PipeFactory {
 		}
 	}
 	
-	private boolean compatible(Policy policy1, Policy policy2)
-	{
-		Policy result = PolicyUtil.intersect(policy1, policy2);
-
-		return (result != null);
-	}
-	
 	private boolean hasAlternatives(Policy policy)
 	{
 		Iterator<?> it = policy.getAlternatives();
@@ -451,31 +482,28 @@ public class PolicyPipeFactory extends PipeFactory {
 	private List<Assertion> getAlternative(Policy policy) throws ExtensionException
 	{
 		log.trace("Analyzing policy for a valid configuration alternative");
-		
 		Iterator<List<Assertion>> it = policy.getAlternatives();
 		
-		if(it.hasNext())
+		while(it.hasNext())
 		{
 			List<Assertion> assertions = it.next();
 			
-			if(log.isTraceEnabled())
+			int i;
+			for(i=0; i<assertions.size(); i++)
 			{
-				if(assertions.size() == 0)
+				if(ExtensionRepository.getInstance().getExtension(assertions.get(i).getName()) == null)
 				{
-					log.trace("Chosen alternative has no assertions");
-				}
-				else
-				{
-					log.trace("List of assertions on chosen alternative:");
-					for(int i=0; i<assertions.size(); i++)
-					{
-						log.trace("\t" + assertions.get(i).getName().getLocalPart());
-					}
-					log.trace("End of list");
+					log.trace("An alternative requires an unsupported feature");
+					log.trace("Assessing next alternative");
+					break;
 				}
 			}
 			
-			return assertions;
+			if(i == assertions.size())
+			{
+				log.trace("Found a valid alternative");
+				return assertions;
+			}
 		}
 		
 		throw new ExtensionException("The policy has no valid alternatives");
@@ -485,12 +513,15 @@ public class PolicyPipeFactory extends PipeFactory {
 	{
 		List<Extension> exts = new LinkedList<Extension>();
 		
+		log.trace("Mapping of assertions:");
 		for(int i=0; i<alternative.size(); i++)
 		{
 			Assertion assertion = alternative.get(i);
-			
-			exts.addAll(getExtensionRepository().getExtensions(assertion.getName()));
+			Extension extension = getExtensionRepository().getExtension(assertion.getName()); 
+			exts.add(extension);
+			log.trace("\t" + assertion.getName().getLocalPart() + " handled by extension " + extension.getID());
 		}
+		log.trace("End of mapping");
 		
 		return exts;
 	}
