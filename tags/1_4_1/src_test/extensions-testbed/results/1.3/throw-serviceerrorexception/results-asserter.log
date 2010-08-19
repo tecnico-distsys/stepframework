@@ -1,0 +1,22 @@
+[2010-03-19 14:57:06,279] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 14:57:06,282]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 14:57:06,287]DEBUG     8[main](AssertMain.java:22) - args[0] 'throw-serviceerrorexception'
+[2010-03-19 14:57:06,287]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-serviceerrorexception'
+[2010-03-19 14:57:06,287]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-19 14:57:06,302]TRACE    23[main](AssertMain.java:66) - Context:
+[2010-03-19 14:57:06,303]TRACE    24[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-serviceerrorexception
+[2010-03-19 14:57:06,303]TRACE    24[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-serviceerrorexception\soap-trace-client.log
+[2010-03-19 14:57:06,303]TRACE    24[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-serviceerrorexception\log-server.log
+[2010-03-19 14:57:06,303]TRACE    24[main](AssertMain.java:68) - config: throw-serviceerrorexception
+[2010-03-19 14:57:06,304]TRACE    25[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-serviceerrorexception\soap-trace-server.log
+[2010-03-19 14:57:06,304]TRACE    25[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-serviceerrorexception\log-client.log
+[2010-03-19 14:57:06,304]DEBUG    25[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 14:57:06,304]DEBUG    25[main](AssertMain.java:79) - Asserting configuration 'throw-serviceerrorexception'
+[2010-03-19 14:57:06,321] INFO    42[main](Assertions.java:36) - assertClientServiceErrorException
+[2010-03-19 14:57:06,341] INFO    62[main](Assertions.java:116) - assertSOAPCounts
+[2010-03-19 14:57:06,342] INFO    63[main](Assertions.java:93) - assertCountClientSOAPEnvelopes
+[2010-03-19 14:57:06,343] INFO    64[main](Assertions.java:98) - assertCountServerSOAPEnvelopes
+[2010-03-19 14:57:06,343] INFO    64[main](Assertions.java:103) - assertCountClientSOAPFaults
+[2010-03-19 14:57:06,344] INFO    65[main](Assertions.java:108) - assertCountServerSOAPFaults
+[2010-03-19 14:57:06,344] INFO    65[main](AssertMain.java:153) - All assertions executed successfully for configuration 'throw-serviceerrorexception'
+[2010-03-19 14:57:06,344] INFO    65[main](AssertMain.java:37) - End of results asserter.
