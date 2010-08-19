@@ -1,0 +1,52 @@
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5&#13;
+XPv9+v8ux+v7ne18QTX+E01jamk0rkjeWjSghLa6JVGIzGGtcXDHOlLu8zizPGf3QxIIiqvW14ET&#13;
+ewnwAr9DaiILTgoJbFA7Y6a5849yAnxZY1MqkUy7wSpeOA1KFQthz/7QKvMjIjfibR29okKSS2vX&#13;
+XU0tJRw=&#13;
+</CipherBody>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5
+XPv9+v8ux+v7ne18QTX+E01jamk0rkggXDpzBym6IyawN7amggPq6LhUqSLenWsAU8+URZToZVlk
+M+mR0+LcpVZjd1r2Z7E8l2tefH4efVNwzcpLtzwmEeJpmSvBxt9J5K6IwSPo1RF+XWHfwpozDw4i
+fdfcAFQnJWEwlpVkF9dgTpVXuGyXDkYjwSqrF3ysDF+fUId8bB/8g/tHOISnozF5evJo6B0yOuOM
+OhJ7xmTVqNaabH1U9PWRWUBxCMYIlwew6B80qra+7HBEM+2tGuPuEHZysDEfxpAryEfX2/bgWUcm
+1i87XY1ZSEWSR1H3SCL9VsestMFWJDmTCpon7zHuq6wnH8X6Z49HYNgdMBgTXSgQCbNdb0VfBjQ3
+k7vbsiFWnl+7No+OJuBfNC+s9DyMc+3BRU+uziLSBQm84HN0042nKfThT1YgoCGU9MB913cQohIb
+C12NWUhFkkdRyDoQMWDgITjl+6rqt0JoPZhnBNl1up1kb0VfBjQ3k7vMB1fbm2+vqKcrJ9OtVuWI
+mbX5zm+ZIVIKj+mZaTvectc4PWjwKohi
+</CipherBody>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <ns2:Fault xmlns:ns2="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns3="http://www.w3.org/2003/05/soap-envelope">
+      <faultcode>ns2:Server</faultcode>
+      <faultstring>Name is missing (forced by hello.ws.ThrowServiceError property for testing)</faultstring>
+      <detail>
+        <serviceError:serviceError xmlns="urn:hello:wsdl" xmlns:serviceError="urn:hello:wsdl"/>
+      </detail>
+    </ns2:Fault>
+  </S:Body>
+</S:Envelope>

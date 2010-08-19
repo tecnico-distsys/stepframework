@@ -1,0 +1,27 @@
+/**
+ *  Flight Performance run instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        run {
+            instance {
+                id = "CacheROUsers2"
+
+                loadId = "SizeMedium"
+
+                configId = "ehcachereadonly"
+                configToApplyList = [ "layermon", "layermon_ehcachereadonly" ]
+
+                numberSamples = 10
+                numberUsersPerSample = 2
+                // will consume 20 load samples
+
+                saveLogSize = true
+
+                perfLogFormat = "layermon"
+            }
+        }
+    }
+}

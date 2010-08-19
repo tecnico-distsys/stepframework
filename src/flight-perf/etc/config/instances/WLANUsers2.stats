@@ -1,0 +1,21 @@
+/**
+ *  Flight Performance stats instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        stats {
+            instance {
+                id = "WLANUsers2"
+
+                runId = "WLANUsers2"
+
+                filterId = ""
+
+                numberSamples = 10
+                numberWLANUsersPerSample = 2
+            }
+        }
+    }
+}

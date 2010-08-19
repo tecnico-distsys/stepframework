@@ -1,0 +1,27 @@
+/**
+ *  Flight Performance run instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        run {
+            instance {
+                id = "Users8MaxThink1000ms"
+
+                loadId = "MaxThink1000ms"
+
+                configId = ""
+                configToApplyList = [ "layermon" ]
+
+                numberSamples = 10
+                numberUsersPerSample = 8
+                // will consume 80 load samples
+
+                saveLog = true
+
+                perfLogFormat = "layermon"
+            }
+        }
+    }
+}
