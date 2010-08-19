@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="r" default="build" basedir=".">
+
+    <description>JAX-WS Registry build file. Customize as required.</description>
+
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="../build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <!-- properties with default folder locations -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="web-content.rel-dir" value="WebContent"/>
+    <property name="build.rel-dir" value="bin"/>
+    <property name="dist.rel-dir" value="dist"/>
+
+
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <pathelement location="${build.rel-dir}" />
+        <!-- JAX-R specific libraries -->
+        <fileset dir="./lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- remaining JAX libraries -->
+        <fileset dir="../lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- import external definitions -->
+    <import file="../lib/jax.xml" /><!-- jax uses project.classpath -->
+
+
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+    </target>
+
+
+    <!-- compile -->
+
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <target name="compile" depends="init,prepare-resources">
+    <!-- description="Compile source code" -->
+        <javac
+            srcdir="${src.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+
+    <!-- web services registry -->
+
+    <target name="ws-publish"
+            description="Publish Web Service on registry"
+            depends="prepare-resources">
+        <echo message="Publishing web service registration..." />
+        <java fork="true" classname="hello.Main">
+            <arg line="${build.rel-dir}/Registry.properties publish ${build.rel-dir}/Registration.properties ${build.rel-dir}/RegistrationKey.properties"/>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="ws-query-all"
+            description="Query all Web Services on registry"
+            depends="prepare-resources">
+        <echo message="Publishing web service registration..." />
+        <java fork="true" classname="hello.Main">
+            <arg line="${build.rel-dir}/Registry.properties query all"/>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="ws-query"
+            description="Query all Web Services on registry matching a name pattern"
+            depends="prepare-resources">
+        <echo message="Publishing web service registration..." />
+        <java fork="true" classname="hello.Main">
+            <arg line="${build.rel-dir}/Registry.properties query namePattern ${build.rel-dir}/NamePatternQuery.properties"/>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="ws-delete-all"
+            description="Delete all Web Services on registry"
+            depends="prepare-resources">
+        <echo message="Publishing web service registration..." />
+        <java fork="true" classname="hello.Main">
+            <arg line="${build.rel-dir}/Registry.properties delete all"/>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+    <target name="ws-delete"
+            description="Delete Web Service on registry using saved key"
+            depends="prepare-resources">
+        <echo message="Publishing web service registration..." />
+        <java fork="true" classname="hello.Main">
+            <arg line="${build.rel-dir}/Registry.properties delete key ${build.rel-dir}/RegistrationKey.properties"/>
+            <classpath>
+                <path refid="project.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" depends="compile"
+        description="Build the program">
+    </target>
+
+    <target name="rebuild" depends="clean,build" >
+    <!-- description="Rebuild the project" -->
+    </target>
+
+</project>

@@ -1,0 +1,26 @@
+19/Mar/2010 14:59:49 org.apache.catalina.core.AprLifecycleListener init
+INFO: The Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: c:\Java\jdk\1.6.0_18\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\PC Connectivity Solution\;C:\Program Files\MiKTeX 2.8\miktex\bin;C:\Program Files\CollabNet\Subversion Client;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;c:\Java\jdk\1.6.0_18\bin;C:\Java\stepcat\1.x-6.0.14\apache-ant\bin;C:\Java\stepcat\1.x-6.0.14\bin;c:\Program Files\SysinternalsSuite;C:\Program Files\Common Files\Roxio Shared\9.0\DLLShared\;C:\Program Files\Common Files\Roxio Shared\10.0\DLLShared\;C:\Program Files\Common Files\Roxio Shared\DLLShared\;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\UnxUtils\usr\local\wbin;C:\Program Files\cvs-1-11-22;C:\Program Files\MySQL\MySQL Server 5.1\bin;C:\Program Files\QuickTime\QTSystem\;%MIKTEK_HOME%\miktek\bin;C:\Program Files\7za465;C:\Java\aspectj\1.6.8\bin;C:\Java\groovy\1.7.0\bin;C:\Java\stepcat\1.x-6.0.14\bin;C:\Program Files\Common Files\DivX Shared\;C:\Program Files\Common Files\Microsoft Shared\Windows Live;D:\biz\current\prefs\my-scripts;C:\Program Files\SSH Communications Security\SSH Secure Shell
+19/Mar/2010 14:59:49 org.apache.coyote.http11.Http11Protocol init
+INFO: Initializing Coyote HTTP/1.1 on http-8080
+19/Mar/2010 14:59:49 org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 283 ms
+19/Mar/2010 14:59:49 org.apache.catalina.core.StandardService start
+INFO: Starting service Catalina
+19/Mar/2010 14:59:49 org.apache.catalina.core.StandardEngine start
+INFO: Starting Servlet Engine: Apache Tomcat/6.0.14
+19/Mar/2010 14:59:49 org.apache.coyote.http11.Http11Protocol start
+INFO: Starting Coyote HTTP/1.1 on http-8080
+19/Mar/2010 14:59:49 org.apache.jk.common.ChannelSocket init
+INFO: JK: ajp13 listening on /0.0.0.0:8009
+19/Mar/2010 14:59:49 org.apache.jk.server.JkMain start
+INFO: Jk running ID=0 time=0/16  config=null
+19/Mar/2010 14:59:49 org.apache.catalina.startup.Catalina start
+INFO: Server startup in 436 ms
+19/Mar/2010 15:00:09 org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive hello-ws.war
+19/Mar/2010 15:00:09 com.sun.xml.ws.transport.http.servlet.WSServletContextListener contextInitialized
+INFO: WSSERVLET12: JAX-WS context listener initializing
+19/Mar/2010 15:00:10 com.sun.xml.ws.transport.http.servlet.WSServletDelegate <init>
+INFO: WSSERVLET14: JAX-WS servlet initializing
+19/Mar/2010 15:00:10 org.apache.catalina.startup.HostConfig deployWAR
+INFO: Deploying web application archive helloclient-web.war

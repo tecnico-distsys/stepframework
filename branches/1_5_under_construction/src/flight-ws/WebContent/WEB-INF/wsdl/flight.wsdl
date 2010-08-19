@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions
+    name="Flight"
+    targetNamespace="urn:org:tripplanner:flight:wsdl"
+    xmlns:tns="urn:org:tripplanner:flight:wsdl"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+>
+    <!--
+        Web Service Definition Language (WSDL) contract for
+        Flight Web Service
+    -->
+
+    <!-- This file is NOT generated automatically -->
+
+    <types>
+        <xsd:schema
+            elementFormDefault="qualified"
+            targetNamespace="urn:org:tripplanner:flight:wsdl"
+            xmlns:ns1="urn:org:tripplanner:flight:view"
+        >
+
+            <!-- import service data views -->
+            <xsd:import
+                namespace="urn:org:tripplanner:flight:view"
+                schemaLocation="flight-view.xsd"
+            />
+
+            <!-- create reservation for lowest price flight -->
+            <xsd:complexType name="CreateLowPriceReservation">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateLowPriceReservationInput" name="input"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createLowPriceReservation" type="tns:CreateLowPriceReservation" />
+
+            <xsd:complexType name="CreateLowPriceReservationResponse">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateLowPriceReservationOutput" name="output"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createLowPriceReservationResponse" type="tns:CreateLowPriceReservationResponse" />
+
+            <!-- search flights -->
+            <xsd:complexType name="SearchFlights">
+                <xsd:sequence>
+                    <xsd:element type="ns1:SearchFlightsInput" name="input"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="searchFlights" type="tns:SearchFlights" />
+
+            <xsd:complexType name="SearchFlightsResponse">
+                <xsd:sequence>
+                    <xsd:element type="ns1:SearchFlightsOutput" name="output"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="searchFlightsResponse" type="tns:SearchFlightsResponse" />
+
+            <!-- create single reservation -->
+            <xsd:complexType name="CreateSingleReservation">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateSingleReservationInput" name="input"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createSingleReservation" type="tns:CreateSingleReservation" />
+
+            <xsd:complexType name="CreateSingleReservationResponse">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateSingleReservationOutput" name="output"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createSingleReservationResponse" type="tns:CreateSingleReservationResponse" />
+
+            <!-- create multiple reservations -->
+            <xsd:complexType name="CreateMultipleReservations">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateMultipleReservationsInput" name="input"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createMultipleReservations" type="tns:CreateMultipleReservations" />
+
+            <xsd:complexType name="CreateMultipleReservationsResponse">
+                <xsd:sequence>
+                    <xsd:element type="ns1:CreateMultipleReservationsOutput" name="output"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="createMultipleReservationsResponse" type="tns:CreateMultipleReservationsResponse" />
+
+            <!-- faults -->
+            <xsd:complexType name="ServiceUnavailable" />
+            <xsd:element name="serviceUnavailable" type="tns:ServiceUnavailable" />
+
+            <xsd:complexType name="FlightFault">
+                <xsd:sequence>
+                    <xsd:element name="faultType" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="flightFault" type="tns:FlightFault" />
+
+        </xsd:schema>
+    </types>
+
+    <message name="createLowPriceReservation">
+        <part name="parameters" element="tns:createLowPriceReservation" />
+    </message>
+    <message name="createLowPriceReservationResponse">
+        <part name="result" element="tns:createLowPriceReservationResponse" />
+    </message>
+
+    <message name="searchFlights">
+        <part name="parameters" element="tns:searchFlights" />
+    </message>
+    <message name="searchFlightsResponse">
+        <part name="result" element="tns:searchFlightsResponse" />
+    </message>
+
+    <message name="createSingleReservation">
+        <part name="parameters" element="tns:createSingleReservation" />
+    </message>
+    <message name="createSingleReservationResponse">
+        <part name="result" element="tns:createSingleReservationResponse" />
+    </message>
+
+    <message name="createMultipleReservations">
+        <part name="parameters" element="tns:createMultipleReservations" />
+    </message>
+    <message name="createMultipleReservationsResponse">
+        <part name="result" element="tns:createMultipleReservationsResponse" />
+    </message>
+
+    <message name="flightFault">
+        <part name="fault" element="tns:flightFault" />
+    </message>
+    <message name="serviceUnavailable">
+        <part name="fault" element="tns:serviceUnavailable" />
+    </message>
+
+    <portType name="FlightPortType">
+        <operation name="createLowPriceReservation">
+            <input message="tns:createLowPriceReservation" name="createLowPriceReservation"/>
+            <output message="tns:createLowPriceReservationResponse" name="createLowPriceReservationResponse"/>
+            <fault message="tns:flightFault" name="flightFault"/>
+            <fault message="tns:serviceUnavailable" name="serviceUnavailable"/>
+        </operation>
+        <operation name="searchFlights">
+            <input message="tns:searchFlights" name="searchFlights"/>
+            <output message="tns:searchFlightsResponse" name="searchFlightsResponse"/>
+            <fault message="tns:flightFault" name="flightFault"/>
+            <fault message="tns:serviceUnavailable" name="serviceUnavailable"/>
+        </operation>
+        <operation name="createSingleReservation">
+            <input message="tns:createSingleReservation" name="createSingleReservation"/>
+            <output message="tns:createSingleReservationResponse" name="createSingleReservationResponse"/>
+            <fault message="tns:flightFault" name="flightFault"/>
+            <fault message="tns:serviceUnavailable" name="serviceUnavailable"/>
+        </operation>
+        <operation name="createMultipleReservations">
+            <input message="tns:createMultipleReservations" name="createMultipleReservations"/>
+            <output message="tns:createMultipleReservationsResponse" name="createMultipleReservationsResponse"/>
+            <fault message="tns:flightFault" name="flightFault"/>
+            <fault message="tns:serviceUnavailable" name="serviceUnavailable"/>
+        </operation>
+    </portType>
+
+    <binding name="FlightBinding" type="tns:FlightPortType">
+        <soap:binding
+            transport="http://schemas.xmlsoap.org/soap/http"
+            style="document"
+        />
+        <operation name="createLowPriceReservation">
+            <soap:operation soapAction="" />
+            <input name="createLowPriceReservation">
+                <soap:body use="literal" />
+            </input>
+            <output name="createLowPriceReservationResponse">
+                <soap:body use="literal" />
+            </output>
+            <fault name="flightFault">
+                <soap:fault name="flightFault" use="literal" />
+            </fault>
+            <fault name="serviceUnavailable">
+                <soap:fault name="serviceUnavailable" use="literal" />
+            </fault>
+        </operation>
+        <operation name="searchFlights">
+            <soap:operation soapAction="" />
+            <input name="searchFlights">
+                <soap:body use="literal" />
+            </input>
+            <output name="searchFlightsResponse">
+                <soap:body use="literal" />
+            </output>
+            <fault name="flightFault">
+                <soap:fault name="flightFault" use="literal" />
+            </fault>
+            <fault name="serviceUnavailable">
+                <soap:fault name="serviceUnavailable" use="literal" />
+            </fault>
+        </operation>
+        <operation name="createSingleReservation">
+            <soap:operation soapAction="" />
+            <input name="createSingleReservation">
+                <soap:body use="literal" />
+            </input>
+            <output name="createSingleReservationResponse">
+                <soap:body use="literal" />
+            </output>
+            <fault name="flightFault">
+                <soap:fault name="flightFault" use="literal" />
+            </fault>
+            <fault name="serviceUnavailable">
+                <soap:fault name="serviceUnavailable" use="literal" />
+            </fault>
+        </operation>
+        <operation name="createMultipleReservations">
+            <soap:operation soapAction="" />
+            <input name="createMultipleReservations">
+                <soap:body use="literal" />
+            </input>
+            <output name="createMultipleReservationsResponse">
+                <soap:body use="literal" />
+            </output>
+            <fault name="flightFault">
+                <soap:fault name="flightFault" use="literal" />
+            </fault>
+            <fault name="serviceUnavailable">
+                <soap:fault name="serviceUnavailable" use="literal" />
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="FlightService">
+        <port name="FlightPort" binding="tns:FlightBinding">
+            <soap:address location="REPLACE_WITH_ACTUAL_URL" />
+        </port>
+    </service>
+
+</definitions>

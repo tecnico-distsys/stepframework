@@ -1,0 +1,11 @@
+CVS configuration tips
+
+*** How to optimize CVS use for STEP Framework projects ***
+
+
+Ignore all "build" and "dist" folders to avoid filling the repository with ever-changing binary files.
+
+
+--
+2009-04-20
+Miguel Pardal
