@@ -16,15 +16,18 @@ public class ApplicationContext extends ContextImpl implements Context {
     }
 
     /**
-     * Single application context.
-     */
-    private static final ApplicationContext applicationContext = new ApplicationContext();
+    * SingletonHolder is loaded on the first execution of Singleton.getInstance()
+    * or the first access to SingletonHolder.INSTANCE, not before.
+    */
+    private static class SingletonHolder {
+        private static final ApplicationContext INSTANCE = new ApplicationContext();
+    }
 
     /**
-     * Obtain application context.
+     *  Obtain application context.
      */
-    public static synchronized ApplicationContext getInstance() {
-        return applicationContext;
+    public static ApplicationContext getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
 }

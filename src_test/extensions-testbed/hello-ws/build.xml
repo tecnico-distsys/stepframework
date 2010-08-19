@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="hello-ws" default="build" basedir=".">
+
+    <description>Hello Web Service build file. Customize as required.</description>
+
+
+    <!-- load environment variables as properties -->
+    <property environment="env"/>
+
+    <property name="root.rel-dir" value="../../../src"/>
+    <property name="rootextra.rel-dir" value="../../../src_extra"/>
+
+    <!-- properties with default folder locations -->
+    <property name="src.rel-dir" value="src"/>
+    <property name="web-content.rel-dir" value="web"/>
+    <property name="build.rel-dir" value="build"/>
+    <property name="dist.rel-dir" value="dist"/>
+
+    <!-- load properties files -->
+    <property file="build.properties"/>
+    <property file="${root.rel-dir}/build.properties"/>
+    <property file="${user.home}/build.properties"/>
+
+    <!-- import external definitions -->
+    <import file="${root.rel-dir}/lib/tomcat.xml" />
+    <import file="${root.rel-dir}/lib/jax.xml" />
+
+
+    <!-- project classpath -->
+
+    <path id="project.classpath">
+        <!-- compiled classes -->
+        <pathelement location="${build.rel-dir}" />
+        <!-- project libraries -->
+        <fileset dir="${web-content.rel-dir}/WEB-INF">
+            <include name="lib/**/*.jar" />
+        </fileset>
+        <!-- root libraries -->
+        <fileset dir="${root.rel-dir}/lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- STEP libraries -->
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- extensions -->
+        <fileset dir="${root.rel-dir}/extensions/dist">
+            <include name="*.jar" />
+        </fileset>
+        <fileset dir="${rootextra.rel-dir}/more-extensions/dist">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+
+    <!-- basic -->
+
+    <target name="init">
+        <mkdir dir="${build.rel-dir}"/>
+        <mkdir dir="${dist.rel-dir}"/>
+    </target>
+
+    <target name="clean"
+        description="Delete temporary folders">
+        <delete dir="${build.rel-dir}" failonerror="false" deleteonexit="true" />
+        <delete dir="${dist.rel-dir}" failonerror="false" deleteonexit="true" />
+    </target>
+
+
+    <!-- jax-ws-server -->
+
+    <property name="wsdl.rel-file" value="${web-content.rel-dir}/WEB-INF/wsdl/hello.wsdl" />
+
+    <target name="wsimport" depends="init,-generate-wsdl-url" unless="recompile.flag">
+    <!-- description="Generate Web Service server-side Java code from WSDL" -->
+        <echo message="Executing wsimport to generate server-side code..." />
+        <echo message="WSDL: ${wsdl.rel-file}" />
+        <wsimport wsdl="${wsdl.url}"
+                  debug="true"
+                  verbose="false"
+                  destdir="${build.rel-dir}"
+                  sourcedestdir="${build.rel-dir}"
+        >
+            <binding dir="${web-content.rel-dir}/WEB-INF" includes="jaxws*binding.xml"/>
+            <produces dir="${build.rel-dir}/hello/wsdl" />
+        </wsimport>
+        <!-- The sources are in the build folder, for programmer reference -->
+    </target>
+
+
+    <!-- compile -->
+
+    <target name="prepare-resources" depends="init">
+    <!-- description="Prepare application resource files" -->
+        <copy todir="${build.rel-dir}" overwrite="true">
+            <fileset dir="${src.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" />
+        </copy>
+        <replace dir="${build.rel-dir}" includes="**/*.properties,**/*.xml" excludes="" summary="true">
+            <replacefilter token="@example-token@" value="${example-property}" />
+        </replace>
+    </target>
+
+    <target name="compile" depends="wsimport,prepare-resources">
+    <!-- description="Compile source code" -->
+        <javac
+            srcdir="${src.rel-dir}"
+            destdir="${build.rel-dir}"
+            debug="true"
+            debuglevel="lines,vars,source"
+            optimize="true"
+            deprecation="true"
+            verbose="false"
+        >
+            <compilerarg line="" /> <!-- "-Xlint:all", "-Xlint:all,-path", "-Xlint:all,-path,-unchecked" -->
+            <classpath refid="project.classpath" />
+        </javac>
+    </target>
+
+
+    <!-- library -->
+
+    <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
+
+    <target name="create-jar" depends="compile">
+    <!-- description="Create a jar file" -->
+        <jar destfile="${jar.rel-file}">
+            <!-- include only exception classes and resources -->
+            <zipfileset dir="${build.rel-dir}"
+                        includes="**/exception/*/*.class,**/exception/*/*.properties,**/exception/*/*.xml"
+                        excludes="" />
+        </jar>
+    </target>
+
+
+    <!-- web application -->
+
+    <property name="deploy.context" value="${ant.project.name}" />
+    <property name="deploy.war.rel-file" value="${dist.rel-dir}/${ant.project.name}.war" />
+
+    <target name="create-war" depends="compile">
+    <!-- description="Create Web application ARchive" -->
+
+        <jar destfile="${deploy.war.rel-file}">
+            <!-- web content -->
+            <zipfileset dir="${web-content.rel-dir}"
+                        includes="**/*" />
+            <!-- compiled classes and resource files -->
+            <zipfileset dir="${build.rel-dir}"
+                        includes="**/*.class,**/*.properties,**/*.xml"
+                        prefix="WEB-INF/classes" />
+            <!-- root libs -->
+            <zipfileset dir="${root.rel-dir}/lib"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+            <!-- extension libs -->
+            <zipfileset dir="${root.rel-dir}/extensions/dist"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+            <zipfileset dir="${rootextra.rel-dir}/more-extensions/dist"
+                        includes="*.jar"
+                        prefix="WEB-INF/lib" />
+        </jar>
+
+    </target>
+
+
+    <!-- build -->
+
+    <target name="build" depends="create-war,create-jar"
+        description="Build the program">
+    </target>
+
+    <target name="rebuild" depends="clean,build" >
+    <!-- description="Rebuild the project" -->
+    </target>
+
+
+</project>

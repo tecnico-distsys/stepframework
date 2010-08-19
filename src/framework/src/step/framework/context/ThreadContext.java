@@ -11,59 +11,38 @@ public class ThreadContext extends ContextImpl implements Context {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-     * Private constructor prevents construction outside this class.
-     */
+    // Private constructor prevents instantiation from other classes
     private ThreadContext() {
         super();
     }
 
     /**
-     * Thread context collection.
-     */
-    private static final Map<String,ThreadContext> threadContextCollection = new HashMap<String,ThreadContext>();
-
-    /**
-     * Get context for current thread.
-     */
-    public static synchronized ThreadContext getInstance() {
-        return getInstance(Thread.currentThread());
-    }
-
-    /**
-     * Get context for specified thread.
-     */
-    public static synchronized ThreadContext getInstance(Thread thread) {
-        String threadKey = getThreadKey(thread);
-        ThreadContext threadContext = threadContextCollection.get(threadKey);
-        if(threadContext == null) {
-            threadContext = new ThreadContext();
-            threadContextCollection.put(threadKey, threadContext);
+    * SingletonHolder extends ThreadLocal so there is one context per thread
+    */
+    private static class SingletonHolder extends ThreadLocal<ThreadContext> {
+        @Override protected ThreadContext initialValue() {
+            return new ThreadContext();
         }
-        return threadContext;
+    }
+
+    /** per thread singleton holder */
+    private static SingletonHolder singletonHolder = new SingletonHolder();
+
+
+    /**
+     *  Get context for current thread.
+     */
+    public static ThreadContext getInstance() {
+        return singletonHolder.get();
     }
 
     /**
-     * Delete the current thread context.
+     *  Delete the current thread context.
      */
-    public static synchronized ThreadContext deleteInstance() {
-        return deleteInstance(Thread.currentThread());
-    }
-
-    /**
-     * Delete context for specified thread.
-     */
-    public static synchronized ThreadContext deleteInstance(Thread thread) {
-        String threadKey = getThreadKey(thread);
-        return threadContextCollection.remove(threadKey);
-    }
-
-    /**
-     * Generate a string representation of a thread id
-     */
-    private static String getThreadKey(Thread thread) {
-        long id = thread.getId();
-        return Long.toString(id);
+    public static ThreadContext deleteInstance() {
+        ThreadContext tc = singletonHolder.get();
+        singletonHolder.remove();
+        return tc;
     }
 
 }
