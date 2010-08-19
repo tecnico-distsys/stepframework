@@ -14,7 +14,7 @@ perf {
                 configId = ""
                 configToApplyList = [ "layermon" ]
 
-                numberSamples = 3 // was 10
+                numberSamples = 10
                 numberUsersPerSample = 2
                 // will consume 20 load samples
 

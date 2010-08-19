@@ -14,9 +14,9 @@ perf {
                 configId = "randomreservationnr"
                 configToApplyList = [ "layermon", "randomreservationnr" ]
 
-                numberSamples = 3
+                numberSamples = 10
                 numberUsersPerSample = 2
-                // will consume 2 * 2 = 4 load samples
+                // will consume 20 load samples
 
                 saveLog = true
 
