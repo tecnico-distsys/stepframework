@@ -16,7 +16,7 @@ perf {
                     return (record["soap_name"] ==~ ".*Fault");
                 }
 
-                numberSamples = 6 // was 30
+                numberSamples = 30
             }
         }
     }

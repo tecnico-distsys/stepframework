@@ -14,7 +14,7 @@ perf {
                 configId = "perf4jnoagg"
                 configToApplyList = [ "perf4j" ]
 
-                numberSamples = 6 // was 30
+                numberSamples = 30
                 numberUsersPerSample = 1
 
                 saveLogSize = true

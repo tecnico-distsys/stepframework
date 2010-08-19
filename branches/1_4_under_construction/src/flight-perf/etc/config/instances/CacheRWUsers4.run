@@ -14,7 +14,7 @@ perf {
                 configId = "ehcachereadwrite"
                 configToApplyList = [ "layermon", "layermon_ehcachereadwrite" ]
 
-                numberSamples = 3 // was 10
+                numberSamples = 10
                 numberUsersPerSample = 4
                 // will consume 40 load samples
 

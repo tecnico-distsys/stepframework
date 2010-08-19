@@ -12,7 +12,7 @@ perf {
                 runId = "LANSizeMedium"
                 filterId = ""
 
-                numberSamples = 6 // was 30
+                numberSamples = 30
             }
         }
     }

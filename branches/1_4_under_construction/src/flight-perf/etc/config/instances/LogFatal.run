@@ -14,7 +14,7 @@ perf {
                 configId = "loglevelfatal"
                 configToApplyList = [ "perf4j", "loglevelfatal" ]
 
-                numberSamples = 3 // was 10
+                numberSamples = 10
                 numberUsersPerSample = 1
 
                 saveLogSize = true
