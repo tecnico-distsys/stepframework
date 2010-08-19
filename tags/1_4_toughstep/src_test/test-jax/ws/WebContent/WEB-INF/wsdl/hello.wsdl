@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="Hello"
+             targetNamespace="urn:hello:wsdl"
+             xmlns:tns="urn:hello:wsdl"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+    <!-- This file is not generated automatically -->
+
+    <!-- # 1
+
+         A WSDL file is better read from the end of the file upwards,
+         so we suggest you read the explanation comments following the
+         ordinal numbers #... sequence
+
+         The XML namespaces definitions are very important.
+         They state which namespaces are being used and are their prefixes.
+
+         The targetNamespace (prefix tns) is the namespace of the Web Service
+         that is being defined by this WSDL document.
+    -->
+
+
+    <!-- #6
+         types definitions
+
+         This section has a XML Schema Definition.
+         It can be in-line or imported from another file.
+
+         In document-literal style, there must be one XML element definition
+         for each declared message.
+    -->
+    <types>
+        <xsd:schema elementFormDefault="qualified"
+                    targetNamespace="urn:hello:wsdl"
+                    xmlns:tns="urn:hello:wsdl">
+
+            <xsd:complexType name="SayHello">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="sayHello" type="tns:SayHello" />
+
+            <xsd:complexType name="SayHelloResponse">
+                <xsd:sequence>
+                    <xsd:element name="return" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="sayHelloResponse" type="tns:SayHelloResponse" />
+
+            <xsd:complexType name="EmptyName">
+                <xsd:sequence>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="emptyName" type="tns:EmptyName" />
+
+        </xsd:schema>
+    </types>
+
+
+    <!-- #5
+         message definitions
+
+         In document-literal style, each message has a single part
+         that refers to a XML element defined in the XML Schema Definition.
+    -->
+    <message name="sayHello">
+        <part name="parameters" element="tns:sayHello" />
+    </message>
+
+    <message name="sayHelloResponse">
+        <part name="result" element="tns:sayHelloResponse" />
+    </message>
+
+    <message name="EmptyNameFault">
+            <part name="fault" element="tns:emptyName" />
+    </message>
+
+
+    <!-- #4
+         port type definitions
+
+         A port type is a set of operations. It is similar in concept to a Java interface.
+
+         Each operation has an input message, an output message and, optionally,
+         fault messages.
+    -->
+    <portType name="HelloPortType">
+        <operation name="sayHello">
+            <input message="tns:sayHello" name="sayHello" />
+            <output message="tns:sayHelloResponse" name="sayHelloResponse" />
+            <fault message="tns:EmptyNameFault" name="emptyName" />
+        </operation>
+    </portType>
+
+
+    <!-- #3
+         binding definitions
+
+         A binding defines a concrete implementation of an abstract port type.
+
+         It is essentially an annotation of the port type operations with
+         the technologies that will be used to actually invoke the service.
+         In this case, SOAP and HTTP.
+
+         It also defines the document-literal style of binding,
+         meaning that the SOAP body will have single part that is
+         a XML document that is defined by a XML Schema Definition.
+    -->
+    <binding name="HelloBinding" type="tns:HelloPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <operation name="sayHello">
+            <soap:operation soapAction="" />
+            <input name="sayHello">
+                <soap:body use="literal" />
+            </input>
+            <output name="sayHelloResponse">
+                <soap:body use="literal" />
+            </output>
+            <fault name="emptyName">
+                <soap:fault use="literal" name="emptyName" />
+            </fault>
+        </operation>
+    </binding>
+
+
+    <!-- #2
+         service definition
+
+         A service defines a set of ports (typically just one).
+         The port is a concrete implementation of a port type, defined by a binding.
+
+         The SOAP address location is the default endpoint address for the Web Service
+    -->
+    <service name="HelloService">
+        <port name="HelloPort" binding="tns:HelloBinding">
+            <soap:address location="REPLACE_WITH_ACTUAL_URL" />
+        </port>
+    </service>
+
+
+</definitions>
