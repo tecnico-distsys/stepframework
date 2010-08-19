@@ -1,5 +1,6 @@
 package step.framework.extensions;
 
+import java.io.PrintStream;
 import java.util.Map;
 
 import org.junit.*;
@@ -9,6 +10,7 @@ import static org.junit.Assert.*;
 public class ExtensionEngineTest {
 
     ExtensionEngine engine;
+    private PrintStream out = System.out;
     
     @Before
     public void setUp() {
@@ -61,7 +63,7 @@ public class ExtensionEngineTest {
 
     @Test
     public void testEngineAutoInit() throws ExtensionEngineException {
-        engine.isEnabled();   // triggers auto-initialization
+        boolean enabled = engine.isEnabled();   // triggers auto-initialization
         assertEngineState();
     }
 

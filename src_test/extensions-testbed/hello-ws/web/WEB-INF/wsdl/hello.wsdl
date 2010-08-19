@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions name="Hello"
+             targetNamespace="urn:hello:wsdl"
+             xmlns:tns="urn:hello:wsdl"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+    <!-- This file is not generated automatically -->
+
+    <types>
+        <xsd:schema elementFormDefault="qualified"
+                    targetNamespace="urn:hello:wsdl">
+
+            <xsd:complexType name="SayHelloType">
+                <xsd:sequence>
+                    <xsd:element name="name" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="sayHello" type="tns:SayHelloType" />
+
+            <xsd:complexType name="SayHelloResponseType">
+                <xsd:sequence>
+                    <xsd:element name="return" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="sayHelloResponse" type="tns:SayHelloResponseType" />
+
+            <xsd:complexType name="ServiceError" />
+            <xsd:element name="serviceError" type="tns:ServiceError" />
+
+        </xsd:schema>
+    </types>
+
+    <message name="sayHello">
+        <part name="parameters" element="tns:sayHello" />
+    </message>
+    <message name="sayHelloResponse">
+        <part name="result" element="tns:sayHelloResponse" />
+    </message>
+    <message name="serviceError">
+        <part name="fault" element="tns:serviceError" />
+    </message>
+
+    <portType name="HelloPortType">
+        <operation name="sayHello">
+            <input message="tns:sayHello" name="sayHello"/>
+            <output message="tns:sayHelloResponse" name="sayHelloResponse"/>
+            <fault message="tns:serviceError" name="serviceError" />
+        </operation>
+    </portType>
+
+    <binding name="HelloBinding" type="tns:HelloPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <operation name="sayHello">
+            <soap:operation soapAction="" />
+            <input>
+                <soap:body use="literal" />
+            </input>
+            <output>
+                <soap:body use="literal" />
+            </output>
+            <fault name="serviceError">
+                <soap:fault use="literal" name="serviceError" />
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="HelloService">
+        <port name="HelloPort" binding="tns:HelloBinding">
+            <soap:address location="REPLACE_WITH_ACTUAL_URL" />
+        </port>
+    </service>
+
+</definitions>

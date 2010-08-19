@@ -4,19 +4,11 @@ import java.io.IOException;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
+import javax.xml.soap.*;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import step.framework.extensions.WebServiceInterceptor;
-import step.framework.extensions.WebServiceInterceptorException;
-import step.framework.extensions.WebServiceInterceptorParameter;
+import step.framework.extensions.*;
 import step.framework.ws.SOAPUtil;
 
 
@@ -24,8 +16,9 @@ import step.framework.ws.SOAPUtil;
  *  This is the Errors extension's web service interceptor.
  *  If properly configured, it captures all inbound and outbound SOAP messages.
  */
-public class ErrorsWebServiceInterceptor implements WebServiceInterceptor {
+public class ErrorsWebServiceInterceptor extends WebServiceInterceptorBase {
 
+    @Override
     public boolean interceptMessage(WebServiceInterceptorParameter param)
     throws SOAPFaultException, WebServiceInterceptorException {
 

@@ -1,0 +1,39 @@
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHelloResponse xmlns="urn:hello:wsdl">
+      <return>Hello friend</return>
+    </sayHelloResponse>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message containing a Fault forced back to client:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <S:Fault>
+      <faultcode>S:Server</faultcode>
+      <faultstring>Test Exception generated in method interceptMessage-server-outbound</faultstring>
+    </S:Fault>
+  </S:Body>
+</S:Envelope>

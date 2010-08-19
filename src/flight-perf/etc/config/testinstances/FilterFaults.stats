@@ -1,0 +1,23 @@
+/**
+ *  Flight Performance stats instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        stats {
+            instance {
+                id = "FilterFaults"
+
+                runId = "SizeTest"
+
+                filterId = "faults"
+                filterClosure = { record ->
+                    return (record["soap_name"] ==~ ".*Fault");
+                }
+
+                numberSamples = 2
+            }
+        }
+    }
+}

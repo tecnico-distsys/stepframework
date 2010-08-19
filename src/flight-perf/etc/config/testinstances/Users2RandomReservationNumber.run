@@ -1,0 +1,27 @@
+/**
+ *  Flight Performance run instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        run {
+            instance {
+                id = "Users2RandomReservationNumber"
+
+                loadId = "SizeTest"
+
+                configId = "randomreservationnr"
+                configToApplyList = [ "layermon", "randomreservationnr" ]
+
+                numberSamples = 2
+                numberUsersPerSample = 2
+                // will consume 2 * 2 = 4 load samples
+
+                saveLog = true
+
+                perfLogFormat = "layermon"
+            }
+        }
+    }
+}

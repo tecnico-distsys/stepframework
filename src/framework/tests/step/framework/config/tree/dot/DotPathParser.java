@@ -6,9 +6,8 @@ import step.framework.config.tree.*;
 
 
 public class DotPathParser implements ConfigPathParser {
-	private static final long serialVersionUID = 1L;
 
-	public List<String> parseConfigPath(String configPath) throws IllegalArgumentException {
+    public List<String> parseConfigPath(String configPath) throws IllegalArgumentException {
 
         // empty string should be stored as default configuration
         if(configPath.length() == 0) {

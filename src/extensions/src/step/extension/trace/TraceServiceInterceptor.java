@@ -4,35 +4,36 @@ import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import step.framework.extensions.ServiceInterceptor;
-import step.framework.extensions.ServiceInterceptorException;
-import step.framework.extensions.ServiceInterceptorParameter;
+import step.framework.domain.DomainException;
+import step.framework.extensions.*;
 import step.framework.service.Service;
 
 /**
  *  This is the Trace extension's service interceptor.
  *  If properly configured, it is invoked before and after a service execution.
  */
-public class TraceServiceInterceptor implements ServiceInterceptor {
+public class TraceServiceInterceptor extends ServiceInterceptorBase {
 
     /**
      *   Prints the values of the service atributes before the service's execution.
      */
+    @Override
     public void interceptBefore(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
         trace(param);
     }
 
     /**
      *   Prints the values of the service atributes after the service's execution.
      */
+    @Override
     public void interceptAfter(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
         trace(param);
     }
 
     private void trace(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
         // where to write the information
         PrintStream out = getPrintStream(param);
 
