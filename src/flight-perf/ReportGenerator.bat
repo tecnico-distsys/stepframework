@@ -20,10 +20,6 @@ IF "%JUST_ONE_PLEASE%"=="true" GOTO end
 CALL groovy src\org\tripplanner\flight\perf\report_generator\BreakdownReport.groovy %*
 IF "%JUST_ONE_PLEASE%"=="true" GOTO end
 
-:mon
-CALL groovy src\org\tripplanner\flight\perf\report_generator\MonReport.groovy %*
-IF "%JUST_ONE_PLEASE%"=="true" GOTO end
-
 :xml
 CALL groovy src\org\tripplanner\flight\perf\report_generator\XMLSizeReport.groovy %*
 IF "%JUST_ONE_PLEASE%"=="true" GOTO end
@@ -42,10 +38,6 @@ IF "%JUST_ONE_PLEASE%"=="true" GOTO end
 
 :users
 CALL groovy src\org\tripplanner\flight\perf\report_generator\UsersReport.groovy %*
-IF "%JUST_ONE_PLEASE%"=="true" GOTO end
-
-:usersrand
-CALL groovy src\org\tripplanner\flight\perf\report_generator\UsersRandomReservationNumberReport.groovy %*
 IF "%JUST_ONE_PLEASE%"=="true" GOTO end
 
 ENDLOCAL

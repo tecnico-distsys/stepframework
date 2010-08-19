@@ -12,17 +12,14 @@ perf {
                 loadId = "SizeMedium"
 
                 configId = "logleveltrace"
-                configToApplyList = [ "perf4j", "logleveltrace" ]
+                configToApplyList = [ "layermon", "logleveltrace" ]
 
                 numberSamples = 10
                 numberUsersPerSample = 1
 
                 saveLogSize = true
 
-                perfLogFormat = "perf4j"
-                perf4j {
-                    aggregateContiguousEntries = true
-                }
+                perfLogFormat = "layermon"
             }
         }
     }

@@ -12,17 +12,14 @@ perf {
                 loadId = "SizeTest"
 
                 configId = "logleveldebug"
-                configToApplyList = [ "perf4j", "logleveldebug" ]
+                configToApplyList = [ "layermon", "logleveldebug" ]
 
                 numberSamples = 2
                 numberUsersPerSample = 1
                 
                 saveLog = true
 
-                perfLogFormat = "perf4j"
-                perf4j {
-                    aggregateContiguousEntries = true
-                }                
+                perfLogFormat = "layermon"
             }
         }
     }

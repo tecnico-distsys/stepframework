@@ -22,24 +22,10 @@
         </layout>
     </appender>
 
-    <!-- Perf4J appender -->
-    <appender name="perfLogFile" class="org.apache.log4j.FileAppender">
-        <param name="File" value="perfLogFile.txt"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%m%n"/>
-        </layout>
-    </appender>
-
 
     <!--  #                                                           -->
     <!-- # # Loggers (control which messages are enabled or disabled) -->
     <!--  #                                                           -->
-
-    <!-- Perf4J logger -->
-    <logger name="org.perf4j.TimingLogger" additivity="false">
-        <level value="OFF"/>
-        <appender-ref ref="perfLogFile"/>
-    </logger>
 
     <!-- Application loggers -->
     <logger name="step.framework">
