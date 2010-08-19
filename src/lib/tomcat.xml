@@ -6,6 +6,12 @@
 
     <property name="tomcat.dir" location="${env.CATALINA_HOME}" />
 
+    <path id="tomcat.dir.path">
+        <pathelement location="${tomcat.dir}"/>
+    </path>
+    <pathconvert property="tomcat.dir./" refid="tomcat.dir.path" pathsep=";" dirsep="/" />
+
+    
     <!--property name="tomcat.username" value="admin" /-->
     <!--property name="tomcat.password" value="adminadmin" /-->
 

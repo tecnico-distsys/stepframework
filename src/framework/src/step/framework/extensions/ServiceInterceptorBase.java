@@ -1,5 +1,7 @@
 package step.framework.extensions;
 
+import step.framework.domain.DomainException;
+
 
 /**
  *  This abstract class provides a default implementation for
@@ -12,7 +14,7 @@ public abstract class ServiceInterceptorBase implements ServiceInterceptor {
      *  <br />
      */
     public void interceptBefore(ServiceInterceptorParameter param)
-        throws ServiceInterceptorException {
+        throws DomainException, ServiceInterceptorException {
     }
 
     /**
@@ -20,7 +22,15 @@ public abstract class ServiceInterceptorBase implements ServiceInterceptor {
      *  <br />
      */
     public void interceptAfter(ServiceInterceptorParameter param)
-        throws ServiceInterceptorException {
+        throws DomainException, ServiceInterceptorException {
+    }
+
+    /**
+     *  Empty implementation of finally after service execution.<br />
+     *  <br />
+     */
+    public void interceptFinallyAfter(ServiceInterceptorParameter param)
+        throws DomainException, ServiceInterceptorException {
     }
 
 }

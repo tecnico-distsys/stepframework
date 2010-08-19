@@ -27,15 +27,14 @@
     <path id="project.classpath">
         <!-- compiled classes -->
         <pathelement location="${build.rel-dir}" />
-		<!-- development libraries (not required at run-time) -->
-		<!-- (GWT libraries must come first as they conflict with jasper-jdt.jar from Tomcat) -->
-<!--		<pathelement location="${env.GWT_HOME}/gwt-servlet.jar"/>-->
-		<pathelement location="${env.GWT_HOME}/gwt-user.jar"/>
-<!--		<fileset dir="${env.GWT_HOME}" includes="gwt-dev*.jar" />-->
-        <!-- shared STEP framework dependencies -->
-        <fileset dir="${env.STEP_HOME}/lib" includes="*.jar"/>
         <!-- STEP non-shareable dependencies -->
-        <fileset dir="../../lib" includes="**/application-specific/*.jar" excludes="**/gwt-servlet.jar"/>
+        <fileset dir="../lib">
+            <include name="*.jar" />
+        </fileset>
+        <!-- shared STEP framework dependencies -->
+        <fileset dir="${env.STEP_HOME}/lib">
+            <include name="*.jar" />
+        </fileset>
     </path>
 
 
@@ -120,39 +119,18 @@
     </target>
 
 
-
     <!-- library -->
 
-    <property name="jar.name" value="${ant.project.name}.jar" />
-    <property name="jar-dev.name" value="${ant.project.name}-dev.jar" />
-    <property name="jar-src.name" value="${ant.project.name}-src.jar" />
+    <property name="jar.rel-file" value="${dist.rel-dir}/${ant.project.name}.jar" />
 
     <target name="create-jar" depends="compile">
     <!-- description="Create a jar file" -->
 
-        <!-- runtime library -->
-        <jar destfile="${dist.rel-dir}/${jar.name}">
-            <!-- relevant compiled classes -->
+        <jar destfile="${jar.rel-file}">
+            <!-- compiled classes and resources -->
             <zipfileset dir="${build.rel-dir}"
                         includes="**/*.class"
-                        excludes="step/framework/presentation/client/**,**/*.properties,**/*.xml" />
-            <!-- GWT client source-code is necessary for Java-to-Javascript translation -->
-            <zipfileset dir="${src.rel-dir}"
-                        includes="step/framework/presentation/**/*.java,step/framework/view/**/*.java"
-                        excludes=""/>
-        </jar>
-
-        <!-- development-only library -->
-        <jar destfile="${dist.rel-dir}/${jar-dev.name}">
-            <zipfileset dir="${build.rel-dir}"
-                        includes="step/framework/presentation/client/**/*.class"/>
-        </jar>
-
-        <!-- full source code distribution -->
-        <jar destfile="${dist.rel-dir}/${jar-src.name}">
-            <zipfileset dir="${src.rel-dir}"
-                        includes="step/framework/**/*.java"
-                        excludes=""/>
+                        excludes="**/*.properties,**/*.xml" />
         </jar>
     </target>
 
@@ -180,24 +158,4 @@
     <!-- description="Rebuild the project" -->
     </target>
 
-    <target name="dist-to-dir" depends="create-jar"> <!-- exclude test code -->
-    <!-- description="Rebuild the program and update library in the examples" -->
-        <fail message="MUST DEFINE to.dir" unless="to.dir" />
-        <copy todir="${to.dir}/war/WEB-INF/lib" overwrite="true">
-            <fileset file="${dist.rel-dir}/${jar.name}"/>
-        </copy>
-        <copy todir="${to.dir}/lib" overwrite="true">
-            <fileset file="${dist.rel-dir}/${jar-src.name}"/>
-            <fileset file="${dist.rel-dir}/${jar-dev.name}"/>
-        </copy>
-    </target>
-
-    <target name="dist-clean">
-    <!-- description="Clean library usage in the examples" -->
-        <fail message="MUST DEFINE from.dir" unless="from.dir" />
-        <delete includeemptydirs="true" deleteonexit="true" failonerror="false">
-             <fileset dir="${from.dir}/war/WEB-INF/lib" includes="${jar.name}"/>
-             <fileset dir="${from.dir}/lib" includes="${jar-src.name},${jar-dev.name}"/>
-        </delete>
-    </target>
 </project>

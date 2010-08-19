@@ -1,0 +1,46 @@
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:Fault xmlns:ns2="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns3="http://www.w3.org/2003/05/soap-envelope">
+      <faultcode>ns2:Server</faultcode>
+      <faultstring>Name is missing (forced by hello.ws.ThrowServiceError property for testing)</faultstring>
+      <detail>
+        <serviceError:serviceError xmlns="urn:hello:wsdl" xmlns:serviceError="urn:hello:wsdl"/>
+      </detail>
+    </ns2:Fault>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service: {urn:hello:wsdl}HelloService
+Outbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:Fault xmlns:ns2="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns3="http://www.w3.org/2003/05/soap-envelope">
+      <faultcode>ns2:Server</faultcode>
+      <faultstring>Name is missing (forced by hello.ws.ThrowServiceError property for testing)</faultstring>
+      <detail>
+        <serviceError:serviceError xmlns="urn:hello:wsdl" xmlns:serviceError="urn:hello:wsdl"/>
+      </detail>
+    </ns2:Fault>
+  </S:Body>
+</S:Envelope>
