@@ -1,0 +1,25 @@
+[2010-03-23 21:47:56,171] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:47:56,174]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:47:56,178]DEBUG     7[main](AssertMain.java:22) - args[0] 'cipher-return-false-sout'
+[2010-03-23 21:47:56,179]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-return-false-sout'
+[2010-03-23 21:47:56,179]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-23 21:47:56,195]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-23 21:47:56,195]TRACE    24[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-return-false-sout
+[2010-03-23 21:47:56,196]TRACE    25[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-return-false-sout\soap-trace-client.log
+[2010-03-23 21:47:56,196]TRACE    25[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-return-false-sout\log-server.log
+[2010-03-23 21:47:56,197]TRACE    26[main](AssertMain.java:68) - config: cipher-return-false-sout
+[2010-03-23 21:47:56,197]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-return-false-sout\soap-trace-server.log
+[2010-03-23 21:47:56,197]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-return-false-sout\log-client.log
+[2010-03-23 21:47:56,197]DEBUG    26[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:47:56,197]DEBUG    26[main](AssertMain.java:79) - Asserting configuration 'cipher-return-false-sout'
+[2010-03-23 21:47:56,217] INFO    46[main](Assertions.java:20) - assertClientNoException
+[2010-03-23 21:47:56,237] INFO    66[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:47:56,237] INFO    66[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:47:56,239] INFO    68[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:47:56,239] INFO    68[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:47:56,240] INFO    69[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:47:56,241] INFO    70[main](Assertions.java:172) - assertSOAPBodyCipherCounts
+[2010-03-23 21:47:56,241] INFO    70[main](Assertions.java:138) - assertCountClientSOAPBodyCipher
+[2010-03-23 21:47:56,242] INFO    71[main](Assertions.java:143) - assertCountServerSOAPBodyCipher
+[2010-03-23 21:47:56,242] INFO    71[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'cipher-return-false-sout'
+[2010-03-23 21:47:56,242] INFO    71[main](AssertMain.java:37) - End of results asserter.

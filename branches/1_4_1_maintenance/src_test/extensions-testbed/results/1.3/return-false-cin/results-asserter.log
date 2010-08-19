@@ -1,0 +1,22 @@
+[2010-03-19 14:59:12,436] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 14:59:12,440]DEBUG     4[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 14:59:12,445]DEBUG     9[main](AssertMain.java:22) - args[0] 'return-false-cin'
+[2010-03-19 14:59:12,445]DEBUG     9[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-cin'
+[2010-03-19 14:59:12,446]DEBUG    10[main](AssertMain.java:45) - Building context
+[2010-03-19 14:59:12,462]TRACE    26[main](AssertMain.java:66) - Context:
+[2010-03-19 14:59:12,462]TRACE    26[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-cin
+[2010-03-19 14:59:12,462]TRACE    26[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-cin\soap-trace-client.log
+[2010-03-19 14:59:12,463]TRACE    27[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-cin\log-server.log
+[2010-03-19 14:59:12,463]TRACE    27[main](AssertMain.java:68) - config: return-false-cin
+[2010-03-19 14:59:12,463]TRACE    27[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-cin\soap-trace-server.log
+[2010-03-19 14:59:12,464]TRACE    28[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\return-false-cin\log-client.log
+[2010-03-19 14:59:12,464]DEBUG    28[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 14:59:12,464]DEBUG    28[main](AssertMain.java:79) - Asserting configuration 'return-false-cin'
+[2010-03-19 14:59:12,484] INFO    48[main](Assertions.java:20) - assertClientNoException
+[2010-03-19 14:59:12,506] INFO    70[main](Assertions.java:116) - assertSOAPCounts
+[2010-03-19 14:59:12,507] INFO    71[main](Assertions.java:93) - assertCountClientSOAPEnvelopes
+[2010-03-19 14:59:12,508] INFO    72[main](Assertions.java:98) - assertCountServerSOAPEnvelopes
+[2010-03-19 14:59:12,508] INFO    72[main](Assertions.java:103) - assertCountClientSOAPFaults
+[2010-03-19 14:59:12,509] INFO    73[main](Assertions.java:108) - assertCountServerSOAPFaults
+[2010-03-19 14:59:12,510] INFO    74[main](AssertMain.java:153) - All assertions executed successfully for configuration 'return-false-cin'
+[2010-03-19 14:59:12,510] INFO    74[main](AssertMain.java:37) - End of results asserter.
