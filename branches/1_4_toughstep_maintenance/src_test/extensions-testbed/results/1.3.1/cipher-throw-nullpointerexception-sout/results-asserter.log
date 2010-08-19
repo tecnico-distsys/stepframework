@@ -1,0 +1,25 @@
+[2010-03-23 21:55:05,872] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:55:05,875]DEBUG     3[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:55:05,880]DEBUG     8[main](AssertMain.java:22) - args[0] 'cipher-throw-nullpointerexception-sout'
+[2010-03-23 21:55:05,880]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-nullpointerexception-sout'
+[2010-03-23 21:55:05,880]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-23 21:55:05,896]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-23 21:55:05,897]TRACE    25[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-nullpointerexception-sout
+[2010-03-23 21:55:05,897]TRACE    25[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-nullpointerexception-sout\soap-trace-client.log
+[2010-03-23 21:55:05,897]TRACE    25[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-nullpointerexception-sout\log-server.log
+[2010-03-23 21:55:05,898]TRACE    26[main](AssertMain.java:68) - config: cipher-throw-nullpointerexception-sout
+[2010-03-23 21:55:05,898]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-nullpointerexception-sout\soap-trace-server.log
+[2010-03-23 21:55:05,898]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\cipher-throw-nullpointerexception-sout\log-client.log
+[2010-03-23 21:55:05,898]DEBUG    26[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:55:05,899]DEBUG    27[main](AssertMain.java:79) - Asserting configuration 'cipher-throw-nullpointerexception-sout'
+[2010-03-23 21:55:05,916] INFO    44[main](Assertions.java:60) - assertClientSOAPFaultExceptionFailedToDecipher
+[2010-03-23 21:55:05,936] INFO    64[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:55:05,937] INFO    65[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:55:05,938] INFO    66[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:55:05,939] INFO    67[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:55:05,939] INFO    67[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:55:05,940] INFO    68[main](Assertions.java:172) - assertSOAPBodyCipherCounts
+[2010-03-23 21:55:05,940] INFO    68[main](Assertions.java:138) - assertCountClientSOAPBodyCipher
+[2010-03-23 21:55:05,940] INFO    68[main](Assertions.java:143) - assertCountServerSOAPBodyCipher
+[2010-03-23 21:55:05,941] INFO    69[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'cipher-throw-nullpointerexception-sout'
+[2010-03-23 21:55:05,941] INFO    69[main](AssertMain.java:37) - End of results asserter.

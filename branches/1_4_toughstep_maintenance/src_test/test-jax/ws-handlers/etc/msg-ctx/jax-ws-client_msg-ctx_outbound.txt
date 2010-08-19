@@ -1,0 +1,8 @@
+Message context: (scope,key,value)
+(handler,com.sun.xml.ws.client.ContentNegotiation,none)
+(handler,com.sun.xml.ws.client.handle,com.sun.xml.ws.client.EndpointIFInvocationHandler@f1bb78)
+(handler,javax.xml.ws.handler.message.outbound,true)
+(handler,javax.xml.ws.service.endpoint.address,http://localhost:8080/CalcWS/endpoint)
+(handler,javax.xml.ws.wsdl.operation,{http://calc}sum)
+(handler,javax.xml.ws.wsdl.port,{http://calc}CalcPort)
+(handler,javax.xml.ws.wsdl.service,{http://calc}CalcService)
