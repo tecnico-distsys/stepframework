@@ -2,17 +2,16 @@ package step.extension.errors;
 
 import java.util.Properties;
 
-import step.framework.extensions.ExtensionException;
-import step.framework.extensions.ExtensionListener;
-import step.framework.extensions.ExtensionListenerParameter;
+import step.framework.extensions.*;
 
 
 /**
  *  This is the Errors extension listener.
  *  If properly configured, it is invoked on extension init and destroy.
  */
-public class ErrorsExtensionListener implements ExtensionListener {
+public class ErrorsExtensionListener extends ExtensionListenerBase {
 
+    @Override
     public void extensionInitialized(ExtensionListenerParameter param) throws ExtensionException {
         Properties extConfig = param.getExtension().getConfig();
         String exceptionClassName = extConfig.getProperty("listener.initialized.throw");
@@ -31,6 +30,7 @@ public class ErrorsExtensionListener implements ExtensionListener {
         }
     }
 
+    @Override
     public void extensionDestroyed(ExtensionListenerParameter param) throws ExtensionException {
         Properties extConfig = param.getExtension().getConfig();
         String exceptionClassName = extConfig.getProperty("listener.destroyed.throw");

@@ -1,0 +1,327 @@
+[2010-03-23 21:54:59,931]TRACE     0[http-8080-1](Handler.java:43) - getHeaders()
+[2010-03-23 21:55:00,031] INFO   100[http-8080-1](ContextListener.java:28) - Framework initializing...
+[2010-03-23 21:55:00,032]DEBUG   101[http-8080-1](ContextListener.java:30) - Disable JAX-WS option to capture stack trace in SOAP fault messages
+[2010-03-23 21:55:00,033]TRACE   102[http-8080-1](ContextListener.java:33) - Initializing extension engine
+[2010-03-23 21:55:00,034]TRACE   103[http-8080-1](ExtensionEngine.java:278) - entering init
+[2010-03-23 21:55:00,035]DEBUG   104[http-8080-1](ExtensionEngine.java:283) - load extension engine configuration from /extensions.properties
+[2010-03-23 21:55:00,036]TRACE   105[http-8080-1](ExtensionEngine.java:364) - entering loadConfig
+[2010-03-23 21:55:00,037]TRACE   106[http-8080-1](ExtensionEngine.java:366) - load extensions properties
+[2010-03-23 21:55:00,038]TRACE   107[http-8080-1](ExtensionEngine.java:367) - /extensions.properties
+[2010-03-23 21:55:00,041]TRACE   110[http-8080-1](ExtensionEngine.java:377) - extensions config properties (key: 'value')
+[2010-03-23 21:55:00,042]TRACE   111[http-8080-1](ExtensionEngine.java:382) - extensions.enabled: 'true'
+[2010-03-23 21:55:00,042]TRACE   111[http-8080-1](ExtensionEngine.java:382) - extensions.intercept.service[]: ''
+[2010-03-23 21:55:00,043]TRACE   112[http-8080-1](ExtensionEngine.java:382) - extensions.intercept.web-service[]: 'trace,errors,cipher,trace'
+[2010-03-23 21:55:00,045]TRACE   114[http-8080-1](ExtensionEngine.java:382) - extensions.list: 'trace,errors,cipher'
+[2010-03-23 21:55:00,047]DEBUG   116[http-8080-1](ExtensionEngine.java:417) - load configuration for each extension
+[2010-03-23 21:55:00,050]TRACE   119[http-8080-1](Extension.java:315) - entering loadConfig
+[2010-03-23 21:55:00,051]TRACE   120[http-8080-1](Extension.java:321) - load trace extension properties from /extension-trace.properties
+[2010-03-23 21:55:00,052]TRACE   121[http-8080-1](Extension.java:336) - extension trace config properties (key: 'value')
+[2010-03-23 21:55:00,053]TRACE   122[http-8080-1](Extension.java:341) - pretty-print: 'true'
+[2010-03-23 21:55:00,053]TRACE   122[http-8080-1](Extension.java:341) - output: 'C:/Java/stepcat/1.x-6.0.14/temp/soap-trace-server.log'
+[2010-03-23 21:55:00,054]TRACE   123[http-8080-1](Extension.java:341) - extension.web-service-interceptor: 'step.extension.trace.TraceWebServiceInterceptor'
+[2010-03-23 21:55:00,055]TRACE   124[http-8080-1](Extension.java:341) - extension.listener: 'step.extension.trace.TraceExtensionListener'
+[2010-03-23 21:55:00,056]TRACE   125[http-8080-1](Extension.java:341) - extension.enabled: 'true'
+[2010-03-23 21:55:00,057]TRACE   126[http-8080-1](Extension.java:369) - remove extension trace properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,058]TRACE   127[http-8080-1](Extension.java:380) - finally exiting loadConfig
+[2010-03-23 21:55:00,059]TRACE   128[http-8080-1](Extension.java:315) - entering loadConfig
+[2010-03-23 21:55:00,059]TRACE   128[http-8080-1](Extension.java:321) - load errors extension properties from /extension-errors.properties
+[2010-03-23 21:55:00,061]TRACE   130[http-8080-1](Extension.java:336) - extension errors config properties (key: 'value')
+[2010-03-23 21:55:00,062]TRACE   131[http-8080-1](Extension.java:341) - web-service-interceptor.throw: 'java.lang.NullPointerException'
+[2010-03-23 21:55:00,063]TRACE   132[http-8080-1](Extension.java:341) - extension.web-service-interceptor: 'step.extension.errors.ErrorsWebServiceInterceptor'
+[2010-03-23 21:55:00,065]TRACE   134[http-8080-1](Extension.java:341) - extension.listener: 'step.extension.errors.ErrorsExtensionListener'
+[2010-03-23 21:55:00,066]TRACE   135[http-8080-1](Extension.java:341) - extension.enabled: 'true'
+[2010-03-23 21:55:00,067]TRACE   136[http-8080-1](Extension.java:341) - web-service-interceptor.error-when: 'server-outbound'
+[2010-03-23 21:55:00,068]TRACE   137[http-8080-1](Extension.java:369) - remove extension errors properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,069]TRACE   138[http-8080-1](Extension.java:380) - finally exiting loadConfig
+[2010-03-23 21:55:00,069]TRACE   138[http-8080-1](Extension.java:315) - entering loadConfig
+[2010-03-23 21:55:00,070]TRACE   139[http-8080-1](Extension.java:321) - load cipher extension properties from /extension-cipher.properties
+[2010-03-23 21:55:00,072]TRACE   141[http-8080-1](Extension.java:336) - extension cipher config properties (key: 'value')
+[2010-03-23 21:55:00,072]TRACE   141[http-8080-1](Extension.java:341) - extension.web-service-interceptor: 'step.extension.cipher.CipherWebServiceInterceptor'
+[2010-03-23 21:55:00,075]TRACE   144[http-8080-1](Extension.java:341) - extension.listener: 'step.extension.cipher.CipherExtensionListener'
+[2010-03-23 21:55:00,075]TRACE   144[http-8080-1](Extension.java:341) - extension.enabled: 'true'
+[2010-03-23 21:55:00,077]TRACE   146[http-8080-1](Extension.java:369) - remove extension cipher properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,078]TRACE   147[http-8080-1](Extension.java:380) - finally exiting loadConfig
+[2010-03-23 21:55:00,079]TRACE   148[http-8080-1](ExtensionEngine.java:425) - load intercept configs
+[2010-03-23 21:55:00,080]TRACE   149[http-8080-1](ExtensionEngine.java:534) - ignoring empty extensions.intercept.service[]
+[2010-03-23 21:55:00,082]TRACE   151[http-8080-1](ExtensionEngine.java:429) - Intercept configuration trees:
+[2010-03-23 21:55:00,083]TRACE   152[http-8080-1](ExtensionEngine.java:430) - Configuration tree Service interception
+root [ConfigNode: config=null, #childNodes=0]
+
+[2010-03-23 21:55:00,084]TRACE   153[http-8080-1](ExtensionEngine.java:431) - Configuration tree Web Service interception
+root [ConfigNode: config=[InterceptConfigData: extensionList={[Extension: id=trace, enabled=true], [Extension: id=errors, enabled=true], [Extension: id=cipher, enabled=true], [Extension: id=trace, enabled=true]} ], #childNodes=0]
+
+[2010-03-23 21:55:00,086]TRACE   155[http-8080-1](ExtensionEngine.java:435) - remove extensions properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,087]TRACE   156[http-8080-1](ExtensionEngine.java:440) - finally exiting loadConfig
+[2010-03-23 21:55:00,087]DEBUG   156[http-8080-1](ExtensionEngine.java:286) - extension engine configuration loaded successfully
+[2010-03-23 21:55:00,089]DEBUG   158[http-8080-1](ExtensionEngine.java:305) - start extensions
+[2010-03-23 21:55:00,089]TRACE   158[http-8080-1](Extension.java:398) - entering start
+[2010-03-23 21:55:00,090]TRACE   159[http-8080-1](Extension.java:432) - skipping service interceptor class loading
+[2010-03-23 21:55:00,091]TRACE   160[http-8080-1](Extension.java:478) - load web service interceptor class
+[2010-03-23 21:55:00,094]TRACE   163[http-8080-1](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:00,098]TRACE   167[http-8080-1](Extension.java:478) - load listener class
+[2010-03-23 21:55:00,100]TRACE   169[http-8080-1](Extension.java:497) - create listener instance
+[2010-03-23 21:55:00,102]TRACE   171[http-8080-1](Extension.java:579) - invoke listener on EXTENSION_INITIALIZED
+[2010-03-23 21:55:00,105] INFO   174[http-8080-1](Extension.java:421) - Extension trace enabled
+[2010-03-23 21:55:00,105]TRACE   174[http-8080-1](Extension.java:424) - finally exiting start
+[2010-03-23 21:55:00,106]TRACE   175[http-8080-1](Extension.java:398) - entering start
+[2010-03-23 21:55:00,107]TRACE   176[http-8080-1](Extension.java:432) - skipping service interceptor class loading
+[2010-03-23 21:55:00,107]TRACE   176[http-8080-1](Extension.java:478) - load web service interceptor class
+[2010-03-23 21:55:00,110]TRACE   179[http-8080-1](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:00,111]TRACE   180[http-8080-1](Extension.java:478) - load listener class
+[2010-03-23 21:55:00,112]TRACE   181[http-8080-1](Extension.java:497) - create listener instance
+[2010-03-23 21:55:00,113]TRACE   182[http-8080-1](Extension.java:579) - invoke listener on EXTENSION_INITIALIZED
+[2010-03-23 21:55:00,114] INFO   183[http-8080-1](Extension.java:421) - Extension errors enabled
+[2010-03-23 21:55:00,114]TRACE   183[http-8080-1](Extension.java:424) - finally exiting start
+[2010-03-23 21:55:00,115]TRACE   184[http-8080-1](Extension.java:398) - entering start
+[2010-03-23 21:55:00,116]TRACE   185[http-8080-1](Extension.java:432) - skipping service interceptor class loading
+[2010-03-23 21:55:00,117]TRACE   186[http-8080-1](Extension.java:478) - load web service interceptor class
+[2010-03-23 21:55:00,118]TRACE   187[http-8080-1](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:00,119]TRACE   188[http-8080-1](Extension.java:478) - load listener class
+[2010-03-23 21:55:00,120]TRACE   189[http-8080-1](Extension.java:497) - create listener instance
+[2010-03-23 21:55:00,121]TRACE   190[http-8080-1](Extension.java:579) - invoke listener on EXTENSION_INITIALIZED
+[2010-03-23 21:55:00,122] INFO   191[http-8080-1](Extension.java:421) - Extension cipher enabled
+[2010-03-23 21:55:00,122]TRACE   191[http-8080-1](Extension.java:424) - finally exiting start
+[2010-03-23 21:55:00,123]DEBUG   192[http-8080-1](ExtensionEngine.java:311) - extensions started successfully
+[2010-03-23 21:55:00,124] INFO   193[http-8080-1](ExtensionEngine.java:327) - Extension engine enabled
+[2010-03-23 21:55:00,124]TRACE   193[http-8080-1](ExtensionEngine.java:330) - set init flag
+[2010-03-23 21:55:00,125]TRACE   194[http-8080-1](ExtensionEngine.java:333) - finally exiting init
+[2010-03-23 21:55:00,126]TRACE   195[http-8080-1](ContextListener.java:41) - Extensions engine enabled
+[2010-03-23 21:55:00,388] INFO   457[http-8080-1](ContextListener.java:28) - Framework initializing...
+[2010-03-23 21:55:00,389]DEBUG   458[http-8080-1](ContextListener.java:30) - Disable JAX-WS option to capture stack trace in SOAP fault messages
+[2010-03-23 21:55:00,390]TRACE   459[http-8080-1](ContextListener.java:33) - Initializing extension engine
+[2010-03-23 21:55:00,396]TRACE   465[http-8080-1](ExtensionEngine.java:278) - entering init
+[2010-03-23 21:55:00,398]DEBUG   467[http-8080-1](ExtensionEngine.java:283) - load extension engine configuration from /extensions.properties
+[2010-03-23 21:55:00,398]TRACE   467[http-8080-1](ExtensionEngine.java:364) - entering loadConfig
+[2010-03-23 21:55:00,399]TRACE   468[http-8080-1](ExtensionEngine.java:366) - load extensions properties
+[2010-03-23 21:55:00,400]TRACE   469[http-8080-1](ExtensionEngine.java:367) - /extensions.properties
+[2010-03-23 21:55:00,403]TRACE   472[http-8080-1](ExtensionEngine.java:377) - extensions config properties (key: 'value')
+[2010-03-23 21:55:00,404]TRACE   473[http-8080-1](ExtensionEngine.java:382) - extensions.enabled: 'true'
+[2010-03-23 21:55:00,404]TRACE   473[http-8080-1](ExtensionEngine.java:382) - extensions.intercept.service[]: ''
+[2010-03-23 21:55:00,405]TRACE   474[http-8080-1](ExtensionEngine.java:382) - extensions.intercept.web-service[]: 'trace,cipher,errors,trace'
+[2010-03-23 21:55:00,406]TRACE   475[http-8080-1](ExtensionEngine.java:382) - extensions.list: 'trace,errors,cipher'
+[2010-03-23 21:55:00,407]DEBUG   476[http-8080-1](ExtensionEngine.java:417) - load configuration for each extension
+[2010-03-23 21:55:00,410]TRACE   479[http-8080-1](Extension.java:315) - entering loadConfig
+[2010-03-23 21:55:00,410]TRACE   479[http-8080-1](Extension.java:321) - load trace extension properties from /extension-trace.properties
+[2010-03-23 21:55:00,412]TRACE   481[http-8080-1](Extension.java:336) - extension trace config properties (key: 'value')
+[2010-03-23 21:55:00,413]TRACE   482[http-8080-1](Extension.java:341) - pretty-print: 'true'
+[2010-03-23 21:55:00,413]TRACE   482[http-8080-1](Extension.java:341) - output: 'C:/Java/stepcat/1.x-6.0.14/temp/soap-trace-client.log'
+[2010-03-23 21:55:00,414]TRACE   483[http-8080-1](Extension.java:341) - extension.web-service-interceptor: 'step.extension.trace.TraceWebServiceInterceptor'
+[2010-03-23 21:55:00,415]TRACE   484[http-8080-1](Extension.java:341) - extension.listener: 'step.extension.trace.TraceExtensionListener'
+[2010-03-23 21:55:00,416]TRACE   485[http-8080-1](Extension.java:341) - extension.enabled: 'true'
+[2010-03-23 21:55:00,416]TRACE   485[http-8080-1](Extension.java:369) - remove extension trace properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,417]TRACE   486[http-8080-1](Extension.java:380) - finally exiting loadConfig
+[2010-03-23 21:55:00,418]TRACE   487[http-8080-1](Extension.java:315) - entering loadConfig
+[2010-03-23 21:55:00,419]TRACE   488[http-8080-1](Extension.java:321) - load errors extension properties from /extension-errors.properties
+[2010-03-23 21:55:00,420]TRACE   489[http-8080-1](Extension.java:336) - extension errors config properties (key: 'value')
+[2010-03-23 21:55:00,421]TRACE   490[http-8080-1](Extension.java:341) - extension.web-service-interceptor: 'step.extension.errors.ErrorsWebServiceInterceptor'
+[2010-03-23 21:55:00,422]TRACE   491[http-8080-1](Extension.java:341) - extension.listener: 'step.extension.errors.ErrorsExtensionListener'
+[2010-03-23 21:55:00,423]TRACE   492[http-8080-1](Extension.java:341) - extension.enabled: 'true'
+[2010-03-23 21:55:00,424]TRACE   493[http-8080-1](Extension.java:369) - remove extension errors properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,424]TRACE   493[http-8080-1](Extension.java:380) - finally exiting loadConfig
+[2010-03-23 21:55:00,425]TRACE   494[http-8080-1](Extension.java:315) - entering loadConfig
+[2010-03-23 21:55:00,426]TRACE   495[http-8080-1](Extension.java:321) - load cipher extension properties from /extension-cipher.properties
+[2010-03-23 21:55:00,427]TRACE   496[http-8080-1](Extension.java:336) - extension cipher config properties (key: 'value')
+[2010-03-23 21:55:00,428]TRACE   497[http-8080-1](Extension.java:341) - extension.web-service-interceptor: 'step.extension.cipher.CipherWebServiceInterceptor'
+[2010-03-23 21:55:00,429]TRACE   498[http-8080-1](Extension.java:341) - extension.listener: 'step.extension.cipher.CipherExtensionListener'
+[2010-03-23 21:55:00,430]TRACE   499[http-8080-1](Extension.java:341) - extension.enabled: 'true'
+[2010-03-23 21:55:00,430]TRACE   499[http-8080-1](Extension.java:369) - remove extension cipher properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,432]TRACE   501[http-8080-1](Extension.java:380) - finally exiting loadConfig
+[2010-03-23 21:55:00,432]TRACE   501[http-8080-1](ExtensionEngine.java:425) - load intercept configs
+[2010-03-23 21:55:00,433]TRACE   502[http-8080-1](ExtensionEngine.java:534) - ignoring empty extensions.intercept.service[]
+[2010-03-23 21:55:00,435]TRACE   504[http-8080-1](ExtensionEngine.java:429) - Intercept configuration trees:
+[2010-03-23 21:55:00,435]TRACE   504[http-8080-1](ExtensionEngine.java:430) - Configuration tree Service interception
+root [ConfigNode: config=null, #childNodes=0]
+
+[2010-03-23 21:55:00,437]TRACE   506[http-8080-1](ExtensionEngine.java:431) - Configuration tree Web Service interception
+root [ConfigNode: config=[InterceptConfigData: extensionList={[Extension: id=trace, enabled=true], [Extension: id=cipher, enabled=true], [Extension: id=errors, enabled=true], [Extension: id=trace, enabled=true]} ], #childNodes=0]
+
+[2010-03-23 21:55:00,438]TRACE   507[http-8080-1](ExtensionEngine.java:435) - remove extensions properties and keep the remaining ones as additional configuration
+[2010-03-23 21:55:00,439]TRACE   508[http-8080-1](ExtensionEngine.java:440) - finally exiting loadConfig
+[2010-03-23 21:55:00,439]DEBUG   508[http-8080-1](ExtensionEngine.java:286) - extension engine configuration loaded successfully
+[2010-03-23 21:55:00,440]DEBUG   509[http-8080-1](ExtensionEngine.java:305) - start extensions
+[2010-03-23 21:55:00,441]TRACE   510[http-8080-1](Extension.java:398) - entering start
+[2010-03-23 21:55:00,441]TRACE   510[http-8080-1](Extension.java:432) - skipping service interceptor class loading
+[2010-03-23 21:55:00,442]TRACE   511[http-8080-1](Extension.java:478) - load web service interceptor class
+[2010-03-23 21:55:00,444]TRACE   513[http-8080-1](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:00,445]TRACE   514[http-8080-1](Extension.java:478) - load listener class
+[2010-03-23 21:55:00,447]TRACE   516[http-8080-1](Extension.java:497) - create listener instance
+[2010-03-23 21:55:00,448]TRACE   517[http-8080-1](Extension.java:579) - invoke listener on EXTENSION_INITIALIZED
+[2010-03-23 21:55:00,450] INFO   519[http-8080-1](Extension.java:421) - Extension trace enabled
+[2010-03-23 21:55:00,451]TRACE   520[http-8080-1](Extension.java:424) - finally exiting start
+[2010-03-23 21:55:00,451]TRACE   520[http-8080-1](Extension.java:398) - entering start
+[2010-03-23 21:55:00,453]TRACE   522[http-8080-1](Extension.java:432) - skipping service interceptor class loading
+[2010-03-23 21:55:00,454]TRACE   523[http-8080-1](Extension.java:478) - load web service interceptor class
+[2010-03-23 21:55:00,456]TRACE   525[http-8080-1](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:00,457]TRACE   526[http-8080-1](Extension.java:478) - load listener class
+[2010-03-23 21:55:00,458]TRACE   527[http-8080-1](Extension.java:497) - create listener instance
+[2010-03-23 21:55:00,459]TRACE   528[http-8080-1](Extension.java:579) - invoke listener on EXTENSION_INITIALIZED
+[2010-03-23 21:55:00,459] INFO   528[http-8080-1](Extension.java:421) - Extension errors enabled
+[2010-03-23 21:55:00,460]TRACE   529[http-8080-1](Extension.java:424) - finally exiting start
+[2010-03-23 21:55:00,460]TRACE   529[http-8080-1](Extension.java:398) - entering start
+[2010-03-23 21:55:00,461]TRACE   530[http-8080-1](Extension.java:432) - skipping service interceptor class loading
+[2010-03-23 21:55:00,461]TRACE   530[http-8080-1](Extension.java:478) - load web service interceptor class
+[2010-03-23 21:55:00,463]TRACE   532[http-8080-1](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:00,464]TRACE   533[http-8080-1](Extension.java:478) - load listener class
+[2010-03-23 21:55:00,465]TRACE   534[http-8080-1](Extension.java:497) - create listener instance
+[2010-03-23 21:55:00,465]TRACE   534[http-8080-1](Extension.java:579) - invoke listener on EXTENSION_INITIALIZED
+[2010-03-23 21:55:00,466] INFO   535[http-8080-1](Extension.java:421) - Extension cipher enabled
+[2010-03-23 21:55:00,466]TRACE   535[http-8080-1](Extension.java:424) - finally exiting start
+[2010-03-23 21:55:00,467]DEBUG   536[http-8080-1](ExtensionEngine.java:311) - extensions started successfully
+[2010-03-23 21:55:00,467] INFO   536[http-8080-1](ExtensionEngine.java:327) - Extension engine enabled
+[2010-03-23 21:55:00,468]TRACE   537[http-8080-1](ExtensionEngine.java:330) - set init flag
+[2010-03-23 21:55:00,468]TRACE   537[http-8080-1](ExtensionEngine.java:333) - finally exiting init
+[2010-03-23 21:55:00,469]TRACE   538[http-8080-1](ContextListener.java:41) - Extensions engine enabled
+[2010-03-23 21:55:00,529] INFO   598[http-8080-1](Log.java:176) - Class implementing/extending ActionBeanContext found in web.xml: hello.web.HelloContext
+[2010-03-23 21:55:00,530] INFO   599[http-8080-1](Log.java:176) - DefaultActionBeanContextFactory will use ActionBeanContext subclass hello.web.HelloContext
+[2010-03-23 21:55:00,539] INFO   608[http-8080-1](Log.java:176) - No locale list specified, defaulting to single locale: pt_PT
+[2010-03-23 21:55:00,548] INFO   617[http-8080-1](Log.java:176) - Class implementing/extending ExceptionHandler found in web.xml: net.sourceforge.stripes.exception.DelegatingExceptionHandler
+[2010-03-23 21:55:00,555] INFO   624[http-8080-1](Log.java:176) - Using net.sourceforge.stripes.controller.multipart.CosMultipartWrapper as MultipartWrapper implementation.
+[2010-03-23 21:55:00,562] INFO   631[http-8080-1](Log.java:176) - Stripes Initialization Complete. Version: 1.5.3, Build: 1221
+[2010-03-23 21:55:04,260]TRACE  4329[http-8080-2](Handler.java:48) - handleMessage()
+[2010-03-23 21:55:04,263]TRACE  4332[http-8080-2](WebServiceInterceptorManager.java:54) - interceptHandleMessageWebService()
+[2010-03-23 21:55:04,264]TRACE  4333[http-8080-2](WebServiceInterceptorManager.java:133) - SOAP message names follow
+[2010-03-23 21:55:04,264]TRACE  4333[http-8080-2](WebServiceInterceptorManager.java:134) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-03-23 21:55:04,265]TRACE  4334[http-8080-2](WebServiceInterceptorManager.java:135) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-03-23 21:55:04,266]TRACE  4335[http-8080-2](WebServiceInterceptorManager.java:162) - Web Service config path source items
+[2010-03-23 21:55:04,266]TRACE  4335[http-8080-2](WebServiceInterceptorManager.java:163) - namespace: 'urn:hello:wsdl'
+[2010-03-23 21:55:04,267]TRACE  4336[http-8080-2](WebServiceInterceptorManager.java:164) - service: 'HelloService'
+[2010-03-23 21:55:04,268]TRACE  4337[http-8080-2](WebServiceInterceptorManager.java:165) - port: 'HelloPort'
+[2010-03-23 21:55:04,268]TRACE  4337[http-8080-2](WebServiceInterceptorManager.java:221) - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+[2010-03-23 21:55:04,269]TRACE  4338[http-8080-2](WebServiceInterceptorManager.java:227) - Using configuration tree: Web Service interception
+[2010-03-23 21:55:04,270]TRACE  4339[http-8080-2](WebServiceInterceptorManager.java:243) - Web Service interception config data: [InterceptConfigData: extensionList={[Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor], [Extension: id=errors, enabled=true, listener=step.extension.errors.ErrorsExtensionListener, web-service-interceptor=step.extension.errors.ErrorsWebServiceInterceptor], [Extension: id=cipher, enabled=true, listener=step.extension.cipher.CipherExtensionListener, web-service-interceptor=step.extension.cipher.CipherWebServiceInterceptor], [Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor]} ]
+[2010-03-23 21:55:04,272]TRACE  4341[http-8080-2](WebServiceInterceptorManager.java:133) - SOAP message names follow
+[2010-03-23 21:55:04,272]TRACE  4341[http-8080-2](WebServiceInterceptorManager.java:134) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-03-23 21:55:04,273]TRACE  4342[http-8080-2](WebServiceInterceptorManager.java:135) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-03-23 21:55:04,274]TRACE  4343[http-8080-2](WebServiceInterceptorManager.java:162) - Web Service config path source items
+[2010-03-23 21:55:04,274]TRACE  4343[http-8080-2](WebServiceInterceptorManager.java:163) - namespace: 'urn:hello:wsdl'
+[2010-03-23 21:55:04,275]TRACE  4344[http-8080-2](WebServiceInterceptorManager.java:164) - service: 'HelloService'
+[2010-03-23 21:55:04,275]TRACE  4344[http-8080-2](WebServiceInterceptorManager.java:165) - port: 'HelloPort'
+[2010-03-23 21:55:04,276]DEBUG  4345[http-8080-2](WebServiceInterceptorManager.java:255) - Intercepting web service {urn:hello:wsdl}HelloService.HelloPort
+[2010-03-23 21:55:04,297]DEBUG  4366[http-8080-2](WebServiceInterceptorManager.java:289) - SOAP Message situation: server-side, inbound, non-fault
+[2010-03-23 21:55:04,298]DEBUG  4367[http-8080-2](WebServiceInterceptorManager.java:328) - Invoking trace extension
+[2010-03-23 21:55:04,299]TRACE  4368[http-8080-2](WebServiceInterceptorManager.java:331) - create web service interceptor instance
+[2010-03-23 21:55:04,300]TRACE  4369[http-8080-2](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:04,300]TRACE  4369[http-8080-2](WebServiceInterceptorManager.java:334) - create web service interceptor parameter instance
+[2010-03-23 21:55:04,302]TRACE  4371[http-8080-2](WebServiceInterceptorManager.java:338) - call web service interceptor
+[2010-03-23 21:55:04,314]TRACE  4383[http-8080-2](WebServiceInterceptorManager.java:341) - interceptor return value: 'true'
+[2010-03-23 21:55:04,314]TRACE  4383[http-8080-2](WebServiceInterceptorManager.java:426) - message does not contain a fault
+[2010-03-23 21:55:04,315]TRACE  4384[http-8080-2](WebServiceInterceptorManager.java:428) - proceed to next step in loop
+[2010-03-23 21:55:04,316]DEBUG  4385[http-8080-2](WebServiceInterceptorManager.java:328) - Invoking cipher extension
+[2010-03-23 21:55:04,320]TRACE  4389[http-8080-2](WebServiceInterceptorManager.java:331) - create web service interceptor instance
+[2010-03-23 21:55:04,321]TRACE  4390[http-8080-2](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:04,322]TRACE  4391[http-8080-2](WebServiceInterceptorManager.java:334) - create web service interceptor parameter instance
+[2010-03-23 21:55:04,322]TRACE  4391[http-8080-2](WebServiceInterceptorManager.java:338) - call web service interceptor
+[2010-03-23 21:55:04,518]TRACE  4587[http-8080-2](WebServiceInterceptorManager.java:341) - interceptor return value: 'true'
+[2010-03-23 21:55:04,533]TRACE  4602[http-8080-2](WebServiceInterceptorManager.java:426) - message does not contain a fault
+[2010-03-23 21:55:04,534]TRACE  4603[http-8080-2](WebServiceInterceptorManager.java:428) - proceed to next step in loop
+[2010-03-23 21:55:04,534]DEBUG  4603[http-8080-2](WebServiceInterceptorManager.java:328) - Invoking errors extension
+[2010-03-23 21:55:04,535]TRACE  4604[http-8080-2](WebServiceInterceptorManager.java:331) - create web service interceptor instance
+[2010-03-23 21:55:04,536]TRACE  4605[http-8080-2](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:04,536]TRACE  4605[http-8080-2](WebServiceInterceptorManager.java:334) - create web service interceptor parameter instance
+[2010-03-23 21:55:04,537]TRACE  4606[http-8080-2](WebServiceInterceptorManager.java:338) - call web service interceptor
+[2010-03-23 21:55:04,538]TRACE  4607[http-8080-2](WebServiceInterceptorManager.java:341) - interceptor return value: 'true'
+[2010-03-23 21:55:04,538]TRACE  4607[http-8080-2](WebServiceInterceptorManager.java:426) - message does not contain a fault
+[2010-03-23 21:55:04,539]TRACE  4608[http-8080-2](WebServiceInterceptorManager.java:428) - proceed to next step in loop
+[2010-03-23 21:55:04,539]DEBUG  4608[http-8080-2](WebServiceInterceptorManager.java:328) - Invoking trace extension
+[2010-03-23 21:55:04,540]TRACE  4609[http-8080-2](WebServiceInterceptorManager.java:331) - create web service interceptor instance
+[2010-03-23 21:55:04,541]TRACE  4610[http-8080-2](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:04,541]TRACE  4610[http-8080-2](WebServiceInterceptorManager.java:334) - create web service interceptor parameter instance
+[2010-03-23 21:55:04,542]TRACE  4611[http-8080-2](WebServiceInterceptorManager.java:338) - call web service interceptor
+[2010-03-23 21:55:04,543]TRACE  4612[http-8080-2](WebServiceInterceptorManager.java:341) - interceptor return value: 'true'
+[2010-03-23 21:55:04,544]TRACE  4613[http-8080-2](WebServiceInterceptorManager.java:426) - message does not contain a fault
+[2010-03-23 21:55:04,544]TRACE  4613[http-8080-2](WebServiceInterceptorManager.java:428) - proceed to next step in loop
+[2010-03-23 21:55:04,545]DEBUG  4614[http-8080-2](WebServiceInterceptorManager.java:433) - Proceeding after web service interceptor loop
+[2010-03-23 21:55:04,546]TRACE  4615[http-8080-2](WebServiceInterceptorManager.java:485) - returning true from intercept message
+[2010-03-23 21:55:04,546]TRACE  4615[http-8080-2](WebServiceInterceptorManager.java:64) - finally exiting interceptHandleMessageWebService()
+[2010-03-23 21:55:04,571]TRACE  4640[http-8080-2](HelloWebServiceImpl.java:24) - Starting sayHello on server
+[2010-03-23 21:55:04,572]TRACE  4641[http-8080-2](HelloWebServiceImpl.java:25) - name = friend
+[2010-03-23 21:55:04,574]DEBUG  4643[http-8080-2](Config.java:39) - Config constructor invoked
+[2010-03-23 21:55:04,575]DEBUG  4644[http-8080-2](Config.java:166) - Configuration has not been loaded yet. Try to load default properties file.
+[2010-03-23 21:55:04,575] INFO  4644[http-8080-2](Config.java:94) - Loading configuration properties from resource path /config.properties
+[2010-03-23 21:55:04,577]TRACE  4646[http-8080-2](Config.java:123) - Configuration properties:
+[2010-03-23 21:55:04,577]TRACE  4646[http-8080-2](Config.java:126) - hello.ws.ThrowServiceError false
+[2010-03-23 21:55:04,578]TRACE  4647[http-8080-2](HelloWebServiceImpl.java:35) - returnValue = Hello friend
+[2010-03-23 21:55:04,579]TRACE  4648[http-8080-2](HelloWebServiceImpl.java:45) - Finally exiting sayHello on server
+[2010-03-23 21:55:04,581]TRACE  4650[http-8080-2](Handler.java:48) - handleMessage()
+[2010-03-23 21:55:04,582]TRACE  4651[http-8080-2](WebServiceInterceptorManager.java:54) - interceptHandleMessageWebService()
+[2010-03-23 21:55:04,582]TRACE  4651[http-8080-2](WebServiceInterceptorManager.java:133) - SOAP message names follow
+[2010-03-23 21:55:04,583]TRACE  4652[http-8080-2](WebServiceInterceptorManager.java:134) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-03-23 21:55:04,584]TRACE  4653[http-8080-2](WebServiceInterceptorManager.java:135) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-03-23 21:55:04,584]TRACE  4653[http-8080-2](WebServiceInterceptorManager.java:162) - Web Service config path source items
+[2010-03-23 21:55:04,585]TRACE  4654[http-8080-2](WebServiceInterceptorManager.java:163) - namespace: 'urn:hello:wsdl'
+[2010-03-23 21:55:04,586]TRACE  4655[http-8080-2](WebServiceInterceptorManager.java:164) - service: 'HelloService'
+[2010-03-23 21:55:04,586]TRACE  4655[http-8080-2](WebServiceInterceptorManager.java:165) - port: 'HelloPort'
+[2010-03-23 21:55:04,587]TRACE  4656[http-8080-2](WebServiceInterceptorManager.java:221) - Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort'
+[2010-03-23 21:55:04,588]TRACE  4657[http-8080-2](WebServiceInterceptorManager.java:227) - Using configuration tree: Web Service interception
+[2010-03-23 21:55:04,588]TRACE  4657[http-8080-2](WebServiceInterceptorManager.java:243) - Web Service interception config data: [InterceptConfigData: extensionList={[Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor], [Extension: id=errors, enabled=true, listener=step.extension.errors.ErrorsExtensionListener, web-service-interceptor=step.extension.errors.ErrorsWebServiceInterceptor], [Extension: id=cipher, enabled=true, listener=step.extension.cipher.CipherExtensionListener, web-service-interceptor=step.extension.cipher.CipherWebServiceInterceptor], [Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor]} ]
+[2010-03-23 21:55:04,590]TRACE  4659[http-8080-2](WebServiceInterceptorManager.java:133) - SOAP message names follow
+[2010-03-23 21:55:04,591]TRACE  4660[http-8080-2](WebServiceInterceptorManager.java:134) - javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService'
+[2010-03-23 21:55:04,592]TRACE  4661[http-8080-2](WebServiceInterceptorManager.java:135) - javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort'
+[2010-03-23 21:55:04,592]TRACE  4661[http-8080-2](WebServiceInterceptorManager.java:162) - Web Service config path source items
+[2010-03-23 21:55:04,593]TRACE  4662[http-8080-2](WebServiceInterceptorManager.java:163) - namespace: 'urn:hello:wsdl'
+[2010-03-23 21:55:04,595]TRACE  4664[http-8080-2](WebServiceInterceptorManager.java:164) - service: 'HelloService'
+[2010-03-23 21:55:04,596]TRACE  4665[http-8080-2](WebServiceInterceptorManager.java:165) - port: 'HelloPort'
+[2010-03-23 21:55:04,596]DEBUG  4665[http-8080-2](WebServiceInterceptorManager.java:255) - Intercepting web service {urn:hello:wsdl}HelloService.HelloPort
+[2010-03-23 21:55:04,612]DEBUG  4681[http-8080-2](WebServiceInterceptorManager.java:289) - SOAP Message situation: server-side, outbound, non-fault
+[2010-03-23 21:55:04,613]DEBUG  4682[http-8080-2](WebServiceInterceptorManager.java:328) - Invoking trace extension
+[2010-03-23 21:55:04,613]TRACE  4682[http-8080-2](WebServiceInterceptorManager.java:331) - create web service interceptor instance
+[2010-03-23 21:55:04,614]TRACE  4683[http-8080-2](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:04,615]TRACE  4684[http-8080-2](WebServiceInterceptorManager.java:334) - create web service interceptor parameter instance
+[2010-03-23 21:55:04,615]TRACE  4684[http-8080-2](WebServiceInterceptorManager.java:338) - call web service interceptor
+[2010-03-23 21:55:04,616]TRACE  4685[http-8080-2](WebServiceInterceptorManager.java:341) - interceptor return value: 'true'
+[2010-03-23 21:55:04,617]TRACE  4686[http-8080-2](WebServiceInterceptorManager.java:426) - message does not contain a fault
+[2010-03-23 21:55:04,618]TRACE  4687[http-8080-2](WebServiceInterceptorManager.java:428) - proceed to next step in loop
+[2010-03-23 21:55:04,618]DEBUG  4687[http-8080-2](WebServiceInterceptorManager.java:328) - Invoking errors extension
+[2010-03-23 21:55:04,619]TRACE  4688[http-8080-2](WebServiceInterceptorManager.java:331) - create web service interceptor instance
+[2010-03-23 21:55:04,619]TRACE  4688[http-8080-2](Extension.java:497) - create web service interceptor instance
+[2010-03-23 21:55:04,620]TRACE  4689[http-8080-2](WebServiceInterceptorManager.java:334) - create web service interceptor parameter instance
+[2010-03-23 21:55:04,621]TRACE  4690[http-8080-2](WebServiceInterceptorManager.java:338) - call web service interceptor
+[2010-03-23 21:55:04,623]DEBUG  4692[http-8080-2](WebServiceInterceptorManager.java:406) - web service interceptor has thrown a run-time exception
+[2010-03-23 21:55:04,623]DEBUG  4692[http-8080-2](WebServiceInterceptorManager.java:407) - java.lang.NullPointerException: Test Exception generated in method interceptMessage-server-outbound
+[2010-03-23 21:55:04,625]TRACE  4694[http-8080-2](WebServiceInterceptorManager.java:408) - run-time exception details
+java.lang.NullPointerException: Test Exception generated in method interceptMessage-server-outbound
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:39)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:27)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:513)
+	at step.extension.errors.ThrowExceptionUtil.throwException(ThrowExceptionUtil.java:23)
+	at step.extension.errors.ErrorsWebServiceInterceptor.interceptMessage(ErrorsWebServiceInterceptor.java:99)
+	at step.framework.extensions.WebServiceInterceptorManager.interceptMessage(WebServiceInterceptorManager.java:339)
+	at step.framework.extensions.WebServiceInterceptorManager.interceptHandleMessage(WebServiceInterceptorManager.java:259)
+	at step.framework.extensions.WebServiceInterceptorManager.interceptHandleMessageWebServiceHandler(WebServiceInterceptorManager.java:57)
+	at step.framework.extensions.Handler.handleMessage(Handler.java:49)
+	at step.framework.extensions.Handler.handleMessage(Handler.java:18)
+	at com.sun.xml.ws.handler.HandlerProcessor.callHandleMessageReverse(HandlerProcessor.java:336)
+	at com.sun.xml.ws.handler.HandlerProcessor.callHandlersResponse(HandlerProcessor.java:207)
+	at com.sun.xml.ws.handler.ServerSOAPHandlerTube.callHandlersOnResponse(ServerSOAPHandlerTube.java:161)
+	at com.sun.xml.ws.handler.HandlerTube.processResponse(HandlerTube.java:160)
+	at com.sun.xml.ws.api.pipe.Fiber.__doRun(Fiber.java:608)
+	at com.sun.xml.ws.api.pipe.Fiber._doRun(Fiber.java:557)
+	at com.sun.xml.ws.api.pipe.Fiber.doRun(Fiber.java:542)
+	at com.sun.xml.ws.api.pipe.Fiber.runSync(Fiber.java:439)
+	at com.sun.xml.ws.server.WSEndpointImpl$2.process(WSEndpointImpl.java:243)
+	at com.sun.xml.ws.transport.http.HttpAdapter$HttpToolkit.handle(HttpAdapter.java:471)
+	at com.sun.xml.ws.transport.http.HttpAdapter.handle(HttpAdapter.java:244)
+	at com.sun.xml.ws.transport.http.servlet.ServletAdapter.handle(ServletAdapter.java:135)
+	at com.sun.xml.ws.transport.http.servlet.WSServletDelegate.doGet(WSServletDelegate.java:129)
+	at com.sun.xml.ws.transport.http.servlet.WSServletDelegate.doPost(WSServletDelegate.java:160)
+	at com.sun.xml.ws.transport.http.servlet.WSServlet.doPost(WSServlet.java:75)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:710)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:175)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:128)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:263)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:844)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:584)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:447)
+	at java.lang.Thread.run(Thread.java:619)
+[2010-03-23 21:55:04,638]TRACE  4707[http-8080-2](WebServiceInterceptorManager.java:413) - rethrowing
+[2010-03-23 21:55:04,639]TRACE  4708[http-8080-2](WebServiceInterceptorManager.java:64) - finally exiting interceptHandleMessageWebService()
+[2010-03-23 21:55:04,639]TRACE  4708[http-8080-2](Handler.java:58) - close()
+[2010-03-23 21:55:04,640]TRACE  4709[http-8080-2](WebServiceInterceptorManager.java:92) - interceptCloseWebServiceHandler()
+[2010-03-23 21:55:04,640]TRACE  4709[http-8080-2](WebServiceInterceptorManager.java:97) - finally exiting interceptCloseWebServiceHandler()

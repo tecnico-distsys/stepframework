@@ -3,14 +3,7 @@ package step.framework.ws;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
+import javax.xml.soap.*;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
@@ -243,17 +236,53 @@ public class SOAPUtil{
 
 
     /**
-     *  This method returns the SOAP fault contained inside the SOAP message
-     *  or returns null if it finds none.
+     *  This method returns the SOAP body contained inside the SOAP message
+     *  or returns null if there is none.
      */
-    public static SOAPFault getFault(SOAPMessage soapMessage) throws SOAPException {
+    public static SOAPBody getBody(SOAPMessage soapMessage) throws SOAPException {
         // access SOAP body
         SOAPPart soapPart = soapMessage.getSOAPPart();
         SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
-        SOAPBody soapBody = soapEnvelope.getBody();
+        return soapEnvelope.getBody();
+    }
 
-        // return SOAP fault or null if it doesn't exist
-        return soapBody.getFault();
+
+    /**
+     *  This method returns the first child element of the SOAP body tag
+     *  or null if there is none or the body contains a Fault.
+     */
+    public static SOAPElement getBodyPayload(SOAPMessage soapMessage) throws SOAPException {
+        SOAPBody soapBody = getBody(soapMessage);
+        SOAPElement soapElement = (SOAPElement) XMLUtil.getFirstChildElement(soapBody);
+        if(soapElement != null && "Fault".equals(soapElement.getElementQName().getLocalPart()))
+            return null;
+        return soapElement;
+    }
+
+
+    /**
+     *  This method returns the SOAP fault contained inside the SOAP message
+     *  or returns null if there is none.
+     */
+    public static SOAPFault getFault(SOAPMessage soapMessage) throws SOAPException {
+        // return SOAP fault or null if it does not exist
+        return getBody(soapMessage).getFault();
+    }
+
+    /**
+     *  This method returns the first child element of the SOAP fault detail tag
+     *  or returns null if there is none.
+     */
+    public static SOAPElement getFaultPayload(SOAPMessage soapMessage) throws SOAPException {
+        SOAPFault soapFault = getFault(soapMessage);
+        if(soapFault != null) {
+            Detail detail = soapFault.getDetail();
+            if(detail != null) {
+                SOAPElement soapElement = (SOAPElement) XMLUtil.getFirstChildElement(detail);
+                return soapElement;
+            }
+        }
+        return null;
     }
 
 }

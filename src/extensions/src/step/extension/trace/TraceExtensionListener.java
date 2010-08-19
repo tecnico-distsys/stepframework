@@ -1,29 +1,30 @@
 package step.extension.trace;
 
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
-import step.framework.extensions.ExtensionException;
-import step.framework.extensions.ExtensionListener;
-import step.framework.extensions.ExtensionListenerParameter;
+import step.framework.extensions.*;
 
 /**
  *  This is the Trace extension listener.
  *  If properly configured, it is invoked on extension init and destroy.
  */
-public class TraceExtensionListener implements ExtensionListener {
+public class TraceExtensionListener extends ExtensionListenerBase {
 
     /**
      *  Checks if the output file configuration option was specified.
      */
+    @Override
     public void extensionInitialized(ExtensionListenerParameter param)
     throws ExtensionException {
 
-        // access the extension configuration
+        // access the extension configuration and context
         Properties extConfig = param.getExtension().getConfig();
+        Map<String,Object> extContext = param.getExtension().getContext();
 
+        //
+        //  output
+        //
         String output = extConfig.getProperty("output");
 	    PrintStream outputStream =  null;
         boolean usingFile = false;
@@ -43,8 +44,6 @@ public class TraceExtensionListener implements ExtensionListener {
     	    System.out.println("Using default output: System.out");
     	}
 
-        // store the print stream in the extension's context
-        Map<String,Object> extContext = param.getExtension().getContext();
         extContext.put("output", outputStream);
         extContext.put("output.usingFile", new Boolean(usingFile));
     }
@@ -52,6 +51,7 @@ public class TraceExtensionListener implements ExtensionListener {
     /**
      *  Closes output file (if one is being used).
      */
+    @Override
     public void extensionDestroyed(ExtensionListenerParameter param) throws ExtensionException {
         // access the extension context
         Map<String,Object> extContext = param.getExtension().getContext();

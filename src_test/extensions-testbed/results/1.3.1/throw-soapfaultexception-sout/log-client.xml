@@ -1,0 +1,808 @@
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380549854" level="TRACE" thread="main">
+<log4j:message><![CDATA[Starting main]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380549857" level="TRACE" thread="main">
+<log4j:message><![CDATA[[Ljava.lang.String;@5afd29]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380549858" level="TRACE" thread="main">
+<log4j:message><![CDATA[Invoking sayHello()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ServiceInterceptorManager" timestamp="1269380549872" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering interceptBefore()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549873" level="TRACE" thread="main">
+<log4j:message><![CDATA[Attempting automatic extension engine initialization]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549873" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering init]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549873" level="DEBUG" thread="main">
+<log4j:message><![CDATA[load extension engine configuration from /extensions.properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549874" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549874" level="TRACE" thread="main">
+<log4j:message><![CDATA[load extensions properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549874" level="TRACE" thread="main">
+<log4j:message><![CDATA[/extensions.properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549879" level="TRACE" thread="main">
+<log4j:message><![CDATA[extensions config properties (key: 'value')]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549879" level="TRACE" thread="main">
+<log4j:message><![CDATA[extensions.enabled: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549880" level="TRACE" thread="main">
+<log4j:message><![CDATA[extensions.intercept.service[]: '']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549880" level="TRACE" thread="main">
+<log4j:message><![CDATA[extensions.intercept.web-service[]: 'trace,cipher,errors,trace']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549880" level="TRACE" thread="main">
+<log4j:message><![CDATA[extensions.list: 'trace,errors,cipher']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549882" level="DEBUG" thread="main">
+<log4j:message><![CDATA[load configuration for each extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549883" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549884" level="TRACE" thread="main">
+<log4j:message><![CDATA[load trace extension properties from /extension-trace.properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549888" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension trace config properties (key: 'value')]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549888" level="TRACE" thread="main">
+<log4j:message><![CDATA[pretty-print: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549888" level="TRACE" thread="main">
+<log4j:message><![CDATA[output: 'C:/Java/stepcat/1.x-6.0.14/temp/soap-trace-client.log']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549889" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.web-service-interceptor: 'step.extension.trace.TraceWebServiceInterceptor']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549889" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.listener: 'step.extension.trace.TraceExtensionListener']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549889" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.enabled: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549889" level="TRACE" thread="main">
+<log4j:message><![CDATA[remove extension trace properties and keep the remaining ones as additional configuration]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549890" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549890" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549890" level="TRACE" thread="main">
+<log4j:message><![CDATA[load errors extension properties from /extension-errors.properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549891" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension errors config properties (key: 'value')]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549891" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.web-service-interceptor: 'step.extension.errors.ErrorsWebServiceInterceptor']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549892" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.listener: 'step.extension.errors.ErrorsExtensionListener']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549892" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.enabled: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549892" level="TRACE" thread="main">
+<log4j:message><![CDATA[remove extension errors properties and keep the remaining ones as additional configuration]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549894" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549895" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549895" level="TRACE" thread="main">
+<log4j:message><![CDATA[load cipher extension properties from /extension-cipher.properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549895" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension cipher config properties (key: 'value')]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549896" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.web-service-interceptor: 'step.extension.cipher.CipherWebServiceInterceptor']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549896" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.listener: 'step.extension.cipher.CipherExtensionListener']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549896" level="TRACE" thread="main">
+<log4j:message><![CDATA[extension.enabled: 'false']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549896" level="TRACE" thread="main">
+<log4j:message><![CDATA[remove extension cipher properties and keep the remaining ones as additional configuration]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549897" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549897" level="TRACE" thread="main">
+<log4j:message><![CDATA[load intercept configs]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549897" level="TRACE" thread="main">
+<log4j:message><![CDATA[ignoring empty extensions.intercept.service[]]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549898" level="TRACE" thread="main">
+<log4j:message><![CDATA[Intercept configuration trees:]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549899" level="TRACE" thread="main">
+<log4j:message><![CDATA[Configuration tree Service interception
+root [ConfigNode: config=null, #childNodes=0]
+]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549899" level="TRACE" thread="main">
+<log4j:message><![CDATA[Configuration tree Web Service interception
+root [ConfigNode: config=[InterceptConfigData: extensionList={[Extension: id=trace, enabled=true], [Extension: id=cipher, enabled=false], [Extension: id=errors, enabled=true], [Extension: id=trace, enabled=true]} ], #childNodes=0]
+]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549899" level="TRACE" thread="main">
+<log4j:message><![CDATA[remove extensions properties and keep the remaining ones as additional configuration]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549899" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting loadConfig]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549902" level="DEBUG" thread="main">
+<log4j:message><![CDATA[extension engine configuration loaded successfully]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549902" level="DEBUG" thread="main">
+<log4j:message><![CDATA[start extensions]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549902" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering start]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549902" level="TRACE" thread="main">
+<log4j:message><![CDATA[skipping service interceptor class loading]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549903" level="TRACE" thread="main">
+<log4j:message><![CDATA[load web service interceptor class]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549904" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549905" level="TRACE" thread="main">
+<log4j:message><![CDATA[load listener class]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549906" level="TRACE" thread="main">
+<log4j:message><![CDATA[create listener instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549907" level="TRACE" thread="main">
+<log4j:message><![CDATA[invoke listener on EXTENSION_INITIALIZED]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549909" level="INFO" thread="main">
+<log4j:message><![CDATA[Extension trace enabled]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549909" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting start]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549910" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering start]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549910" level="TRACE" thread="main">
+<log4j:message><![CDATA[skipping service interceptor class loading]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549910" level="TRACE" thread="main">
+<log4j:message><![CDATA[load web service interceptor class]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549912" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549912" level="TRACE" thread="main">
+<log4j:message><![CDATA[load listener class]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549913" level="TRACE" thread="main">
+<log4j:message><![CDATA[create listener instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549913" level="TRACE" thread="main">
+<log4j:message><![CDATA[invoke listener on EXTENSION_INITIALIZED]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549913" level="INFO" thread="main">
+<log4j:message><![CDATA[Extension errors enabled]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549914" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting start]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549915" level="TRACE" thread="main">
+<log4j:message><![CDATA[entering start]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549915" level="DEBUG" thread="main">
+<log4j:message><![CDATA[extension cipher disabled. Skipping further initialization.]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549915" level="INFO" thread="main">
+<log4j:message><![CDATA[Extension cipher disabled]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380549915" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting start]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549916" level="DEBUG" thread="main">
+<log4j:message><![CDATA[extensions started successfully]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549916" level="INFO" thread="main">
+<log4j:message><![CDATA[Extension engine enabled]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549916" level="TRACE" thread="main">
+<log4j:message><![CDATA[set init flag]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549918" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting init]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ExtensionEngine" timestamp="1269380549918" level="TRACE" thread="main">
+<log4j:message><![CDATA[Automatic extension engine initialization successful!]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ServiceInterceptorManager" timestamp="1269380549919" level="TRACE" thread="main">
+<log4j:message><![CDATA[service instance full class name: hello.ws.client.service.SayHelloService]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ServiceInterceptorManager" timestamp="1269380549919" level="TRACE" thread="main">
+<log4j:message><![CDATA[Using configuration tree: Service interception]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ServiceInterceptorManager" timestamp="1269380549919" level="TRACE" thread="main">
+<log4j:message><![CDATA[no service interception configuration found; ignoring service execution]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.ServiceInterceptorManager" timestamp="1269380549923" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting interceptBefore()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380549923" level="TRACE" thread="main">
+<log4j:message><![CDATA[Starting SayHelloService action]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380549923" level="DEBUG" thread="main">
+<log4j:message><![CDATA[create Web Service stub]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.config.Config" timestamp="1269380549925" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Config constructor invoked]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.config.Config" timestamp="1269380549925" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Configuration has not been loaded yet. Try to load default properties file.]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.config.Config" timestamp="1269380549925" level="INFO" thread="main">
+<log4j:message><![CDATA[Loading configuration properties from resource path /config.properties]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.config.Config" timestamp="1269380549926" level="TRACE" thread="main">
+<log4j:message><![CDATA[Configuration properties:]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.config.Config" timestamp="1269380549926" level="TRACE" thread="main">
+<log4j:message><![CDATA[hello.ws.EndpointAddress http://localhost:8080/hello-ws/endpoint]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Handler" timestamp="1269380550322" level="TRACE" thread="main">
+<log4j:message><![CDATA[getHeaders()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Handler" timestamp="1269380550322" level="TRACE" thread="main">
+<log4j:message><![CDATA[getHeaders()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380550419" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoke web service. Parameter = friend]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Handler" timestamp="1269380550434" level="TRACE" thread="main">
+<log4j:message><![CDATA[handleMessage()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550435" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptHandleMessageWebService()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550435" level="TRACE" thread="main">
+<log4j:message><![CDATA[SOAP message names follow]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550435" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550436" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550436" level="TRACE" thread="main">
+<log4j:message><![CDATA[Web Service config path source items]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550436" level="TRACE" thread="main">
+<log4j:message><![CDATA[namespace: 'urn:hello:wsdl']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550436" level="TRACE" thread="main">
+<log4j:message><![CDATA[service: 'HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550437" level="TRACE" thread="main">
+<log4j:message><![CDATA[port: 'HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550437" level="TRACE" thread="main">
+<log4j:message><![CDATA[Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550437" level="TRACE" thread="main">
+<log4j:message><![CDATA[Using configuration tree: Web Service interception]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550438" level="TRACE" thread="main">
+<log4j:message><![CDATA[Web Service interception config data: [InterceptConfigData: extensionList={[Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor], [Extension: id=cipher, enabled=false], [Extension: id=errors, enabled=true, listener=step.extension.errors.ErrorsExtensionListener, web-service-interceptor=step.extension.errors.ErrorsWebServiceInterceptor], [Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor]} ]]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550439" level="TRACE" thread="main">
+<log4j:message><![CDATA[SOAP message names follow]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550439" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550439" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550439" level="TRACE" thread="main">
+<log4j:message><![CDATA[Web Service config path source items]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550440" level="TRACE" thread="main">
+<log4j:message><![CDATA[namespace: 'urn:hello:wsdl']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550440" level="TRACE" thread="main">
+<log4j:message><![CDATA[service: 'HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550440" level="TRACE" thread="main">
+<log4j:message><![CDATA[port: 'HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550441" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Intercepting web service {urn:hello:wsdl}HelloService.HelloPort]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550474" level="DEBUG" thread="main">
+<log4j:message><![CDATA[SOAP Message situation: client-side, outbound, non-fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550474" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoking trace extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550475" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380550476" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550476" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor parameter instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550477" level="TRACE" thread="main">
+<log4j:message><![CDATA[call web service interceptor]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550489" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptor return value: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550489" level="TRACE" thread="main">
+<log4j:message><![CDATA[message does not contain a fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550489" level="TRACE" thread="main">
+<log4j:message><![CDATA[proceed to next step in loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550489" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Skipping cipher extension because it's disabled]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550490" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoking errors extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550490" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380550490" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550490" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor parameter instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550490" level="TRACE" thread="main">
+<log4j:message><![CDATA[call web service interceptor]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550491" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptor return value: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550491" level="TRACE" thread="main">
+<log4j:message><![CDATA[message does not contain a fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550491" level="TRACE" thread="main">
+<log4j:message><![CDATA[proceed to next step in loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550492" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoking trace extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550492" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380550493" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550493" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor parameter instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550493" level="TRACE" thread="main">
+<log4j:message><![CDATA[call web service interceptor]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550498" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptor return value: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550498" level="TRACE" thread="main">
+<log4j:message><![CDATA[message does not contain a fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550498" level="TRACE" thread="main">
+<log4j:message><![CDATA[proceed to next step in loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550498" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Proceeding after web service interceptor loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550499" level="TRACE" thread="main">
+<log4j:message><![CDATA[returning true from intercept message]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550499" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting interceptHandleMessageWebService()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Handler" timestamp="1269380550804" level="TRACE" thread="main">
+<log4j:message><![CDATA[handleFault()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550804" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptHandleFaultWebService()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550804" level="TRACE" thread="main">
+<log4j:message><![CDATA[SOAP message names follow]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550804" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550805" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550805" level="TRACE" thread="main">
+<log4j:message><![CDATA[Web Service config path source items]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550805" level="TRACE" thread="main">
+<log4j:message><![CDATA[namespace: 'urn:hello:wsdl']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550805" level="TRACE" thread="main">
+<log4j:message><![CDATA[service: 'HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550805" level="TRACE" thread="main">
+<log4j:message><![CDATA[port: 'HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550806" level="TRACE" thread="main">
+<log4j:message><![CDATA[Extracted config path: '{urn:hello:wsdl}HelloService.HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550806" level="TRACE" thread="main">
+<log4j:message><![CDATA[Using configuration tree: Web Service interception]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550806" level="TRACE" thread="main">
+<log4j:message><![CDATA[Web Service interception config data: [InterceptConfigData: extensionList={[Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor], [Extension: id=cipher, enabled=false], [Extension: id=errors, enabled=true, listener=step.extension.errors.ErrorsExtensionListener, web-service-interceptor=step.extension.errors.ErrorsWebServiceInterceptor], [Extension: id=trace, enabled=true, listener=step.extension.trace.TraceExtensionListener, web-service-interceptor=step.extension.trace.TraceWebServiceInterceptor]} ]]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550807" level="TRACE" thread="main">
+<log4j:message><![CDATA[SOAP message names follow]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550807" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.service: '{urn:hello:wsdl}HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550807" level="TRACE" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.wsdl.port: '{urn:hello:wsdl}HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550807" level="TRACE" thread="main">
+<log4j:message><![CDATA[Web Service config path source items]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550807" level="TRACE" thread="main">
+<log4j:message><![CDATA[namespace: 'urn:hello:wsdl']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550809" level="TRACE" thread="main">
+<log4j:message><![CDATA[service: 'HelloService']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550809" level="TRACE" thread="main">
+<log4j:message><![CDATA[port: 'HelloPort']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550809" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Intercepting web service {urn:hello:wsdl}HelloService.HelloPort]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550812" level="DEBUG" thread="main">
+<log4j:message><![CDATA[SOAP Message situation: client-side, inbound, fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550812" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoking trace extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550814" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380550814" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550814" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor parameter instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550814" level="TRACE" thread="main">
+<log4j:message><![CDATA[call web service interceptor]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550815" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptor return value: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550816" level="TRACE" thread="main">
+<log4j:message><![CDATA[message contains a fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550816" level="TRACE" thread="main">
+<log4j:message><![CDATA[proceed to next step in loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550817" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoking errors extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550817" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380550817" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550817" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor parameter instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550818" level="TRACE" thread="main">
+<log4j:message><![CDATA[call web service interceptor]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550819" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptor return value: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550819" level="TRACE" thread="main">
+<log4j:message><![CDATA[message contains a fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550819" level="TRACE" thread="main">
+<log4j:message><![CDATA[proceed to next step in loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550819" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Skipping cipher extension because it's disabled]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550821" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Invoking trace extension]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550821" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Extension" timestamp="1269380550821" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550822" level="TRACE" thread="main">
+<log4j:message><![CDATA[create web service interceptor parameter instance]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550822" level="TRACE" thread="main">
+<log4j:message><![CDATA[call web service interceptor]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550824" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptor return value: 'true']]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550824" level="TRACE" thread="main">
+<log4j:message><![CDATA[message contains a fault]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550825" level="TRACE" thread="main">
+<log4j:message><![CDATA[proceed to next step in loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550825" level="DEBUG" thread="main">
+<log4j:message><![CDATA[Proceeding after web service interceptor loop]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550825" level="TRACE" thread="main">
+<log4j:message><![CDATA[returning true from intercept message]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550826" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting interceptHandleFaultWebService()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.Handler" timestamp="1269380550826" level="TRACE" thread="main">
+<log4j:message><![CDATA[close()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550826" level="TRACE" thread="main">
+<log4j:message><![CDATA[interceptCloseWebServiceHandler()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="step.framework.extensions.WebServiceInterceptorManager" timestamp="1269380550827" level="TRACE" thread="main">
+<log4j:message><![CDATA[finally exiting interceptCloseWebServiceHandler()]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380550854" level="TRACE" thread="main">
+<log4j:message><![CDATA[Caught class javax.xml.ws.soap.SOAPFaultException]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380550854" level="ERROR" thread="main">
+<log4j:message><![CDATA[javax.xml.ws.soap.SOAPFaultException: ErrorsWebServiceInterceptor generated exception in method interceptMessage-server-outbound]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380550854" level="TRACE" thread="main">
+<log4j:message><![CDATA[Throw RemoteServiceException with nested exception]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.ws.client.service.SayHelloService" timestamp="1269380550854" level="TRACE" thread="main">
+<log4j:message><![CDATA[Finally exiting SayHelloService action]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380550854" level="TRACE" thread="main">
+<log4j:message><![CDATA[sayHello caught exception]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380550855" level="ERROR" thread="main">
+<log4j:message><![CDATA[step.framework.exception.RemoteServiceException: javax.xml.ws.soap.SOAPFaultException: ErrorsWebServiceInterceptor generated exception in method interceptMessage-server-outbound]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380550858" level="TRACE" thread="main">
+<log4j:message><![CDATA[Action message: javax.xml.ws.soap.SOAPFaultException: ErrorsWebServiceInterceptor generated exception in method interceptMessage-server-outbound]]></log4j:message>
+</log4j:event>
+
+<log4j:event logger="hello.web.SayHelloAction" timestamp="1269380550858" level="TRACE" thread="main">
+<log4j:message><![CDATA[Finally exiting main]]></log4j:message>
+</log4j:event>
+

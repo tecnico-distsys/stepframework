@@ -1,0 +1,22 @@
+[2010-03-19 14:59:44,117] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-19 14:59:44,121]DEBUG     4[main](AssertMain.java:20) - Program arguments:
+[2010-03-19 14:59:44,125]DEBUG     8[main](AssertMain.java:22) - args[0] 'throw-wsinterceptorexception-cout'
+[2010-03-19 14:59:44,126]DEBUG     9[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-wsinterceptorexception-cout'
+[2010-03-19 14:59:44,126]DEBUG     9[main](AssertMain.java:45) - Building context
+[2010-03-19 14:59:44,143]TRACE    26[main](AssertMain.java:66) - Context:
+[2010-03-19 14:59:44,143]TRACE    26[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-wsinterceptorexception-cout
+[2010-03-19 14:59:44,143]TRACE    26[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-wsinterceptorexception-cout\soap-trace-client.log
+[2010-03-19 14:59:44,145]TRACE    28[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-wsinterceptorexception-cout\log-server.log
+[2010-03-19 14:59:44,145]TRACE    28[main](AssertMain.java:68) - config: throw-wsinterceptorexception-cout
+[2010-03-19 14:59:44,145]TRACE    28[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-wsinterceptorexception-cout\soap-trace-server.log
+[2010-03-19 14:59:44,146]TRACE    29[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100319\1456\throw-wsinterceptorexception-cout\log-client.log
+[2010-03-19 14:59:44,146]DEBUG    29[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-19 14:59:44,146]DEBUG    29[main](AssertMain.java:79) - Asserting configuration 'throw-wsinterceptorexception-cout'
+[2010-03-19 14:59:44,165] INFO    48[main](Assertions.java:52) - assertClientSOAPFaultException
+[2010-03-19 14:59:44,185] INFO    68[main](Assertions.java:116) - assertSOAPCounts
+[2010-03-19 14:59:44,186] INFO    69[main](Assertions.java:93) - assertCountClientSOAPEnvelopes
+[2010-03-19 14:59:44,186] INFO    69[main](Assertions.java:98) - assertCountServerSOAPEnvelopes
+[2010-03-19 14:59:44,202] INFO    85[main](Assertions.java:103) - assertCountClientSOAPFaults
+[2010-03-19 14:59:44,202] INFO    85[main](Assertions.java:108) - assertCountServerSOAPFaults
+[2010-03-19 14:59:44,218] INFO   101[main](AssertMain.java:153) - All assertions executed successfully for configuration 'throw-wsinterceptorexception-cout'
+[2010-03-19 14:59:44,218] INFO   101[main](AssertMain.java:37) - End of results asserter.

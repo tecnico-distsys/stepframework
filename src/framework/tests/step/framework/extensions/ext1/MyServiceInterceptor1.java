@@ -1,13 +1,14 @@
 package step.framework.extensions.ext1;
 
-import step.framework.extensions.ServiceInterceptor;
-import step.framework.extensions.ServiceInterceptorException;
-import step.framework.extensions.ServiceInterceptorParameter;
+import step.framework.domain.DomainException;
 
-public class MyServiceInterceptor1 implements ServiceInterceptor {
+import step.framework.extensions.*;
 
+public class MyServiceInterceptor1 extends ServiceInterceptorBase {
+
+    @Override
     public void interceptBefore(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
         /*
         System.out.println(this.getClass().getSimpleName() +
                            " @ interceptBefore(" +
@@ -16,8 +17,9 @@ public class MyServiceInterceptor1 implements ServiceInterceptor {
         */
     }
 
+    @Override
     public void interceptAfter(ServiceInterceptorParameter param)
-    throws ServiceInterceptorException {
+    throws DomainException, ServiceInterceptorException {
         /*
         System.out.println(this.getClass().getSimpleName() +
                            " @ interceptAfter(" +

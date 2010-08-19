@@ -1,0 +1,45 @@
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <sayHello xmlns="urn:hello:wsdl">
+      <name>friend</name>
+    </sayHello>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Outbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5&#13;
+XPv9+v8ux+v7ne18QTX+E01jamk0rkjeWjSghLa6JVGIzGGtcXDHOlLu8zizPGf3QxIIiqvW14ET&#13;
+ewnwAr9DaiILTgoJbFA7Y6a5849yAnxZY1MqkUy7wSpeOA1KFQthz/7QKvMjIjfibR29okKSS2vX&#13;
+XU0tJRw=&#13;
+</CipherBody>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <CipherBody>ZbeYI5k7yR89oyIEnBSZD+6Up02wRMrKgq2P++B/0qkhcpinJzNyowqFeROdxLpqPU5hUkbeEXJ5
+XPv9+v8ux+v7ne18QTX+E01jamk0rkiLVxfvscAeOChya8lgZgBp7TZ8UGBHoe53GQZ6VT3dPwJ7
+v/pot9QMrTB17jUT8jMSfGSATFgbLAGS9/T3IzlPGdhkpwgxboTaaAF6IdJqiBUEO2Qjr7h4jep0
+X7aUEl8Xu2z4ZVEVBKoBl+79LtghlpzZQAEOt12XkoHOiX+jfxJ8ZIBMWBssCDOWtjzYwXajtcCd
+TaFKqmHP/tAq8yMiN+JtHb2iQpJLa9ddTS0lHA==
+</CipherBody>
+  </S:Body>
+</S:Envelope>
+Tracing Web Service client: {urn:hello:wsdl}HelloService
+Inbound SOAP message containing a Fault:
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header/>
+  <S:Body>
+    <S:Fault>
+      <faultcode>S:Server</faultcode>
+      <faultstring>Test Exception generated in method interceptMessage-server-inbound</faultstring>
+    </S:Fault>
+  </S:Body>
+</S:Envelope>
