@@ -2,12 +2,11 @@ package step.framework.extensions.ext3;
 
 import java.util.*;
 
-import step.framework.extensions.ExtensionListener;
-import step.framework.extensions.ExtensionListenerParameter;
-import step.framework.extensions.ExtensionException;
+import step.framework.extensions.*;
 
-public class MyExtensionListener3 implements ExtensionListener {
+public class MyExtensionListener3 extends ExtensionListenerBase {
 
+    @Override
     public void extensionInitialized(ExtensionListenerParameter param)
     throws ExtensionException {
         /*
@@ -21,6 +20,7 @@ public class MyExtensionListener3 implements ExtensionListener {
         ctx.put("ext3ctx.var", "3");
     }
 
+    @Override
     public void extensionDestroyed(ExtensionListenerParameter param)
     throws ExtensionException {
         /*

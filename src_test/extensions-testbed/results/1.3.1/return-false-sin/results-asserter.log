@@ -1,0 +1,22 @@
+[2010-03-23 21:37:53,092] INFO     0[main](AssertMain.java:17) - Results asserter starting
+[2010-03-23 21:37:53,094]DEBUG     2[main](AssertMain.java:20) - Program arguments:
+[2010-03-23 21:37:53,099]DEBUG     7[main](AssertMain.java:22) - args[0] 'return-false-sin'
+[2010-03-23 21:37:53,100]DEBUG     8[main](AssertMain.java:22) - args[1] 'D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\return-false-sin'
+[2010-03-23 21:37:53,100]DEBUG     8[main](AssertMain.java:45) - Building context
+[2010-03-23 21:37:53,116]TRACE    24[main](AssertMain.java:66) - Context:
+[2010-03-23 21:37:53,116]TRACE    24[main](AssertMain.java:68) - resultDir: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\return-false-sin
+[2010-03-23 21:37:53,116]TRACE    24[main](AssertMain.java:68) - clientSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\return-false-sin\soap-trace-client.log
+[2010-03-23 21:37:53,117]TRACE    25[main](AssertMain.java:68) - serverLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\return-false-sin\log-server.log
+[2010-03-23 21:37:53,118]TRACE    26[main](AssertMain.java:68) - config: return-false-sin
+[2010-03-23 21:37:53,118]TRACE    26[main](AssertMain.java:68) - serverSoap: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\return-false-sin\soap-trace-server.log
+[2010-03-23 21:37:53,118]TRACE    26[main](AssertMain.java:68) - clientLog: D:\dev\stepframework\src_test\extensions-testbed\results\20100323\2135\return-false-sin\log-client.log
+[2010-03-23 21:37:53,118]DEBUG    26[main](AssertMain.java:76) - Entering assert dispatch
+[2010-03-23 21:37:53,118]DEBUG    26[main](AssertMain.java:79) - Asserting configuration 'return-false-sin'
+[2010-03-23 21:37:53,136] INFO    44[main](Assertions.java:44) - assertClientUnexpectedXML
+[2010-03-23 21:37:53,156] INFO    64[main](Assertions.java:162) - assertSOAPCounts
+[2010-03-23 21:37:53,156] INFO    64[main](Assertions.java:118) - assertCountClientSOAPEnvelopes
+[2010-03-23 21:37:53,158] INFO    66[main](Assertions.java:123) - assertCountServerSOAPEnvelopes
+[2010-03-23 21:37:53,159] INFO    67[main](Assertions.java:128) - assertCountClientSOAPFaults
+[2010-03-23 21:37:53,159] INFO    67[main](Assertions.java:133) - assertCountServerSOAPFaults
+[2010-03-23 21:37:53,160] INFO    68[main](AssertMain.java:234) - SUCCESS! All assertions executed successfully for configuration 'return-false-sin'
+[2010-03-23 21:37:53,160] INFO    68[main](AssertMain.java:37) - End of results asserter.

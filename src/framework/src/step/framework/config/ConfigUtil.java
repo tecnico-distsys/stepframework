@@ -2,7 +2,7 @@ package step.framework.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-//import java.util.Enumeration;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
