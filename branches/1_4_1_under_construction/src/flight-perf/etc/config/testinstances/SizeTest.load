@@ -1,0 +1,31 @@
+/**
+ *  Flight Performance load instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        load {
+            instance {
+                id = "SizeTest"
+
+                numberSessions = 12
+                maxGroup = 10
+                maxThinkTime = 0
+                errorProbability = 0.20
+
+                numberSamples = 8
+                randomSeedList = [ 
+                                           755, 
+                                     -46289129, 
+                                         74634, 
+                                           -72, 
+                                      83498729,
+                                           131, 
+                                        -23908, 
+                                          7876 
+                                 ]
+            }
+        }
+    }
+}

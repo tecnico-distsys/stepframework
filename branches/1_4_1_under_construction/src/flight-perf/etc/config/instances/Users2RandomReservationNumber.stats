@@ -1,0 +1,21 @@
+/**
+ *  Flight Performance stats instance config
+ *  (syntax http://groovy.codehaus.org/ConfigSlurper)
+ */
+
+perf {
+    flight {
+        stats {
+            instance {
+                id = "Users2RandomReservationNumber"
+
+                runId = "Users2RandomReservationNumber"
+
+                filterId = ""
+
+                numberSamples = 10
+                numberUsersPerSample = 2
+            }
+        }
+    }
+}

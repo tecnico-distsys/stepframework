@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<hello xmlns="urn:hello:xsd" id="2">
+    <name>friend 2</name>
+</hello>
