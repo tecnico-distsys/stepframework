@@ -71,7 +71,7 @@ public abstract class PipeFactory {
 			if(className == null || className.equals(NULLFACTORY))
 			{
 				System.out.println("[DEBUG] Using " + NullPipeFactory.class.getName());
-				return null;
+				return new NullPipeFactory();
 			}
 			if(className.equals(PROPERTIESFACTORY))
 			{

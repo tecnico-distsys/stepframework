@@ -2,6 +2,7 @@ package step.framework.extensions;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,25 @@ public class ExtensionRepository {
 		{
 			if(wspNss[i] != null)
 				wspMapping.put(wspNss[i], ext);
+		}
+	}
+	
+	public void destroyExtensions()
+	{
+		Iterator<Extension> it = extensions.values().iterator();
+		
+		while(it.hasNext())
+		{
+			Extension ext = it.next();
+			try
+			{
+				ext.destroy();
+			}
+			catch(ExtensionException e)
+			{
+				System.out.println("Failed to destroy extension " + ext.getID());
+				e.printStackTrace();
+			}
 		}
 	}
 }

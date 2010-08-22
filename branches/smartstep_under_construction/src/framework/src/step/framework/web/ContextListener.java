@@ -24,7 +24,8 @@ public class ContextListener implements ServletContextListener {
     private Log log = LogFactory.getLog(ContextListener.class);
 
     /** Web application initialized */
-    public void contextInitialized(ServletContextEvent sce) {
+    public void contextInitialized(ServletContextEvent sce)
+    {
         // write startup message
         log.info("Framework initializing...");
         
@@ -43,8 +44,12 @@ public class ContextListener implements ServletContextListener {
     }
 
     /** Web application destroyed */
-    public void contextDestroyed(ServletContextEvent sce) {
+    public void contextDestroyed(ServletContextEvent sce)
+    {
         log.info("Framework terminating...");
+
+        ExtensionRepository.getInstance().destroyExtensions();
+        log.info("Extensions destroyed.");
     }
 
 }
