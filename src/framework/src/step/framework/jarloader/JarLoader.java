@@ -3,6 +3,7 @@ package step.framework.jarloader;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,12 +63,27 @@ public class JarLoader extends TimerTask {
 			throw new JarException(e);
 		}
 	}
+
+	public static void kill() throws JarException
+	{
+		try
+		{
+			Iterator<JarLoader> it = instances.values().iterator();
+			while(it.hasNext())
+			    it.next().stop();
+		}
+		catch(Exception e)
+		{
+			throw new JarException(e);
+		}
+	}
 	
 	//*********************************************************************+
 	//jar loader implementation
 	
 	private File folder;
 	private Map<File, Jar> jars;
+	private Timer timer;
 	
 	private JarLoader(File folder) throws JarException, IOException
 	{
@@ -80,8 +96,14 @@ public class JarLoader extends TimerTask {
 	
 	public void start()
 	{
-		Timer timer = new Timer();
+		timer = new Timer(true);
 		timer.schedule(this, TIMER_DELAY, TIMER_PERIOD);
+	}
+
+	public void stop()
+	{
+		if(timer != null)
+		    timer.cancel();
 	}
 	
 	public void run()
