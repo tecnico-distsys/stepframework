@@ -21,7 +21,7 @@
 
     <xs:complexType name="ServiceSection">
       <xs:sequence>
-        <xs:any namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" minOccurs="0" maxOccurs="1" />
+        <xs:any namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" minOccurs="1" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="class" type="xs:string" use="required" />
     </xs:complexType>
@@ -29,7 +29,7 @@
     <xs:complexType name="WSClientSection">
       <xs:sequence>
         <xs:element name="wsdl" type="tns:WSDLDefinition" minOccurs="1" maxOccurs="1" />
-        <xs:any namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" minOccurs="0" maxOccurs="1" />
+        <xs:any namespace="http://schemas.xmlsoap.org/ws/2004/09/policy" minOccurs="1" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="endpoint" type="xs:string" use="required" />
     </xs:complexType>
