@@ -8,24 +8,82 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class JarLoader extends TimerTask {
 	
 	private static final int TIMER_DELAY = 0;
 	private static final int TIMER_PERIOD = 5000;
 	
-	//*********************************************************************+
-	//singleton
+	//*********************************************************************
+	//logging
+
+    private static Log log = LogFactory.getLog(JarLoader.class);
 	
-	public static Map<File, JarLoader> instances;
+	//*********************************************************************
+	//members
+    
+	private static Map<File, JarLoader> instances = new HashMap<File, JarLoader>();
 	
-	public static void loadOneTime(String path) throws JarException
+	//*********************************************************************
+	//api
+		
+	public static void load(String path, boolean periodic) throws JarException
+	{
+		if(periodic)
+			loadPeriodically(path);
+		else
+			loadOneTime(path);
+	}
+
+	public static void kill(String path)
+	{
+		try
+		{
+			File folder = new File(path);
+			JarLoader instance = instances.get(folder);
+			if(instance != null)
+			{
+				instance.stop();
+				instances.remove(instance);
+			}
+		}
+		catch(Exception e)
+		{
+			log.error("An error occured when trying to stop JarLoader instance.", e);
+		}
+	}
+
+	public static void killAll()
+	{
+		try
+		{
+			Iterator<JarLoader> it = instances.values().iterator();
+			while(it.hasNext())
+			    it.next().stop();			
+		}
+		catch(Exception e)
+		{
+			log.error("An error occured when trying to stop running JarLoader instances.", e);
+		}
+		finally
+		{
+			instances.clear();
+		}
+	}
+
+	//*********************************************************************
+	//loading methods
+	
+	private static void loadOneTime(String path) throws JarException
 	{
 		try
 		{
 			File folder = new File(path);
 			JarLoader loader = new JarLoader(folder);
 			loader.run();
-			System.out.println("[DEBUG] JarLoader loaded folder \"" + folder.getCanonicalPath() + "\"");
+			log.debug("JarLoader loaded folder \"" + folder.getCanonicalPath() + "\"");
 		}
 		catch(JarException e)
 		{
@@ -37,13 +95,10 @@ public class JarLoader extends TimerTask {
 		}
 	}
 	
-	public static void load(String path) throws JarException
+	private static void loadPeriodically(String path) throws JarException
 	{
 		try
 		{
-			if(instances == null)
-				instances = new HashMap<File, JarLoader>();
-			
 			File folder = new File(path);
 			JarLoader instance = instances.get(folder);
 			if(instance == null)
@@ -51,7 +106,7 @@ public class JarLoader extends TimerTask {
 				instance = new JarLoader(folder);
 				instances.put(folder, instance);
 				instance.start();
-				System.out.println("[DEBUG] Started JarLoader on folder \"" + folder.getCanonicalPath() + "\"");
+				log.debug("Started periodic JarLoader on folder \"" + folder.getCanonicalPath() + "\"");
 			}
 		}
 		catch(JarException e)
@@ -63,22 +118,8 @@ public class JarLoader extends TimerTask {
 			throw new JarException(e);
 		}
 	}
-
-	public static void kill() throws JarException
-	{
-		try
-		{
-			Iterator<JarLoader> it = instances.values().iterator();
-			while(it.hasNext())
-			    it.next().stop();
-		}
-		catch(Exception e)
-		{
-			throw new JarException(e);
-		}
-	}
 	
-	//*********************************************************************+
+	//*********************************************************************
 	//jar loader implementation
 	
 	private File folder;
@@ -94,13 +135,13 @@ public class JarLoader extends TimerTask {
 		this.jars = new HashMap<File, Jar>();
 	}
 	
-	public void start()
+	private void start()
 	{
 		timer = new Timer(true);
 		timer.schedule(this, TIMER_DELAY, TIMER_PERIOD);
 	}
 
-	public void stop()
+	private void stop()
 	{
 		if(timer != null)
 		    timer.cancel();
@@ -122,18 +163,17 @@ public class JarLoader extends TimerTask {
 			{
 				try
 				{
-					System.out.println("[DEBUG] Found new Jar: " + files[i].getName());
+					log.debug("Found new Jar: " + files[i].getName());
 					jar = new Jar(files[i]);
-					System.out.println("[DEBUG] Installing Jar: " + files[i].getName());
+					log.debug("Installing Jar: " + files[i].getName());
 					jar.install();
-					System.out.println("[DEBUG] Registering Jar: " + files[i].getName());
+					log.debug("Registering Jar: " + files[i].getName());
 					jars.put(files[i], jar);
-					System.out.println("[DEBUG] Jar \"" + files[i].getName() + "\" successfully installed.");
+					log.debug("Jar \"" + files[i].getName() + "\" successfully installed.");
 				}
 				catch(Exception e)
 				{
-					System.out.println("[DEBUG] An error occured while loading Jar \"" + files[i].getName() + "\". Details:");
-					e.printStackTrace();
+					log.error("An error occured while loading Jar \"" + files[i].getName(), e);
 				}
 			}
 		}

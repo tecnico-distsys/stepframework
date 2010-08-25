@@ -168,7 +168,6 @@ public class PolicyPipeFactory extends PipeFactory {
 				Policy localPolicy = PolicyUtil.getPolicy((Element) section.getAny());
 				log.trace("Loading policy from WSDL");
 				Policy serverPolicy = getPolicyFromWSDL(section.getWsdl());
-				serverPolicy = removeLocalAssertions(serverPolicy);
 				
 				log.trace("Calculating effective policy");
 				policy = PolicyUtil.intersect(localPolicy, serverPolicy);
@@ -178,7 +177,8 @@ public class PolicyPipeFactory extends PipeFactory {
 					log.trace("Effective policy is empty");
 					throw new ExtensionException("The policies are incompatible");
 				}
-				else if(hasAlternatives(serverPolicy))
+				
+				if(hasAlternatives(serverPolicy))
 				{
 					addPolicyHeader = true;
 				}

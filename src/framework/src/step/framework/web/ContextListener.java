@@ -34,12 +34,12 @@ public class ContextListener implements ServletContextListener {
         
         try
         {
-        	JarLoader.load(ExtensionRepository.LOADER_PATH);
-            log.info("Extensions JarLoader initialized on path \"" + ExtensionRepository.LOADER_PATH + "\"");
+        	JarLoader.load(ExtensionRepository.LOADER_PATH, true);
+            log.debug("Extensions JarLoader initialized on path \"" + ExtensionRepository.LOADER_PATH + "\"");
         }
         catch(JarException e)
         {
-            log.info("Extensions JarLoader failed to initialize on path \"" + ExtensionRepository.LOADER_PATH + "\"", e);
+            log.debug("Extensions JarLoader failed to initialize on path \"" + ExtensionRepository.LOADER_PATH + "\"", e);
         }
     }
 
@@ -47,9 +47,12 @@ public class ContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce)
     {
         log.info("Framework terminating...");
+        
+        JarLoader.killAll();
+        log.debug("JarLoader disabled.");
 
         ExtensionRepository.getInstance().destroyExtensions();
-        log.info("Extensions destroyed.");
+        log.debug("Extensions destroyed.");
     }
 
 }
