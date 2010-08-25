@@ -6,55 +6,43 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
+/**
+ * Loads a WSDLDocument using an HTTP-GET operation.
+ * 
+ * @author João Leitão
+ *
+ */
 public class HTTPWSDLObtainer implements WSDLObtainer {
-	
-	public static boolean print = false;
 
 	private String txt_url;
 
-	public HTTPWSDLObtainer(String url) {
+	/**
+	 * Create a new HTTPWSDLObtainer for the WSDLDocument at the specified url parameter.
+	 * 
+	 * @param	url	The URL of the WSDLDocument to obtain.
+	 */
+	public HTTPWSDLObtainer(String url)
+	{
 		this.txt_url = url;
 	}
 
-	public WSDLDocument getWSDL() throws Exception {		
-		URL url = new URL(txt_url);
-
-		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-		docBuilderFactory.setNamespaceAware(true);
-		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(url.openStream());
-		
-		if(print)
-			print(doc, 0);
-
-		return new WSDLDocument(doc);
-	}
+	public WSDLDocument getWSDL() throws WSDLException
+	{
+		try
+		{
+			URL url = new URL(txt_url);
 	
-	/**
-	 * DEBUG ONLY
-	 */
-	private void print(Node node, int depth)
-	{		
-		NodeList children = node.getChildNodes();
-		
-		String space = "";
-		for(int i=0; i<depth; i++)
-		{
-			space += "\t";
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			docBuilderFactory.setNamespaceAware(true);
+			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+			Document doc = docBuilder.parse(url.openStream());
+	
+			return new WSDLDocument(doc);
 		}
-		
-		for(int i=0; i<children.getLength(); i++)
+		catch(Exception e)
 		{
-			Node current = children.item(i);
-			
-			if(current.getNodeType() != Node.TEXT_NODE && current.getNodeType() != Node.COMMENT_NODE)
-			{
-				System.out.println(space + current.getNodeName() + " -> " + current.getNamespaceURI());
-				print(current, depth + 1);
-			}
+			throw new WSDLException(e);
 		}
 	}
 }

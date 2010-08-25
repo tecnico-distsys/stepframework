@@ -2,6 +2,7 @@ package step.framework.extensions;
 
 import javax.xml.namespace.QName;
 
+import step.framework.jarloader.JarException;
 import step.framework.jarloader.JarInstaller;
 
 public abstract class ExtensionInstaller extends JarInstaller {
@@ -12,7 +13,7 @@ public abstract class ExtensionInstaller extends JarInstaller {
 	protected abstract Class<? extends ServiceInterceptor> getServiceInterceptorClass();
 	protected abstract Class<? extends WebServiceInterceptor> getWebServiceInterceptorClass();
 	
-	public final void install() throws ExtensionException
+	public final void install() throws JarException
 	{
 		try
 		{
@@ -54,13 +55,9 @@ public abstract class ExtensionInstaller extends JarInstaller {
 			ExtensionRepository.getInstance().install(ext);
 			ext.init();
 		}
-		catch(ExtensionException e)
-		{
-			throw e;
-		}
 		catch(Exception e)
 		{
-			throw new ExtensionException(e);
+			throw new JarException(e);
 		}
 	}
 }

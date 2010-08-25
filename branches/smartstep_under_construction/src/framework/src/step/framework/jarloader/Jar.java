@@ -6,10 +6,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 class Jar {
 	
 	private static final String CONFIGFILE = "installer.properties";
 	private static final String INSTALLERPROPERTY = "installer.class";
+
+    private Log log = LogFactory.getLog(Jar.class);
 	
 	private File file;
 	private JarInstaller installer;
@@ -36,7 +41,7 @@ class Jar {
 	{
 		try
 		{
-			System.out.println("[DEBUG] Creating a new ClassLoader for Jar: " + file.getName());
+			log.debug("Creating a new ClassLoader for Jar: " + file.getName());
 			String urlStr = "jar:" + file.toURI() + "!/";
 			URL url = new URL(urlStr);
 
@@ -57,7 +62,7 @@ class Jar {
 			if(is == null)
 				throw new JarException("The Jar file \"" + file.getName() + "\" does not contain a valid configuration file: " + CONFIGFILE);
 
-			System.out.println("[DEBUG] Loading properties from \"" + CONFIGFILE + "\".");
+			log.debug("Loading properties from \"" + CONFIGFILE + "\".");
 			Properties properties = new Properties();
 			properties.load(is);
 			is.close();
@@ -66,7 +71,7 @@ class Jar {
 			if(installerProperty == null)
 				throw new JarException("The Jar file \"" + file.getName() + "\" does not define the \"" + INSTALLERPROPERTY + "\" property");
 
-			System.out.println("[DEBUG] Loading installer \"" + installerProperty + "\".");
+			log.debug("Loading installer \"" + installerProperty + "\".");
 			Class<JarInstaller> installerClass = (Class<JarInstaller>) classLoader.loadClass(installerProperty);
 			installer = installerClass.newInstance();
 			installer.setProperties(properties);

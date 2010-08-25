@@ -63,7 +63,7 @@ public class SayHelloAction extends HelloAction {
 	    try
 	    {
 		log.trace("Installing extensions");
-		JarLoader.loadOneTime(ExtensionRepository.LOADER_PATH);
+		JarLoader.load(ExtensionRepository.LOADER_PATH, false);
 		log.trace("Extensions JarLoader loaded folder \"" + ExtensionRepository.LOADER_PATH + "\"");
 	    }
 	    catch(Exception e)

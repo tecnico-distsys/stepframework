@@ -21,6 +21,6 @@ public abstract class JarInstaller {
 		return properties;
 	}
 	
-	protected abstract void install() throws Exception;
+	protected abstract void install() throws JarException;
 	
 }

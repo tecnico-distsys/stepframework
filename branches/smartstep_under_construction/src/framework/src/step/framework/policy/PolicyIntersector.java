@@ -12,8 +12,28 @@ import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 
 import step.framework.extensions.pipe.policy.PolicyPipeFactory;
 
+/**
+ * Implementation of the WS-Policy intersection operation.
+ * 
+ * Two assertions are considered equivalent if they have the same namespace and local name.
+ * The intersection of two equivalent assertions is the assertion from the primary policy.
+ * 
+ * Assertions marked with the SmartSTEP Local attribute will not be intersected, and only
+ * the ones from the primary policy will be kept. 
+ *  
+ * @author João Leitão
+ *
+ */
 public class PolicyIntersector {
 
+	/**
+	 * Intersect the two policies considering policy1 as primary and policy2 as secondary.
+	 * 
+	 * @param	policy1		The primary policy.
+	 * @param	policy2		The secondary policy.
+	 * 
+	 * @return	The Policy resulting from the intersection of the two policies.
+	 */
 	@SuppressWarnings("unchecked")
 	public static Policy intersect(Policy policy1, Policy policy2)
 	{
@@ -68,22 +88,22 @@ public class PolicyIntersector {
 		
 		for(int i=0; i<alt1.size(); i++)
 		{
-			if(!hasCompatibleAssertion(alt1.get(i), alt2, true))
+			if(!hasCompatibleAssertion(alt1.get(i), alt2))
 				return false;
 		}
 
 		for(int i=0; i<alt2.size(); i++)
 		{
-			if(!hasCompatibleAssertion(alt2.get(i), alt1, false))
+			if(!hasCompatibleAssertion(alt2.get(i), alt1))
 				return false;
 		}		
 		
 		return true;
 	}
 	
-	private static boolean hasCompatibleAssertion(Assertion assertion, List<Assertion> alt, boolean local)
+	private static boolean hasCompatibleAssertion(Assertion assertion, List<Assertion> alt)
 	{
-		if(local && isLocal(assertion))
+		if(isLocal(assertion))
 			return true;
 		
 		for(int i=0; i<alt.size(); i++)
