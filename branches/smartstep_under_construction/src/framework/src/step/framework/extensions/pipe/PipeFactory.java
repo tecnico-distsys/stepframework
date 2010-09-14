@@ -12,6 +12,7 @@ import step.framework.extensions.ExtensionRepository;
 import step.framework.extensions.ServiceInterceptor;
 import step.framework.extensions.WebServiceInterceptor;
 import step.framework.extensions.pipe.properties.PropertiesPipeFactory;
+import step.framework.extensions.pipe.policy.DynamicPolicyPipeFactory;
 import step.framework.extensions.pipe.policy.PolicyPipeFactory;
 import step.framework.service.Service;
 
@@ -21,6 +22,7 @@ public abstract class PipeFactory {
 	private static final String NULLFACTORY = "null";
 	private static final String PROPERTIESFACTORY = "properties";
 	private static final String POLICYFACTORY = "policy";
+	private static final String DYNAMICPOLICYFACTORY = "dynamic";
 
 	private static PipeFactory instance;
 
@@ -83,11 +85,10 @@ public abstract class PipeFactory {
 				System.out.println("[DEBUG] Using " + PolicyPipeFactory.class.getName());
 				return new PolicyPipeFactory();
 			}
-			//TODO: testing only, remove when done
-			if(className.equals("test"))
+			if(className.equals(DYNAMICPOLICYFACTORY))
 			{
-				System.out.println("[DEBUG] Using " + TestPipeFactory.class.getName());
-				return new TestPipeFactory();
+				System.out.println("[DEBUG] Using " + DynamicPolicyPipeFactory.class.getName());
+				return new DynamicPolicyPipeFactory();
 			}
 			
     		Class<PipeFactory> clazz = (Class<PipeFactory>) Class.forName(className);

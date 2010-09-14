@@ -28,8 +28,6 @@ import org.hibernate.cfg.NotYetImplementedException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.sun.xml.ws.developer.JAXWSProperties;
-
 import step.framework.extensions.Extension;
 import step.framework.extensions.ExtensionException;
 import step.framework.extensions.ExtensionRepository;
@@ -40,9 +38,8 @@ import step.framework.extensions.pipe.ServiceInterceptorPipe;
 import step.framework.extensions.pipe.WebServiceInterceptorPipe;
 import step.framework.extensions.pipe.policy.config.ServiceSection;
 import step.framework.extensions.pipe.policy.config.SmartSTEPConfig;
-import step.framework.extensions.pipe.policy.config.WSClientSection;
 import step.framework.extensions.pipe.policy.config.WSDLDefinition;
-import step.framework.extensions.pipe.policy.config.WSSection;
+import step.framework.extensions.pipe.policy.config.WSDLMethod;
 import step.framework.policy.PolicyUtil;
 import step.framework.policy.ServerPolicyObtainer;
 import step.framework.service.Service;
@@ -50,7 +47,9 @@ import step.framework.ws.SOAPUtil;
 import step.framework.wsdl.HTTPWSDLObtainer;
 import step.framework.wsdl.WSDLObtainer;
 
-public class PolicyPipeFactory extends PipeFactory {
+import com.sun.xml.ws.developer.JAXWSProperties;
+
+public class DynamicPolicyPipeFactory extends PipeFactory {
 	
 	//********************************************************
 	// Constants
@@ -68,7 +67,7 @@ public class PolicyPipeFactory extends PipeFactory {
 	// Logging
 
     /** Logging */
-    private static Log log = LogFactory.getLog(PolicyPipeFactory.class);
+    protected static Log log = LogFactory.getLog(DynamicPolicyPipeFactory.class);
 	
 	//********************************************************
 	// Pipe creators
@@ -144,41 +143,30 @@ public class PolicyPipeFactory extends PipeFactory {
 		try
 		{
 			log.trace("Creating WebServiceInterceptorPipe");
-
-			log.trace("Loading configuration file");
-			SmartSTEPConfig config = loadConfig();
 			
 			Policy policy = null;
 			boolean addPolicyHeader = false;
 			if(!SOAPUtil.isServerSideMessage(smc))
 			{
 				log.trace("Client side message (assuming outbound)");
-
-				log.trace("Loading configuration for this endpoint");
-				WSClientSection section = loadWSClientSection(config, smc); 
 				
-				if(section == null)
-				{
-					log.trace("No configuration found for this endpoint");
-					log.trace("Skipping web service interception");
-					return new WebServiceInterceptorPipe(null);
-				}
+				String endpoint = (String) smc.get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY);
+				String wsdlUrl = endpoint + "?wsdl";
 				
-				log.trace("Loading policy from configuration");
-				Policy localPolicy = PolicyUtil.getPolicy((Element) section.getAny());
+				WSDLDefinition wsdl = new WSDLDefinition();
+				wsdl.setLocation(wsdlUrl);
+				wsdl.setMethod(WSDLMethod.HTTP);
+				
 				log.trace("Loading policy from WSDL");
-				Policy serverPolicy = getPolicyFromWSDL(section.getWsdl());
-				
-				log.trace("Calculating effective policy");
-				policy = PolicyUtil.intersect(localPolicy, serverPolicy);
+				policy = removeLocalAssertions(getPolicyFromWSDL(wsdl));
 				
 				if(!policy.getAlternatives().hasNext())
 				{
-					log.trace("Effective policy is empty");
-					throw new ExtensionException("The policies are incompatible");
+					log.trace("Server policy is invalid");
+					throw new ExtensionException("Server policy is invalid");
 				}
 				
-				if(hasAlternatives(serverPolicy))
+				if(hasAlternatives(policy))
 				{
 					addPolicyHeader = true;
 				}
@@ -186,19 +174,17 @@ public class PolicyPipeFactory extends PipeFactory {
 			else
 			{
 				log.trace("Server side message (assuming inbound)");
-
-				log.trace("Loading configuration for this endpoint");
-				WSSection section = loadWSSection(config, smc); 
 				
-				if(section == null)
-				{
-					log.trace("No configuration found for this endpoint");
-					log.trace("Skipping web service interception");
-					return new WebServiceInterceptorPipe(null);
-				}
+				String endpoint = (String) smc.get(JAXWSProperties.HTTP_REQUEST_URL);
+				String wsdlUrl = endpoint + "?wsdl";
+				
+				WSDLDefinition wsdl = new WSDLDefinition();
+				wsdl.setLocation(wsdlUrl);
+				wsdl.setMethod(WSDLMethod.HTTP);
 				
 				log.trace("Loading policy from WSDL");
-				Policy localPolicy = getPolicyFromWSDL(section.getWsdl());
+				Policy localPolicy = getPolicyFromWSDL(wsdl);
+				
 				if(hasAlternatives(localPolicy))
 				{
 					log.trace("Local policy has multiple alternatives");
@@ -238,8 +224,7 @@ public class PolicyPipeFactory extends PipeFactory {
 			if(addPolicyHeader)
 			{
 				log.trace("Adding policy header");
-				Policy headerPolicy = removeLocalAssertions(pipePolicy);			
-				addPolicyHeader(smc, headerPolicy);
+				addPolicyHeader(smc, pipePolicy);
 			}			
 
 			log.trace("Returning pipe");
@@ -274,7 +259,7 @@ public class PolicyPipeFactory extends PipeFactory {
 	{
 		JAXBContext jaxb = JAXBContext.newInstance(JAXB_CONTEXT);
 
-		URL url = PolicyPipeFactory.class.getResource(SMARTSTEP_FILE);
+		URL url = DynamicPolicyPipeFactory.class.getResource(SMARTSTEP_FILE);
 		Unmarshaller unmarsh = jaxb.createUnmarshaller();
 		JAXBElement<SmartSTEPConfig> elem = (JAXBElement<SmartSTEPConfig>) unmarsh.unmarshal(url);
 		SmartSTEPConfig config = elem.getValue();
@@ -305,38 +290,6 @@ public class PolicyPipeFactory extends PipeFactory {
 		}
 		
 		return section;
-	}
-	
-	private WSClientSection loadWSClientSection(SmartSTEPConfig config, SOAPMessageContext smc)
-	{
-		List<WSClientSection> sections = config.getWsclient();
-		
-		for(int i=0; i<sections.size(); i++)
-		{
-			String url = sections.get(i).getEndpoint();
-			if(url.equals((String) smc.get(BindingProvider.ENDPOINT_ADDRESS_PROPERTY)))
-			{
-				return sections.get(i);
-			}
-		}
-		
-		return null;
-	}
-	
-	private WSSection loadWSSection(SmartSTEPConfig config, SOAPMessageContext smc)
-	{
-		List<WSSection> sections = config.getWs();
-		
-		for(int i=0; i<sections.size(); i++)
-		{
-			String url = sections.get(i).getEndpoint();
-			if(url.equals((String) smc.get(JAXWSProperties.HTTP_REQUEST_URL)))
-			{
-				return sections.get(i);
-			}
-		}
-		
-		return null;
 	}
 	
 	//********************************************************
@@ -447,7 +400,7 @@ public class PolicyPipeFactory extends PipeFactory {
 			if(soapHeader == null)
 				soapHeader = soapEnvelope.addHeader();
 
-			SOAPHeaderElement element = soapHeader.addHeaderElement(PolicyPipeFactory.QN_POLICY_HEADER);
+			SOAPHeaderElement element = soapHeader.addHeaderElement(DynamicPolicyPipeFactory.QN_POLICY_HEADER);
 			
 			Node node = PolicyUtil.toNode(policy);
 			node = element.getOwnerDocument().importNode(node, true);
