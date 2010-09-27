@@ -34,7 +34,7 @@ public final class Extension {
 	private Properties localProp;
 	private Map<String, Object> contextProp;	
 	
-	public Extension(String id, QName[] wspNamespaces, Properties globalProp)
+	Extension(String id, QName[] wspNamespaces, Properties globalProp)
 	{
 		this.id = id;
 		this.wspNamespaces = (wspNamespaces == null) ? new QName[0] : wspNamespaces;
